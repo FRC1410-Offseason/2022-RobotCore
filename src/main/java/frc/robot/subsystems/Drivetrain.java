@@ -37,7 +37,7 @@ public class Drivetrain extends SubsystemBase {
     private final AHRS mGyro = new AHRS(SerialPort.Port.kMXP);
     private final SimDouble mGyroSim = new SimDouble(SimDeviceDataJNI.getSimValueHandle(SimDeviceDataJNI.getSimDeviceHandle("navX-Sensor[0]"), "Yaw"));
 
-    private final DifferentialDrive mDrive = new DifferentialDrive(mLeftLeader, mLeftFollower);
+    private final DifferentialDrive mDrive = new DifferentialDrive(mLeftLeader, mRightLeader);
 
     private final DifferentialDrivePoseEstimator mPoseEstimator = new DifferentialDrivePoseEstimator(new Rotation2d(), new Pose2d(),
             new MatBuilder<>(Nat.N5(), Nat.N1()).fill(STATE_X, STATE_Y, STATE_THETA, STATE_LEFT_DIST, STATE_RIGHT_DIST),
@@ -46,7 +46,7 @@ public class Drivetrain extends SubsystemBase {
 
     private DifferentialDrivetrainSim mSim;
 
-    private Field2d mFieldSim;
+    private final Field2d mFieldSim;
 
     private TalonFXSimCollection mLeftEncoderSim;
     private TalonFXSimCollection mRightEncoderSim;
@@ -86,9 +86,6 @@ public class Drivetrain extends SubsystemBase {
                 NOISE
         );
 
-        mLeftLeader.setInverted(false);
-        mLeftFollower.setInverted(false);
-
         this.mLeftEncoderSim = mLeftLeader.getSimCollection();
         this.mRightEncoderSim = mRightLeader.getSimCollection();
     }
@@ -117,6 +114,7 @@ public class Drivetrain extends SubsystemBase {
 
         mLeftEncoderSim.setIntegratedSensorRawPosition((int)(mSim.getLeftPositionMeters() / ENCODER_CONSTANT));
         mRightEncoderSim.setIntegratedSensorRawPosition((int)(mSim.getRightPositionMeters() / ENCODER_CONSTANT));
+        System.out.println(mSim.getLeftPositionMeters() + " " + mSim.getRightPositionMeters());
 
         mLeftEncoderSim.setIntegratedSensorVelocity((int)((mSim.getLeftVelocityMetersPerSecond() / Math.PI / WHEEL_DIAMETER) * ENCODER_CPR / 10));
         mRightEncoderSim.setIntegratedSensorVelocity((int)((mSim.getRightVelocityMetersPerSecond() / Math.PI / WHEEL_DIAMETER) * ENCODER_CPR / 10));

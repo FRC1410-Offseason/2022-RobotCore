@@ -40,8 +40,8 @@ public class RobotContainer {
   private void configureButtonBindings() {
     drivetrain.setDefaultCommand(
             new RunCommand(() -> drivetrain.arcadeDrive(
-                    driverController.getRawAxis(1),
-                    driverController.getRawAxis(4) * -1),
+                    driverController.getRawAxis(1) * -1,
+                    driverController.getRawAxis(4)),
                   drivetrain
             )
     );
