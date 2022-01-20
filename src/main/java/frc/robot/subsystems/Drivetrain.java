@@ -66,6 +66,10 @@ public class Drivetrain extends SubsystemBase {
         mRightFollower.setNeutralMode(NeutralMode.Brake);
         mRightFollower.follow(mRightLeader);
 
+        if (RobotBase.isSimulation()) {
+            simInit();
+        }
+
         this.mFieldSim = new Field2d();
         SmartDashboard.putData("Field", mFieldSim);
 
@@ -108,6 +112,8 @@ public class Drivetrain extends SubsystemBase {
         mSim.update(0.02);
 
         mGyroSim.set(-mSim.getHeading().getDegrees());
+
+        mFieldSim.setRobotPose(mSim.getPose());
 
         mLeftEncoderSim.setIntegratedSensorRawPosition((int)(mSim.getLeftPositionMeters() / ENCODER_CONSTANT));
         mRightEncoderSim.setIntegratedSensorRawPosition((int)(mSim.getRightPositionMeters() / ENCODER_CONSTANT));
