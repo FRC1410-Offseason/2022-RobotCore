@@ -6,6 +6,12 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N7;
 
 public final class Tuning {
+
+    public static final double MAX_VOLTAGE = 12;
+    public static final double MAX_SPEED = 3.50;
+    public static final double MAX_ACCEL = 3.80;
+    public static final double MAX_CENTRIPETAL_ACCEL = 2.5;
+
     public static final double STATE_X = 0.000001;
     public static final double STATE_Y = 0.000001;
     public static final double STATE_THETA = 0.000001;
