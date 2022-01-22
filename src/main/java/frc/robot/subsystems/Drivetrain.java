@@ -84,7 +84,7 @@ public class Drivetrain extends SubsystemBase {
                 GEARING,
                 TRACKWIDTH,
                 WHEEL_DIAMETER,
-                NOISE_TEST
+                NOISE
         );
 
         this.mLeftEncoderSim = mLeftLeader.getSimCollection();
