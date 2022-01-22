@@ -12,6 +12,11 @@ public final class Tuning {
     public static final double MAX_ACCEL = 3.80;
     public static final double MAX_CENTRIPETAL_ACCEL = 2.5;
 
+    public static final double KB = 4.0;
+    public static final double KZ = 0.7;
+
+    public static final double KP_VEL = 5;
+
     public static final double STATE_X = 0.000001;
     public static final double STATE_Y = 0.000001;
     public static final double STATE_THETA = 0.000001;
@@ -27,4 +32,5 @@ public final class Tuning {
     public static final double VISION_THETA = 0.000001;
 
     public static final Matrix<N7, N1> NOISE = VecBuilder.fill(0.001, 0.001, 0.001, 0.1, 0.1, 0.005, 0.005);
+    public static final Matrix<N7, N1> NOISE_TEST = VecBuilder.fill(0, 0, 0, 0, 0, 0, 0);
 }

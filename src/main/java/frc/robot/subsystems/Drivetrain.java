@@ -4,6 +4,7 @@ import static frc.robot.constants.IDs.*;
 import static frc.robot.constants.Tuning.*;
 import static frc.robot.constants.Constants.*;
 
+import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonFXSimCollection;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
@@ -58,7 +59,7 @@ public class Drivetrain extends SubsystemBase {
         mLeftFollower.setNeutralMode(NeutralMode.Brake);
         mLeftFollower.follow(mLeftLeader);
         mLeftLeader.setInverted(true);
-        mLeftFollower.setInverted(true);
+        mLeftFollower.setInverted(InvertType.FollowMaster);
 
         mRightLeader.configFactoryDefault();
         mRightFollower.configFactoryDefault();
@@ -83,7 +84,7 @@ public class Drivetrain extends SubsystemBase {
                 GEARING,
                 TRACKWIDTH,
                 WHEEL_DIAMETER,
-                NOISE
+                NOISE_TEST
         );
 
         this.mLeftEncoderSim = mLeftLeader.getSimCollection();
@@ -95,8 +96,8 @@ public class Drivetrain extends SubsystemBase {
         mPoseEstimator.update(
                 mGyro.getRotation2d(),
                 getWheelSpeeds(),
-                mLeftLeader.getSelectedSensorPosition() * ENCODER_CONSTANT,
-                mRightLeader.getSelectedSensorPosition() * ENCODER_CONSTANT
+                (mLeftLeader.getSelectedSensorPosition() / 2048 / GEARING) * Math.PI * WHEEL_DIAMETER,
+                (mRightLeader.getSelectedSensorPosition() / 2048 / GEARING) * Math.PI * WHEEL_DIAMETER
         );
     }
 
@@ -110,14 +111,14 @@ public class Drivetrain extends SubsystemBase {
 
         mGyroSim.set(-mSim.getHeading().getDegrees());
 
-        mFieldSim.setRobotPose(mSim.getPose());
+        mFieldSim.setRobotPose(mPoseEstimator.getEstimatedPosition());
+//        mFieldSim.setRobotPose(mSim.getPose());
 
-        mLeftEncoderSim.setIntegratedSensorRawPosition((int)(mSim.getLeftPositionMeters() / ENCODER_CONSTANT));
-        mRightEncoderSim.setIntegratedSensorRawPosition((int)(mSim.getRightPositionMeters() / ENCODER_CONSTANT));
-        System.out.println(mSim.getLeftPositionMeters() + " " + mSim.getRightPositionMeters());
+        mLeftEncoderSim.setIntegratedSensorRawPosition((int)((mSim.getLeftPositionMeters() / Math.PI * WHEEL_DIAMETER) * GEARING * 2048));
+        mRightEncoderSim.setIntegratedSensorRawPosition((int)((mSim.getRightPositionMeters() / Math.PI * WHEEL_DIAMETER) * GEARING * 2048));
 
-        mLeftEncoderSim.setIntegratedSensorVelocity((int)((mSim.getLeftVelocityMetersPerSecond() / Math.PI / WHEEL_DIAMETER) * ENCODER_CPR / 10));
-        mRightEncoderSim.setIntegratedSensorVelocity((int)((mSim.getRightVelocityMetersPerSecond() / Math.PI / WHEEL_DIAMETER) * ENCODER_CPR / 10));
+        mLeftEncoderSim.setIntegratedSensorVelocity((int)((mSim.getLeftVelocityMetersPerSecond() / 10) / (Math.PI * WHEEL_DIAMETER) * GEARING * 2048));
+        mRightEncoderSim.setIntegratedSensorVelocity((int)((mSim.getRightVelocityMetersPerSecond() / 10) / (Math.PI * WHEEL_DIAMETER) * GEARING * 2048));
     }
 
     public Pose2d getPose() {
@@ -125,17 +126,21 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public DifferentialDriveWheelSpeeds getWheelSpeeds() {
-        return new DifferentialDriveWheelSpeeds(
-                ((10 * mLeftLeader.getSelectedSensorVelocity()) / ENCODER_CPR) * Math.PI * WHEEL_DIAMETER,
-                ((10 * mRightLeader.getSelectedSensorVelocity()) / ENCODER_CPR) * Math.PI * WHEEL_DIAMETER
-        );
+//        return new DifferentialDriveWheelSpeeds(
+//                ((mLeftLeader.getSelectedSensorVelocity() * 10) / 2048 / GEARING) * Math.PI * WHEEL_DIAMETER,
+//                ((mRightLeader.getSelectedSensorVelocity() * 10) / 2048 / GEARING) * Math.PI * WHEEL_DIAMETER
+//        );
+        return new DifferentialDriveWheelSpeeds(mSim.getLeftVelocityMetersPerSecond(), mSim.getRightVelocityMetersPerSecond());
     }
 
     public void resetPoseEstimator(Pose2d pose) {
         if (RobotBase.isSimulation()) {
             mSim.setPose(pose);
+            mPoseEstimator.resetPosition(pose, pose.getRotation());
+        } else {
+            mPoseEstimator.resetPosition(pose, mGyro.getRotation2d());
         }
-        mPoseEstimator.resetPosition(pose, mGyro.getRotation2d());
+        resetEncoders();
     }
 
     public void arcadeDrive(double forward, double rotation) {
