@@ -16,6 +16,7 @@ import edu.wpi.first.math.Nat;
 import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -44,6 +45,8 @@ public class Drivetrain extends SubsystemBase {
             new MatBuilder<>(Nat.N5(), Nat.N1()).fill(STATE_X, STATE_Y, STATE_THETA, STATE_LEFT_DIST, STATE_RIGHT_DIST),
             new MatBuilder<>(Nat.N3(), Nat.N1()).fill(LOCAL_LEFT_DIST, LOCAL_RIGHT_DIST, LOCAL_THETA),
             new MatBuilder<>(Nat.N3(), Nat.N1()).fill(VISION_X, VISION_Y, VISION_THETA));
+
+    private final DifferentialDriveOdometry testOdometry = new DifferentialDriveOdometry(new Rotation2d());
 
     private DifferentialDrivetrainSim mSim;
 
@@ -87,6 +90,8 @@ public class Drivetrain extends SubsystemBase {
                 NOISE
         );
 
+        mLeftLeader.setInverted(false);
+
         this.mLeftEncoderSim = mLeftLeader.getSimCollection();
         this.mRightEncoderSim = mRightLeader.getSimCollection();
     }
@@ -112,13 +117,12 @@ public class Drivetrain extends SubsystemBase {
         mGyroSim.set(-mSim.getHeading().getDegrees());
 
         mFieldSim.setRobotPose(mPoseEstimator.getEstimatedPosition());
-//        mFieldSim.setRobotPose(mSim.getPose());
 
-        mLeftEncoderSim.setIntegratedSensorRawPosition((int)((mSim.getLeftPositionMeters() / Math.PI * WHEEL_DIAMETER) * GEARING * 2048));
-        mRightEncoderSim.setIntegratedSensorRawPosition((int)((mSim.getRightPositionMeters() / Math.PI * WHEEL_DIAMETER) * GEARING * 2048));
+        mLeftEncoderSim.setIntegratedSensorRawPosition((int)(mSim.getLeftPositionMeters() / ENCODER_CONSTANT));
+        mRightEncoderSim.setIntegratedSensorRawPosition((int)(mSim.getRightPositionMeters() / ENCODER_CONSTANT));
 
-        mLeftEncoderSim.setIntegratedSensorVelocity((int)((mSim.getLeftVelocityMetersPerSecond() / 10) / (Math.PI * WHEEL_DIAMETER) * GEARING * 2048));
-        mRightEncoderSim.setIntegratedSensorVelocity((int)((mSim.getRightVelocityMetersPerSecond() / 10) / (Math.PI * WHEEL_DIAMETER) * GEARING * 2048));
+        mLeftEncoderSim.setIntegratedSensorVelocity((int)(mSim.getLeftVelocityMetersPerSecond() / 10 / ENCODER_CONSTANT));
+        mRightEncoderSim.setIntegratedSensorVelocity((int)(mSim.getRightVelocityMetersPerSecond() / 10 / ENCODER_CONSTANT));
     }
 
     public Pose2d getPose() {
@@ -126,11 +130,12 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public DifferentialDriveWheelSpeeds getWheelSpeeds() {
-//        return new DifferentialDriveWheelSpeeds(
-//                ((mLeftLeader.getSelectedSensorVelocity() * 10) / 2048 / GEARING) * Math.PI * WHEEL_DIAMETER,
-//                ((mRightLeader.getSelectedSensorVelocity() * 10) / 2048 / GEARING) * Math.PI * WHEEL_DIAMETER
-//        );
-        return new DifferentialDriveWheelSpeeds(mSim.getLeftVelocityMetersPerSecond(), mSim.getRightVelocityMetersPerSecond());
+        System.out.println("Left: " + ((((mLeftLeader.getSelectedSensorVelocity() / 2048) * 10) / GEARING) * Math.PI * WHEEL_DIAMETER) + " Right: " + ((((mRightLeader.getSelectedSensorVelocity() / 2048) * 10) / GEARING) * Math.PI * WHEEL_DIAMETER));
+        return new DifferentialDriveWheelSpeeds(
+                (((mLeftLeader.getSelectedSensorVelocity() / 2048) * 10) / GEARING) * Math.PI * WHEEL_DIAMETER,
+                (((mRightLeader.getSelectedSensorVelocity() / 2048) * 10) / GEARING) * Math.PI * WHEEL_DIAMETER
+        );
+//        return new DifferentialDriveWheelSpeeds(mSim.getLeftVelocityMetersPerSecond(), mSim.getRightVelocityMetersPerSecond());
     }
 
     public void resetPoseEstimator(Pose2d pose) {
