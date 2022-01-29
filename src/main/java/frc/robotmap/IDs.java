@@ -21,4 +21,13 @@ public class IDs {
 
     public static final int DRIVER_CONTROLLER_PORT = 0;
     public static final int OPERATOR_CONTROLLER_PORT = 1;
+
+    //INTAKE
+    //TODO: Update with actual ports on the PCM
+    public static final int INTAKE_FLIPPER_L_FWD = 0;
+    public static final int INTAKE_FLIPPER_L_BCK = 1;
+    public static final int INTAKE_FLIPPER_R_FWD = 2;
+    public static final int INTAKE_FLIPPER_R_BCK = 3;
+
+    public static final int INTAKE_MOTOR = 0;
 }
