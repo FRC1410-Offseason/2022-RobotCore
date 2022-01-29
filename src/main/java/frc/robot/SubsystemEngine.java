@@ -1,21 +1,15 @@
 package frc.robot;
 
-import java.util.ArrayList;
-import java.util.Map;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj2.command.*;
 
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
-import java.util.HashMap;
+import java.util.*;
 
 public class SubsystemEngine {
+    private static final SubsystemEngine instance = new SubsystemEngine();
 
-    //Singleton instance creation
-    private static SubsystemEngine engineInstance;
     public static SubsystemEngine getInstance() {
-        if (engineInstance == null) {
-            engineInstance = new SubsystemEngine();
-        }
-        return engineInstance;
+        return instance;
     }
 
     public void refreshInstance() {
@@ -23,26 +17,22 @@ public class SubsystemEngine {
     }
 
     //Subsystem table handling
-    private Map<Class, Object> rawSubsystemMap = new HashMap<Class, Object>();
-    public <T> SubsystemBase getSubsystem(Class<T> subsystemKey) {
-        SubsystemBase returnInstance = null;
+    private final Map<Class<? extends Subsystem>, Object> rawSubsystemMap = new IdentityHashMap<>();
 
-        try {
-            if (!getInstance().rawSubsystemMap.containsKey(subsystemKey)) {
-                T obj = subsystemKey.newInstance();
-                getInstance().rawSubsystemMap.put(subsystemKey, obj);
+    public <T extends Subsystem> T getSubsystem(Class<T> type) {
+        @SuppressWarnings("unchecked")
+        T subsystem = (T) rawSubsystemMap.get(type);
 
-                try {
-                    SubsystemBase castedSubsystem = (SubsystemBase) obj;
-                } catch (Exception e) {
-                    //Future TelemetryHandler warning for "Improper Subsystem Cast"
-                }
+        if (subsystem == null) {
+            try {
+                subsystem = type.getDeclaredConstructor().newInstance();
+            } catch (ReflectiveOperationException e) {
+                DriverStation.reportError("Error instantiating subsystem!", e.getStackTrace());
             }
-            returnInstance = (SubsystemBase) getInstance().rawSubsystemMap.get(subsystemKey);
-        } catch (Exception e) {
-            //Future Telemetry Post for "Cannot Instantiate"
+
+            rawSubsystemMap.put(type, subsystem);
         }
 
-        return returnInstance;
+        return subsystem;
     }
 }
