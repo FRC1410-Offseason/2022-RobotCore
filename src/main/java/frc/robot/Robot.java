@@ -2,12 +2,14 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.Drivetrain;
 
 import static frc.robotmap.Constants.*;
 import static frc.robotmap.IDs.*;
 import static frc.robotmap.Tuning.*;
 
 public class Robot extends TimedRobot {
+    public Drivetrain drivetrain = new Drivetrain();
 
     public OI oi = new OI();
     @Override
