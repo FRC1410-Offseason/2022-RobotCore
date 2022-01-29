@@ -32,6 +32,9 @@ public class IDs {
     public static final int INTAKE_MOTOR = 0;
 
     //SHOOTER ARM
+    public static final int SHOOTER_ARM_LOCK_FWD = 0;
+    public static final int SHOOTER_ARM_LOCK_BCK = 1;
+
     public static final int SHOOTER_ARM_L_MOTOR = 0;
     public static final int SHOOTER_ARM_R_MOTOR = 1;
 }
