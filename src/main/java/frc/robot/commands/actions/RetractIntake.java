@@ -9,8 +9,6 @@ public class RetractIntake extends CommandBase {
 
     public RetractIntake(Intake intake) {
         this.intake = intake;
- 
-        // addRequirements() method (which takes a vararg of Subsystem)
         addRequirements(this.intake);
     }
 
