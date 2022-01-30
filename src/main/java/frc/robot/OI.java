@@ -3,6 +3,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.TriggerCommand;
+import frc.robot.commands.actions.ReverseIntake;
 import frc.robot.commands.actions.RunIntake;
 import frc.robot.commands.actions.ToggleIntake;
 import frc.robot.control.input.Axis;
@@ -57,5 +58,6 @@ public class OI {
         //INTAKE
         OperatorAButton.whenPressed(new ToggleIntake(SubsystemEngine.getInstance().getSubsystem(Intake.class)));
         OperatorXButton.whileHeld(new RunIntake(SubsystemEngine.getInstance().getSubsystem(Intake.class)));
+        OperatorYButton.whileHeld(new ReverseIntake(SubsystemEngine.getInstance().getSubsystem((Intake.class))));
     }
 }
