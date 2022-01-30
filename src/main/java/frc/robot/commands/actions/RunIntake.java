@@ -18,4 +18,9 @@ public class RunIntake extends CommandBase {
     public void initialize() {
         this.intake.setSpeed(INTAKE_FORWARD_SPEED);
     }
+
+    @Override
+    public void end(boolean interrupted) {
+        this.intake.setSpeed(0);
+    }
 }
