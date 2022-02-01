@@ -20,4 +20,6 @@ public final class Constants {
     public static final Color RED_TARGET = new Color(new Color8Bit(224, 69, 56));
 
     public static final double STORAGE_INDEX_SPEED = 0;
+
+    
 }

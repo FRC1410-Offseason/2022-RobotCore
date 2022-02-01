@@ -37,4 +37,6 @@ public class IDs {
     public static final int INTAKE_FLIPPER_R_BCK = 3;
 
     public static final int INTAKE_MOTOR = 0;
+
+    public static final int PRESSURE_SENSOR = 0;
 }
