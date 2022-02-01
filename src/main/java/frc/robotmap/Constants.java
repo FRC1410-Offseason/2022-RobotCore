@@ -1,12 +1,14 @@
+// Copyright (c) FIRST and other WPILib contributors.
+// Open Source Software; you can modify and/or share it under the terms of
+// the WPILib BSD license file in the root directory of this project.
+
 package frc.robotmap;
 
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.numbers.N2;
 import edu.wpi.first.math.system.LinearSystem;
 import edu.wpi.first.math.system.plant.LinearSystemId;
-
-import edu.wpi.first.wpilibj.util.Color;
-import edu.wpi.first.wpilibj.util.Color8Bit;
+import edu.wpi.first.wpilibj.util.*;
 
 public final class Constants {
     //Position
@@ -42,4 +44,9 @@ public final class Constants {
     public static final Color RED_TARGET = new Color(new Color8Bit(224, 69, 56));
 
     public static final double STORAGE_INDEX_SPEED = 0;
+
+    //INTAKE
+    public static final double INTAKE_FORWARD_SPEED = 1;
+    public static final double INTAKE_REVERSE_SPEED = -1;
+
 }
