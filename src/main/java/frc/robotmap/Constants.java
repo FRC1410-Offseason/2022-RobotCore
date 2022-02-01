@@ -5,6 +5,9 @@ import edu.wpi.first.math.numbers.N2;
 import edu.wpi.first.math.system.LinearSystem;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 
+import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj.util.Color8Bit;
+
 public final class Constants {
     public static final double KS = 0.676;
     public static final double KV = 2.67;
@@ -29,4 +32,9 @@ public final class Constants {
                     KA,
                     KV_ANGULAR,
                     KA_ANGULAR);
+
+    public static final Color BLUE_TARGET = new Color(new Color8Bit(100, 138, 216));
+    public static final Color RED_TARGET = new Color(new Color8Bit(224, 69, 56));
+
+    public static final double STORAGE_INDEX_SPEED = 0;
 }
