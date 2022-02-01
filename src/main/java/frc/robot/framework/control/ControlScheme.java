@@ -1,7 +1,6 @@
 package frc.robot.framework.control;
 
 import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.framework.control.input.Axis;
 import frc.robot.framework.scheduler.TaskScheduler;
 import frc.robotmap.*;
 
@@ -78,7 +77,7 @@ public interface ControlScheme {
 	default Button getOperatorLeftStickButton() {
 		return new Button(operatorController, getScheduler(), IDs.ButtonId.LEFT_STICK_BUTTON);
 	}
-
+    
 	default Button getOperatorRightStickButton() {
 		return new Button(operatorController, getScheduler(), IDs.ButtonId.RIGHT_STICK_BUTTON);
 	}
