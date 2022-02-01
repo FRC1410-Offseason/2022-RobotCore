@@ -9,10 +9,11 @@ import frc.robot.subsystems.Intake;
 
 public class RunIntake extends CommandBase {
     private final Intake intake;
-    private Axis axis = null;
+    private final Axis axis;
 
     public RunIntake(Intake intake) {
         this.intake = intake;
+        this.axis = null;
         addRequirements(this.intake);
     }
 
