@@ -30,11 +30,11 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Drivetrain extends SubsystemBase {
 
-    private final WPI_TalonFX mLeftLeader = new WPI_TalonFX(LEFT_MOTOR_1_PORT);
-    private final WPI_TalonFX mLeftFollower = new WPI_TalonFX(LEFT_MOTOR_2_PORT);
+    private final WPI_TalonFX mLeftLeader = new WPI_TalonFX(DRIVETRAIN_LEFT_FRONT_MOTOR_ID);
+    private final WPI_TalonFX mLeftFollower = new WPI_TalonFX(DRIVETRAIN_LEFT_BACK_MOTOR_ID);
 
-    private final WPI_TalonFX mRightLeader = new WPI_TalonFX(RIGHT_MOTOR_1_PORT);
-    private final WPI_TalonFX mRightFollower = new WPI_TalonFX(RIGHT_MOTOR_2_PORT);
+    private final WPI_TalonFX mRightLeader = new WPI_TalonFX(DRIVETRAIN_RIGHT_FRONT_MOTOR_ID);
+    private final WPI_TalonFX mRightFollower = new WPI_TalonFX(DRIVETRAIN_RIGHT_BACK_MOTOR_ID);
 
     private final AHRS mGyro = new AHRS(SerialPort.Port.kMXP);
     private final SimDouble mGyroSim = new SimDouble(SimDeviceDataJNI.getSimValueHandle(SimDeviceDataJNI.getSimDeviceHandle("navX-Sensor[0]"), "Yaw"));

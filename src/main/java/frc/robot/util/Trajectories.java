@@ -33,19 +33,19 @@ public class Trajectories {
     public Trajectories(Drivetrain drivetrain) {
         this.drivetrain = drivetrain;
 
-        centripetalAccelerationConstraint = new CentripetalAccelerationConstraint(MAX_CENTRIPETAL_ACCEL);
+        centripetalAccelerationConstraint = new CentripetalAccelerationConstraint(DRIVETRAIN_MAX_CENTRIPETAL_ACCEL);
 
         differentialDriveVoltageConstraint = new DifferentialDriveVoltageConstraint(
-                new SimpleMotorFeedforward(KS, KV, KA), DRIVE_KINEMATICS, MAX_VOLTAGE
+                new SimpleMotorFeedforward(KS, KV, KA), DRIVE_KINEMATICS, DRIVETRAIN_MAX_VOLTAGE
         );
 
-        config = new TrajectoryConfig(MAX_SPEED, MAX_ACCEL)
+        config = new TrajectoryConfig(DRIVETRAIN_MAX_SPEED, DRIVETRAIN_MAX_ACCEL)
                 .setKinematics(DRIVE_KINEMATICS)
                 .addConstraint(centripetalAccelerationConstraint)
                 .addConstraint(differentialDriveVoltageConstraint)
                 .setReversed(false);
 
-        reverseConfig = new TrajectoryConfig(MAX_SPEED, MAX_ACCEL)
+        reverseConfig = new TrajectoryConfig(DRIVETRAIN_MAX_SPEED, DRIVETRAIN_MAX_ACCEL)
                 .setKinematics(DRIVE_KINEMATICS)
                 .addConstraint(centripetalAccelerationConstraint)
                 .addConstraint(differentialDriveVoltageConstraint)

@@ -10,11 +10,12 @@ public final class Tuning {
     public static final double DRIVER_DEADZONE_VALUE = 0.05;
     public static final double OPERATOR_DEADZONE_VALUE = 0.05;
 
-    public static final double MAX_VOLTAGE = 12;
-    public static final double MAX_SPEED = 3.50;
-    public static final double MAX_ACCEL = 3.80;
-    public static final double MAX_CENTRIPETAL_ACCEL = 2.5;
+    public static final double DRIVETRAIN_MAX_VOLTAGE = 12;
+    public static final double DRIVETRAIN_MAX_SPEED = 3.50;
+    public static final double DRIVETRAIN_MAX_ACCEL = 3.80;
+    public static final double DRIVETRAIN_MAX_CENTRIPETAL_ACCEL = 2.5;
 
+    //Ramsete controller constants
     public static final double KB = 4.0;
     public static final double KZ = 0.7;
 

@@ -9,10 +9,15 @@ import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 
 public final class Constants {
+    //Position
     public static final double KS = 0.676;
+    //Acceleration
     public static final double KV = 2.67;
+    //Velocity
     public static final double KA = 0.34;
+    //Angular Velocity
     public static final double KV_ANGULAR = 2.84;
+    //Angular Acceleration
     public static final double KA_ANGULAR = 0.216;
 
     public static final double WHEEL_DIAMETER = 0.15; // meters
