@@ -1,33 +1,44 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.*;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commands.actions.ReverseIntake;
+import frc.robot.commands.actions.RunIntake;
+import frc.robot.commands.actions.ToggleIntake;
+import frc.robot.framework.scheduler.ScheduledRobot;
+import frc.robot.subsystems.Intake;
 
-import static frc.robotmap.Constants.*;
-import static frc.robotmap.IDs.*;
-import static frc.robotmap.Tuning.*;
+public class Robot extends ScheduledRobot {
+	private final Intake intake = new Intake();
 
-public class Robot extends TimedRobot {
-
-    public OI oi = new OI();
-    @Override
-    public void robotInit() {
-        oi.registerControls();
-    }
-
-    public static void main(String[] args) {
-        RobotBase.startRobot(Robot::new);
-    }
-
+	public static void main(String[] args) {
+		RobotBase.startRobot(Robot::new);
+	}
 
     @Override
-    public void robotPeriodic() {
-        CommandScheduler.getInstance().run();
+    public void registerControls() {
+        OperatorAButton.whenPressed(new ToggleIntake(intake));
+		OperatorXButton.whileHeld(new RunIntake(intake));
+		OperatorYButton.whileHeld(new ReverseIntake(intake));
     }
 
-    @Override
-    public void testInit() {
-        // Cancels all running commands at the start of test mode.
-        CommandScheduler.getInstance().cancelAll();
-    }
+	private Robot() {
+		super(20);
+	}
+
+	private final Timer timer = new Timer();
+	private int ticks = 0;
+
+	@Override
+	public void robotInit() {
+		timer.start();
+		scheduler.queuePeriodic(() -> {
+			ticks++;
+
+			if (timer.get() >= 5) {
+				timer.reset();
+				System.out.println(ticks);
+				ticks = 0;
+			}
+		}, 2);
+	}
 }
