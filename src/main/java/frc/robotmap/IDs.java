@@ -2,7 +2,13 @@ package frc.robotmap;
 
 import javax.sound.sampled.Port;
 
-public class IDs {
+public final class IDs {
+
+    public static final int DRIVETRAIN_LEFT_FRONT_MOTOR_ID = 0;
+    public static final int DRIVETRAIN_LEFT_BACK_MOTOR_ID = 1;
+    public static final int DRIVETRAIN_RIGHT_FRONT_MOTOR_ID = 2;
+    public static final int DRIVETRAIN_RIGHT_BACK_MOTOR_ID = 3;
+
     public enum AXIS_ID {
         LEFT_X,
         RIGHT_X,
