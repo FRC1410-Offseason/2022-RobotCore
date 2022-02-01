@@ -1,5 +1,7 @@
 package frc.robotmap;
 
+import javax.sound.sampled.Port;
+
 public class IDs {
     public enum AXIS_ID {
         LEFT_X,
@@ -21,6 +23,11 @@ public class IDs {
 
     public static final int DRIVER_CONTROLLER_PORT = 0;
     public static final int OPERATOR_CONTROLLER_PORT = 1;
+
+
+    public static final int STORAGE_MOTOR_ID = 1;
+    //TODO: Find out what the actual port on the roborio is
+    public static final int STORAGE_LINE_BREAK_PORT = 0;
 
     //INTAKE
     //TODO: Update with actual ports on the PCM
