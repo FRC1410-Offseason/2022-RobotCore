@@ -9,11 +9,17 @@ public class ToggleIntake extends CommandBase {
 
     public ToggleIntake(Intake intake) {
         this.intake = intake;
-        addRequirements(this.intake);
+        addRequirements(intake);
     }
 
     @Override
     public void initialize() {
+        System.out.println("Init");
         this.intake.toggle();
+    }
+
+    @Override
+    public boolean isFinished() {
+        return true;
     }
 }
