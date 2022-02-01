@@ -9,10 +9,11 @@ import frc.robot.subsystems.Intake;
 
 public class ReverseIntake extends CommandBase {
     private final Intake intake;
-    private Axis axis = null;
+    private final Axis axis;
 
     public ReverseIntake(Intake intake) {
         this.intake = intake;
+        this.axis = null;
         addRequirements(this.intake);
     }
 
