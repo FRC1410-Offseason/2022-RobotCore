@@ -2,6 +2,8 @@ package frc.robot.subsystems;
 
 import static frc.robotmap.Constants.*;
 
+import frc.robot.framework.subsystem.SubsystemBase;
+
 import com.revrobotics.*;
 
 import edu.wpi.first.math.Nat;
@@ -19,8 +21,6 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
-import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
@@ -28,7 +28,6 @@ import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import static frc.robotmap.IDs.*;
 
@@ -53,7 +52,8 @@ public class ShooterArm extends SubsystemBase {
     //<editor-fold desc="State Space Stuff" default-state="collapsed">
 
     //State space model
-//    LinearSystem<N2, N1, N1> armPlant = LinearSystemId.identifyPositionSystem(SHOOTER_ARM_KV, SHOOTER_ARM_KA);
+
+    //LinearSystem<N2, N1, N1> armPlant = LinearSystemId.identifyPositionSystem(SHOOTER_ARM_KV, SHOOTER_ARM_KA);
     LinearSystem<N2, N1, N1> armPlant =
             LinearSystemId.createSingleJointedArmSystem(
                     DCMotor.getNEO(2),
