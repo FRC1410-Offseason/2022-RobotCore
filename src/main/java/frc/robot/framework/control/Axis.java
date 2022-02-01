@@ -1,4 +1,4 @@
-package frc.robot.framework.control.input;
+package frc.robot.framework.control;
 
 import edu.wpi.first.wpilibj.XboxController;
 import static frc.robotmap.IDs.*;
