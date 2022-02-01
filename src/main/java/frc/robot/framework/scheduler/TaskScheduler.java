@@ -40,6 +40,8 @@ public class TaskScheduler {
 	}
 
 	public RobotMode getCurrentMode() {
+		controlWord.update();
+		
 		if (controlWord.isDisabled()) return RobotMode.DISABLED;
 		if (controlWord.isAutonomous()) return RobotMode.AUTONOMOUS;
 		if (controlWord.isTeleop()) return RobotMode.TELEOP;
