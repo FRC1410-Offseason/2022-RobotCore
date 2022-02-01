@@ -7,6 +7,9 @@ import edu.wpi.first.math.numbers.N7;
 
 public final class Tuning {
 
+    public static final double DRIVER_DEADZONE_VALUE = 0.05;
+    public static final double OPERATOR_DEADZONE_VALUE = 0.05;
+
     public static final double MAX_VOLTAGE = 12;
     public static final double MAX_SPEED = 3.50;
     public static final double MAX_ACCEL = 3.80;
