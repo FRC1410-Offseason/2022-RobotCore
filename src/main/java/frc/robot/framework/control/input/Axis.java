@@ -6,10 +6,10 @@ import static frc.robotmap.IDs.*;
 public class Axis {
 
     private final XboxController controller;
-    private final AXIS_ID id;
+    private final AxisId id;
     private final double deadzone;
 
-    public Axis(XboxController controller, AXIS_ID id, double deadzone) {
+    public Axis(XboxController controller, AxisId id, double deadzone) {
         
         this.controller = controller;        
         this.id = id;
