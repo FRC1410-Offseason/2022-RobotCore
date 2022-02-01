@@ -24,9 +24,16 @@ public class RunIntake extends CommandBase {
 
     @Override
     public void initialize() {
-        if (this.axis == null) {
-            this.intake.setSpeed(INTAKE_FORWARD_SPEED);
+        if (this.axis != null) {
+            this.intake.setSpeed(this.axis.getDeadzoned());
         } else {
+            this.intake.setSpeed(INTAKE_FORWARD_SPEED);
+        }
+    }
+
+    @Override
+    public void execute() {
+        if (this.axis != null) {
             this.intake.setSpeed(this.axis.getDeadzoned());
         }
     }
