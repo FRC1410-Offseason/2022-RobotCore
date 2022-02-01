@@ -1,45 +1,36 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.*;
-import frc.robot.commands.TriggerCommand;
-import frc.robot.commands.actions.ToggleIntake;
+import frc.robot.commands.actions.ReleaseShooterArmBreak;
+import frc.robot.commands.actions.SetShooterArmAngle;
+import frc.robot.commands.actions.SetShooterArmBrake;
 import frc.robot.framework.control.ControlScheme;
 import frc.robot.framework.scheduler.ScheduledRobot;
 import frc.robot.framework.scheduler.TaskScheduler;
+import frc.robot.subsystems.ShooterArm;
 
 public class Robot extends ScheduledRobot implements ControlScheme {
 	public static void main(String[] args) {
 		RobotBase.startRobot(Robot::new);
 	}
 
-    @Override
-        public TaskScheduler getScheduler() {
-        return scheduler;
-    }
+	private final ShooterArm shooterArm = new ShooterArm();
 
-    @Override
+	@Override
+	public TaskScheduler getScheduler() {
+		return scheduler;
+	}
+
+	@Override
     public void registerControls() {
-
+		getDriverAButton().whileHeld(new SetShooterArmAngle(shooterArm, 50));
+		getDriverBButton().whileHeld(new SetShooterArmAngle(shooterArm, 20));
+		getDriverXButton().whileHeld(new SetShooterArmAngle(shooterArm, 0));
+//		getDriverBButton().whileHeld(new SetShooterArmBrake(shooterArm));
+//		getDriverXButton().whileHeld(new ReleaseShooterArmBreak(shooterArm));
     }
 
 	private Robot() {
 		super(20);
-	}
-
-	private final Timer timer = new Timer();
-	private int ticks = 0;
-
-	@Override
-	public void robotInit() {
-		timer.start();
-		scheduler.queuePeriodic(() -> {
-			ticks++;
-
-			if (timer.get() >= 5) {
-				timer.reset();
-				System.out.println(ticks);
-				ticks = 0;
-			}
-		}, 2);
 	}
 }

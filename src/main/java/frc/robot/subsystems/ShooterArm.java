@@ -45,6 +45,7 @@ public class ShooterArm extends SubsystemBase {
     //Locking Solenoid
     private final DoubleSolenoid brake = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, SHOOTER_ARM_LOCK_FWD, SHOOTER_ARM_LOCK_BCK);
 
+
     //State variable to track state of lock
     private boolean lockState = false;
     //</editor-fold>
@@ -122,6 +123,11 @@ public class ShooterArm extends SubsystemBase {
             )
     );
 
+    private final Mechanism2d pistonMech = new Mechanism2d(60, 60);
+    private final MechanismRoot2d brakeSim = pistonMech.getRoot("Piston", 30, 10);
+    private final MechanismLigament2d pistonSim = brakeSim.append(new MechanismLigament2d("Piston Actuator", 20, 90));
+    private final MechanismLigament2d pistonInnards = brakeSim.append(new MechanismLigament2d("Piston", 20, 90, 4, new Color8Bit(Color.kRed)));
+
     //</editor-fold>
 
     private double currentVoltage = 0;
@@ -131,8 +137,13 @@ public class ShooterArm extends SubsystemBase {
         shooterArmLeftMotor.restoreFactoryDefaults();
         shooterArmRightMotor.restoreFactoryDefaults();
 
+        shooterArmLeftMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
+        shooterArmRightMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
+
         SmartDashboard.putData("Arm Sim", mech2d);
         armTower.setColor(new Color8Bit(Color.kBlue));
+
+        SmartDashboard.putData("Piston Sim", pistonMech);
 
         leftEncoder.setPositionConversionFactor((Math.PI * 2) / SHOOTER_ARM_GEARING);
         rightEncoder.setPositionConversionFactor((Math.PI * 2) / SHOOTER_ARM_GEARING);
@@ -148,13 +159,26 @@ public class ShooterArm extends SubsystemBase {
 
         armLoop.correct(VecBuilder.fill(getPosition()));
         armLoop.predict(DT);
-        setVoltage(armLoop.getU(0));
+//        System.out.println(Math.abs(currentTarget.position - armLoop.getObserver().getXhat(0)));
+        if (Math.abs(currentTarget.position - armLoop.getObserver().getXhat(0)) < 0.1) {
+//        if (armLoop.getObserver().getXhat(1) < 0.001) {
+            setBrake();
+        } else {
+            releaseBrake();
+            setVoltage(armLoop.getU(0));
+        }
     }
 
     @Override
     public void simulationPeriodic() {
         armSim.setInputVoltage(currentVoltage);
         armSim.update(DT);
+        if (getBrakeState()) {
+            armSim.update(DT);
+            pistonInnards.setLength(40);
+        } else {
+            pistonInnards.setLength(0);
+        }
         leftEncoder.setPosition(armSim.getAngleRads());
         rightEncoder.setPosition(armSim.getAngleRads());
         arm.setAngle(Units.radiansToDegrees(armLoop.getObserver().getXhat(0)));
@@ -166,9 +190,14 @@ public class ShooterArm extends SubsystemBase {
      * @param angle The angle of the arm in degrees
      */
     public void setTargetAngle(double angle) {
+        System.out.println("Current target set to" + angle);
         this.currentTarget = new TrapezoidProfile.State(Units.degreesToRadians(angle), 0);
     }
 
+    /**
+     * Set bus voltage on the motors
+     * @param voltage voltage (should probably 0 - 12)
+     */
     public void setVoltage(double voltage) {
         currentVoltage = voltage;
         shooterArmLeftMotor.setVoltage(voltage);
@@ -183,6 +212,10 @@ public class ShooterArm extends SubsystemBase {
         return (leftEncoder.getVelocity() + rightEncoder.getVelocity()) / 2;
     }
 
+    /**
+     * Get the average position across both encoders
+     * @return position of the mechanism in radians
+     */
     public double getPosition() { return (leftEncoder.getPosition() + rightEncoder.getPosition()) / 2; }
 
     /**
@@ -214,7 +247,7 @@ public class ShooterArm extends SubsystemBase {
     /**
      * Set the state of the lock to unlocked
      */
-    public void releaseBrake() {
+        public void releaseBrake() {
         if (this.lockState) {
             this.setBrake(Value.kReverse);
             this.lockState = false;

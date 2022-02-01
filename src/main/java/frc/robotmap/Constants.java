@@ -31,15 +31,15 @@ public final class Constants {
     public static final double SHOOTER_ARM_VEL_CONFIDENCE = .0001;
     public static final double SHOOTER_ARM_ENC_CONFIDENCE = 1;
 
-    public static final double SHOOTER_ARM_POS_TOLERANCE = 1;
-    public static final double SHOOTER_ARM_VEL_TOLERANCE = 30;
-    public static final double SHOOTER_ARM_CTRL_TOLERANCE = 12;
+    public static final double SHOOTER_ARM_POS_TOLERANCE = 0.1;
+    public static final double SHOOTER_ARM_VEL_TOLERANCE = 0.001;
+    public static final double SHOOTER_ARM_CTRL_TOLERANCE = 10;
 
     public static final Matrix<N1, N1> SHOOTER_ARM_NOISE = VecBuilder.fill(0.01);
 
     public static final double SHOOTER_ARM_MAX_VOLTAGE = 12.;
-    public static final double SHOOTER_ARM_MAX_VELOCITY = 30; // Deg per Second
-    public static final double SHOOTER_ARM_MAX_ACCEL = 30; // Deg per Second squared
+    public static final double SHOOTER_ARM_MAX_VELOCITY = 40; // Deg per Second
+    public static final double SHOOTER_ARM_MAX_ACCEL = 300; // Deg per Second squared
 
     public static final double DT = 0.02;
 }
