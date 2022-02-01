@@ -37,4 +37,14 @@ public class IDs {
     public static final int INTAKE_FLIPPER_R_BCK = 3;
 
     public static final int INTAKE_MOTOR = 0;
+
+    //WINCH
+    //TODO: Update with actual ports on the PCM
+    public static final int WINCH_L_FWD = 0;
+    public static final int WINCH_L_BCK = 1;
+    public static final int WINCH_R_FWD = 2;
+    public static final int WINCH_R_BCK = 3;
+
+    public static final int WINCH_LEFT_MOTOR_ID = 0;
+    public static final int WINCH_RIGHT_MOTOR_ID = 0;
 }
