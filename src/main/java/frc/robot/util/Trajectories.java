@@ -1,8 +1,8 @@
 package frc.robot.util;
 
-import static frc.robot.constants.Tuning.*;
-import static frc.robot.constants.IDs.*;
-import static frc.robot.constants.Constants.*;
+import static frc.robotmap.Constants.*;
+import static frc.robotmap.IDs.*;
+import static frc.robotmap.Tuning.*;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.RamseteController;
