@@ -18,6 +18,9 @@ public final class IDs {
         RIGHT_TRIGGER
     }
 
+    public static final int SHOOTER_LEFT_MOTOR_ID = 10;
+    public static final int SHOOTER_RIGHT_MOTOR_ID = 11;
+
     public static final int A_BUTTON_ID = 1;
     public static final int B_BUTTON_ID = 2;
     public static final int X_BUTTON_ID = 3;

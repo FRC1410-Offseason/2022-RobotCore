@@ -10,6 +10,16 @@ public final class Tuning {
     public static final double DRIVER_DEADZONE_VALUE = 0.05;
     public static final double OPERATOR_DEADZONE_VALUE = 0.05;
 
+    public static final double SHOOTER_LEFT_kP = 0;
+    public static final double SHOOTER_LEFT_kI = 0;
+    public static final double SHOOTER_LEFT_kD = 0;
+    public static final double SHOOTER_LEFT_kFF = 0;
+
+    public static final double SHOOTER_RIGHT_kP = 0;
+    public static final double SHOOTER_RIGHT_kI = 0;
+    public static final double SHOOTER_RIGHT_kD = 0;
+    public static final double SHOOTER_RIGHT_kFF = 0;
+  
     public static final double DRIVETRAIN_MAX_VOLTAGE = 12;
     public static final double DRIVETRAIN_MAX_SPEED = 3.50;
     public static final double DRIVETRAIN_MAX_ACCEL = 3.80;
