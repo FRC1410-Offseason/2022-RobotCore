@@ -3,12 +3,19 @@ package frc.robot;
 import edu.wpi.first.wpilibj.*;
 import frc.robot.commands.TriggerCommand;
 import frc.robot.commands.actions.ToggleIntake;
+import frc.robot.framework.control.ControlScheme;
 import frc.robot.framework.scheduler.ScheduledRobot;
+import frc.robot.framework.scheduler.TaskScheduler;
 
-public class Robot extends ScheduledRobot {
+public class Robot extends ScheduledRobot implements ControlScheme {
 	public static void main(String[] args) {
 		RobotBase.startRobot(Robot::new);
 	}
+
+    @Override
+        public TaskScheduler getScheduler() {
+        return scheduler;
+    }
 
     @Override
     public void registerControls() {
