@@ -1,13 +1,34 @@
 package frc.robotmap;
 
 public class IDs {
-    public enum AXIS_ID {
+    public enum AxisId {
         LEFT_X,
         RIGHT_X,
         LEFT_Y,
         RIGHT_Y,
         LEFT_TRIGGER,
         RIGHT_TRIGGER
+    }
+
+    public enum ButtonId {
+        A(1),
+        B(2),
+        X(3),
+        Y(4),
+        LEFT_BUMPER(5),
+        RIGHT_BUMPER(6),
+        LEFT_STICK_BUTTON(7),
+        RIGHT_STICK_BUTTON(8);
+
+        private final int id;
+
+        ButtonId(int id) {
+            this.id = id;
+        }
+
+        public int getId() {
+            return id;
+        }
     }
 
     public static final int A_BUTTON_ID = 1;

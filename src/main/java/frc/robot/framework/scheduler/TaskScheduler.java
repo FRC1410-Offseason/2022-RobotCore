@@ -22,7 +22,7 @@ public class TaskScheduler {
 	}
 
 	public TaskScheduler() {
-		this(20L);
+		this(20);
 	}
 
 	public void start() {
@@ -40,6 +40,7 @@ public class TaskScheduler {
 	}
 
 	public RobotMode getCurrentMode() {
+		controlWord.update();
 		if (controlWord.isDisabled()) return RobotMode.DISABLED;
 		if (controlWord.isAutonomous()) return RobotMode.AUTONOMOUS;
 		if (controlWord.isTeleop()) return RobotMode.TELEOP;
@@ -69,6 +70,7 @@ public class TaskScheduler {
 		}
 
 		if (next.isPeriodic() && !next.getTask().isFinished()) {
+			System.out.println("Periodic tick for " + next.getTask());
 			next.tickPeriod();
 			queue.add(next);
 		}
@@ -76,6 +78,8 @@ public class TaskScheduler {
 		// Run task if it subscribes to the current mode
 		if (!next.getTask().getDisallowedModes().contains(getCurrentMode())) {
 			next.getTask().execute();
+		} else {
+			System.out.println("skipping task");
 		}
 	}
 
@@ -86,6 +90,7 @@ public class TaskScheduler {
 
 	@Contract(value = "_ -> param1", mutates = "this")
 	private EnqueuedTask queue(EnqueuedTask task) {
+		System.out.printf("Enqueued %s%n", task.getTask());
 		queue.add(task);
 		return task;
 	}
