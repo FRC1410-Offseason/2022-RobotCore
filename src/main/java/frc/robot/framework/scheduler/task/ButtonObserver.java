@@ -8,19 +8,19 @@ import java.util.Set;
 
 public class ButtonObserver implements Task {
 	private final XboxController controller;
-	private final XboxController.Button button;
+	private final int id;
 	private final Command command;
 	private boolean wasActive = false;
 
-	public ButtonObserver(XboxController controller, XboxController.Button button, Command command) {
+	public ButtonObserver(XboxController controller, int id, Command command) {
 		this.controller = controller;
-		this.button = button;
+		this.id = id;
 		this.command = command;
 	}
 
 	@Override
 	public void execute() {
-		if (controller.getRawButton(button.value)) {
+		if (controller.getRawButton(id)) {
 			if (!wasActive) {
 				wasActive = true;
 				command.initialize();
