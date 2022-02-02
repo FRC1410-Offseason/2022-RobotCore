@@ -5,6 +5,7 @@
 package frc.robot.framework.scheduler;
 
 import edu.wpi.first.wpilibj.*;
+
 import frc.robot.framework.control.Axis;
 import frc.robot.framework.control.ControlScheme;
 import frc.robot.framework.scheduler.task.SubsystemPeriodicTask;
@@ -31,7 +32,7 @@ public abstract class ScheduledRobot extends RobotBase {
 			simulationInit();
 		}
 
-        if (this instanceof ControlScheme) {
+    if (this instanceof ControlScheme) {
 			((ControlScheme) this).registerControls();
 		}
 
