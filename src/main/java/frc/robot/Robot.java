@@ -1,7 +1,10 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.*;
+
+import frc.robot.commands.actions.ReleaseShooterArmBreak;
 import frc.robot.commands.actions.SetShooterArmAngle;
+import frc.robot.commands.actions.SetShooterArmBrake;
 import frc.robot.framework.control.ControlScheme;
 import frc.robot.framework.scheduler.ScheduledRobot;
 import frc.robot.framework.scheduler.TaskScheduler;
@@ -31,4 +34,15 @@ public class Robot extends ScheduledRobot implements ControlScheme {
 	private Robot() {
 		super(20);
 	}
+
+  @Override
+  public TaskScheduler getScheduler() {
+      return scheduler;
+  }
+
+	@Override
+	public void registerControls() {
+
+	}
+// needs to be populated
 }
