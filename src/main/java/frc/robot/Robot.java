@@ -2,9 +2,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.*;
 
-import frc.robot.commands.actions.ReleaseShooterArmBreak;
 import frc.robot.commands.actions.SetShooterArmAngle;
-import frc.robot.commands.actions.SetShooterArmBrake;
 import frc.robot.framework.control.ControlScheme;
 import frc.robot.framework.scheduler.ScheduledRobot;
 import frc.robot.framework.scheduler.TaskScheduler;
@@ -24,25 +22,15 @@ public class Robot extends ScheduledRobot implements ControlScheme {
 
 	@Override
     public void registerControls() {
+		/*
+		For Testing
+		 */
 		getDriverAButton().whileHeld(new SetShooterArmAngle(shooterArm, 50));
 		getDriverBButton().whileHeld(new SetShooterArmAngle(shooterArm, 20));
 		getDriverXButton().whileHeld(new SetShooterArmAngle(shooterArm, 0));
-//		getDriverBButton().whileHeld(new SetShooterArmBrake(shooterArm));
-//		getDriverXButton().whileHeld(new ReleaseShooterArmBreak(shooterArm));
     }
 
 	private Robot() {
 		super(20);
 	}
-
-  @Override
-  public TaskScheduler getScheduler() {
-      return scheduler;
-  }
-
-	@Override
-	public void registerControls() {
-
-	}
-// needs to be populated
 }
