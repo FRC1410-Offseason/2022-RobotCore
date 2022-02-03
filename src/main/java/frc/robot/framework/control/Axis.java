@@ -11,7 +11,6 @@ public class Axis {
     private final double deadzone;
 
     public Axis(XboxController controller, AXIS_ID id, double deadzone) {
-        
         this.controller = controller;        
         this.id = id;
         this.deadzone = deadzone;

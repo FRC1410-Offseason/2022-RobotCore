@@ -22,7 +22,7 @@ public class TaskScheduler {
 	}
 
 	public TaskScheduler() {
-		this(20L);
+		this(20);
 	}
 
 	public void start() {
@@ -40,6 +40,8 @@ public class TaskScheduler {
 	}
 
 	public RobotMode getCurrentMode() {
+		controlWord.update();
+
 		if (controlWord.isDisabled()) return RobotMode.DISABLED;
 		if (controlWord.isAutonomous()) return RobotMode.AUTONOMOUS;
 		if (controlWord.isTeleop()) return RobotMode.TELEOP;
