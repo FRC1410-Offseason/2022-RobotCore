@@ -73,4 +73,5 @@ public final class IDs {
 
     public static final int SHOOTER_ARM_L_MOTOR = 10;
     public static final int SHOOTER_ARM_R_MOTOR = 11;
+    public static final int PRESSURE_SENSOR = 0;
 }
