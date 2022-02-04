@@ -47,7 +47,7 @@ public class Winch extends SubsystemBase {
      * Return the state of the locks
      * @return True / False -> Locked / Unlocked
      */
-    public boolean getLockState() {
+    public boolean isLocked() {
         return lockEngaged;
     }
 

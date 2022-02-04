@@ -24,7 +24,7 @@ public class Storage extends SubsystemBase {
 
     private boolean lineBroken = false;
     private boolean ballDetected = false;
-    private ColorSensorState csState = null;
+    private ColorSensorState current_color = null;
 
     public enum ColorSensorState {
         BLUE,
@@ -49,8 +49,8 @@ public class Storage extends SubsystemBase {
      * Returns the current state of the color sensor
      * @return either RED or BLUE
      */
-    public ColorSensorState getCsState() {
-        return csState;
+    public ColorSensorState getCurrent_color() {
+        return current_color;
     }
 
     /**
@@ -79,9 +79,9 @@ public class Storage extends SubsystemBase {
 
             if (ballDetected) {
                 if (currentColor.color.equals(BLUE_TARGET)) {
-                    csState = ColorSensorState.BLUE;
+                    current_color = ColorSensorState.BLUE;
                 } else {
-                    csState = ColorSensorState.RED;
+                    current_color = ColorSensorState.RED;
                 }
                 ballDetected = false;
             }
