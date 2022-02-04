@@ -1,14 +1,6 @@
 package frc.robotmap;
 
-import javax.sound.sampled.Port;
-
-public final class IDs {
-
-    public static final int DRIVETRAIN_LEFT_FRONT_MOTOR_ID = 0;
-    public static final int DRIVETRAIN_LEFT_BACK_MOTOR_ID = 1;
-    public static final int DRIVETRAIN_RIGHT_FRONT_MOTOR_ID = 2;
-    public static final int DRIVETRAIN_RIGHT_BACK_MOTOR_ID = 3;
-
+public class IDs {
     public enum AXIS_ID {
         LEFT_X,
         RIGHT_X,
@@ -50,6 +42,11 @@ public final class IDs {
 
     public static final int DRIVER_CONTROLLER_PORT = 0;
     public static final int OPERATOR_CONTROLLER_PORT = 1;
+    
+    public static final int DRIVETRAIN_LEFT_FRONT_MOTOR_ID = 1;
+    public static final int DRIVETRAIN_LEFT_BACK_MOTOR_ID = 2;
+    public static final int DRIVETRAIN_RIGHT_FRONT_MOTOR_ID = 3;
+    public static final int DRIVETRAIN_RIGHT_BACK_MOTOR_ID = 4;
 
     public static final int SHOOTER_LEFT_MOTOR_ID = 10;
     public static final int SHOOTER_RIGHT_MOTOR_ID = 11;
@@ -67,11 +64,22 @@ public final class IDs {
 
     public static final int INTAKE_MOTOR = 0;
 
+    //WINCH
+    //TODO: Update with actual ports on the PCM
+    public static final int WINCH_L_FWD = 0;
+    public static final int WINCH_L_BCK = 1;
+    public static final int WINCH_R_FWD = 2;
+    public static final int WINCH_R_BCK = 3;
+
+    public static final int WINCH_LEFT_MOTOR_ID = 0;
+    public static final int WINCH_RIGHT_MOTOR_ID = 0;
+
     //SHOOTER ARM
     public static final int SHOOTER_ARM_LOCK_FWD = 6;
     public static final int SHOOTER_ARM_LOCK_BCK = 7;
 
     public static final int SHOOTER_ARM_L_MOTOR = 10;
     public static final int SHOOTER_ARM_R_MOTOR = 11;
+  
     public static final int PRESSURE_SENSOR = 0;
 }

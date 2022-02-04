@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.*;
 
 import frc.robot.commands.actions.SetShooterArmAngle;
 import frc.robot.commands.looped.TankDrive;
+
 import frc.robot.framework.control.ControlScheme;
 import frc.robot.framework.scheduler.ScheduledRobot;
 import frc.robot.framework.scheduler.TaskScheduler;
@@ -44,7 +45,7 @@ public class Robot extends ScheduledRobot implements ControlScheme {
 	@Override
 	public void robotInit() {
 		NetworkTables.networkTables();
-        NetworkTables.setAutoList(autoList);
+		NetworkTables.setAutoList(autoList);
 		NetworkTables.setCorrectColor(DriverStation.getAlliance().toString());
 		NetworkTables.setPressure(pressure);
 	}

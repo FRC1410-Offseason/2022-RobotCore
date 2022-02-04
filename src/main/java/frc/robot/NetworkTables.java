@@ -9,8 +9,10 @@ public class NetworkTables {
     static NetworkTableEntry autoList, autoChooser; // Auto
     static NetworkTableEntry x, y, theta, wheelLeft, wheelRight; // Drivetrain
     static NetworkTableEntry pitch, visionDistance; // Limelight
+
     static NetworkTableEntry shooterTargetRPM, leftShooterRPM, leftShooterP, leftShooterI, leftShooterD, leftShooterFF, 
         rightShooterP, rightShooterI, rightShooterD, rightShooterFF, rightShooterRPM; // Shooter
+  
     static NetworkTableEntry correctColor, colorReading, lineBroken, storageRPM; // Storage
     static NetworkTableEntry shooterArmAngle, shooterArmLocked; // Shooter Arm
     static NetworkTableEntry pressure; // Pneumatics
@@ -72,7 +74,7 @@ public class NetworkTables {
         rightTelescopingArmHeight = robotState.getEntry("Right Telescoping Arm Height");
         leftTelescopingArmLocked = robotState.getEntry("Left Telescoping Arm is Locked");
         rightTelescopingArmLocked = robotState.getEntry("Right Telescoping Arm is Locked");
-        
+
         // Initializing
         // Autonomous
         autoList.setString("");

@@ -69,7 +69,7 @@ public class Drivetrain extends SubsystemBase {
         mRightLeader.setNeutralMode(NeutralMode.Brake);
         mRightFollower.setNeutralMode(NeutralMode.Brake);
         mRightFollower.follow(mRightLeader);
-        mRightFollower.setInverted(true);
+        mRightFollower.setInverted(true); 
 
         if (RobotBase.isSimulation()) {
             simInit();

@@ -13,7 +13,7 @@ public class ExampleSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        System.out.println("INSIDE THJE FUCKY");
+        
     }
 }
 
