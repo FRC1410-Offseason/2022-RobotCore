@@ -34,7 +34,7 @@ public class TaskScheduler {
 			try {
 				tick();
 
-                //Feed the watchdog
+				// Feed the watchdog
 				NotifierJNI.updateNotifierAlarm(m_notifier, (long) (1e6));
 
 			} catch (Throwable e) {
