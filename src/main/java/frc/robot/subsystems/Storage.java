@@ -81,7 +81,7 @@ public class Storage extends SubsystemBase {
                 if (currentColor.color.equals(BLUE_TARGET)) {
                     currentColor = ColorSensorState.BLUE;
                 } else {
-                    current_color = ColorSensorState.RED;
+                    currentColor = ColorSensorState.RED;
                 }
                 ballDetected = false;
             }
