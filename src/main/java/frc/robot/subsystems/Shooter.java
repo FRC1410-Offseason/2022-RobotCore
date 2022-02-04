@@ -64,7 +64,7 @@ public class Shooter extends SubsystemBase {
     }
 
     public void setLeftPID(double P, double I, double D) {
-        this.setLeftPID(P, I, D, 0);
+        setLeftPID(P, I, D, 0);
     }
 
     /**
@@ -82,7 +82,7 @@ public class Shooter extends SubsystemBase {
     }
 
     public void setRightPID(double P, double I, double D) {
-        this.setRightPID(P, I, D, 0);
+        setRightPID(P, I, D, 0);
     }
 
     /**
@@ -105,9 +105,9 @@ public class Shooter extends SubsystemBase {
      * @param RPM speed of motors in revolutions per minute
      */
     public void setSpeeds(double RPM) {
-        this.target = RPM;
-        leftController.setReference(this.target, CANSparkMax.ControlType.kVelocity);
-        rightController.setReference(this.target, CANSparkMax.ControlType.kVelocity);
+        target = RPM;
+        leftController.setReference(target, CANSparkMax.ControlType.kVelocity);
+        rightController.setReference(target, CANSparkMax.ControlType.kVelocity);
     }
 
     /**
@@ -115,7 +115,7 @@ public class Shooter extends SubsystemBase {
      * @return The target speed (RPM)
      */
     public double getSpeed() {
-        return this.target;
+        return target;
     }
 
     /**

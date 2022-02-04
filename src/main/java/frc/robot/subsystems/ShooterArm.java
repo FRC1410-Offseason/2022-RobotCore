@@ -250,7 +250,7 @@ public class ShooterArm extends SubsystemBase {
      * @param voltage desired voltage
      */
     public void setVoltage(double voltage) {
-        this.currentVoltage = voltage;
+        currentVoltage = voltage;
         leftMotor.setVoltage(voltage);
         rightMotor.setVoltage(voltage);
     }

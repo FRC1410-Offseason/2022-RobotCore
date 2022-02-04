@@ -14,7 +14,7 @@ public class Intake extends SubsystemBase {
     private final DoubleSolenoid flipperLeft = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, INTAKE_FLIPPER_L_FWD, INTAKE_FLIPPER_L_BCK);
     private final DoubleSolenoid flipperRight = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, INTAKE_FLIPPER_R_FWD, INTAKE_FLIPPER_R_BCK);
     //Internal state variable to keep track of flipper state
-    private boolean flipperState = false;
+    private boolean extended = false;
 
     //Motor that runs the intake
     private final CANSparkMax intakeMotor = new CANSparkMax(INTAKE_MOTOR, CANSparkMaxLowLevel.MotorType.kBrushless);
@@ -52,17 +52,17 @@ public class Intake extends SubsystemBase {
      * Returns the current state of the intake
      * @return True / False -> Extended / Retracted
      */
-    public boolean getState() {
-        return this.flipperState;
+    public boolean getFlipperState() {
+        return extended;
     }
 
     /**
      * Set the current state of the intake to extended
      */
     public void extend() {
-        if (!this.flipperState) {
-            this.setFlipper(Value.kForward);
-            this.flipperState = true;
+        if (!extended) {
+            setFlipper(Value.kForward);
+            extended = true;
         }
     }
 
@@ -70,9 +70,9 @@ public class Intake extends SubsystemBase {
      * Set the state of the intake to retracted
      */
     public void retract() {
-        if (this.flipperState) {
-            this.setFlipper(Value.kReverse);
-            this.flipperState = false;
+        if (extended) {
+            setFlipper(Value.kReverse);
+            extended = false;
         }
     }
 
@@ -80,10 +80,10 @@ public class Intake extends SubsystemBase {
      * Toggle the state of the intake
      */
     public void toggle() {
-        if (this.flipperState) {
-            this.retract();
+        if (extended) {
+            retract();
         } else {
-            this.extend();
+            extend();
         }
     }
 }

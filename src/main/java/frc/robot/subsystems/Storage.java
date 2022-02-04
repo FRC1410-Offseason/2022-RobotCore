@@ -50,7 +50,7 @@ public class Storage extends SubsystemBase {
      * @return either RED or BLUE
      */
     public ColorSensorState getCsState() {
-        return this.csState;
+        return csState;
     }
 
     /**
@@ -58,7 +58,7 @@ public class Storage extends SubsystemBase {
      * @return true if there is no cargo, false if there is
      */
     public boolean getLineBreakState() {
-        return this.lineBroken;
+        return lineBroken;
     }
     
     /**

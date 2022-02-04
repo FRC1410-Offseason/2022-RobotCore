@@ -18,7 +18,7 @@ public class TankDrive extends CommandBase {
 
     @Override
     public void execute() {
-        this.drivetrain.tankDrive(leftAxis.getDeadzoned(), rightAxis.getDeadzoned());
+        drivetrain.tankDrive(leftAxis.getDeadzoned(), rightAxis.getDeadzoned());
     }
 
     @Override

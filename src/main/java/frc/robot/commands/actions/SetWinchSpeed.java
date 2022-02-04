@@ -16,7 +16,7 @@ public class SetWinchSpeed extends CommandBase {
 
     @Override
     public void initialize() {
-        this.winch.runWinch(speed);
+        winch.runWinch(speed);
     }
 
     @Override
@@ -26,6 +26,6 @@ public class SetWinchSpeed extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
-        this.winch.runWinch(0);
+        winch.runWinch(0);
     }
 }

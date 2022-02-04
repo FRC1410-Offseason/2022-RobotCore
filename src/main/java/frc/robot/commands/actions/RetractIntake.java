@@ -14,7 +14,7 @@ public class RetractIntake extends CommandBase {
 
     @Override
     public void initialize() {
-        this.intake.retract();
+        intake.retract();
     }
 
     @Override
