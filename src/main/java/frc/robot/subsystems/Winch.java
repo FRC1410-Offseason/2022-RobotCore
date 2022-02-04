@@ -18,7 +18,7 @@ public class Winch extends SubsystemBase {
     private final DoubleSolenoid rightLock = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, WINCH_R_FWD, WINCH_R_BCK);
 
     //State variable to track state of locks
-    private boolean lockState = false;
+    private boolean lockEngaged = false;
 
     public Winch() {
         leftMotor.restoreFactoryDefaults();
@@ -48,16 +48,16 @@ public class Winch extends SubsystemBase {
      * @return True / False -> Locked / Unlocked
      */
     public boolean getLockState() {
-        return this.lockState;
+        return this.lockEngaged;
     }
 
     /**
      * Set the state of the locks to locked
      */
     public void lock() {
-        if (!this.lockState) {
+        if (!this.lockEngaged) {
             this.setLock(Value.kForward);
-            this.lockState = true;
+            this.lockEngaged = true;
         }
     }
 
@@ -65,9 +65,9 @@ public class Winch extends SubsystemBase {
      * Set the state of the locks to unlocked
      */
     public void unlock() {
-        if (this.lockState) {
+        if (this.lockEngaged) {
             this.setLock(Value.kReverse);
-            this.lockState = false;
+            this.lockEngaged = false;
         }
     }
 
@@ -75,7 +75,7 @@ public class Winch extends SubsystemBase {
      * Toggle the state of the locks
      */
     public void toggle() {
-        if (this.lockState) {
+        if (this.lockEngaged) {
             this.unlock();
         } else {
             this.lock();

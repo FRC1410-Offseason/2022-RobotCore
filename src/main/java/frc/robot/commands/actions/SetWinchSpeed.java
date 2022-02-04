@@ -4,11 +4,11 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Winch;
 
 
-public class RunWinch extends CommandBase {
+public class SetWinchSpeed extends CommandBase {
     private final Winch winch;
     private final double speed;
 
-    public RunWinch(Winch winch, double speed) {
+    public SetWinchSpeed(Winch winch, double speed) {
         this.winch = winch;
         this.speed = speed;
         addRequirements(winch);
