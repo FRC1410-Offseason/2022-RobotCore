@@ -44,16 +44,16 @@ public class Shooter extends SubsystemBase {
 
         //Set PID loops to default values from the tuning file
         setLeftPID(
-                SHOOTER_LEFT_kP,
-                SHOOTER_LEFT_kI,
-                SHOOTER_LEFT_kD,
-                SHOOTER_LEFT_kFF
+                SHOOTER_LEFT_KP,
+                SHOOTER_LEFT_KI,
+                SHOOTER_LEFT_KD,
+                SHOOTER_LEFT_KFF
         );
         setRightPID(
-                SHOOTER_RIGHT_kP,
-                SHOOTER_RIGHT_kI,
-                SHOOTER_RIGHT_kD,
-                SHOOTER_RIGHT_kFF
+                SHOOTER_RIGHT_KP,
+                SHOOTER_RIGHT_KI,
+                SHOOTER_RIGHT_KD,
+                SHOOTER_RIGHT_KFF
         );
     }
 

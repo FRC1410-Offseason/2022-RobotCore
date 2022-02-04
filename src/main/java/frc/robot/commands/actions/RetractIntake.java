@@ -9,11 +9,17 @@ public class RetractIntake extends CommandBase {
 
     public RetractIntake(Intake intake) {
         this.intake = intake;
-        addRequirements(this.intake);
+        addRequirements(intake);
     }
 
     @Override
     public void initialize() {
         this.intake.retract();
+    }
+
+    @Override
+    public boolean isFinished() {
+        // TODO: Make this return true when this Command no longer needs to run execute()
+        return true;
     }
 }

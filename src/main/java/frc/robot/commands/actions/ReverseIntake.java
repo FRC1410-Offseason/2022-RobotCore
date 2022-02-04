@@ -20,7 +20,7 @@ public class ReverseIntake extends CommandBase {
     public ReverseIntake(Intake intake, Axis axis) {
         this.intake = intake;
         this.axis = axis;
-        addRequirements(this.intake);
+        addRequirements(intake);
     }
 
     @Override
@@ -37,6 +37,12 @@ public class ReverseIntake extends CommandBase {
         if (this.axis != null) {
             this.intake.setSpeed(this.axis.getDeadzoned());
         }
+    }
+
+    @Override
+    public boolean isFinished() {
+        // TODO: Make this return true when this Command no longer needs to run execute()
+        return true;
     }
 
     @Override

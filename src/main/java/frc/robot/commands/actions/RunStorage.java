@@ -11,11 +11,22 @@ public class RunStorage extends CommandBase {
     public RunStorage(Storage storage, double speed) {
         this.storage = storage;
         this.speed = speed;
-        addRequirements(this.storage);
+        addRequirements(storage);
     }
 
     @Override
-    public void execute() {
-        storage.runStorage(speed);
+    public void initialize() {
+        this.storage.runStorage(speed);
+    }
+
+    @Override
+    public boolean isFinished() {
+        // TODO: Make this return true when this Command no longer needs to run execute()
+        return true;
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        storage.runStorage(0);
     }
 }

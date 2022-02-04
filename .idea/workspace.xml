@@ -5,12 +5,24 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7990b0c6-76ef-4980-a298-d19747b5cef7" name="Changes" comment="docs(Shooter Arm): Add documentation to subsystem">
-      <change afterPath="$PROJECT_DIR$/src/main/java/frc/robot/commands/looped/TankDrive.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/frc/robot/commands/actions/SetShooterRPM.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules/2022-RobotCore.main.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules/2022-RobotCore.main.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/frc/robot/Robot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/frc/robot/Robot.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/frc/robot/subsystems/Drivetrain.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/frc/robot/subsystems/Drivetrain.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/frc/robot/commands/actions/ExtendIntake.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/frc/robot/commands/actions/ExtendIntake.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/frc/robot/commands/actions/ReleaseShooterArmBreak.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/frc/robot/commands/actions/ReleaseShooterArmBreak.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/frc/robot/commands/actions/RetractIntake.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/frc/robot/commands/actions/RetractIntake.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/frc/robot/commands/actions/ReverseIntake.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/frc/robot/commands/actions/ReverseIntake.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/frc/robot/commands/actions/RunIntake.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/frc/robot/commands/actions/RunIntake.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/frc/robot/commands/actions/RunStorage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/frc/robot/commands/actions/RunStorage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/frc/robot/commands/actions/SetShooterArmBrake.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/frc/robot/commands/actions/SetShooterArmBrake.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/frc/robot/commands/actions/ToggleIntake.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/frc/robot/commands/actions/ToggleIntake.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/frc/robot/subsystems/Shooter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/frc/robot/subsystems/Shooter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/frc/robotmap/Constants.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/frc/robotmap/Constants.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/frc/robotmap/Tuning.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/frc/robotmap/Tuning.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -56,9 +68,9 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="FRC v2 Command" />
         <option value="FRC v2 Subsystem" />
         <option value="Class" />
+        <option value="FRC v2 Command" />
       </list>
     </option>
   </component>
@@ -108,7 +120,7 @@
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="settings.editor.selected.configurable" value="reference.settingsdialog.project.gradle" />
   </component>
-  <component name="RunManager" selected="Gradle.2022-RobotCore [deploy]">
+  <component name="RunManager" selected="Gradle.2022-RobotCore [build]">
     <configuration name="2022-RobotCore [build]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -206,9 +218,9 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Gradle.2022-RobotCore [build]" />
         <item itemvalue="Gradle.2022-RobotCore [deploy]" />
         <item itemvalue="Gradle.2022-RobotCore [simulateJava]" />
-        <item itemvalue="Gradle.2022-RobotCore [build]" />
         <item itemvalue="Gradle.2022-RobotCore [vendordep]" />
       </list>
     </recent_temporary>
@@ -216,7 +228,7 @@
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="fd35006f-da3d-4e5b-8fc0-ad25fc09a595" name="Changes" comment="" />
+      <changelist id="7990b0c6-76ef-4980-a298-d19747b5cef7" name="Changes" comment="docs(Shooter Arm): Add documentation to subsystem" />
       <created>1642608865740</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
@@ -236,6 +248,7 @@
       <workItem from="1643068898699" duration="6470000" />
       <workItem from="1643231382174" duration="11000" />
       <workItem from="1643421518374" duration="1174000" />
+      <workItem from="1643954858348" duration="849000" />
     </task>
     <task id="LOCAL-00001" summary="feat(Drivetrain): Replace odometry with pose estimation">
       <created>1642640655891</created>
@@ -316,6 +329,6 @@
     <option name="LAST_COMMIT_MESSAGE" value="feat(Shooter): Port code from Mechanisms Div" />
   </component>
   <component name="WpiLibVersionService">
-    <option name="lastChecked" value="20220126140949" />
+    <option name="lastChecked" value="20220203230800" />
   </component>
 </project>
