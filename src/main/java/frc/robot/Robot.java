@@ -3,7 +3,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.*;
 
 import frc.robot.commands.actions.SetShooterArmAngle;
-import frc.robot.commands.actions.TestCommand;
+import frc.robot.commands.looped.TankDrive;
 import frc.robot.framework.control.ControlScheme;
 import frc.robot.framework.scheduler.ScheduledRobot;
 import frc.robot.framework.scheduler.TaskScheduler;
@@ -18,8 +18,8 @@ public class Robot extends ScheduledRobot implements ControlScheme {
 		RobotBase.startRobot(Robot::new);
 	}
 
-	// private final ShooterArm shooterArm = new ShooterArm();
-    private final ExampleSubsystem fuckySystem = new ExampleSubsystem();
+	//private final ShooterArm shooterArm = new ShooterArm();
+	private final Drivetrain drivetrain = new Drivetrain();
 
 	@Override
 	public TaskScheduler getScheduler() {
@@ -28,15 +28,13 @@ public class Robot extends ScheduledRobot implements ControlScheme {
 
 	@Override
     public void registerControls() {
+		scheduler.scheduleCommand(new TankDrive(drivetrain, getDriverLeftYAxis(), getDriverRightYAxis()));
 		/*
 		For Testing
 		 */
-		// getDriverAButton().whileHeld(new SetShooterArmAngle(shooterArm, 50));
-		// getDriverBButton().whileHeld(new SetShooterArmAngle(shooterArm, 20));
-		// getDriverXButton().whileHeld(new SetShooterArmAngle(shooterArm, 0));
-
-        scheduler.scheduleCommand(new TestCommand(fuckySystem));
-
+//		getDriverAButton().whileHeld(new SetShooterArmAngle(shooterArm, 50));
+//		getDriverBButton().whileHeld(new SetShooterArmAngle(shooterArm, 20));
+//		getDriverXButton().whileHeld(new SetShooterArmAngle(shooterArm, 0));
     }
 
 	private Robot() {
