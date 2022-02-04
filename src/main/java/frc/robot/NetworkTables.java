@@ -9,15 +9,17 @@ public class NetworkTables {
     static NetworkTableEntry autoList, autoChooser; // Auto
     static NetworkTableEntry x, y, theta, wheelLeft, wheelRight; // Drivetrain
     static NetworkTableEntry pitch, visionDistance; // Limelight
-    static NetworkTableEntry shooterTargetRPM, leftShooterRPM, leftShooterP, leftShooterI, leftShooterD, leftShooterFF,
-            rightShooterP, rightShooterI, rightShooterD, rightShooterFF, rightShooterRPM; // Shooter
+
+    static NetworkTableEntry shooterTargetRPM, leftShooterRPM, leftShooterP, leftShooterI, leftShooterD, leftShooterFF, 
+        rightShooterP, rightShooterI, rightShooterD, rightShooterFF, rightShooterRPM; // Shooter
+  
     static NetworkTableEntry correctColor, colorReading, lineBroken, storageRPM; // Storage
     static NetworkTableEntry shooterArmAngle, shooterArmLocked; // Shooter Arm
     static NetworkTableEntry pressure; // Pneumatics
     static NetworkTableEntry intakeDeployed, intakeRPM; // Intake
     static NetworkTableEntry leftWinchHeight, leftWinchLocked, rightWinchHeight, rightWinchLocked; // Winches
     static NetworkTableEntry leftTelescopingArmHeight, leftTelescopingArmLocked,
-            rightTelescopingArmHeight, rightTelescopingArmLocked; // Telescoping Arms
+        rightTelescopingArmHeight, rightTelescopingArmLocked; // Telescoping Arms
 
     static final NetworkTableInstance instance = NetworkTableInstance.getDefault();
     static final NetworkTable table = instance.getTable("Dashboard Data");
