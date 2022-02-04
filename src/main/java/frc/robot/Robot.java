@@ -16,7 +16,6 @@ public class Robot extends ScheduledRobot implements ControlScheme {
 		RobotBase.startRobot(Robot::new);
 	}
 
-	private final Winch winch = new Winch();
 
 	@Override
 	public TaskScheduler getScheduler() {
