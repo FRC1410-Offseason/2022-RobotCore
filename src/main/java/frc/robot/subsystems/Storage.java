@@ -49,7 +49,7 @@ public class Storage extends SubsystemBase {
      * Returns the current state of the color sensor
      * @return either RED or BLUE
      */
-    public ColorSensorState getCurrent_color() {
+    public ColorSensorState getCurrentColor() {
         return currentColor;
     }
 
@@ -79,9 +79,9 @@ public class Storage extends SubsystemBase {
 
             if (ballDetected) {
                 if (currentColor.color.equals(BLUE_TARGET)) {
-                    currentColor = ColorSensorState.BLUE;
+                    this.currentColor = ColorSensorState.BLUE;
                 } else {
-                    currentColor = ColorSensorState.RED;
+                    this.currentColor = ColorSensorState.RED;
                 }
                 ballDetected = false;
             }
