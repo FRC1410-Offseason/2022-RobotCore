@@ -26,13 +26,20 @@ public class TaskScheduler {
 	}
 
 	public void start() {
-		while (!stopped) {
-			try {
-				tick();
-			} catch (Throwable e) {
-				DriverStation.reportError("Encountered error while ticking scheduler!", e.getStackTrace());
-			}
-		}
+        System.out.println("BEGINNING THE WHILE STATEMENT YOU BRUH MOMENT ON LEGS");
+
+		// while (!stopped) {
+
+		// 	try {
+		// 		tick();
+		// 	} catch (Throwable e) {
+		// 		DriverStation.reportError("Encountered error while ticking scheduler!", e.getStackTrace());
+		// 	}
+		// }
+        
+        System.out.println("Control Word: " + controlWord);
+        System.out.println("Queue: " + queue);
+        System.out.println("HashSet: " + pendingCancellation);
 	}
 
 	public DSControlWord getControlWord() {

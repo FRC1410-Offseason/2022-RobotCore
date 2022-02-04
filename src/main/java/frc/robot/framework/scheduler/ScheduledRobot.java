@@ -4,6 +4,7 @@
 
 package frc.robot.framework.scheduler;
 
+import edu.wpi.first.hal.HAL;
 import edu.wpi.first.wpilibj.*;
 
 import frc.robot.framework.control.Axis;
@@ -32,12 +33,19 @@ public abstract class ScheduledRobot extends RobotBase {
 			simulationInit();
 		}
 
-    if (this instanceof ControlScheme) {
-			((ControlScheme) this).registerControls();
-		}
+        System.out.println("WE ARE PAST THE INITIALIZATION OHASE LMAO");
 
+        if (this instanceof ControlScheme) {
+            ((ControlScheme) this).registerControls();
+        }
 		scheduler.start();
+
+        System.out.println("MUFUCKEN UHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH");
+
+        HAL.observeUserProgramStarting();
 	}
+
+
 
 	@Override
 	public void endCompetition() {
