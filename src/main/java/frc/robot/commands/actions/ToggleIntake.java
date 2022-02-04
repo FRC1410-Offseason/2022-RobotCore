@@ -14,7 +14,6 @@ public class ToggleIntake extends CommandBase {
 
     @Override
     public void initialize() {
-        System.out.println("Init");
         this.intake.toggle();
     }
 

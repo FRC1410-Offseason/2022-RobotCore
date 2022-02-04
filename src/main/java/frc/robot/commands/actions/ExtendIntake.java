@@ -9,11 +9,16 @@ public class ExtendIntake extends CommandBase {
 
     public ExtendIntake(Intake intake) {
         this.intake = intake;
-        addRequirements(this.intake);
+        addRequirements(intake);
     }
 
     @Override
     public void initialize() {
         intake.extend();
+    }
+
+    @Override
+    public boolean isFinished() {
+        return true;
     }
 }
