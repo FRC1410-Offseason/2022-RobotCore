@@ -23,7 +23,7 @@ import edu.wpi.first.wpilibj.util.*;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-    //Shooter Arm
+    //SHOOTER ARM
     public static final double SHOOTER_ARM_KV = 0;
     public static final double SHOOTER_ARM_KA = 0;
 
