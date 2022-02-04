@@ -50,7 +50,7 @@ public class Storage extends SubsystemBase {
      * @return either RED or BLUE
      */
     public ColorSensorState getCurrent_color() {
-        return current_color;
+        return currentColor;
     }
 
     /**
