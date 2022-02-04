@@ -38,11 +38,12 @@ public abstract class ScheduledRobot extends RobotBase {
         if (this instanceof ControlScheme) {
             ((ControlScheme) this).registerControls();
         }
+		HAL.observeUserProgramStarting();
+		
 		scheduler.start();
 
         System.out.println("MUFUCKEN UHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH");
 
-        HAL.observeUserProgramStarting();
 	}
 
 
