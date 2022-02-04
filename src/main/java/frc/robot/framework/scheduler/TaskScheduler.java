@@ -29,8 +29,6 @@ public class TaskScheduler {
 	}
 
 	public void start() {
-        System.out.println("BEGINNING THE WHILE STATEMENT YOU BRUH MOMENT ON LEGS");
-
 		while (!stopped) {
 
 			try {
@@ -41,10 +39,6 @@ public class TaskScheduler {
 				DriverStation.reportError("Encountered error while ticking scheduler!", e.getStackTrace());
 			}
 		}
-        
-        System.out.println("Control Word: " + controlWord);
-        System.out.println("Queue: " + queue);
-        System.out.println("HashSet: " + pendingCancellation);
 	}
 
 	public DSControlWord getControlWord() {
