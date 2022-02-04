@@ -16,7 +16,7 @@ public class SetShooterArmBrake extends CommandBase {
 
     @Override
     public void initialize() {
-        this.shooterArm.setBrake();
+        shooterArm.setBrake();
     }
 
     @Override

@@ -16,12 +16,11 @@ public class ReleaseShooterArmBreak extends CommandBase {
 
     @Override
     public void initialize() {
-        this.shooterArm.releaseBrake();
+        shooterArm.releaseBrake();
     }
 
     @Override
     public boolean isFinished() {
-        // TODO: Make this return true when this Command no longer needs to run execute()
         return true;
     }
 }

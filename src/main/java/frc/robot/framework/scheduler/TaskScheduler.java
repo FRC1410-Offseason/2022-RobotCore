@@ -29,22 +29,18 @@ public class TaskScheduler {
 	}
 
 	public void start() {
-        System.out.println("BEGINNING THE WHILE STATEMENT YOU BRUH MOMENT ON LEGS");
-
 		while (!stopped) {
 
 			try {
 				tick();
+
+				// Feed the watchdog
 				NotifierJNI.updateNotifierAlarm(m_notifier, (long) (1e6));
 
 			} catch (Throwable e) {
 				DriverStation.reportError("Encountered error while ticking scheduler!", e.getStackTrace());
 			}
 		}
-        
-        System.out.println("Control Word: " + controlWord);
-        System.out.println("Queue: " + queue);
-        System.out.println("HashSet: " + pendingCancellation);
 	}
 
 	public DSControlWord getControlWord() {

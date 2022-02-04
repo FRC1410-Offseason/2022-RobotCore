@@ -14,7 +14,7 @@ public class SetWinchBrake extends CommandBase {
 
     @Override
     public void initialize() {
-        this.winch.lock();
+        winch.lock();
     }
 
     @Override

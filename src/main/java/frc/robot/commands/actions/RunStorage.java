@@ -16,7 +16,7 @@ public class RunStorage extends CommandBase {
 
     @Override
     public void initialize() {
-        this.storage.runStorage(speed);
+        storage.runStorage(speed);
     }
 
     @Override

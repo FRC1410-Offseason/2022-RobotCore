@@ -47,17 +47,17 @@ public class Winch extends SubsystemBase {
      * Return the state of the locks
      * @return True / False -> Locked / Unlocked
      */
-    public boolean getLockState() {
-        return this.lockEngaged;
+    public boolean isLocked() {
+        return lockEngaged;
     }
 
     /**
      * Set the state of the locks to locked
      */
     public void lock() {
-        if (!this.lockEngaged) {
-            this.setLock(Value.kForward);
-            this.lockEngaged = true;
+        if (!lockEngaged) {
+            setLock(Value.kForward);
+            lockEngaged = true;
         }
     }
 
@@ -65,9 +65,9 @@ public class Winch extends SubsystemBase {
      * Set the state of the locks to unlocked
      */
     public void unlock() {
-        if (this.lockEngaged) {
-            this.setLock(Value.kReverse);
-            this.lockEngaged = false;
+        if (lockEngaged) {
+            setLock(Value.kReverse);
+            lockEngaged = false;
         }
     }
 
@@ -75,10 +75,10 @@ public class Winch extends SubsystemBase {
      * Toggle the state of the locks
      */
     public void toggle() {
-        if (this.lockEngaged) {
-            this.unlock();
+        if (lockEngaged) {
+            unlock();
         } else {
-            this.lock();
+            lock();
         }
     }
 }

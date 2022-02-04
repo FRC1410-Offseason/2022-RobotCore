@@ -14,7 +14,7 @@ public class ReleaseWinchBreak extends CommandBase {
 
     @Override
     public void initialize() {
-        this.winch.unlock();
+        winch.unlock();
     }
 
     @Override

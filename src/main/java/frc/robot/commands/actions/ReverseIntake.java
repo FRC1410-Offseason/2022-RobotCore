@@ -14,7 +14,7 @@ public class ReverseIntake extends CommandBase {
     public ReverseIntake(Intake intake) {
         this.intake = intake;
         this.axis = null;
-        addRequirements(this.intake);
+        addRequirements(intake);
     }
 
     public ReverseIntake(Intake intake, Axis axis) {
@@ -25,17 +25,17 @@ public class ReverseIntake extends CommandBase {
 
     @Override
     public void initialize() {
-        if (this.axis != null) {
-            this.intake.setSpeed(this.axis.getDeadzoned());
+        if (axis != null) {
+            intake.setSpeed(axis.getDeadzoned());
         } else {
-            this.intake.setSpeed(INTAKE_REVERSE_SPEED);
+            intake.setSpeed(INTAKE_REVERSE_SPEED);
         }
     }
 
     @Override
     public void execute() {
-        if (this.axis != null) {
-            this.intake.setSpeed(this.axis.getDeadzoned());
+        if (axis != null) {
+            intake.setSpeed(axis.getDeadzoned());
         }
     }
 
@@ -46,6 +46,6 @@ public class ReverseIntake extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
-        this.intake.setSpeed(0);
+        intake.setSpeed(0);
     }
 }
