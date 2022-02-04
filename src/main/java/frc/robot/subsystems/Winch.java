@@ -29,7 +29,7 @@ public class Winch extends SubsystemBase {
      * Sets motor speeds
      * @param speed Speed from -1 to 1
      */
-    public void runWinch(double speed){
+    public void runWinch(double speed) {
         leftMotor.set(speed);
         rightMotor.set(speed);
     }
