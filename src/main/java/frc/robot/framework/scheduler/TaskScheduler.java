@@ -1,5 +1,6 @@
 package frc.robot.framework.scheduler;
 
+import edu.wpi.first.hal.NotifierJNI;
 import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.framework.scheduler.task.CommandTask;
@@ -17,22 +18,33 @@ public class TaskScheduler {
 	private int currentTaskId = -1;
 	private final long defaultPeriod;
 
+	private final int m_notifier = NotifierJNI.initializeNotifier();
+
 	public TaskScheduler(long defaultPeriod) {
 		this.defaultPeriod = defaultPeriod;
 	}
 
 	public TaskScheduler() {
-		this(20L);
+		this(20);
 	}
 
 	public void start() {
+        System.out.println("BEGINNING THE WHILE STATEMENT YOU BRUH MOMENT ON LEGS");
+
 		while (!stopped) {
+
 			try {
 				tick();
+				NotifierJNI.updateNotifierAlarm(m_notifier, (long) (1e6));
+
 			} catch (Throwable e) {
 				DriverStation.reportError("Encountered error while ticking scheduler!", e.getStackTrace());
 			}
 		}
+        
+        System.out.println("Control Word: " + controlWord);
+        System.out.println("Queue: " + queue);
+        System.out.println("HashSet: " + pendingCancellation);
 	}
 
 	public DSControlWord getControlWord() {
@@ -40,6 +52,8 @@ public class TaskScheduler {
 	}
 
 	public RobotMode getCurrentMode() {
+		controlWord.update();
+
 		if (controlWord.isDisabled()) return RobotMode.DISABLED;
 		if (controlWord.isAutonomous()) return RobotMode.AUTONOMOUS;
 		if (controlWord.isTeleop()) return RobotMode.TELEOP;

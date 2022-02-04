@@ -1,35 +1,42 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.*;
-import frc.robot.framework.scheduler.ScheduledRobot;
 
-public class Robot extends ScheduledRobot {
+import frc.robot.framework.control.ControlScheme;
+import frc.robot.framework.scheduler.ScheduledRobot;
+import frc.robot.framework.scheduler.TaskScheduler;
+import frc.robot.subsystems.*;
+import static frc.robotmap.IDs.*;
+
+public class Robot extends ScheduledRobot implements ControlScheme {
+	private final String[] autoList = {"Taxi","2Cargo","3CargoTerminal","3CargoUpRight","4Cargo","5Cargo"};
+	private final AnalogInput pressure = new AnalogInput(PRESSURE_SENSOR);
+
 	public static void main(String[] args) {
 		RobotBase.startRobot(Robot::new);
 	}
 
-    @Override
-    public void registerControls() {
-    }
+	private final Winch winch = new Winch();
+
+	@Override
+	public TaskScheduler getScheduler() {
+		return scheduler;
+	}
+
+	@Override
+	public void registerControls() {
+
+	}
 
 	private Robot() {
 		super(20);
 	}
 
-	private final Timer timer = new Timer();
-	private int ticks = 0;
-
 	@Override
 	public void robotInit() {
-		timer.start();
-		scheduler.queuePeriodic(() -> {
-			ticks++;
-
-			if (timer.get() >= 5) {
-				timer.reset();
-				System.out.println(ticks);
-				ticks = 0;
-			}
-		}, 2);
+		NetworkTables.networkTables();
+		NetworkTables.setAutoList(autoList);
+		NetworkTables.setCorrectColor(DriverStation.getAlliance().toString());
+		NetworkTables.setPressure(pressure);
 	}
 }
