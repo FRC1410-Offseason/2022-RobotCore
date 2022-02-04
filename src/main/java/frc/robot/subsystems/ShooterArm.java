@@ -200,7 +200,7 @@ public class ShooterArm extends SubsystemBase {
         }
 
         //Set inputs to the simulator
-        sim.setInputVoltage(this.currentVoltage);
+        sim.setInputVoltage(currentVoltage);
 
         //Update the sim (default time is 20 ms)
         sim.update(DT);

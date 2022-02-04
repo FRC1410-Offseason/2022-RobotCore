@@ -46,8 +46,6 @@ public class Drivetrain extends SubsystemBase {
             new MatBuilder<>(Nat.N3(), Nat.N1()).fill(LOCAL_LEFT_DIST, LOCAL_RIGHT_DIST, LOCAL_THETA),
             new MatBuilder<>(Nat.N3(), Nat.N1()).fill(VISION_X, VISION_Y, VISION_THETA));
 
-    private final DifferentialDriveOdometry testOdometry = new DifferentialDriveOdometry(new Rotation2d());
-
     private DifferentialDrivetrainSim mSim;
 
     private final Field2d mFieldSim;
@@ -75,7 +73,7 @@ public class Drivetrain extends SubsystemBase {
             simInit();
         }
 
-        this.mFieldSim = new Field2d();
+        mFieldSim = new Field2d();
         SmartDashboard.putData("Field", mFieldSim);
 
 
@@ -93,8 +91,8 @@ public class Drivetrain extends SubsystemBase {
 
         mLeftLeader.setInverted(false);
 
-        this.mLeftEncoderSim = mLeftLeader.getSimCollection();
-        this.mRightEncoderSim = mRightLeader.getSimCollection();
+        mLeftEncoderSim = mLeftLeader.getSimCollection();
+        mRightEncoderSim = mRightLeader.getSimCollection();
     }
 
     @Override
@@ -136,7 +134,6 @@ public class Drivetrain extends SubsystemBase {
                 (((mLeftLeader.getSelectedSensorVelocity() / 2048) * 10) / GEARING) * Math.PI * WHEEL_DIAMETER,
                 (((mRightLeader.getSelectedSensorVelocity() / 2048) * 10) / GEARING) * Math.PI * WHEEL_DIAMETER
         );
-//        return new DifferentialDriveWheelSpeeds(mSim.getLeftVelocityMetersPerSecond(), mSim.getRightVelocityMetersPerSecond());
     }
 
     public void resetPoseEstimator(Pose2d pose) {
