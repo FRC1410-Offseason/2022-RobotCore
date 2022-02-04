@@ -4,17 +4,17 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Winch;
 
 
-public class SetWinchBrake extends CommandBase {
+public class ReleaseWinchBreak extends CommandBase {
     private final Winch winch;
 
-    public SetWinchBrake(Winch winch) {
+    public ReleaseWinchBreak(Winch winch) {
         this.winch = winch;
         addRequirements(winch);
     }
 
     @Override
     public void initialize() {
-        this.winch.lock();
+        this.winch.unlock();
     }
 
     @Override
