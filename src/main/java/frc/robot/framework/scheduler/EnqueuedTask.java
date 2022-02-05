@@ -1,5 +1,6 @@
 package frc.robot.framework.scheduler;
 
+import frc.robot.framework.scheduler.task.Task;
 public class EnqueuedTask implements Comparable<EnqueuedTask> {
 	private final Task task;
 	private final int id;

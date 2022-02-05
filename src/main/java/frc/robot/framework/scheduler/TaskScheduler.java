@@ -7,6 +7,8 @@ import frc.robot.framework.scheduler.task.CommandTask;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import org.jetbrains.annotations.*;
 
+import frc.robot.framework.scheduler.task.Task;
+
 import java.util.PriorityQueue;
 
 public class TaskScheduler {

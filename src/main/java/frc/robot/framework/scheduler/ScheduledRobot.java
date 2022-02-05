@@ -12,6 +12,8 @@ import frc.robot.framework.control.ControlScheme;
 import frc.robot.framework.scheduler.task.SubsystemPeriodicTask;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
+import frc.robot.framework.scheduler.task.Task;
+
 import static frc.robotmap.IDs.*;
 import static frc.robotmap.Tuning.*;
 
