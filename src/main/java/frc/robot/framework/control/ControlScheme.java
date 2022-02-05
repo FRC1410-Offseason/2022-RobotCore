@@ -84,6 +84,10 @@ public interface ControlScheme {
 	default Button getOperatorRightStickButton() {
 		return new Button(operatorController, getScheduler(), ButtonId.RIGHT_STICK_BUTTON);
 	}
+
+	default D getOperatorDPad() {
+		return new D(operatorController);
+	}
 	// </editor-fold>
 
 	// <editor-fold desc="> Driver axes">
@@ -135,6 +139,10 @@ public interface ControlScheme {
 
 	default Axis getOperatorRightTrigger() {
 		return new Axis(operatorController, AXIS_ID.RIGHT_TRIGGER, DRIVER_DEADZONE_VALUE);
+	}
+
+	default D getDriverDPad() {
+		return new D(driverController);
 	}
 	// </editor-fold>
 }
