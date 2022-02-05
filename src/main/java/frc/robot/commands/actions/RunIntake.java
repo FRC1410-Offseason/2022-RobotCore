@@ -3,9 +3,8 @@ package frc.robot.commands.actions;
 import static frc.robotmap.Constants.*;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.framework.control.input.Axis;
+import frc.robot.framework.control.Axis;
 import frc.robot.subsystems.Intake;
-
 
 public class RunIntake extends CommandBase {
     private final Intake intake;

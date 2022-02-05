@@ -50,16 +50,14 @@ public final class Constants {
 
     public static final double DT = 0.02;
   
-    //Position
-    public static final double KS = 0.676;
-    //Acceleration
-    public static final double KV = 2.67;
-    //Velocity
-    public static final double KA = 0.34;
-    //Angular Velocity
-    public static final double KV_ANGULAR = 2.84;
-    //Angular Acceleration
-    public static final double KA_ANGULAR = 0.216;
+    public static final double KS = 0.676; //Position
+    public static final double KV = 2.67; //Velocity
+    public static final double KA = 0.34; //Acceleration
+    public static final double KV_ANGULAR = 2.84; //Angular Velocity
+    public static final double KA_ANGULAR = 0.216; //Angular Acceleration
+
+    public static final boolean LEFT_ENCODER_REVERSED = false;
+    public static final boolean RIGHT_ENCODER_REVERSED = false;
 
     public static final double WHEEL_DIAMETER = 0.15; // meters
     public static final double ENCODER_CPR = 2048;

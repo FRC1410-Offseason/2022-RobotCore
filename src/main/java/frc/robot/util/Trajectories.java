@@ -1,9 +1,10 @@
 package frc.robot.util;
 
-import static frc.robotmap.Constants.*;
-import static frc.robotmap.IDs.*;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.subsystems.Drivetrain;
 import static frc.robotmap.Tuning.*;
-
+import static frc.robotmap.Constants.*;
+import java.util.List;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -17,135 +18,134 @@ import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstrai
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.subsystems.Drivetrain;
-
-import java.util.List;
 
 public class Trajectories {
     private final Drivetrain drivetrain;
-    private final TrajectoryConfig config;
-    private final TrajectoryConfig reverseConfig;
+    
+    private static final CentripetalAccelerationConstraint CentripetalAccelerationConstraint = 
+        new CentripetalAccelerationConstraint(MAX_CENTRIPETAL_ACCEL);
+    private static final DifferentialDriveVoltageConstraint autoVoltageConstraint = new DifferentialDriveVoltageConstraint(
+        new SimpleMotorFeedforward(KS, KV, KA), DRIVE_KINEMATICS, MAX_VOLTAGE);
 
-    private final CentripetalAccelerationConstraint centripetalAccelerationConstraint;
-    private final DifferentialDriveVoltageConstraint differentialDriveVoltageConstraint;
+    private static final TrajectoryConfig config = new TrajectoryConfig(MAX_SPEED, MAX_ACCEL)
+        .setKinematics(DRIVE_KINEMATICS)
+        .addConstraint(CentripetalAccelerationConstraint)
+        .addConstraint(autoVoltageConstraint)
+        .setReversed(false);
+    private static final TrajectoryConfig reverseConfig = new TrajectoryConfig(MAX_SPEED, MAX_ACCEL)
+        .setKinematics(DRIVE_KINEMATICS)
+        .addConstraint(CentripetalAccelerationConstraint)
+        .addConstraint(autoVoltageConstraint)
+        .setReversed(true);
 
-    public Trajectories(Drivetrain drivetrain) {
-        this.drivetrain = drivetrain;
+    private static final Trajectory taxi = TrajectoryGenerator.generateTrajectory(List.of(
+        new Pose2d(8.70, 6.50, new Rotation2d(Units.degreesToRadians(90))),
+        new Pose2d(8.70, 7.60, new Rotation2d(Units.degreesToRadians(90)))), config);
+    private static final Trajectory upperTarmacToUpperCargoShootTrajectory = TrajectoryGenerator.generateTrajectory(List.of(
+        new Pose2d(8.75, 6.51, new Rotation2d(Units.degreesToRadians(91.3))),
+        new Pose2d(8.835, 7.50, new Rotation2d(Units.degreesToRadians(80.56)))), config);
+    private static final Trajectory upperCargoToUpperField = TrajectoryGenerator.generateTrajectory(List.of(
+        new Pose2d(8.85, 7.63, new Rotation2d(Units.degreesToRadians(80.56))),
+        new Pose2d(8.30, 6.90, new Rotation2d(Units.degreesToRadians(-15)))), reverseConfig);
+    private static final Trajectory upperFieldToUpRightCargo = TrajectoryGenerator.generateTrajectory(List.of(
+        new Pose2d(8.30, 6.90, new Rotation2d(Units.degreesToRadians(-15))),
+        new Pose2d(10.97, 6.36, new Rotation2d(Units.degreesToRadians(0)))), config);
+    private static final Trajectory upRightCargoToTerminalShoot = TrajectoryGenerator.generateTrajectory(List.of(
+        new Pose2d(10.97, 6.36, new Rotation2d(Units.degreesToRadians(0))),
+        new Pose2d(14.98, 6.95, new Rotation2d(Units.degreesToRadians(22.96)))), config);
+    private static final Trajectory upperFieldToTerminalShoot = TrajectoryGenerator.generateTrajectory(List.of(
+        new Pose2d(8.30, 6.30, new Rotation2d(Units.degreesToRadians(-15))),
+        new Pose2d(15.10, 7.00, new Rotation2d(Units.degreesToRadians(22.9)))), config);
 
-        centripetalAccelerationConstraint = new CentripetalAccelerationConstraint(DRIVETRAIN_MAX_CENTRIPETAL_ACCEL);
-
-        differentialDriveVoltageConstraint = new DifferentialDriveVoltageConstraint(
-                new SimpleMotorFeedforward(KS, KV, KA), DRIVE_KINEMATICS, DRIVETRAIN_MAX_VOLTAGE
-        );
-
-        config = new TrajectoryConfig(DRIVETRAIN_MAX_SPEED, DRIVETRAIN_MAX_ACCEL)
-                .setKinematics(DRIVE_KINEMATICS)
-                .addConstraint(centripetalAccelerationConstraint)
-                .addConstraint(differentialDriveVoltageConstraint)
-                .setReversed(false);
-
-        reverseConfig = new TrajectoryConfig(DRIVETRAIN_MAX_SPEED, DRIVETRAIN_MAX_ACCEL)
-                .setKinematics(DRIVE_KINEMATICS)
-                .addConstraint(centripetalAccelerationConstraint)
-                .addConstraint(differentialDriveVoltageConstraint)
-                .setReversed(true);
-    }
-
+    public Trajectories(Drivetrain drivetrain) {this.drivetrain = drivetrain;}
     public RamseteCommand generateRamsete(Trajectory trajectory) {
         return new RamseteCommand(
-                trajectory,
-                drivetrain::getPose,
-                new RamseteController(KB, KZ),
-                new SimpleMotorFeedforward(KS, KV, KA),
-                DRIVE_KINEMATICS,
-                drivetrain::getWheelSpeeds,
-                new PIDController(KP_VEL, 0, 0),
-                new PIDController(KP_VEL, 0, 0),
-                drivetrain::tankDriveVolts,
-                drivetrain
-        );
+            trajectory,
+            drivetrain::getPoseEstimation,
+            new RamseteController(KB, KZ),
+            new SimpleMotorFeedforward(KS, KV, KA),
+            DRIVE_KINEMATICS,
+            drivetrain::getWheelSpeeds,
+            new PIDController(KP_VEL, 0, 0, 0.005),
+            new PIDController(KP_VEL, 0, 0, 0.005),
+            drivetrain::tankDriveVolts,
+            drivetrain);
     }
 
-    public Command simpleTest() {
-        Trajectory traj = TrajectoryGenerator.generateTrajectory(List.of(
-                new Pose2d(0, 0, new Rotation2d(Units.degreesToRadians(90))),
-                new Pose2d(0, 1, new Rotation2d(Units.degreesToRadians(90)))
-        ), config);
-
-        drivetrain.resetPoseEstimator(traj.getInitialPose());
-        return generateRamsete(traj);
+    public Command Taxi() {
+        RamseteCommand ramseteCommand = generateRamsete(taxi);
+        drivetrain.resetPoseEstimation(taxi.getInitialPose());
+        return ramseteCommand.andThen(() -> drivetrain.tankDriveVolts(0, 0));
     }
 
-    public Command test() {
-        Trajectory forward = TrajectoryGenerator.generateTrajectory(List.of(
-                        new Pose2d(0, 0, new Rotation2d(Units.degreesToRadians(90))),
-                        new Pose2d(0, 2, new Rotation2d(Units.degreesToRadians(90)))),
-                config);
-        Trajectory reverse = TrajectoryGenerator.generateTrajectory(List.of(
-                        new Pose2d(0, 2, new Rotation2d(Units.degreesToRadians(90))),
-                        new Pose2d(0, 0, new Rotation2d(Units.degreesToRadians(90)))),
-                reverseConfig);
+    public Command UpperCargoShoot2() {
+        RamseteCommand ramseteCommand = generateRamsete(upperTarmacToUpperCargoShootTrajectory);
+        drivetrain.resetPoseEstimation(upperTarmacToUpperCargoShootTrajectory.getInitialPose());
+        return ramseteCommand.andThen(() -> drivetrain.tankDriveVolts(0, 0));
+    }
 
-        RamseteCommand ramseteCommand = generateRamsete(forward);
-        RamseteCommand ramseteCommand2 = generateRamsete(reverse);
-        drivetrain.resetPoseEstimator(forward.getInitialPose());
-
+    public Command Terminal3Cargo() {
+        RamseteCommand ramseteCommand = generateRamsete(upperTarmacToUpperCargoShootTrajectory);
+        RamseteCommand ramseteCommand2 = generateRamsete(upperCargoToUpperField);
+        RamseteCommand ramseteCommand3 = generateRamsete(upperFieldToTerminalShoot);
+        drivetrain.resetPoseEstimation(upperTarmacToUpperCargoShootTrajectory.getInitialPose());
         return ramseteCommand.andThen(
-                ramseteCommand2).andThen(
-                () -> drivetrain.tankDriveVolts(0, 0));
+            () -> drivetrain.tankDriveVolts(0, 0)).andThen(
+            new WaitCommand(1.7)).andThen(
+            ramseteCommand2).andThen(
+            ramseteCommand3).andThen(
+            () -> drivetrain.tankDriveVolts(0, 0));
     }
 
-    public Command test2() {
-        Trajectory forward = TrajectoryGenerator.generateTrajectory(List.of(
-                        new Pose2d(0, 0, new Rotation2d(Units.degreesToRadians(0))),
-                        new Pose2d(2, 0, new Rotation2d(Units.degreesToRadians(0)))),
-                config);
-        Trajectory reverse = TrajectoryGenerator.generateTrajectory(List.of(
-                        new Pose2d(2, 0, new Rotation2d(Units.degreesToRadians(0))),
-                        new Pose2d(0, 0, new Rotation2d(Units.degreesToRadians(0)))),
-                reverseConfig);
-
-        RamseteCommand ramseteCommand = generateRamsete(forward);
-        RamseteCommand ramseteCommand2 = generateRamsete(reverse);
-        drivetrain.resetPoseEstimator(forward.getInitialPose());
-
+    public Command UpRight3Cargo() {
+        RamseteCommand ramseteCommand = generateRamsete(upperTarmacToUpperCargoShootTrajectory);
+        RamseteCommand ramseteCommand2 = generateRamsete(upperCargoToUpperField);
+        RamseteCommand ramseteCommand3 = generateRamsete(upperFieldToUpRightCargo);
+        drivetrain.resetPoseEstimation(upperTarmacToUpperCargoShootTrajectory.getInitialPose());
         return ramseteCommand.andThen(
-                ramseteCommand2).andThen(
-                () -> drivetrain.tankDriveVolts(0, 0));
+            () -> drivetrain.tankDriveVolts(0, 0)).andThen(
+            new WaitCommand(1.7)).andThen(
+            ramseteCommand2).andThen(
+            ramseteCommand3).andThen(
+            () -> drivetrain.tankDriveVolts(0, 0));
     }
 
-    public Command fiveBall() {
-        Trajectory first = TrajectoryGenerator.generateTrajectory(List.of(
-                new Pose2d(9.07, 6.42, new Rotation2d(Units.degreesToRadians(67))),
-                new Pose2d(9.05, 7.63, new Rotation2d(Units.degreesToRadians(110)))), config);
-        Trajectory second = TrajectoryGenerator.generateTrajectory(List.of(
-                new Pose2d(9.05, 7.63, new Rotation2d(Units.degreesToRadians(110))),
-                new Pose2d(9.07, 6.12, new Rotation2d(Units.degreesToRadians(67)))), reverseConfig);
-        Trajectory third = TrajectoryGenerator.generateTrajectory(List.of(
-                new Pose2d(9.07, 6.12, new Rotation2d(Units.degreesToRadians(72))),
-                new Pose2d(11.15, 6.20, new Rotation2d(Units.degreesToRadians(35.5)))), config);
-        Trajectory fourth = TrajectoryGenerator.generateTrajectory(List.of(
-                new Pose2d(11.15, 6.20, new Rotation2d(Units.degreesToRadians(35.5))),
-                new Pose2d(15.10, 7.02, new Rotation2d(Units.degreesToRadians(22.9)))), config);
-
-        RamseteCommand ramseteCommand1 = generateRamsete(first);
-        RamseteCommand ramseteCommand2 = generateRamsete(second);
-        RamseteCommand ramseteCommand3 = generateRamsete(third);
-        RamseteCommand ramseteCommand4 = generateRamsete(fourth);
-        drivetrain.resetPoseEstimator(first.getInitialPose());
-
+    public Command UpRightTerminal4Cargo() {
+        RamseteCommand ramseteCommand1 = generateRamsete(upperTarmacToUpperCargoShootTrajectory);
+        RamseteCommand ramseteCommand2 = generateRamsete(upperCargoToUpperField);
+        RamseteCommand ramseteCommand3 = generateRamsete(upperFieldToUpRightCargo);
+        RamseteCommand ramseteCommand4 = generateRamsete(upRightCargoToTerminalShoot);
+        drivetrain.resetPoseEstimation(upperTarmacToUpperCargoShootTrajectory.getInitialPose());
         return ramseteCommand1.andThen(
-                ramseteCommand2).andThen(
-                () -> drivetrain.tankDriveVolts(0, 0)).andThen(
-                new WaitCommand(1.5)).andThen(
-                ramseteCommand3).andThen(
-                () -> drivetrain.tankDriveVolts(0, 0)).andThen(
-                new WaitCommand(2.2)).andThen(
-                ramseteCommand4).andThen(
-                () -> drivetrain.tankDriveVolts(0, 0)).andThen(
-                new WaitCommand(2.2));
+            () -> drivetrain.tankDriveVolts(0, 0)).andThen(
+            new WaitCommand(1.7)).andThen(
+            ramseteCommand2).andThen(
+            ramseteCommand3).andThen(
+            () -> drivetrain.tankDriveVolts(0, 0)).andThen(
+            new WaitCommand(0.4)).andThen(
+            ramseteCommand4).andThen(
+            () -> drivetrain.tankDriveVolts(0, 0));
     }
 
-
+    public Command FiveCargo() {
+        System.out.println("TOTAL TIME FOR TRAJECTORY 1 = " + upperTarmacToUpperCargoShootTrajectory.getTotalTimeSeconds());
+        System.out.println("TOTAL TIME FOR TRAJECTORY 2 = " + upperCargoToUpperField.getTotalTimeSeconds());
+        System.out.println("TOTAL TIME FOR TRAJECTORY 3 = " + upperFieldToUpRightCargo.getTotalTimeSeconds());
+        System.out.println("TOTAL TIME FOR TRAJECTORY 4 = " + upRightCargoToTerminalShoot.getTotalTimeSeconds());
+        RamseteCommand ramseteCommand1 = generateRamsete(upperTarmacToUpperCargoShootTrajectory);
+        RamseteCommand ramseteCommand2 = generateRamsete(upperCargoToUpperField);
+        RamseteCommand ramseteCommand3 = generateRamsete(upperFieldToUpRightCargo);
+        RamseteCommand ramseteCommand4 = generateRamsete(upRightCargoToTerminalShoot);
+        drivetrain.resetPoseEstimation(upperTarmacToUpperCargoShootTrajectory.getInitialPose());
+        return ramseteCommand1.andThen(
+            () -> drivetrain.tankDriveVolts(0, 0)).andThen(
+            new WaitCommand(1.7)).andThen(
+            // Lower storage to HIA 
+            ramseteCommand2).andThen(
+            ramseteCommand3).andThen(
+            () -> drivetrain.tankDriveVolts(0, 0)).andThen(
+            new WaitCommand(0.4)).andThen(
+            ramseteCommand4).andThen(
+            () -> drivetrain.tankDriveVolts(0, 0));
+    }
 }

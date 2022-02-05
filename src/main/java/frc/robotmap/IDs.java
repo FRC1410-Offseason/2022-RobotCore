@@ -9,6 +9,9 @@ public final class IDs {
     public static final int DRIVETRAIN_RIGHT_FRONT_MOTOR_ID = 2;
     public static final int DRIVETRAIN_RIGHT_BACK_MOTOR_ID = 3;
 
+    public static final int[] LEFT_ENCODER_PORTS = new int[] {0, 1};
+    public static final int[] RIGHT_ENCODER_PORTS = new int[] {2, 3};
+
     public enum AXIS_ID {
         LEFT_X,
         RIGHT_X,

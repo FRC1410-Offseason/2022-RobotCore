@@ -4,12 +4,13 @@ import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.framework.scheduler.TaskScheduler;
 
 import static frc.robotmap.IDs.*;
-import static frc.robotmap.Tuning.*;
+import static frc.robotmap.Tuning.DRIVER_DEADZONE_VALUE;
 
 /**
  * A mixin used to receive button getters.
  */
 public interface ControlScheme {
+
 	XboxController driverController = new XboxController(DRIVER_CONTROLLER_PORT);
 	XboxController operatorController = new XboxController(OPERATOR_CONTROLLER_PORT);
 
@@ -79,7 +80,7 @@ public interface ControlScheme {
 	default Button getOperatorLeftStickButton() {
 		return new Button(operatorController, getScheduler(), ButtonId.LEFT_STICK_BUTTON);
 	}
-    
+
 	default Button getOperatorRightStickButton() {
 		return new Button(operatorController, getScheduler(), ButtonId.RIGHT_STICK_BUTTON);
 	}

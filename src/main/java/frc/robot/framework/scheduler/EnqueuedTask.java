@@ -1,11 +1,14 @@
 package frc.robot.framework.scheduler;
 
+import frc.robot.framework.scheduler.task.Task;
+
 public class EnqueuedTask implements Comparable<EnqueuedTask> {
+
 	private final Task task;
 	private final int id;
-	private long targetTime;
 	private final long period;
 	boolean isPendingCancellation = false;
+	private long targetTime;
 
 	public EnqueuedTask(Task task, int id, long initialDelay, long period) {
 		this.task = task;

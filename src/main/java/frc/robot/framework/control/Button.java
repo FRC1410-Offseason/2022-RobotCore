@@ -7,6 +7,7 @@ import frc.robot.framework.scheduler.task.ButtonObserver;
 import frc.robotmap.IDs;
 
 public class Button {
+
 	private final XboxController controller;
 	private final TaskScheduler scheduler;
 	private final int id;

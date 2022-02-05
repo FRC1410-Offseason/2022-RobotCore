@@ -1,21 +1,26 @@
 package frc.robot.framework.scheduler;
 
-import edu.wpi.first.wpilibj.*;
+import edu.wpi.first.hal.NotifierJNI;
+import edu.wpi.first.wpilibj.DSControlWord;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.framework.scheduler.task.CommandTask;
+import frc.robot.framework.scheduler.task.Task;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
-import org.jetbrains.annotations.*;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.PriorityQueue;
 
 public class TaskScheduler {
+
 	private final DSControlWord controlWord = new DSControlWord();
 	private final PriorityQueue<EnqueuedTask> queue = new PriorityQueue<>();
 	private final IntOpenHashSet pendingCancellation = new IntOpenHashSet();
-	private boolean stopped = false;
-
-	private int currentTaskId = -1;
 	private final long defaultPeriod;
+	private final int m_notifier = NotifierJNI.initializeNotifier();
+	private boolean stopped = false;
+	private int currentTaskId = -1;
 
 	public TaskScheduler(long defaultPeriod) {
 		this.defaultPeriod = defaultPeriod;
@@ -29,6 +34,9 @@ public class TaskScheduler {
 		while (!stopped) {
 			try {
 				tick();
+
+				// Feed the watchdog
+				NotifierJNI.updateNotifierAlarm(m_notifier, (long) (1e6));
 			} catch (Throwable e) {
 				DriverStation.reportError("Encountered error while ticking scheduler!", e.getStackTrace());
 			}

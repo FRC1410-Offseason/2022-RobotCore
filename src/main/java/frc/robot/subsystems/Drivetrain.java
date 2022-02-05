@@ -1,171 +1,141 @@
 package frc.robot.subsystems;
 
-import static frc.robotmap.Constants.*;
 import static frc.robotmap.IDs.*;
 import static frc.robotmap.Tuning.*;
+import static frc.robotmap.Constants.*;
 
-import com.ctre.phoenix.motorcontrol.InvertType;
-import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.TalonFXSimCollection;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
-import com.kauailabs.navx.frc.AHRS;
-import edu.wpi.first.hal.SimDouble;
-import edu.wpi.first.hal.simulation.SimDeviceDataJNI;
+import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
+import edu.wpi.first.wpilibj.simulation.EncoderSim;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.SerialPort;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.MatBuilder;
 import edu.wpi.first.math.Nat;
-import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
-import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
-import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.SerialPort;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.hal.simulation.SimDeviceDataJNI;
+import edu.wpi.first.hal.SimDouble;
 
-public class Drivetrain extends SubsystemBase {
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.kauailabs.navx.frc.AHRS;
 
-    private final WPI_TalonFX mLeftLeader = new WPI_TalonFX(DRIVETRAIN_LEFT_FRONT_MOTOR_ID);
-    private final WPI_TalonFX mLeftFollower = new WPI_TalonFX(DRIVETRAIN_LEFT_BACK_MOTOR_ID);
+public class Drivetrain extends SubsystemBase {    
+    public double leftEncoderPosition, leftEncoderVelocity, rightEncoderPosition, rightEncoderVelocity;
 
-    private final WPI_TalonFX mRightLeader = new WPI_TalonFX(DRIVETRAIN_RIGHT_FRONT_MOTOR_ID);
-    private final WPI_TalonFX mRightFollower = new WPI_TalonFX(DRIVETRAIN_RIGHT_BACK_MOTOR_ID);
+    public WPI_TalonFX leftLeader = new WPI_TalonFX(DRIVETRAIN_LEFT_FRONT_MOTOR_ID);
+    public WPI_TalonFX leftFollower = new WPI_TalonFX(DRIVETRAIN_LEFT_BACK_MOTOR_ID);
+    public WPI_TalonFX rightLeader = new WPI_TalonFX(DRIVETRAIN_RIGHT_FRONT_MOTOR_ID);
+    public WPI_TalonFX rightFollower = new WPI_TalonFX(DRIVETRAIN_RIGHT_BACK_MOTOR_ID);
 
-    private final AHRS mGyro = new AHRS(SerialPort.Port.kMXP);
-    private final SimDouble mGyroSim = new SimDouble(SimDeviceDataJNI.getSimValueHandle(SimDeviceDataJNI.getSimDeviceHandle("navX-Sensor[0]"), "Yaw"));
+    private final DifferentialDrive m_drive;
 
-    private final DifferentialDrive mDrive = new DifferentialDrive(mLeftLeader, mRightLeader);
+    public final DifferentialDrivePoseEstimator poseEstimator = new DifferentialDrivePoseEstimator(new Rotation2d(), new Pose2d(),
+        new MatBuilder<>(Nat.N5(), Nat.N1()).fill(STATE_X, STATE_Y, STATE_THETA, STATE_LEFT_DIST, STATE_RIGHT_DIST),
+        new MatBuilder<>(Nat.N3(), Nat.N1()).fill(LOCAL_LEFT_DIST, LOCAL_RIGHT_DIST, LOCAL_THETA),
+        new MatBuilder<>(Nat.N3(), Nat.N1()).fill(VISION_X, VISION_Y, VISION_THETA), 0.005);
 
-    private final DifferentialDrivePoseEstimator mPoseEstimator = new DifferentialDrivePoseEstimator(new Rotation2d(), new Pose2d(),
-            new MatBuilder<>(Nat.N5(), Nat.N1()).fill(STATE_X, STATE_Y, STATE_THETA, STATE_LEFT_DIST, STATE_RIGHT_DIST),
-            new MatBuilder<>(Nat.N3(), Nat.N1()).fill(LOCAL_LEFT_DIST, LOCAL_RIGHT_DIST, LOCAL_THETA),
-            new MatBuilder<>(Nat.N3(), Nat.N1()).fill(VISION_X, VISION_Y, VISION_THETA));
+    public DifferentialDrivetrainSim drivetrainSimulator;
 
-    private final DifferentialDriveOdometry testOdometry = new DifferentialDriveOdometry(new Rotation2d());
+    public Field2d fieldSim;
 
-    private DifferentialDrivetrainSim mSim;
+    public final Encoder rightEncoder = new Encoder(RIGHT_ENCODER_PORTS[0], RIGHT_ENCODER_PORTS[1], RIGHT_ENCODER_REVERSED);
+    public final Encoder leftEncoder = new Encoder(LEFT_ENCODER_PORTS[0], LEFT_ENCODER_PORTS[1], LEFT_ENCODER_REVERSED);
 
-    private final Field2d mFieldSim;
+    public EncoderSim leftEncoderSim;
+    public EncoderSim rightEncoderSim;
 
-    private TalonFXSimCollection mLeftEncoderSim;
-    private TalonFXSimCollection mRightEncoderSim;
+    public AHRS m_gyro = new AHRS(SerialPort.Port.kMXP);
+    public int dev;
+    public SimDouble angle;
 
     public Drivetrain() {
-        mLeftLeader.configFactoryDefault();
-        mLeftFollower.configFactoryDefault();
-        mLeftLeader.setNeutralMode(NeutralMode.Brake);
-        mLeftFollower.setNeutralMode(NeutralMode.Brake);
-        mLeftFollower.follow(mLeftLeader);
-        mLeftLeader.setInverted(true);
-        mLeftFollower.setInverted(InvertType.FollowMaster);
+        initializeTalonFX(leftLeader);
+        initializeTalonFX(leftFollower);
+        initializeTalonFX(rightLeader);
+        initializeTalonFX(rightFollower);
+        
+        leftFollower.follow(leftLeader);
+        rightFollower.follow(rightLeader);
 
-        mRightLeader.configFactoryDefault();
-        mRightFollower.configFactoryDefault();
-        mRightLeader.setNeutralMode(NeutralMode.Brake);
-        mRightFollower.setNeutralMode(NeutralMode.Brake);
-        mRightFollower.follow(mRightLeader);
+        leftLeader.setInverted(true);
 
-        if (RobotBase.isSimulation()) {
-            simInit();
-        }
+        m_drive = new DifferentialDrive(leftLeader, rightLeader);
+        if (RobotBase.isSimulation()) simulationInit();
 
-        this.mFieldSim = new Field2d();
-        SmartDashboard.putData("Field", mFieldSim);
-
-
+        resetEncoders();
+        zeroHeading();
     }
 
-    private void simInit() {
-        mSim = new DifferentialDrivetrainSim(
-            DRIVETRAIN_PLANT,
-                DCMotor.getFalcon500(2),
-                GEARING,
-                TRACKWIDTH,
-                WHEEL_DIAMETER,
-                NOISE
-        );
+    public void simulationInit() {
+        drivetrainSimulator = new DifferentialDrivetrainSim(
+            DRIVETRAIN_PLANT, DCMotor.getFalcon500(2), GEARING, TRACKWIDTH, WHEEL_DIAMETER, NOISE);
 
-        mLeftLeader.setInverted(false);
-
-        this.mLeftEncoderSim = mLeftLeader.getSimCollection();
-        this.mRightEncoderSim = mRightLeader.getSimCollection();
+        leftLeader.setInverted(false);
+        leftEncoder.setDistancePerPulse(ENCODER_DISTANCE_PER_PULSE);
+        rightEncoder.setDistancePerPulse(ENCODER_DISTANCE_PER_PULSE);
+        leftEncoderSim = new EncoderSim(leftEncoder);
+        rightEncoderSim = new EncoderSim(rightEncoder);
+        dev = SimDeviceDataJNI.getSimDeviceHandle("navX-Sensor[0]");
+        angle = new SimDouble(SimDeviceDataJNI.getSimValueHandle(dev, "Yaw"));
+        fieldSim = new Field2d();
+        SmartDashboard.putData("Field", fieldSim);
     }
 
-    @Override
-    public void periodic() {
-        mPoseEstimator.update(
-                mGyro.getRotation2d(),
-                getWheelSpeeds(),
-                (mLeftLeader.getSelectedSensorPosition() / 2048 / GEARING) * Math.PI * WHEEL_DIAMETER,
-                (mRightLeader.getSelectedSensorPosition() / 2048 / GEARING) * Math.PI * WHEEL_DIAMETER
-        );
+    public void initializeTalonFX(WPI_TalonFX motor) {
+        motor.configFactoryDefault();
+        motor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 10);
+        motor.setNeutralMode(NeutralMode.Brake);
+        motor.configNeutralDeadband(0.001);
     }
 
-    @Override
-    public void simulationPeriodic() {
-        mSim.setInputs(
-                mLeftLeader.get() * RobotController.getBatteryVoltage(),
-                mRightLeader.get() * RobotController.getBatteryVoltage()
-        );
-        mSim.update(0.02);
-
-        mGyroSim.set(-mSim.getHeading().getDegrees());
-
-        mFieldSim.setRobotPose(mPoseEstimator.getEstimatedPosition());
-
-        mLeftEncoderSim.setIntegratedSensorRawPosition((int)(mSim.getLeftPositionMeters() / ENCODER_CONSTANT));
-        mRightEncoderSim.setIntegratedSensorRawPosition((int)(mSim.getRightPositionMeters() / ENCODER_CONSTANT));
-
-        mLeftEncoderSim.setIntegratedSensorVelocity((int)(mSim.getLeftVelocityMetersPerSecond() / 10 / ENCODER_CONSTANT));
-        mRightEncoderSim.setIntegratedSensorVelocity((int)(mSim.getRightVelocityMetersPerSecond() / 10 / ENCODER_CONSTANT));
+    public void tankDriveDeadzoned(double deadzonedLeftAxis, double deadzonedRightAxis) {
+        m_drive.tankDrive(deadzonedLeftAxis, deadzonedRightAxis);
+        m_drive.feed();
     }
 
-    public Pose2d getPose() {
-        return mPoseEstimator.getEstimatedPosition();
-    }
+    public void arcadeDrive(double forward, double rotation) {m_drive.arcadeDrive(forward, rotation);}
+
+    public Pose2d getPoseEstimation() {return poseEstimator.getEstimatedPosition();}
 
     public DifferentialDriveWheelSpeeds getWheelSpeeds() {
-        System.out.println("Left: " + ((((mLeftLeader.getSelectedSensorVelocity() / 2048) * 10) / GEARING) * Math.PI * WHEEL_DIAMETER) + " Right: " + ((((mRightLeader.getSelectedSensorVelocity() / 2048) * 10) / GEARING) * Math.PI * WHEEL_DIAMETER));
-        return new DifferentialDriveWheelSpeeds(
-                (((mLeftLeader.getSelectedSensorVelocity() / 2048) * 10) / GEARING) * Math.PI * WHEEL_DIAMETER,
-                (((mRightLeader.getSelectedSensorVelocity() / 2048) * 10) / GEARING) * Math.PI * WHEEL_DIAMETER
-        );
-//        return new DifferentialDriveWheelSpeeds(mSim.getLeftVelocityMetersPerSecond(), mSim.getRightVelocityMetersPerSecond());
+        if (RobotBase.isSimulation()) {return new DifferentialDriveWheelSpeeds(leftEncoder.getRate(), rightEncoder.getRate());}
+        else {return new DifferentialDriveWheelSpeeds(leftEncoderVelocity, rightEncoderVelocity);}
     }
 
-    public void resetPoseEstimator(Pose2d pose) {
+    public void resetPoseEstimation(Pose2d pose) {
         if (RobotBase.isSimulation()) {
-            mSim.setPose(pose);
-            mPoseEstimator.resetPosition(pose, pose.getRotation());
-        } else {
-            mPoseEstimator.resetPosition(pose, mGyro.getRotation2d());
-        }
+            drivetrainSimulator.setPose(pose);
+            poseEstimator.resetPosition(pose, pose.getRotation());
+        } else poseEstimator.resetPosition(pose, m_gyro.getRotation2d());
         resetEncoders();
-    }
-
-    public void arcadeDrive(double forward, double rotation) {
-        mDrive.arcadeDrive(forward, rotation);
-    }
+    }   
 
     public void tankDriveVolts(double leftVolts, double rightVolts) {
-        mLeftLeader.setVoltage(leftVolts);
-        mRightLeader.setVoltage(rightVolts);
-        mDrive.feed();
+        leftLeader.setVoltage(leftVolts);
+        rightLeader.setVoltage(rightVolts);
+        m_drive.feed();
     }
 
     public void resetEncoders() {
-        mLeftLeader.setSelectedSensorPosition(0);
-        mRightLeader.setSelectedSensorPosition(0);
+        if (RobotBase.isSimulation()) {leftEncoder.reset(); rightEncoder.reset();}
+        leftLeader.setSelectedSensorPosition(0);
+        leftFollower.setSelectedSensorPosition(0);
+        rightLeader.setSelectedSensorPosition(0);
+        rightFollower.setSelectedSensorPosition(0);
     }
 
-    public void setCoast() {}
-    public void setBrake() {}
+    public void setCoast() {leftLeader.setNeutralMode(NeutralMode.Coast); rightLeader.setNeutralMode(NeutralMode.Coast);}
 
-    public void zeroHeading() {mGyro.reset();}
+    public void setBrake() {leftLeader.setNeutralMode(NeutralMode.Brake); rightLeader.setNeutralMode(NeutralMode.Brake);}
+
+    public void zeroHeading() {m_gyro.reset();}
 }
-
