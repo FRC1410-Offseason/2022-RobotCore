@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj.RobotBase;
 import frc.robot.commands.looped.*;
 import frc.robot.commands.actions.*;
 import frc.robot.framework.control.ControlScheme;
-import frc.robot.framework.control.DirectionalPad;
 import frc.robot.framework.scheduler.ScheduledRobot;
 import frc.robot.framework.scheduler.TaskScheduler;
 import frc.robot.subsystems.*;
@@ -41,9 +40,16 @@ public class Robot extends ScheduledRobot implements ControlScheme {
 
 	@Override
 	public void registerControls() {
+		//Drivetrain Default Command
 		scheduler.scheduleCommand(new TankDrive(drivetrain, getDriverLeftYAxis(), getDriverRightYAxis()));
+		//Elevator Default Command
 		scheduler.scheduleCommand(new RunElevator(elevator, getOperatorLeftYAxis()));
+		//Winch Default Command
 		scheduler.scheduleCommand(new RunWinch(winch, getOperatorRightYAxis()));
+		//Intake Default Command
+		scheduler.scheduleCommand(new RunIntake(intake, getOperatorRightTrigger()));
+		//Outtake
+		scheduler.scheduleCommand(new ReverseIntake(intake, getOperatorLeftTrigger()).alongWith(new ReverseStorage(storage)));
 
 		//scheduler.scheduleCommand(); //TODO: Add shooter arm incrementing
 
@@ -51,7 +57,8 @@ public class Robot extends ScheduledRobot implements ControlScheme {
 
 		getOperatorLeftBumper(); //TODO: Toggle shooter arm position
 		getOperatorRightBumper().whileHeld(new ToggleIntake(intake)); //TODO: Make this toggle when pressed
-		getOperatorXButton().whileHeld(new RunStorage(storage));
+		getOperatorXButton(); //TODO: Make this toggle when pressed & add adaptive shooter RPM
+		getOperatorYButton().whileHeld(new RunStorage(storage));
 	}
 
 	@Override
