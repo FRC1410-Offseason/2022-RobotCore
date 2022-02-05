@@ -23,6 +23,9 @@ import edu.wpi.first.wpilibj.util.*;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+    
+    //Elevator
+    public static final double GEAR_RATIO = 10.61;
     //SHOOTER ARM
     public static final double SHOOTER_ARM_KV = 0;
     public static final double SHOOTER_ARM_KA = 0;

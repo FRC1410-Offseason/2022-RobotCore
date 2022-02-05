@@ -19,9 +19,6 @@ public class Robot extends ScheduledRobot implements ControlScheme {
 		RobotBase.startRobot(Robot::new);
 	}
 
-	//private final ShooterArm shooterArm = new ShooterArm();
-	private final Drivetrain drivetrain = new Drivetrain();
-
 	@Override
 	public TaskScheduler getScheduler() {
 		return scheduler;
@@ -29,13 +26,7 @@ public class Robot extends ScheduledRobot implements ControlScheme {
 
 	@Override
     public void registerControls() {
-		scheduler.scheduleCommand(new TankDrive(drivetrain, getDriverLeftYAxis(), getDriverRightYAxis()));
-		/*
-		For Testing
-		 */
-//		getDriverAButton().whileHeld(new SetShooterArmAngle(shooterArm, 50));
-//		getDriverBButton().whileHeld(new SetShooterArmAngle(shooterArm, 20));
-//		getDriverXButton().whileHeld(new SetShooterArmAngle(shooterArm, 0));
+      
     }
 
 	private Robot() {

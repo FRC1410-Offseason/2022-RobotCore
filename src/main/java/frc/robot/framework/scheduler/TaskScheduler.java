@@ -30,13 +30,11 @@ public class TaskScheduler {
 
 	public void start() {
 		while (!stopped) {
-
-			try {
+      try {
 				tick();
 
 				// Feed the watchdog
 				NotifierJNI.updateNotifierAlarm(m_notifier, (long) (1e6));
-
 			} catch (Throwable e) {
 				DriverStation.reportError("Encountered error while ticking scheduler!", e.getStackTrace());
 			}

@@ -33,15 +33,13 @@ public abstract class ScheduledRobot extends RobotBase {
 			simulationInit();
 		}
 
-        if (this instanceof ControlScheme) {
-            ((ControlScheme) this).registerControls();
-        }
+    if (this instanceof ControlScheme) {
+        ((ControlScheme) this).registerControls();
+    }
 		HAL.observeUserProgramStarting();
 		
 		scheduler.start();
 	}
-
-
 
 	@Override
 	public void endCompetition() {

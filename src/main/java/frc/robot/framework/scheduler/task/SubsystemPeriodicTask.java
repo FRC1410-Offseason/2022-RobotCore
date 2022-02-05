@@ -11,6 +11,7 @@ public class SubsystemPeriodicTask implements Task {
 	@Override
 	public void execute() {
 		SubsystemRegistry.getEntries().forEach(Subsystem::periodic);
+
 		if (RobotBase.isSimulation()) {
 			SubsystemRegistry.getEntries().forEach(Subsystem::simulationPeriodic);
 		}

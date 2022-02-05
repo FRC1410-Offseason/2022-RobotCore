@@ -64,6 +64,15 @@ public class IDs {
 
     public static final int INTAKE_MOTOR = 0;
 
+    //Elevator
+    //TODO: Update with motor ports
+    public static final int  ELEVATOR_L_FWD = 0;
+    public static final int  ELEVATOR_L_BCK = 1;
+    public static final int  ELEVATOR_R_FWD = 2;
+    public static final int  ELEVATOR_R_BCK = 3;
+
+    public static final int ELEVATOR_LEFT_MOTOR_ID = 0;
+    public final static int ELEVATOR_RIGHT_MOTOR_ID = 1;
     //WINCH
     //TODO: Update with actual ports on the PCM
     public static final int WINCH_L_FWD = 0;
