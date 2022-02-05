@@ -143,5 +143,6 @@ public class Drivetrain extends SubsystemBase {
 	public void setBrake() {leftLeader.setNeutralMode(NeutralMode.Brake); rightLeader.setNeutralMode(NeutralMode.Brake);}
 
 	public void zeroHeading() {
-		gyro.reset();}
+		gyro.reset();
+	}
 }
