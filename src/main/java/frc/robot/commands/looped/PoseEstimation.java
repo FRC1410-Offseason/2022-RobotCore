@@ -23,7 +23,7 @@ public class PoseEstimation extends CommandBase {
         drivetrain.rightEncoderVelocity = (drivetrain.rightLeader.getSelectedSensorVelocity(0) +
             drivetrain.rightFollower.getSelectedSensorVelocity(0)) * ENCODER_CONSTANT / 2 * 10;
 
-        drivetrain.poseEstimator.update(drivetrain.m_gyro.getRotation2d(), drivetrain.getWheelSpeeds(),
+        drivetrain.poseEstimator.update(drivetrain.gyro.getRotation2d(), drivetrain.getWheelSpeeds(),
             drivetrain.leftEncoderPosition, drivetrain.rightEncoderPosition);
     }
 }
