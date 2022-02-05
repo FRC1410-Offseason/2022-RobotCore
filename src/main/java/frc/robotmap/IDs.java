@@ -2,16 +2,6 @@ package frc.robotmap;
 
 public class IDs {
 
-	public static final int A_BUTTON_ID = 1;
-	public static final int B_BUTTON_ID = 2;
-	public static final int X_BUTTON_ID = 3;
-	public static final int Y_BUTTON_ID = 4;
-	public static final int LEFT_BUMPER_ID = 5;
-	public static final int RIGHT_BUMPER_ID = 6;
-	public static final int LEFT_STICK_BUTTON_ID = 9;
-	public static final int RIGHT_STICK_BUTTON_ID = 10;
-	public static final int DRIVER_CONTROLLER_PORT = 0;
-	public static final int OPERATOR_CONTROLLER_PORT = 1;
 	public static final int DRIVETRAIN_LEFT_FRONT_MOTOR_ID = 1;
 	public static final int DRIVETRAIN_LEFT_BACK_MOTOR_ID = 2;
 	public static final int DRIVETRAIN_RIGHT_FRONT_MOTOR_ID = 3;
@@ -50,6 +40,11 @@ public class IDs {
 	public static final int SHOOTER_ARM_L_MOTOR = 10;
 	public static final int SHOOTER_ARM_R_MOTOR = 11;
 	public static final int PRESSURE_SENSOR = 0;
+
+    //CONTROLLERS, DO NOT TOUCH
+	public static final int DRIVER_CONTROLLER_PORT = 0;
+	public static final int OPERATOR_CONTROLLER_PORT = 1;
+
 	public enum AXIS_ID {
 		LEFT_X,
 		RIGHT_X,
@@ -67,7 +62,11 @@ public class IDs {
 		LEFT_BUMPER(5),
 		RIGHT_BUMPER(6),
 		LEFT_STICK_BUTTON(7),
-		RIGHT_STICK_BUTTON(8);
+		RIGHT_STICK_BUTTON(8),
+        DPAD_UP(0),
+        DPAD_DOWN(180),
+        DPAD_LEFT(270),
+        DPAD_RIGHT(90);
 
 		private final int id;
 
@@ -78,5 +77,12 @@ public class IDs {
 		public int getId() {
 			return id;
 		}
+	}
+
+    public enum BUTTON_CONDITION {
+		WHEN_PRESSED,
+        WHEN_UNPRESSED,
+        WHILE_HELD,
+        TOGGLE_WHEN_PRESSED
 	}
 }
