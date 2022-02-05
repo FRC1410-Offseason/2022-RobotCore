@@ -24,6 +24,9 @@ public final class Constants {
 	//Elevator
 	public static final double GEAR_RATIO = 10.61;
 	//SHOOTER ARM
+	public static final double SHOOTER_ARM_RESTING_ANGLE = 10; //Degrees
+	public static final double SHOOTER_ARM_MAX_ANGLE = 55; //Degrees
+
 	public static final double SHOOTER_ARM_KV = 0;
 	public static final double SHOOTER_ARM_KA = 0;
 
