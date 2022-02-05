@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.RobotBase;
 import frc.robot.commands.looped.*;
 import frc.robot.commands.actions.*;
 import frc.robot.framework.control.ControlScheme;
+import frc.robot.framework.control.DirectionalPad;
 import frc.robot.framework.scheduler.ScheduledRobot;
 import frc.robot.framework.scheduler.TaskScheduler;
 import frc.robot.subsystems.*;
@@ -43,6 +44,8 @@ public class Robot extends ScheduledRobot implements ControlScheme {
 		scheduler.scheduleCommand(new TankDrive(drivetrain, getDriverLeftYAxis(), getDriverRightYAxis()));
 		scheduler.scheduleCommand(new RunElevator(elevator, getOperatorLeftYAxis()));
 		scheduler.scheduleCommand(new RunWinch(winch, getOperatorRightYAxis()));
+
+		//scheduler.scheduleCommand(); //TODO: Add shooter arm incrementing
 
 		getDriverRightBumper(); //TODO: Auto align and shoot
 
