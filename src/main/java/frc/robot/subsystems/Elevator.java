@@ -20,7 +20,9 @@ public class Elevator extends SubsystemBase {
 	private final DoubleSolenoid rightLock = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, ELEVATOR_R_FWD, ELEVATOR_R_BCK);
 
 	//State variable to track state of locks
-	private boolean lockState = false;
+	private boolean locked = false;
+
+
 
 	public Elevator() {
 		leftMotor.restoreFactoryDefaults();
@@ -80,17 +82,17 @@ public class Elevator extends SubsystemBase {
 	 *
 	 * @return True / False -> Locked / Unlocked
 	 */
-	public boolean getLockState() {
-		return this.lockState;
+	public boolean getLocked() {
+		return this.locked;
 	}
 
 	/**
 	 * Set the state of the locks to locked
 	 */
 	public void lock() {
-		if (!this.lockState) {
+		if (!this.locked) {
 			this.setLock(Value.kForward);
-			this.lockState = true;
+			this.locked = true;
 		}
 	}
 
@@ -98,9 +100,9 @@ public class Elevator extends SubsystemBase {
 	 * Set the state of the locks to unlocked
 	 */
 	public void unlock() {
-		if (this.lockState) {
+		if (this.locked) {
 			this.setLock(Value.kReverse);
-			this.lockState = false;
+			this.locked = false;
 		}
 	}
 
@@ -108,7 +110,7 @@ public class Elevator extends SubsystemBase {
 	 * Toggle the state of the locks
 	 */
 	public void toggle() {
-		if (this.lockState) {
+		if (this.locked) {
 			this.unlock();
 		} else {
 			this.lock();
