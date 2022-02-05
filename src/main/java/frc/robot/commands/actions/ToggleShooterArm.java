@@ -23,8 +23,14 @@ public class ToggleShooterArm extends CommandBase {
 	private ShooterArmPosition shooterArmPosition = ShooterArmPosition.RESTING;
 
 	public enum ShooterArmPosition {
-		RESTING,
-		ELEVATED
+		RESTING(new TrapezoidProfile.State(Units.degreesToRadians(SHOOTER_ARM_RESTING_ANGLE), 0)),
+		ELEVATED(new TrapezoidProfile.State(Units.degreesToRadians(SHOOTER_ARM_MAX_ANGLE), 0));
+
+		private final TrapezoidProfile.State goal;
+
+		ShooterArmPosition(TrapezoidProfile.State goal) {
+			this.goal = goal;
+		}
 	}
 
 
@@ -32,12 +38,11 @@ public class ToggleShooterArm extends CommandBase {
 		this.shooterArm = shooterArm;
 		this.armLoop = shooterArm.getLoop();
 		if (shooterArmPosition == ShooterArmPosition.RESTING) {
-			goal = new TrapezoidProfile.State(Units.degreesToRadians(SHOOTER_ARM_MAX_ANGLE), 0);
 			shooterArmPosition = ShooterArmPosition.ELEVATED;
 		} else {
-			goal = new TrapezoidProfile.State(Units.degreesToRadians(SHOOTER_ARM_RESTING_ANGLE), 0);
 			shooterArmPosition = ShooterArmPosition.RESTING;
 		}
+		goal = shooterArmPosition.goal;
 		addRequirements(shooterArm);
 	}
 
