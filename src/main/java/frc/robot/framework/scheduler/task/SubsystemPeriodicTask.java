@@ -2,7 +2,8 @@ package frc.robot.framework.scheduler.task;
 
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Subsystem;
-import frc.robot.framework.scheduler.*;
+import frc.robot.framework.scheduler.RobotMode;
+import frc.robot.framework.scheduler.SubsystemRegistry;
 
 import java.util.Set;
 

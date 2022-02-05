@@ -5,20 +5,21 @@ import frc.robot.subsystems.Intake;
 
 
 public class ExtendIntake extends CommandBase {
-    private final Intake intake;
 
-    public ExtendIntake(Intake intake) {
-        this.intake = intake;
-        addRequirements(intake);
-    }
+	private final Intake intake;
 
-    @Override
-    public void initialize() {
-        intake.extend();
-    }
+	public ExtendIntake(Intake intake) {
+		this.intake = intake;
+		addRequirements(intake);
+	}
 
-    @Override
-    public boolean isFinished() {
-        return true;
-    }
+	@Override
+	public void initialize() {
+		intake.extend();
+	}
+
+	@Override
+	public boolean isFinished() {
+		return true;
+	}
 }

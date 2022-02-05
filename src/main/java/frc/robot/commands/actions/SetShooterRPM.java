@@ -5,23 +5,23 @@ import frc.robot.subsystems.Shooter;
 
 
 public class SetShooterRPM extends CommandBase {
-    private final Shooter shooter;
-    private final double RPM;
 
-    public SetShooterRPM(Shooter shooter, double RPM) {
-        this.shooter = shooter;
-        this.RPM = RPM;
-        addRequirements(shooter);
-    }
+	private final Shooter shooter;
+	private final double RPM;
 
-    @Override
-    public void initialize() {
-        shooter.setSpeeds(RPM);
-    }
+	public SetShooterRPM(Shooter shooter, double RPM) {
+		this.shooter = shooter;
+		this.RPM = RPM;
+		addRequirements(shooter);
+	}
 
-    @Override
-    public boolean isFinished() {
-        // TODO: Make this return true when this Command no longer needs to run execute()
-        return true;
-    }
+	@Override
+	public void initialize() {
+		shooter.setSpeeds(RPM);
+	}
+
+	@Override
+	public boolean isFinished() {
+		return true;
+	}
 }

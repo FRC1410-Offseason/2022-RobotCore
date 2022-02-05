@@ -5,28 +5,28 @@ import frc.robot.subsystems.Storage;
 
 
 public class RunStorage extends CommandBase {
-    private final Storage storage;
-    private final double speed;
 
-    public RunStorage(Storage storage, double speed) {
-        this.storage = storage;
-        this.speed = speed;
-        addRequirements(storage);
-    }
+	private final Storage storage;
+	private final double speed;
 
-    @Override
-    public void initialize() {
-        storage.runStorage(speed);
-    }
+	public RunStorage(Storage storage, double speed) {
+		this.storage = storage;
+		this.speed = speed;
+		addRequirements(storage);
+	}
 
-    @Override
-    public boolean isFinished() {
-        // TODO: Make this return true when this Command no longer needs to run execute()
-        return true;
-    }
+	@Override
+	public void initialize() {
+		storage.runStorage(speed);
+	}
 
-    @Override
-    public void end(boolean interrupted) {
-        storage.runStorage(0);
-    }
+	@Override
+	public boolean isFinished() {
+		return true;
+	}
+
+	@Override
+	public void end(boolean interrupted) {
+		storage.runStorage(0);
+	}
 }

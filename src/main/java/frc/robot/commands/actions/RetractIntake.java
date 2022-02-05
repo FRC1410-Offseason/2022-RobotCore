@@ -5,20 +5,21 @@ import frc.robot.subsystems.Intake;
 
 
 public class RetractIntake extends CommandBase {
-    private final Intake intake;
 
-    public RetractIntake(Intake intake) {
-        this.intake = intake;
-        addRequirements(intake);
-    }
+	private final Intake intake;
 
-    @Override
-    public void initialize() {
-        intake.retract();
-    }
+	public RetractIntake(Intake intake) {
+		this.intake = intake;
+		addRequirements(intake);
+	}
 
-    @Override
-    public boolean isFinished() {
-        return true;
-    }
+	@Override
+	public void initialize() {
+		intake.retract();
+	}
+
+	@Override
+	public boolean isFinished() {
+		return true;
+	}
 }

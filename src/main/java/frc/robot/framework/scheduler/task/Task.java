@@ -1,11 +1,13 @@
 package frc.robot.framework.scheduler.task;
 
-import java.util.*;
-
 import frc.robot.framework.scheduler.RobotMode;
+
+import java.util.EnumSet;
+import java.util.Set;
 
 @FunctionalInterface
 public interface Task {
+
 	void execute();
 
 	default boolean isFinished() {

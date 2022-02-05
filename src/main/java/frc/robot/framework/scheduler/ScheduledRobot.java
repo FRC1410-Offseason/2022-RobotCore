@@ -5,17 +5,11 @@
 package frc.robot.framework.scheduler;
 
 import edu.wpi.first.hal.HAL;
-import edu.wpi.first.wpilibj.*;
-
-import frc.robot.framework.control.Axis;
+import edu.wpi.first.wpilibj.DSControlWord;
+import edu.wpi.first.wpilibj.RobotBase;
 import frc.robot.framework.control.ControlScheme;
 import frc.robot.framework.scheduler.task.SubsystemPeriodicTask;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-
 import frc.robot.framework.scheduler.task.Task;
-
-import static frc.robotmap.IDs.*;
-import static frc.robotmap.Tuning.*;
 
 public abstract class ScheduledRobot extends RobotBase {
 
@@ -35,11 +29,11 @@ public abstract class ScheduledRobot extends RobotBase {
 			simulationInit();
 		}
 
-    if (this instanceof ControlScheme) {
-        ((ControlScheme) this).registerControls();
-    }
+		if (this instanceof ControlScheme) {
+			((ControlScheme) this).registerControls();
+		}
 		HAL.observeUserProgramStarting();
-		
+
 		scheduler.start();
 	}
 
@@ -111,6 +105,7 @@ public abstract class ScheduledRobot extends RobotBase {
 	}
 
 	private final class GameModeObserverTask implements Task {
+
 		private RobotMode currentMode = null;
 
 		@Override

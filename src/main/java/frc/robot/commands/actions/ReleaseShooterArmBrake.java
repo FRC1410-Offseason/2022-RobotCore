@@ -4,20 +4,18 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ShooterArm;
 
 
-public class SetShooterArmBrake extends CommandBase {
+public class ReleaseShooterArmBrake extends CommandBase {
 
 	private final ShooterArm shooterArm;
 
-	public SetShooterArmBrake(ShooterArm shooterArm) {
+	public ReleaseShooterArmBrake(ShooterArm shooterArm) {
 		this.shooterArm = shooterArm;
-		// each subsystem used by the command must be passed into the
-		// addRequirements() method (which takes a vararg of Subsystem)
 		addRequirements(shooterArm);
 	}
 
 	@Override
 	public void initialize() {
-		shooterArm.setBrake();
+		shooterArm.releaseBrake();
 	}
 
 	@Override

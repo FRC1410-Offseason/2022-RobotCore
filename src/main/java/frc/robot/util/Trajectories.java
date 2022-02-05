@@ -1,9 +1,5 @@
 package frc.robot.util;
 
-import static frc.robotmap.Constants.*;
-import static frc.robotmap.IDs.*;
-import static frc.robotmap.Tuning.*;
-
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -22,130 +18,134 @@ import frc.robot.subsystems.Drivetrain;
 
 import java.util.List;
 
+import static frc.robotmap.Constants.*;
+import static frc.robotmap.Tuning.*;
+
 public class Trajectories {
-    private final Drivetrain drivetrain;
-    private final TrajectoryConfig config;
-    private final TrajectoryConfig reverseConfig;
 
-    private final CentripetalAccelerationConstraint centripetalAccelerationConstraint;
-    private final DifferentialDriveVoltageConstraint differentialDriveVoltageConstraint;
+	private final Drivetrain drivetrain;
+	private final TrajectoryConfig config;
+	private final TrajectoryConfig reverseConfig;
 
-    public Trajectories(Drivetrain drivetrain) {
-        this.drivetrain = drivetrain;
+	private final CentripetalAccelerationConstraint centripetalAccelerationConstraint;
+	private final DifferentialDriveVoltageConstraint differentialDriveVoltageConstraint;
 
-        centripetalAccelerationConstraint = new CentripetalAccelerationConstraint(DRIVETRAIN_MAX_CENTRIPETAL_ACCEL);
+	public Trajectories(Drivetrain drivetrain) {
+		this.drivetrain = drivetrain;
 
-        differentialDriveVoltageConstraint = new DifferentialDriveVoltageConstraint(
-                new SimpleMotorFeedforward(KS, KV, KA), DRIVE_KINEMATICS, DRIVETRAIN_MAX_VOLTAGE
-        );
+		centripetalAccelerationConstraint = new CentripetalAccelerationConstraint(DRIVETRAIN_MAX_CENTRIPETAL_ACCEL);
 
-        config = new TrajectoryConfig(DRIVETRAIN_MAX_SPEED, DRIVETRAIN_MAX_ACCEL)
-                .setKinematics(DRIVE_KINEMATICS)
-                .addConstraint(centripetalAccelerationConstraint)
-                .addConstraint(differentialDriveVoltageConstraint)
-                .setReversed(false);
+		differentialDriveVoltageConstraint = new DifferentialDriveVoltageConstraint(
+				new SimpleMotorFeedforward(KS, KV, KA), DRIVE_KINEMATICS, DRIVETRAIN_MAX_VOLTAGE
+		);
 
-        reverseConfig = new TrajectoryConfig(DRIVETRAIN_MAX_SPEED, DRIVETRAIN_MAX_ACCEL)
-                .setKinematics(DRIVE_KINEMATICS)
-                .addConstraint(centripetalAccelerationConstraint)
-                .addConstraint(differentialDriveVoltageConstraint)
-                .setReversed(true);
-    }
+		config = new TrajectoryConfig(DRIVETRAIN_MAX_SPEED, DRIVETRAIN_MAX_ACCEL)
+				.setKinematics(DRIVE_KINEMATICS)
+				.addConstraint(centripetalAccelerationConstraint)
+				.addConstraint(differentialDriveVoltageConstraint)
+				.setReversed(false);
 
-    public RamseteCommand generateRamsete(Trajectory trajectory) {
-        return new RamseteCommand(
-                trajectory,
-                drivetrain::getPose,
-                new RamseteController(KB, KZ),
-                new SimpleMotorFeedforward(KS, KV, KA),
-                DRIVE_KINEMATICS,
-                drivetrain::getWheelSpeeds,
-                new PIDController(KP_VEL, 0, 0),
-                new PIDController(KP_VEL, 0, 0),
-                drivetrain::tankDriveVolts,
-                drivetrain
-        );
-    }
+		reverseConfig = new TrajectoryConfig(DRIVETRAIN_MAX_SPEED, DRIVETRAIN_MAX_ACCEL)
+				.setKinematics(DRIVE_KINEMATICS)
+				.addConstraint(centripetalAccelerationConstraint)
+				.addConstraint(differentialDriveVoltageConstraint)
+				.setReversed(true);
+	}
 
-    public Command simpleTest() {
-        Trajectory traj = TrajectoryGenerator.generateTrajectory(List.of(
-                new Pose2d(0, 0, new Rotation2d(Units.degreesToRadians(90))),
-                new Pose2d(0, 1, new Rotation2d(Units.degreesToRadians(90)))
-        ), config);
+	public RamseteCommand generateRamsete(Trajectory trajectory) {
+		return new RamseteCommand(
+				trajectory,
+				drivetrain::getPose,
+				new RamseteController(KB, KZ),
+				new SimpleMotorFeedforward(KS, KV, KA),
+				DRIVE_KINEMATICS,
+				drivetrain::getWheelSpeeds,
+				new PIDController(KP_VEL, 0, 0),
+				new PIDController(KP_VEL, 0, 0),
+				drivetrain::tankDriveVolts,
+				drivetrain
+		);
+	}
 
-        drivetrain.resetPoseEstimator(traj.getInitialPose());
-        return generateRamsete(traj);
-    }
+	public Command simpleTest() {
+		Trajectory traj = TrajectoryGenerator.generateTrajectory(List.of(
+				new Pose2d(0, 0, new Rotation2d(Units.degreesToRadians(90))),
+				new Pose2d(0, 1, new Rotation2d(Units.degreesToRadians(90)))
+		), config);
 
-    public Command test() {
-        Trajectory forward = TrajectoryGenerator.generateTrajectory(List.of(
-                        new Pose2d(0, 0, new Rotation2d(Units.degreesToRadians(90))),
-                        new Pose2d(0, 2, new Rotation2d(Units.degreesToRadians(90)))),
-                config);
-        Trajectory reverse = TrajectoryGenerator.generateTrajectory(List.of(
-                        new Pose2d(0, 2, new Rotation2d(Units.degreesToRadians(90))),
-                        new Pose2d(0, 0, new Rotation2d(Units.degreesToRadians(90)))),
-                reverseConfig);
+		drivetrain.resetPoseEstimator(traj.getInitialPose());
+		return generateRamsete(traj);
+	}
 
-        RamseteCommand ramseteCommand = generateRamsete(forward);
-        RamseteCommand ramseteCommand2 = generateRamsete(reverse);
-        drivetrain.resetPoseEstimator(forward.getInitialPose());
+	public Command test() {
+		Trajectory forward = TrajectoryGenerator.generateTrajectory(List.of(
+						new Pose2d(0, 0, new Rotation2d(Units.degreesToRadians(90))),
+						new Pose2d(0, 2, new Rotation2d(Units.degreesToRadians(90)))),
+				config);
+		Trajectory reverse = TrajectoryGenerator.generateTrajectory(List.of(
+						new Pose2d(0, 2, new Rotation2d(Units.degreesToRadians(90))),
+						new Pose2d(0, 0, new Rotation2d(Units.degreesToRadians(90)))),
+				reverseConfig);
 
-        return ramseteCommand.andThen(
-                ramseteCommand2).andThen(
-                () -> drivetrain.tankDriveVolts(0, 0));
-    }
+		RamseteCommand ramseteCommand = generateRamsete(forward);
+		RamseteCommand ramseteCommand2 = generateRamsete(reverse);
+		drivetrain.resetPoseEstimator(forward.getInitialPose());
 
-    public Command test2() {
-        Trajectory forward = TrajectoryGenerator.generateTrajectory(List.of(
-                        new Pose2d(0, 0, new Rotation2d(Units.degreesToRadians(0))),
-                        new Pose2d(2, 0, new Rotation2d(Units.degreesToRadians(0)))),
-                config);
-        Trajectory reverse = TrajectoryGenerator.generateTrajectory(List.of(
-                        new Pose2d(2, 0, new Rotation2d(Units.degreesToRadians(0))),
-                        new Pose2d(0, 0, new Rotation2d(Units.degreesToRadians(0)))),
-                reverseConfig);
+		return ramseteCommand.andThen(
+				ramseteCommand2).andThen(
+				() -> drivetrain.tankDriveVolts(0, 0));
+	}
 
-        RamseteCommand ramseteCommand = generateRamsete(forward);
-        RamseteCommand ramseteCommand2 = generateRamsete(reverse);
-        drivetrain.resetPoseEstimator(forward.getInitialPose());
+	public Command test2() {
+		Trajectory forward = TrajectoryGenerator.generateTrajectory(List.of(
+						new Pose2d(0, 0, new Rotation2d(Units.degreesToRadians(0))),
+						new Pose2d(2, 0, new Rotation2d(Units.degreesToRadians(0)))),
+				config);
+		Trajectory reverse = TrajectoryGenerator.generateTrajectory(List.of(
+						new Pose2d(2, 0, new Rotation2d(Units.degreesToRadians(0))),
+						new Pose2d(0, 0, new Rotation2d(Units.degreesToRadians(0)))),
+				reverseConfig);
 
-        return ramseteCommand.andThen(
-                ramseteCommand2).andThen(
-                () -> drivetrain.tankDriveVolts(0, 0));
-    }
+		RamseteCommand ramseteCommand = generateRamsete(forward);
+		RamseteCommand ramseteCommand2 = generateRamsete(reverse);
+		drivetrain.resetPoseEstimator(forward.getInitialPose());
 
-    public Command fiveBall() {
-        Trajectory first = TrajectoryGenerator.generateTrajectory(List.of(
-                new Pose2d(9.07, 6.42, new Rotation2d(Units.degreesToRadians(67))),
-                new Pose2d(9.05, 7.63, new Rotation2d(Units.degreesToRadians(110)))), config);
-        Trajectory second = TrajectoryGenerator.generateTrajectory(List.of(
-                new Pose2d(9.05, 7.63, new Rotation2d(Units.degreesToRadians(110))),
-                new Pose2d(9.07, 6.12, new Rotation2d(Units.degreesToRadians(67)))), reverseConfig);
-        Trajectory third = TrajectoryGenerator.generateTrajectory(List.of(
-                new Pose2d(9.07, 6.12, new Rotation2d(Units.degreesToRadians(72))),
-                new Pose2d(11.15, 6.20, new Rotation2d(Units.degreesToRadians(35.5)))), config);
-        Trajectory fourth = TrajectoryGenerator.generateTrajectory(List.of(
-                new Pose2d(11.15, 6.20, new Rotation2d(Units.degreesToRadians(35.5))),
-                new Pose2d(15.10, 7.02, new Rotation2d(Units.degreesToRadians(22.9)))), config);
+		return ramseteCommand.andThen(
+				ramseteCommand2).andThen(
+				() -> drivetrain.tankDriveVolts(0, 0));
+	}
 
-        RamseteCommand ramseteCommand1 = generateRamsete(first);
-        RamseteCommand ramseteCommand2 = generateRamsete(second);
-        RamseteCommand ramseteCommand3 = generateRamsete(third);
-        RamseteCommand ramseteCommand4 = generateRamsete(fourth);
-        drivetrain.resetPoseEstimator(first.getInitialPose());
+	public Command fiveBall() {
+		Trajectory first = TrajectoryGenerator.generateTrajectory(List.of(
+				new Pose2d(9.07, 6.42, new Rotation2d(Units.degreesToRadians(67))),
+				new Pose2d(9.05, 7.63, new Rotation2d(Units.degreesToRadians(110)))), config);
+		Trajectory second = TrajectoryGenerator.generateTrajectory(List.of(
+				new Pose2d(9.05, 7.63, new Rotation2d(Units.degreesToRadians(110))),
+				new Pose2d(9.07, 6.12, new Rotation2d(Units.degreesToRadians(67)))), reverseConfig);
+		Trajectory third = TrajectoryGenerator.generateTrajectory(List.of(
+				new Pose2d(9.07, 6.12, new Rotation2d(Units.degreesToRadians(72))),
+				new Pose2d(11.15, 6.20, new Rotation2d(Units.degreesToRadians(35.5)))), config);
+		Trajectory fourth = TrajectoryGenerator.generateTrajectory(List.of(
+				new Pose2d(11.15, 6.20, new Rotation2d(Units.degreesToRadians(35.5))),
+				new Pose2d(15.10, 7.02, new Rotation2d(Units.degreesToRadians(22.9)))), config);
 
-        return ramseteCommand1.andThen(
-                ramseteCommand2).andThen(
-                () -> drivetrain.tankDriveVolts(0, 0)).andThen(
-                new WaitCommand(1.5)).andThen(
-                ramseteCommand3).andThen(
-                () -> drivetrain.tankDriveVolts(0, 0)).andThen(
-                new WaitCommand(2.2)).andThen(
-                ramseteCommand4).andThen(
-                () -> drivetrain.tankDriveVolts(0, 0)).andThen(
-                new WaitCommand(2.2));
-    }
+		RamseteCommand ramseteCommand1 = generateRamsete(first);
+		RamseteCommand ramseteCommand2 = generateRamsete(second);
+		RamseteCommand ramseteCommand3 = generateRamsete(third);
+		RamseteCommand ramseteCommand4 = generateRamsete(fourth);
+		drivetrain.resetPoseEstimator(first.getInitialPose());
+
+		return ramseteCommand1.andThen(
+				ramseteCommand2).andThen(
+				() -> drivetrain.tankDriveVolts(0, 0)).andThen(
+				new WaitCommand(1.5)).andThen(
+				ramseteCommand3).andThen(
+				() -> drivetrain.tankDriveVolts(0, 0)).andThen(
+				new WaitCommand(2.2)).andThen(
+				ramseteCommand4).andThen(
+				() -> drivetrain.tankDriveVolts(0, 0)).andThen(
+				new WaitCommand(2.2));
+	}
 
 
 }
