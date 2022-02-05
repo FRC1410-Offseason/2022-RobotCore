@@ -3,21 +3,21 @@ package frc.robot.commands.actions;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Storage;
 
+import static frc.robotmap.Constants.STORAGE_RUN_SPEED;
+
 
 public class RunStorage extends CommandBase {
 
 	private final Storage storage;
-	private final double speed;
 
-	public RunStorage(Storage storage, double speed) {
+	public RunStorage(Storage storage) {
 		this.storage = storage;
-		this.speed = speed;
 		addRequirements(storage);
 	}
 
 	@Override
 	public void initialize() {
-		storage.runStorage(speed);
+		storage.runStorage(STORAGE_RUN_SPEED);
 	}
 
 	@Override
