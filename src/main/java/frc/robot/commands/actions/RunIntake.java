@@ -1,7 +1,7 @@
 package frc.robot.commands.actions;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.framework.control.input.Axis;
+import frc.robot.framework.control.Axis;
 import frc.robot.subsystems.Intake;
 
 import static frc.robotmap.Constants.INTAKE_FORWARD_SPEED;
