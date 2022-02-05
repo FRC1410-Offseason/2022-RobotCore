@@ -34,7 +34,6 @@ public class Robot extends ScheduledRobot implements ControlScheme {
 
 	@Override
 	public void robotInit() {
-		NetworkTables.networkTables();
 		NetworkTables.setAutoList(autoList);
 		NetworkTables.setCorrectColor(DriverStation.getAlliance().toString());
 		NetworkTables.setPressure(pressure);
