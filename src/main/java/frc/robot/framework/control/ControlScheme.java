@@ -85,8 +85,8 @@ public interface ControlScheme {
 		return new Button(operatorController, getScheduler(), ButtonId.RIGHT_STICK_BUTTON);
 	}
 
-	default D getOperatorDPad() {
-		return new D(operatorController);
+	default DirectionalPad getOperatorDPad() {
+		return new DirectionalPad(operatorController);
 	}
 	// </editor-fold>
 
@@ -141,8 +141,8 @@ public interface ControlScheme {
 		return new Axis(operatorController, AXIS_ID.RIGHT_TRIGGER, DRIVER_DEADZONE_VALUE);
 	}
 
-	default D getDriverDPad() {
-		return new D(driverController);
+	default DirectionalPad getDriverDPad() {
+		return new DirectionalPad(driverController);
 	}
 	// </editor-fold>
 }

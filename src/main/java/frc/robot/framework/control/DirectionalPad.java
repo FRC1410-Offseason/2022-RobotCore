@@ -2,10 +2,10 @@ package frc.robot.framework.control;
 
 import edu.wpi.first.wpilibj.XboxController;
 
-public class D {
+public class DirectionalPad {
 	private final XboxController controller;
 
-	public D(XboxController controller) {
+	public DirectionalPad(XboxController controller) {
 		this.controller = controller;
 	}
 
