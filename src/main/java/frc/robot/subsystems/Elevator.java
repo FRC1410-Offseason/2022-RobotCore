@@ -16,8 +16,7 @@ public class Elevator extends SubsystemBase {
 	private final CANSparkMax leftMotor = new CANSparkMax(ELEVATOR_LEFT_MOTOR_ID, CANSparkMaxLowLevel.MotorType.kBrushless);
 	private final CANSparkMax rightMotor = new CANSparkMax(ELEVATOR_RIGHT_MOTOR_ID, CANSparkMaxLowLevel.MotorType.kBrushless);
 	//Elevator Brakes
-	private final DoubleSolenoid leftLock = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, ELEVATOR_L_FWD, ELEVATOR_L_BCK);
-	private final DoubleSolenoid rightLock = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, ELEVATOR_R_FWD, ELEVATOR_R_BCK);
+	private final DoubleSolenoid lock = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, ELEVATOR_FWD, ELEVATOR_BCK);
 
 	//State variable to track state of locks
 	private boolean lockState = false;
@@ -70,10 +69,7 @@ public class Elevator extends SubsystemBase {
 	 *
 	 * @param state forward or backward
 	 */
-	public void setLock(Value state) {
-		leftLock.set(state);
-		rightLock.set(state);
-	}
+	public void setLock(Value state) {lock.set(state);}
 
 	/**
 	 * Return the state of the locks
