@@ -25,7 +25,7 @@ public class SetShooterArmAngle extends CommandBase {
 		this.shooterArm = shooterArm;
 		this.armLoop = shooterArm.getLoop();
 		goal = new TrapezoidProfile.State(Units.degreesToRadians(angle), 0);
-		addRequirements(shooterArm);
+		// addRequirements(shooterArm);
 	}
 
 	@Override

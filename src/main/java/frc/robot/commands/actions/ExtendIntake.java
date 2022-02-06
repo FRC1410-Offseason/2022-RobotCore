@@ -10,7 +10,7 @@ public class ExtendIntake extends CommandBase {
 
 	public ExtendIntake(Intake intake) {
 		this.intake = intake;
-		addRequirements(intake);
+		// addRequirements(intake);
 	}
 
 	@Override

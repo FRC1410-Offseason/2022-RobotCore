@@ -23,21 +23,16 @@ public final class Tuning {
 	public static final double SHOOTER_RIGHT_KD = 0;
 	public static final double SHOOTER_RIGHT_KFF = 0;
 
-	public static final double DRIVETRAIN_MAX_VOLTAGE = 12;
-	public static final double DRIVETRAIN_MAX_SPEED = 3.50;
-	public static final double DRIVETRAIN_MAX_ACCEL = 3.80;
-	public static final double DRIVETRAIN_MAX_CENTRIPETAL_ACCEL = 2.5;
-
 	//Ramsete controller constants
-	public static final double KB = 4.0;
+	public static final double KB = 2.0;
 	public static final double KZ = 0.7;
 
 	public static final double KP_VEL = 5;
 
-	public static final double MAX_VOLTAGE = 12;
-	public static final double MAX_SPEED = 3.5; // m/s
-	public static final double MAX_ACCEL = 4.8; // m/s^2
-	public static final double MAX_CENTRIPETAL_ACCEL = 4.5; // m/s^2
+	public static final double DRIVETRAIN_MAX_VOLTAGE = 12;
+	public static final double DRIVETRAIN_MAX_SPEED = 3.5; // m/s
+	public static final double DRIVETRAIN_MAX_ACCEL = 4.8; // m/s^2
+	public static final double DRIVETRAIN_MAX_CENTRIPETAL_ACCEL = 4.5; // m/s^2
 
 	public static final double STATE_X = 0.000001;
 	public static final double STATE_Y = 0.000001;

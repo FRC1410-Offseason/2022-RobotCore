@@ -17,7 +17,7 @@ public class IDs {
 	public static final int SHOOTER_RIGHT_MOTOR_ID = 12;
 
 	public static final int STORAGE_MOTOR_ID = 41;
-	public static final int STORAGE_LINE_BREAK_PORT = 0; //To Do: Find out what the actual port on the roborio is
+	public static final int STORAGE_LINE_BREAK_PORT = 8; //To Do: Find out what the actual port on the roborio is || ALSO You can't use 0 or 1 during simulation
 
 	//INTAKE 
 	//To Do: Update with actual ports on the PCM
@@ -25,17 +25,17 @@ public class IDs {
 	public static final int INTAKE_FLIPPER_BCK = 7;
 	public static final int INTAKE_MOTOR = 31;
 	//Elevator
-	//T0 D0: Update with motor ports
+	//To Do: Update with motor ports
 	public static final int ELEVATOR_FWD = 0;
 	public static final int ELEVATOR_BCK = 1;
-	public static final int ELEVATOR_LEFT_MOTOR_ID = 0;
-	public final static int ELEVATOR_RIGHT_MOTOR_ID = 1;
+	public static final int ELEVATOR_LEFT_MOTOR_ID = 51;
+	public final static int ELEVATOR_RIGHT_MOTOR_ID = 52;
 	//WINCH
 	//To Do: Update with actual ports on the PCM
 	public static final int WINCH_FWD = 2;
 	public static final int WINCH_BCK = 3;
-	public static final int WINCH_LEFT_MOTOR_ID = 0;
-	public static final int WINCH_RIGHT_MOTOR_ID = 0;
+	public static final int WINCH_LEFT_MOTOR_ID = 61;
+	public static final int WINCH_RIGHT_MOTOR_ID = 62;
 	//SHOOTER ARM
 	public static final int SHOOTER_ARM_LOCK_FWD = 4;
 	public static final int SHOOTER_ARM_LOCK_BCK = 5;

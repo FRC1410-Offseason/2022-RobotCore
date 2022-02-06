@@ -12,7 +12,7 @@ public class RunStorage extends CommandBase {
 
 	public RunStorage(Storage storage) {
 		this.storage = storage;
-		addRequirements(storage);
+		// addRequirements(storage);
 	}
 
 	@Override

@@ -12,7 +12,7 @@ public class SetShooterRPM extends CommandBase {
 	public SetShooterRPM(Shooter shooter, double RPM) {
 		this.shooter = shooter;
 		this.RPM = RPM;
-		addRequirements(shooter);
+		// addRequirements(shooter);
 	}
 
 	@Override
