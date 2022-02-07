@@ -11,12 +11,17 @@ import frc.robot.framework.control.ControlScheme;
 import frc.robot.framework.scheduler.task.SubsystemPeriodicTask;
 import frc.robot.framework.scheduler.task.Task;
 
-public abstract class ScheduledRobot extends RobotBase {
+public abstract class ScheduledRobot extends RobotBase implements ControlScheme {
 
 	protected final TaskScheduler scheduler;
 
 	public ScheduledRobot(long defaultPeriod) {
 		this.scheduler = new TaskScheduler(defaultPeriod);
+	}
+
+	@Override
+	public TaskScheduler getScheduler() {
+		return scheduler;
 	}
 
 	@Override

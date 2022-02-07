@@ -12,7 +12,7 @@ import frc.robot.subsystems.*;
 
 import static frc.robotmap.IDs.PRESSURE_SENSOR;
 
-public class Robot extends ScheduledRobot implements ControlScheme {
+public class Robot extends ScheduledRobot {
 
 	private final String[] autoList = {"Taxi", "2Cargo", "3CargoTerminal", "3CargoUpRight", "4Cargo", "5Cargo"};
 	private final AnalogInput pressure = new AnalogInput(PRESSURE_SENSOR);
@@ -32,11 +32,6 @@ public class Robot extends ScheduledRobot implements ControlScheme {
 	private final ShooterArm shooterArm = new ShooterArm();
 	private final Storage storage = new Storage(DriverStation.getAlliance());
 	private final Winch winch = new Winch();
-
-	@Override
-	public TaskScheduler getScheduler() {
-		return scheduler;
-	}
 
 	@Override
 	public void registerControls() {
