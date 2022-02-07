@@ -22,8 +22,8 @@ public class Button {
 		scheduler.queuePeriodic(new WhenPressedTask(new ButtonStateObserver(controller, id), command));
 	}
 
-    public void whenUnpressed(Command command) {
-		scheduler.queuePeriodic(new WhenUnpressedTask(new ButtonStateObserver(controller, id), command));
+    public void whenReleased(Command command) {
+		scheduler.queuePeriodic(new WhenReleasedTask(new ButtonStateObserver(controller, id), command));
 	}
 
     public void toggleWhenPressed(Command command) {

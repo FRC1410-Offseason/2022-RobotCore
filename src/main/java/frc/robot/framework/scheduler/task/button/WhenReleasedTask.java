@@ -8,13 +8,13 @@ import frc.robot.framework.control.ButtonStateObserver.ButtonState;
 import frc.robot.framework.scheduler.RobotMode;
 import frc.robot.framework.scheduler.task.Task;
 
-public class WhenUnpressedTask implements Task {
+public class WhenReleasedTask implements Task {
     private final ButtonStateObserver observer;
     private final Command command;
 
     private boolean running = false;
 
-    public WhenUnpressedTask(ButtonStateObserver observer, Command command) {
+    public WhenReleasedTask(ButtonStateObserver observer, Command command) {
         this.observer = observer;
         this.command = command;
     }
@@ -23,12 +23,9 @@ public class WhenUnpressedTask implements Task {
 	public void execute() {
         observer.updateState();
         
-		if (observer.getState() == ButtonState.PRESSED) {
+		if (observer.getState() == ButtonState.RELEASED) {
             command.initialize();
             running = true;
-        } else if (running && observer.getState() == ButtonState.RELEASED) {
-            command.end(true);
-            running = false;
         }
 
         if (running) command.execute();
