@@ -25,15 +25,17 @@ public class ToggleWhenPressedTask implements Task {
 	public void execute() {
         observer.updateState();
 
-		if (observer.getState() == ButtonState.PRESSED) {
-            command.initialize();
-            running = true;
-        } else if (running && observer.getState() == ButtonState.RELEASED) {
-            command.end(true);
-            running = false;
+        if (observer.getState() == ButtonState.PRESSED) {
+            if (!running) {
+                command.initialize();
+                running = true;
+            } else {
+                command.end(true);
+                running = false;
+            }
         }
 
-        if (running) command.execute();
+		if (running) command.execute();
 
         if (command.isFinished()){
             command.end(false);
