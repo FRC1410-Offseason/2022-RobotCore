@@ -44,8 +44,10 @@ public class Robot extends ScheduledRobot {
 		getDriverRightBumper(); //TODO: Auto align and shoot
 
 		getOperatorLeftBumper(); //TODO: Toggle shooter arm position
-		getOperatorRightBumper().whileHeld(new ToggleIntake(intake)); //TODO: Make this toggle when pressed
+		getOperatorRightBumper().whenPressed(new ToggleIntake(intake)); //Toggling is handled in the command, only needs to be WhenPressed
 		getOperatorXButton().whileHeld(new RunStorage(storage));
+
+        getDriverAButton().whenPressed(new TestInstantCommand());
 	}
 
 	@Override
