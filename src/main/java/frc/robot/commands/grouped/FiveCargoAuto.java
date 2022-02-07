@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.actions.ExtendIntake;
-import frc.robot.commands.actions.RunStorage;
+import frc.robot.commands.actions.RunStorageForTime;
 import frc.robot.commands.actions.SetIntakeSpeed;
 import frc.robot.commands.actions.SetShooterArmAngle;
 import frc.robot.commands.actions.SetShooterRPM;
@@ -114,20 +114,20 @@ public class FiveCargoAuto extends ParallelCommandGroup {
                     new SetShooterArmAngle(shooterArm, highestShooterArmAngle)
                 )
             ),
-            // Storage - needs work
+            // Storage - Works in theory
             new ParallelCommandGroup(
                 new SequentialCommandGroup(
                     new WaitCommand(upperTarmacToUpperCargoShootDuration + intakeToStorageDuration + shooterArmLiftDuration),
-                    new RunStorage(storage)
+                    new RunStorageForTime(storage, doubleShootDuration)
                 ),
                 new SequentialCommandGroup(
                     new WaitCommand(upperTarmacToTerminalDuration + intakeToStorageDuration + shooterArmLiftDuration),
-                    new RunStorage(storage)
+                    new RunStorageForTime(storage, doubleShootDuration)
 				),
 				new SequentialCommandGroup(
 					new WaitCommand(upperTarmacToTerminalDuration + intakeToStorageDuration + shooterArmLiftDuration + doubleShootDuration
 						+ shooterArmLowerDuration + intakeToStorageDuration + shooterArmLiftDuration),
-					new RunStorage(storage) // add duration somehow
+					new RunStorageForTime(storage, doubleShootDuration)
 				)
             ),
             // Drivetrain - Works in theory

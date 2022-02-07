@@ -13,15 +13,15 @@ public final class Tuning {
 	public static final double DRIVER_DEADZONE_VALUE = 0.05;
 	public static final double OPERATOR_DEADZONE_VALUE = 0.05;
 
-	public static final double SHOOTER_LEFT_KP = 0;
+	public static final double SHOOTER_LEFT_KP = 0.000135;
 	public static final double SHOOTER_LEFT_KI = 0;
 	public static final double SHOOTER_LEFT_KD = 0;
-	public static final double SHOOTER_LEFT_KFF = 0;
+	public static final double SHOOTER_LEFT_KFF = 0.000165;
 
-	public static final double SHOOTER_RIGHT_KP = 0;
+	public static final double SHOOTER_RIGHT_KP = 0.000135;
 	public static final double SHOOTER_RIGHT_KI = 0;
 	public static final double SHOOTER_RIGHT_KD = 0;
-	public static final double SHOOTER_RIGHT_KFF = 0;
+	public static final double SHOOTER_RIGHT_KFF = 0.000165;
 
 	//Ramsete controller constants
 	public static final double KB = 2.0;

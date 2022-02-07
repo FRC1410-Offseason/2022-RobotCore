@@ -11,7 +11,6 @@ import static frc.robotmap.Constants.STORAGE_RUN_SPEED;
 public class RunStorage extends CommandBase {
 
 	private final Storage storage;
-	private final Timer timer = new Timer();
 
 	public RunStorage(Storage storage) {
 		this.storage = storage;
@@ -20,7 +19,6 @@ public class RunStorage extends CommandBase {
 
 	@Override
 	public void initialize() {
-		timer.start();
 		storage.runStorage(STORAGE_RUN_SPEED);
 		NetworkTables.setStorageSpeed(STORAGE_RUN_SPEED);
 	}
