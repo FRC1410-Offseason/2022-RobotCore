@@ -26,9 +26,6 @@ public class WhenPressedTask implements Task {
 		if (observer.getState() == ButtonState.PRESSED) {
             command.initialize();
             running = true;
-        } else if (running && observer.getState() == ButtonState.RELEASED) {
-            command.end(true);
-            running = false;
         }
 
         if (running) command.execute();
