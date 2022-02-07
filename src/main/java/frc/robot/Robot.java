@@ -3,11 +3,11 @@ package frc.robot;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
-import frc.robot.commands.looped.RunElevator;
 import frc.robot.framework.control.ControlScheme;
 import frc.robot.framework.scheduler.ScheduledRobot;
 import frc.robot.framework.scheduler.TaskScheduler;
 import frc.robot.subsystems.Elevator;
+import frc.robot.commands.looped.RunElevator;
 
 import static frc.robotmap.IDs.PRESSURE_SENSOR;
 

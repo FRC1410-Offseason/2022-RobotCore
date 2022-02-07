@@ -32,7 +32,7 @@ public final class Constants {
 	public static final double ELEVATOR_VEL_CONFIDENCE = 0.0001; //Meters per second
 	public static final double ELEVATOR_ENC_CONFIDENCE = 0.0001; //Rotations
 
-	public static final double ELEVATOR_POS_TOLERANCE = .01; //Meters
+	public static final double ELEVATOR_POS_TOLERANCE = .001; //Meters
 	public static final double ELEVATOR_VEL_TOLERANCE = .1; //Meters per second
 	public static final double ELEVATOR_CTRL_TOLERANCE = 12; //Volts
 
