@@ -26,6 +26,8 @@ public class ButtonStateObserver {
     }
 
     public void updateState() {
+        pressed = getRaw();
+
         if (pressed && !wasPressed) {
             internalButtonState = ButtonState.PRESSED;
         } else if (!pressed && wasPressed) {
@@ -33,6 +35,8 @@ public class ButtonStateObserver {
         } else {
             internalButtonState = ButtonState.UNCHANGED;
         }
+
+        wasPressed = pressed;
     }
 
     public ButtonState getState() {
