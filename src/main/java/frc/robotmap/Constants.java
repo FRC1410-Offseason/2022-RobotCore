@@ -24,6 +24,9 @@ public final class Constants {
 	//Elevator
 	public static final double GEAR_RATIO = 10.61;
 	//SHOOTER ARM
+	public static final double SHOOTER_ARM_RESTING_ANGLE = 10; //Degrees
+	public static final double SHOOTER_ARM_MAX_ANGLE = 55; //Degrees
+
 	public static final double SHOOTER_ARM_KV = 0;
 	public static final double SHOOTER_ARM_KA = 0;
 
@@ -86,6 +89,7 @@ public final class Constants {
 
 	public static final double STORAGE_INDEX_SPEED = 0;
 	public static final double STORAGE_RUN_SPEED = 0;
+	public static final double STORAGE_REVERSE_SPEED = 0;
 
 	//INTAKE
 	public static final double INTAKE_FORWARD_SPEED = 1;

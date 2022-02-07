@@ -12,8 +12,7 @@ import static frc.robotmap.IDs.*;
 public class Intake extends SubsystemBase {
 
 	//Flipping Solenoids
-	private final DoubleSolenoid flipperLeft = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, INTAKE_FLIPPER_L_FWD, INTAKE_FLIPPER_L_BCK);
-	private final DoubleSolenoid flipperRight = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, INTAKE_FLIPPER_R_FWD, INTAKE_FLIPPER_R_BCK);
+	private final DoubleSolenoid flipper = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, INTAKE_FLIPPER_FWD, INTAKE_FLIPPER_BCK);
 	//Motor that runs the intake
 	private final CANSparkMax intakeMotor = new CANSparkMax(INTAKE_MOTOR, CANSparkMaxLowLevel.MotorType.kBrushless);
 	//Internal state variable to keep track of flipper state
@@ -46,10 +45,7 @@ public class Intake extends SubsystemBase {
 	 *
 	 * @param state either forward or reverse
 	 */
-	public void setFlipper(Value state) {
-		flipperLeft.set(state);
-		flipperRight.set(state);
-	}
+	public void setFlipper(Value state) {flipper.set(state);}
 
 	/**
 	 * Returns the current state of the intake

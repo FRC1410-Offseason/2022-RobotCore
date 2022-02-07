@@ -35,19 +35,25 @@ public class Robot extends ScheduledRobot {
 
 	@Override
 	public void registerControls() {
+		//Drivetrain Default Command
 		scheduler.scheduleCommand(new TankDrive(drivetrain, getDriverLeftYAxis(), getDriverRightYAxis()));
+		//Elevator Default Command
 		scheduler.scheduleCommand(new RunElevator(elevator, getOperatorLeftYAxis()));
+		//Winch Default Command
 		scheduler.scheduleCommand(new RunWinch(winch, getOperatorRightYAxis()));
+		//Intake Default Command
+		scheduler.scheduleCommand(new RunIntake(intake, getOperatorRightTrigger()));
+		//Outtake
+		scheduler.scheduleCommand(new ReverseIntake(intake, getOperatorLeftTrigger()).alongWith(new ReverseStorage(storage)));
 
 		//scheduler.scheduleCommand(); //TODO: Add shooter arm incrementing
 
 		getDriverRightBumper(); //TODO: Auto align and shoot
 
-		getOperatorLeftBumper(); //TODO: Toggle shooter arm position
-		getOperatorRightBumper().whenPressed(new ToggleIntake(intake)); //Toggling is handled in the command, only needs to be WhenPressed
-		getOperatorXButton().whileHeld(new RunStorage(storage));
-
-        getDriverAButton().whenPressed(new TestInstantCommand());
+		getOperatorLeftBumper().whileHeld(new ToggleShooterArm(shooterArm)); //TODO: Make this when pressed
+		getOperatorRightBumper().whileHeld(new ToggleIntake(intake)); //TODO: Make this toggle when pressed
+		getOperatorXButton(); //TODO: Make this toggle when pressed & add adaptive shooter RPM
+		getOperatorYButton().whileHeld(new RunStorage(storage));
 	}
 
 	@Override
