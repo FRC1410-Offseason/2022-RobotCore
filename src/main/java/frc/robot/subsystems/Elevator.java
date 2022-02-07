@@ -38,7 +38,7 @@ public class Elevator extends SubsystemBase {
 	private final RelativeEncoder rightEncoder = rightMotor.getEncoder();
 
 	//Elevator Brakes
-	private final DoubleSolenoid lock = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, ELEVATOR_L_FWD, ELEVATOR_L_BCK);
+	private final DoubleSolenoid lock = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, ELEVATOR_FWD, ELEVATOR_BCK);
 
 	//State variable to track state of locks
 	private boolean locked = false;
