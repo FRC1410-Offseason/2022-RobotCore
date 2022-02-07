@@ -37,7 +37,7 @@ public class ToggleWhenPressedTask implements Task {
 
 		if (running) command.execute();
 
-        if (command.isFinished()){
+        if (running && command.isFinished()){
             command.end(false);
             running = false;
         }
