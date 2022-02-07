@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj.RobotBase;
 import frc.robot.commands.looped.*;
 import frc.robot.commands.actions.*;
 import frc.robot.framework.control.ControlScheme;
-import frc.robot.framework.control.DirectionalPad;
 import frc.robot.framework.scheduler.ScheduledRobot;
 import frc.robot.framework.scheduler.TaskScheduler;
 import frc.robot.subsystems.*;
