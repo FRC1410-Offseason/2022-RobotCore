@@ -43,6 +43,7 @@ public class ShooterArm extends SubsystemBase {
 	 * For the physical brake piston on the mechanism
 	 */
 	private final DoubleSolenoid brake = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, SHOOTER_ARM_LOCK_FWD, SHOOTER_ARM_LOCK_BCK);
+
 	/**
 	 * State space model of the mechanism
 	 */

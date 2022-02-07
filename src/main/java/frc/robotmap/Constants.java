@@ -44,6 +44,9 @@ public final class Constants {
 
 
 	//SHOOTER ARM
+	public static final double SHOOTER_ARM_RESTING_ANGLE = 10; //Degrees
+	public static final double SHOOTER_ARM_MAX_ANGLE = 55; //Degrees
+
 	public static final double SHOOTER_ARM_KV = 0;
 	public static final double SHOOTER_ARM_KA = 0;
 
@@ -100,10 +103,13 @@ public final class Constants {
 					KV_ANGULAR,
 					KA_ANGULAR);
 
+	//STORAGE
 	public static final Color BLUE_TARGET = new Color(new Color8Bit(100, 138, 216));
 	public static final Color RED_TARGET = new Color(new Color8Bit(224, 69, 56));
 
 	public static final double STORAGE_INDEX_SPEED = 0;
+	public static final double STORAGE_RUN_SPEED = 0;
+	public static final double STORAGE_REVERSE_SPEED = 0;
 
 	//INTAKE
 	public static final double INTAKE_FORWARD_SPEED = 1;

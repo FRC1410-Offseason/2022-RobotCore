@@ -3,21 +3,21 @@ package frc.robot.commands.actions;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Storage;
 
-import static frc.robotmap.Constants.STORAGE_RUN_SPEED;
+import static frc.robotmap.Constants.STORAGE_REVERSE_SPEED;
 
 
-public class RunStorage extends CommandBase {
+public class ReverseStorage extends CommandBase {
 
 	private final Storage storage;
 
-	public RunStorage(Storage storage) {
+	public ReverseStorage(Storage storage) {
 		this.storage = storage;
 		addRequirements(storage);
 	}
 
 	@Override
 	public void initialize() {
-		storage.runStorage(STORAGE_RUN_SPEED);
+		storage.runStorage(STORAGE_REVERSE_SPEED);
 	}
 
 	@Override

@@ -7,7 +7,10 @@ import edu.wpi.first.math.numbers.N7;
 
 public final class Tuning {
 
-	public static final double DRIVER_DEADZONE_VALUE = 0.1;
+	public static final long DT = 5; // ms
+	public static final long TIME_OFFSET = 3; // ms
+
+	public static final double DRIVER_DEADZONE_VALUE = 0.05;
 	public static final double OPERATOR_DEADZONE_VALUE = 0.05;
 
 	public static final double SHOOTER_LEFT_KP = 0;
@@ -30,6 +33,11 @@ public final class Tuning {
 	public static final double KZ = 0.7;
 
 	public static final double KP_VEL = 5;
+
+	public static final double MAX_VOLTAGE = 12;
+	public static final double MAX_SPEED = 3.5; // m/s
+	public static final double MAX_ACCEL = 4.8; // m/s^2
+	public static final double MAX_CENTRIPETAL_ACCEL = 4.5; // m/s^2
 
 	public static final double STATE_X = 0.000001;
 	public static final double STATE_Y = 0.000001;

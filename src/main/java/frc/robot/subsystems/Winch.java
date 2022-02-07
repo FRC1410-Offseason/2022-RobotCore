@@ -15,8 +15,7 @@ public class Winch extends SubsystemBase {
 	private final CANSparkMax leftMotor = new CANSparkMax(WINCH_LEFT_MOTOR_ID, MotorType.kBrushless);
 	private final CANSparkMax rightMotor = new CANSparkMax(WINCH_RIGHT_MOTOR_ID, MotorType.kBrushless);
 	//Winch Brakes
-	private final DoubleSolenoid leftLock = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, WINCH_L_FWD, WINCH_L_BCK);
-	private final DoubleSolenoid rightLock = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, WINCH_R_FWD, WINCH_R_BCK);
+	private final DoubleSolenoid lock = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, WINCH_FWD, WINCH_BCK);
 
 	//State variable to track state of locks
 	private boolean lockEngaged = false;
@@ -41,10 +40,7 @@ public class Winch extends SubsystemBase {
 	 *
 	 * @param state forward or backward
 	 */
-	public void setLock(Value state) {
-		leftLock.set(state);
-		rightLock.set(state);
-	}
+	public void setLock(Value state) {lock.set(state);}
 
 	/**
 	 * Return the state of the locks

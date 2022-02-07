@@ -11,20 +11,20 @@ public class NetworkTables {
 	static final NetworkTable table = instance.getTable("Dashboard Data");
 	static final NetworkTable robotState = instance.getTable("Robot State");
 	static final NetworkTable limelight = instance.getTable("photonvision/Limelight 2");
-	static NetworkTableEntry autoList, autoChooser; // Auto
-	static NetworkTableEntry x, y, theta, wheelLeft, wheelRight; // Drivetrain
-	static NetworkTableEntry pitch, visionDistance; // Limelight
-	static NetworkTableEntry shooterTargetRPM, leftShooterRPM, leftShooterP, leftShooterI, leftShooterD, leftShooterFF,
+	static final NetworkTableEntry autoList, autoChooser; // Auto
+	static final NetworkTableEntry x, y, theta, wheelLeft, wheelRight; // Drivetrain
+	static final NetworkTableEntry pitch, visionDistance; // Limelight
+	static final NetworkTableEntry shooterTargetRPM, leftShooterRPM, leftShooterP, leftShooterI, leftShooterD, leftShooterFF,
 			rightShooterP, rightShooterI, rightShooterD, rightShooterFF, rightShooterRPM; // Shooter
-	static NetworkTableEntry correctColor, colorReading, lineBroken, storageRPM; // Storage
-	static NetworkTableEntry shooterArmAngle, shooterArmLocked; // Shooter Arm
-	static NetworkTableEntry pressure; // Pneumatics
-	static NetworkTableEntry intakeDeployed, intakeRPM; // Intake
-	static NetworkTableEntry leftWinchHeight, leftWinchLocked, rightWinchHeight, rightWinchLocked; // Winches
-	static NetworkTableEntry leftTelescopingArmHeight, leftTelescopingArmLocked,
+	static final NetworkTableEntry correctColor, colorReading, lineBroken, storageRPM; // Storage
+	static final NetworkTableEntry shooterArmAngle, shooterArmLocked; // Shooter Arm
+	static final NetworkTableEntry pressure; // Pneumatics
+	static final NetworkTableEntry intakeDeployed, intakeRPM; // Intake
+	static final NetworkTableEntry leftWinchHeight, leftWinchLocked, rightWinchHeight, rightWinchLocked; // Winches
+	static final NetworkTableEntry leftTelescopingArmHeight, leftTelescopingArmLocked,
 			rightTelescopingArmHeight, rightTelescopingArmLocked; // Telescoping Arms
 
-	public static void networkTables() {
+	static {
 		// Autonomous
 		autoList = table.getEntry("Auto List");
 		autoChooser = table.getEntry("Auto Chooser");
