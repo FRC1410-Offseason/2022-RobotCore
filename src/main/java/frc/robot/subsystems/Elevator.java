@@ -84,15 +84,6 @@ public class Elevator extends SubsystemBase {
 	private final LinearSystemLoop<N2, N1, N1> loop =
 			new LinearSystemLoop<>(plant, controller, observer, ELEVATOR_CTRL_TOLERANCE, DT);
 
-//	private final ElevatorSim sim = new ElevatorSim(
-//			DCMotor.getNEO(1),
-//			GEAR_RATIO,
-//			ELEVATOR_MASS,
-//			Units.inchesToMeters(1),
-//			ELEVATOR_MIN_POS,
-//			ELEVATOR_MAX_POS
-//	);
-
 	private final LinearSystemSim<N2, N1, N1> sim = new LinearSystemSim<>(plant);
 
 	private final Mechanism2d simWidget = new Mechanism2d(20, 50);
