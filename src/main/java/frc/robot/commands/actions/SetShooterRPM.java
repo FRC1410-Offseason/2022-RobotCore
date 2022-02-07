@@ -1,6 +1,7 @@
 package frc.robot.commands.actions;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.NetworkTables;
 import frc.robot.subsystems.Shooter;
 
 
@@ -18,6 +19,7 @@ public class SetShooterRPM extends CommandBase {
 	@Override
 	public void initialize() {
 		shooter.setSpeeds(RPM);
+		NetworkTables.setShooterTargetRPM(RPM);
 	}
 
 	@Override

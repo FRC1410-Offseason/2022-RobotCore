@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.revrobotics.ColorSensorV3;
 import com.revrobotics.ColorMatchResult;
 import com.revrobotics.ColorMatch;
+import frc.robot.NetworkTables;
 
 public class Storage extends SubsystemBase {
     //Motor that runs the storage
@@ -103,11 +104,14 @@ public class Storage extends SubsystemBase {
 
         if (!lineBreak.get()) {
             runStorage(STORAGE_INDEX_SPEED);
+			NetworkTables.setStorageSpeed(STORAGE_INDEX_SPEED);
         } else {
             runStorage(0);
             if (ballStatus == BallStatus.INDEXED) {
                 if (currentColor == ColorSensorStatus.NOT_ALLIANCE) {
-                    //TODO: Do outtake here
+                    runStorage(STORAGE_REVERSE_SPEED);
+					NetworkTables.setStorageSpeed(STORAGE_REVERSE_SPEED);
+					// Add outtake (from the intake)
                 }
             }
         }

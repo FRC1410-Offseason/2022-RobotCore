@@ -16,10 +16,10 @@ public class NetworkTables {
 	static final NetworkTableEntry pitch, visionDistance; // Limelight
 	static final NetworkTableEntry shooterTargetRPM, leftShooterRPM, leftShooterP, leftShooterI, leftShooterD, leftShooterFF,
 			rightShooterP, rightShooterI, rightShooterD, rightShooterFF, rightShooterRPM; // Shooter
-	static final NetworkTableEntry correctColor, colorReading, lineBroken, storageRPM; // Storage
+	static final NetworkTableEntry correctColor, colorReading, lineBroken, storageSpeed; // Storage
 	static final NetworkTableEntry shooterArmAngle, shooterArmLocked; // Shooter Arm
 	static final NetworkTableEntry pressure; // Pneumatics
-	static final NetworkTableEntry intakeDeployed, intakeRPM; // Intake
+	static final NetworkTableEntry intakeDeployed, intakeSpeed; // Intake
 	static final NetworkTableEntry leftWinchHeight, leftWinchLocked, rightWinchHeight, rightWinchLocked; // Winches
 	static final NetworkTableEntry leftTelescopingArmHeight, leftTelescopingArmLocked,
 			rightTelescopingArmHeight, rightTelescopingArmLocked; // Telescoping Arms
@@ -53,7 +53,7 @@ public class NetworkTables {
 		correctColor = robotState.getEntry("Correct Color");
 		colorReading = robotState.getEntry("Detected Color");
 		lineBroken = robotState.getEntry("Line is Broken");
-		storageRPM = robotState.getEntry("Storage RPM");
+		storageSpeed = robotState.getEntry("Storage RPM");
 		// Shooter Arm
 		shooterArmAngle = robotState.getEntry("Shooter Arm Angle");
 		shooterArmLocked = robotState.getEntry("Shooter Arm is Locked");
@@ -61,7 +61,7 @@ public class NetworkTables {
 		pressure = robotState.getEntry("Pressure");
 		// Intake
 		intakeDeployed = robotState.getEntry("Intake is Deployed");
-		intakeRPM = robotState.getEntry("Intake is Running");
+		intakeSpeed = robotState.getEntry("Intake Speed");
 		// Winches
 		leftWinchHeight = robotState.getEntry("Left Winch Height");
 		rightWinchHeight = robotState.getEntry("Right Winch Height");
@@ -75,7 +75,6 @@ public class NetworkTables {
 
 		// Initializing
 		// Autonomous
-		autoList.setString("");
 		autoChooser.setDouble(0);
 		// Drivetrain
 		x.setDouble(0);
@@ -101,7 +100,7 @@ public class NetworkTables {
 		correctColor.setString("");
 		colorReading.setString("");
 		lineBroken.setBoolean(false);
-		storageRPM.setDouble(0);
+		storageSpeed.setDouble(0);
 		// Shooter Arm
 		shooterArmAngle.setDouble(0);
 		shooterArmLocked.setBoolean(false);
@@ -109,7 +108,7 @@ public class NetworkTables {
 		pressure.setDouble(0);
 		// Intake
 		intakeDeployed.setBoolean(false);
-		intakeRPM.setDouble(0);
+		intakeSpeed.setDouble(0);
 		// Winches
 		leftWinchHeight.setDouble(0);
 		rightWinchHeight.setDouble(0);
@@ -237,8 +236,8 @@ public class NetworkTables {
 		lineBroken.setBoolean(broken);
 	}
 
-	public static void setStorageRPM(double RPM) {
-		storageRPM.setDouble(RPM);
+	public static void setStorageSpeed(double RPM) {
+		storageSpeed.setDouble(RPM);
 	}
 
 	public static double getShooterAngle() {
@@ -268,12 +267,12 @@ public class NetworkTables {
 	}
 
 	public static double getIntakeRPM() {
-		return intakeRPM.getDouble(0);
+		return intakeSpeed.getDouble(0);
 	}
 
 	// Intake
-	public static void setIntakeRPM(double RPM) {
-		intakeRPM.setDouble(RPM);
+	public static void setIntakeSpeed(double speed) {
+		intakeSpeed.setDouble(speed);
 	}
 
 	public static boolean getIntakeDeployed() {

@@ -2,6 +2,7 @@ package frc.robot.commands.actions;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.NetworkTables;
 import frc.robot.subsystems.Intake;
 
 public class SetIntakeSpeed extends CommandBase {
@@ -21,10 +22,16 @@ public class SetIntakeSpeed extends CommandBase {
     public void initialize() {timer.start();}
 
     @Override
-    public void execute() {if (timer.get() <= duration) intake.setSpeed(speed);}
+    public void execute() {
+        if (timer.get() <= duration) intake.setSpeed(speed);
+        NetworkTables.setIntakeSpeed(speed);
+    }
 
     @Override
-    public void end(boolean interrupted) {intake.setSpeed(0);}
+    public void end(boolean interrupted) {
+        intake.setSpeed(0);
+        NetworkTables.setIntakeSpeed(0);
+    }
 
     @Override
     public boolean isFinished() {return timer.get() >= duration;}
