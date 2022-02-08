@@ -9,10 +9,11 @@ public class IDs {
 	public static final int DRIVETRAIN_RIGHT_FRONT_MOTOR_ID = 3;
 	public static final int DRIVETRAIN_RIGHT_BACK_MOTOR_ID = 4;
 
-    //SHOOTER
+	//SHOOTER
 	public static final int SHOOTER_LEFT_MOTOR_ID = 11;
 	public static final int SHOOTER_RIGHT_MOTOR_ID = 12;
 
+	//STORAGE
 	public static final int STORAGE_MOTOR_ID = 41;
 	public static final int STORAGE_LINE_BREAK_PORT = 0; //To Do: Find out what the actual port on the roborio is
 
