@@ -37,8 +37,8 @@ public class RunElevator extends CommandBase {
 	public void execute() {
 		boolean shouldRun = Math.abs(axis.getDeadzoned()) < 0.1;
 		if (!shouldRun) {
-			elevator.setLock(DoubleSolenoid.Value.kReverse);
-			double desiredSpeed = -axis.getDeadzoned() * ELEVATOR_MAX_VEL;
+			elevator.unlock();
+			double desiredSpeed = axis.getDeadzoned() * ELEVATOR_MAX_VEL;
 			if (desiredSpeed < -0.01) {
 				goal = new TrapezoidProfile.State(ELEVATOR_MIN_POS, desiredSpeed);
 			} else if (desiredSpeed > 0.01) {
@@ -52,7 +52,7 @@ public class RunElevator extends CommandBase {
 			elevator.setVoltage(armLoop.getU(0));
 		} else {
 			elevator.setVoltage(0);
-			elevator.setLock(DoubleSolenoid.Value.kForward);
+			elevator.lock();
 		}
 	}
 

@@ -248,16 +248,16 @@ public class Elevator extends SubsystemBase {
 	 * @return True / False -> Locked / Unlocked
 	 */
 	public boolean getLocked() {
-		return this.locked;
+		return locked;
 	}
 
 	/**
 	 * Set the state of the locks to locked
 	 */
 	public void lock() {
-		if (!this.locked) {
-			this.setLock(Value.kForward);
-			this.locked = true;
+		if (!locked) {
+			setLock(Value.kForward);
+			locked = true;
 		}
 	}
 
@@ -265,9 +265,9 @@ public class Elevator extends SubsystemBase {
 	 * Set the state of the locks to unlocked
 	 */
 	public void unlock() {
-		if (this.locked) {
-			this.setLock(Value.kReverse);
-			this.locked = false;
+		if (locked) {
+			setLock(Value.kReverse);
+			locked = false;
 		}
 	}
 
@@ -275,10 +275,10 @@ public class Elevator extends SubsystemBase {
 	 * Toggle the state of the locks
 	 */
 	public void toggle() {
-		if (this.locked) {
-			this.unlock();
+		if (locked) {
+			unlock();
 		} else {
-			this.lock();
+			lock();
 		}
 	}
 }
