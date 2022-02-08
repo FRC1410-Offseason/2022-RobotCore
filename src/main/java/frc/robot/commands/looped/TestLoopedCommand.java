@@ -1,8 +1,8 @@
 package frc.robot.commands.looped;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-
 public class TestLoopedCommand extends CommandBase {
+
     @Override
 	public void initialize() {
         System.out.println("Initializing Looped Command");

@@ -35,7 +35,8 @@ public class Robot extends ScheduledRobot {
 
 	@Override
 	public void registerControls() {
-		//Drivetrain Default Command
+        
+        //Drivetrain Default Command
 		scheduler.scheduleCommand(new TankDrive(drivetrain, getDriverLeftYAxis(), getDriverRightYAxis()));
 		//Elevator Default Command
 		scheduler.scheduleCommand(new RunElevator(elevator, getOperatorLeftYAxis()));
@@ -54,6 +55,11 @@ public class Robot extends ScheduledRobot {
 		getOperatorRightBumper().whileHeld(new ToggleIntake(intake)); //TODO: Make this toggle when pressed
 		getOperatorXButton(); //TODO: Make this toggle when pressed & add adaptive shooter RPM
 		getOperatorYButton().whileHeld(new RunStorage(storage));
+
+        // getDriverAButton().whenPressed(new TestActionCommand());
+        // getDriverBButton().toggleWhenPressed(new TestLoopedCommand());
+        
+        // scheduler.scheduleCommand(new TestAxisCommand(getDriverLeftXAxis()));
 	}
 
 	@Override
