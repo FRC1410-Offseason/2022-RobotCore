@@ -18,6 +18,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.LinearSystemSim;
 import edu.wpi.first.wpilibj.smartdashboard.*;
 import edu.wpi.first.wpilibj.util.Color;
@@ -143,7 +144,7 @@ public class Elevator extends SubsystemBase {
 
 	@Override
 	public void simulationPeriodic() {
-		sim.setInput(currentVoltage);
+		sim.setInput(getSpeed() * RobotController.getBatteryVoltage());
 
 		if (lock.get() == Value.kForward) {
 			pistonInnards.setLength(40);
@@ -156,7 +157,7 @@ public class Elevator extends SubsystemBase {
 		leftEncoder.setPosition(sim.getOutput(0));
 		rightEncoder.setPosition(sim.getOutput(0));
 
-		elevatorSim.setLength(loop.getObserver().getXhat(0) * 23);
+		elevatorSim.setLength(sim.getOutput(0) * 23);
 	}
 
 	public LinearSystemLoop<N2, N1, N1> getLoop() {
@@ -182,7 +183,6 @@ public class Elevator extends SubsystemBase {
 	}
 
 	public void set(double speed) {
-		System.out.println("Speed of motors set to" + speed);
 		leftMotor.set(speed);
 		rightMotor.set(speed);
 	}

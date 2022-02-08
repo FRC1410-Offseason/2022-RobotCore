@@ -80,7 +80,7 @@ public class Axis {
 		if (magnitude <= deadzone) {
 			return 0;
 		} else {
-			return -((magnitude - deadzone) / (1 - deadzone)) * (value / magnitude);
+			return ((magnitude - deadzone) / (1 - deadzone)) * (value / magnitude);
 		}
 	}
 }
