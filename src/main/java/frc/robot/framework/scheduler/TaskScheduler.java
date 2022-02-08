@@ -22,6 +22,8 @@ public class TaskScheduler {
 	private boolean stopped = false;
 	private int currentTaskId = -1;
 
+    private boolean dumpingDebugTelemetry = false;
+
 	public TaskScheduler(long defaultPeriod) {
 		this.defaultPeriod = defaultPeriod;
 	}
@@ -29,6 +31,17 @@ public class TaskScheduler {
 	public TaskScheduler() {
 		this(20);
 	}
+
+    public void enableDebugTelemetry() {
+        dumpingDebugTelemetry = true;
+    }
+    
+    public void debugDump() {
+        System.out.println("Current Control Word: " + controlWord);
+        for (EnqueuedTask task : queue) {
+            System.out.println("Task: " + task.getTask());
+        }
+    }
 
 	public void start() {
 		while (!stopped) {
@@ -64,6 +77,9 @@ public class TaskScheduler {
 	}
 
 	public void tick() {
+
+        if (dumpingDebugTelemetry) debugDump();
+
 		EnqueuedTask next;
 		//noinspection StatementWithEmptyBody – no logic needed; block until a task is available
 		while ((next = queue.peek()) == null || next.getTargetTime() > System.currentTimeMillis()) {
