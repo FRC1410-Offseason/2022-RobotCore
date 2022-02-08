@@ -21,8 +21,28 @@ import edu.wpi.first.wpilibj.util.Color8Bit;
  */
 public final class Constants {
 
-	//Elevator
+	//ELEVATOR
 	public static final double GEAR_RATIO = 10.61;
+	public static final double ELEVATOR_MASS = 2.7; //kg, placeholder
+	public static final double ELEVATOR_KV = 1; //Placeholder
+	public static final double ELEVATOR_KA = 1; //Placeholder
+	public static final double ELEVATOR_METERS_PER_REV = 0.0151;
+
+	public static final double ELEVATOR_POS_CONFIDENCE = 0.0001; //Meters
+	public static final double ELEVATOR_VEL_CONFIDENCE = 0.0001; //Meters per second
+	public static final double ELEVATOR_ENC_CONFIDENCE = 0.0001; //Rotations
+
+	public static final double ELEVATOR_POS_TOLERANCE = .001; //Meters
+	public static final double ELEVATOR_VEL_TOLERANCE = .1; //Meters per second
+	public static final double ELEVATOR_CTRL_TOLERANCE = 12; //Volts
+
+	public static final double ELEVATOR_MAX_VEL = 1; //Meters per second
+	public static final double ELEVATOR_MAX_ACCEL = 1; //Meters per second^2
+	public static final double ELEVATOR_MAX_POS = 2; //Meters
+	public static final double ELEVATOR_MIN_POS = 0; //Meters
+
+
+
 	//SHOOTER ARM
 	public static final double SHOOTER_ARM_RESTING_ANGLE = 10; //Degrees
 	public static final double SHOOTER_ARM_MAX_ANGLE = 55; //Degrees
