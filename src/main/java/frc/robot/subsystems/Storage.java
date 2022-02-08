@@ -3,8 +3,7 @@ package frc.robot.subsystems;
 import static frc.robotmap.IDs.*;
 import static frc.robotmap.Constants.*;
 
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.I2C;
@@ -16,7 +15,7 @@ import com.revrobotics.ColorMatch;
 
 public class Storage extends SubsystemBase {
     //Motor that runs the storage
-    private final CANSparkMax motor = new CANSparkMax(STORAGE_MOTOR_ID, MotorType.kBrushless);
+	private final WPI_VictorSPX motor = new WPI_VictorSPX(STORAGE_MOTOR_ID);
     //Color sensor
     private final ColorSensorV3 colorSensor = new ColorSensorV3(I2C.Port.kOnboard);
     private final ColorMatch colorMatcher = new ColorMatch();
@@ -24,8 +23,6 @@ public class Storage extends SubsystemBase {
     private final DigitalInput lineBreak = new DigitalInput(STORAGE_LINE_BREAK_PORT);
 
     private final Alliance currentAlliance;
-//    private boolean lineBroken = false;
-//    private boolean ballDetected = false;
     private ColorSensorStatus currentColor = null;
     private BallStatus ballStatus = null;
 
@@ -43,7 +40,7 @@ public class Storage extends SubsystemBase {
         colorMatcher.addColorMatch(BLUE_TARGET);
         colorMatcher.addColorMatch(RED_TARGET);
         this.currentAlliance = currentAlliance;
-        motor.restoreFactoryDefaults();
+		motor.configFactoryDefault();
     }
 
     /**
