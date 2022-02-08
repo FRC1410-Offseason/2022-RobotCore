@@ -134,7 +134,7 @@ public class Elevator extends SubsystemBase {
 		rightEncoder.setPositionConversionFactor(ELEVATOR_METERS_PER_REV);
 
 		SmartDashboard.putData("Elevator Sim", simWidget);
-		SmartDashboard.putData("Piston Sim", pistonSim);
+		SmartDashboard.putData("Elevator Piston", pistonSim);
 	}
 
 	@Override
