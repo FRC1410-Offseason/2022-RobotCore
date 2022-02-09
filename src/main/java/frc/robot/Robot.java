@@ -52,7 +52,7 @@ public class Robot extends ScheduledRobot {
 		getOperatorLeftBumper().whileHeld(new ToggleShooterArm(shooterArm)); //TODO: Make this when pressed
 		getOperatorRightBumper().whileHeld(new ToggleIntake(intake)); //TODO: Make this toggle when pressed
 		getOperatorXButton(); //TODO: Make this toggle when pressed & add adaptive shooter RPM
-		getOperatorYButton().whileHeld(new RunStorage(storage));
+		getOperatorYButton().whileHeld(new SetStorageSpeed(storage));
 
         // getDriverAButton().whenPressed(new TestActionCommand());
         // getDriverBButton().toggleWhenPressed(new TestLoopedCommand());
