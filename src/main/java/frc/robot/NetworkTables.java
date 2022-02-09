@@ -15,7 +15,7 @@ public class NetworkTables {
 	static final NetworkTableEntry x, y, theta, wheelLeft, wheelRight; // Drivetrain
 	static final NetworkTableEntry pitch, visionDistance; // Limelight
 	static final NetworkTableEntry shooterTargetRPM, leftShooterRPM, leftShooterP, leftShooterI, leftShooterD, leftShooterFF,
-			rightShooterP, rightShooterI, rightShooterD, rightShooterFF, rightShooterRPM; // Shooter
+		rightShooterP, rightShooterI, rightShooterD, rightShooterFF, rightShooterRPM, lowestRPM; // Shooter
 	static final NetworkTableEntry correctColor, colorReading, lineBroken, storageSpeed; // Storage
 	static final NetworkTableEntry shooterArmAngle, shooterArmLocked; // Shooter Arm
 	static final NetworkTableEntry pressure; // Pneumatics
@@ -49,6 +49,7 @@ public class NetworkTables {
 		rightShooterI = robotState.getEntry("Right Shooter I");
 		rightShooterD = robotState.getEntry("Right Shooter D");
 		rightShooterFF = robotState.getEntry("Right Shooter FF");
+		lowestRPM = robotState.getEntry("Lowest Shooter RPM Drop");
 		// Storage
 		correctColor = robotState.getEntry("Correct Color");
 		colorReading = robotState.getEntry("Detected Color");
@@ -96,6 +97,7 @@ public class NetworkTables {
 		rightShooterI.setDouble(0);
 		rightShooterD.setDouble(0);
 		rightShooterFF.setDouble(0);
+		lowestRPM.setDouble(0);
 		// Storage
 		correctColor.setString("");
 		colorReading.setString("");
@@ -210,6 +212,8 @@ public class NetworkTables {
 		rightShooterD.setDouble(D);
 		rightShooterFF.setDouble(FF);
 	}
+
+	public static void setLowestRPM(double RPM) {lowestRPM.setDouble(RPM);}
 
 	public static String getCorrectColor() {
 		return correctColor.getString("");

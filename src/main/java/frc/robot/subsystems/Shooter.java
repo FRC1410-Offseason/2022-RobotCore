@@ -2,6 +2,8 @@ package frc.robot.subsystems;
 
 import com.revrobotics.*;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
+import frc.robot.NetworkTables;
 import frc.robot.framework.subsystem.SubsystemBase;
 
 import static frc.robotmap.IDs.SHOOTER_LEFT_MOTOR_ID;
@@ -23,6 +25,8 @@ public class Shooter extends SubsystemBase {
 	private final SparkMaxPIDController rightController = rightMotor.getPIDController();
 
 	private double target = 0;
+	private boolean running = false;
+	private double lowestRPM = 0;
 
 	/**
 	 * Creates a new Shooter.
@@ -41,22 +45,29 @@ public class Shooter extends SubsystemBase {
 
 		//Set PID loops to default values from the tuning file
 		setLeftPID(
-				SHOOTER_LEFT_KP,
-				SHOOTER_LEFT_KI,
-				SHOOTER_LEFT_KD,
-				SHOOTER_LEFT_KFF
+			SHOOTER_LEFT_KP,
+			SHOOTER_LEFT_KI,
+			SHOOTER_LEFT_KD,
+			SHOOTER_LEFT_KFF
 		);
 		setRightPID(
-				SHOOTER_RIGHT_KP,
-				SHOOTER_RIGHT_KI,
-				SHOOTER_RIGHT_KD,
-				SHOOTER_RIGHT_KFF
+			SHOOTER_RIGHT_KP,
+			SHOOTER_RIGHT_KI,
+			SHOOTER_RIGHT_KD,
+			SHOOTER_RIGHT_KFF
 		);
 	}
 
 	@Override
 	public void periodic() {
-		// This method will be called once per scheduler run
+		if ((getRightVel() * 1.1) >= target) {
+			running = true;
+			lowestRPM = getRightVel();
+		}
+		if (getRightVel() < (target * 0.2) && running) running = false;
+		if (running && (getRightVel() < lowestRPM)) lowestRPM = getRightVel();
+		if (running && (getLeftVel() < lowestRPM)) lowestRPM = getLeftVel();
+		NetworkTables.setLowestRPM(lowestRPM);
 	}
 
 	public void setLeftPID(double P, double I, double D) {

@@ -4,7 +4,6 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.NetworkTables;
 import frc.robot.subsystems.Shooter;
 
-
 public class SetShooterRPM extends CommandBase {
 
 	private final Shooter shooter;
