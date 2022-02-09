@@ -5,12 +5,11 @@ import static frc.robotmap.Constants.*;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import com.revrobotics.ColorSensorV3;
-import com.revrobotics.ColorMatchResult;
 import com.revrobotics.ColorMatch;
 
 public class Storage extends SubsystemBase {
@@ -18,11 +17,8 @@ public class Storage extends SubsystemBase {
 	private final WPI_VictorSPX motor = new WPI_VictorSPX(STORAGE_MOTOR_ID);
     //Color sensor
     private final ColorSensorV3 colorSensor = new ColorSensorV3(I2C.Port.kOnboard);
-    private final ColorMatch colorMatcher = new ColorMatch();
     //Line break sensor
     private final DigitalInput lineBreak = new DigitalInput(STORAGE_LINE_BREAK_PORT);
-
-    private final Alliance currentAlliance;
     private ColorSensorStatus currentColor = null;
     private BallStatus ballStatus = null;
 	private OuttakeStatus outtakeStatus = null;
@@ -42,10 +38,7 @@ public class Storage extends SubsystemBase {
 		NOT_OUTTAKING
 	}
 
-    public Storage(Alliance currentAlliance) {
-        colorMatcher.addColorMatch(BLUE_TARGET);
-        colorMatcher.addColorMatch(RED_TARGET);
-        this.currentAlliance = currentAlliance;
+    public Storage() {
 		motor.configFactoryDefault();
     }
 
@@ -61,9 +54,17 @@ public class Storage extends SubsystemBase {
      * Returns the current value that the line break is reporting
      * @return true if there is no cargo, false if there is
      */
-    public boolean getLineBreakState() {
+    public boolean getLineBreak() {
         return lineBreak.get();
     }
+
+	/**
+	 * Returns the current color that the color sensor is reporting
+	 * @return color object of color sensor
+	 */
+	public Color getColorSensor() {
+		return colorSensor.getColor();
+	}
 
 	/**
 	 * Returns the current state of the color sensor
@@ -112,48 +113,5 @@ public class Storage extends SubsystemBase {
 	public void setOuttakeStatus(OuttakeStatus outtakeStatus) {
 		this.outtakeStatus = outtakeStatus;
 	}
-    
-    /**
-     * Runs every robot cycle
-     * Line Broken --> Motor runs & ball in storage
-     * Line !Broken --> Motor stops & if ball in storage --> Update color
-     */
-    @Override
-    public void periodic() {
-        ColorMatchResult colorMatchResult = colorMatcher.matchClosestColor(colorSensor.getColor());
-
-        if (currentAlliance == Alliance.Blue) {
-            if (colorMatchResult.color.equals(BLUE_TARGET)) {
-                currentColor = ColorSensorStatus.ALLIANCE;
-            } else {
-                currentColor = ColorSensorStatus.NOT_ALLIANCE;
-            }
-        } else {
-            if (colorMatchResult.color.equals(RED_TARGET)) {
-                currentColor = ColorSensorStatus.ALLIANCE;
-            } else {
-                currentColor = ColorSensorStatus.NOT_ALLIANCE;
-            }
-        }
-
-        if (lineBreak.get()) {
-            if (ballStatus == BallStatus.INDEXING) {
-                ballStatus = BallStatus.INDEXED;
-            }
-        } else {
-            ballStatus = BallStatus.INDEXING;
-        }
-
-        if (!lineBreak.get()) {
-            runStorage(STORAGE_INDEX_SPEED);
-        } else {
-            runStorage(0);
-            if (ballStatus == BallStatus.INDEXED) {
-                if (currentColor == ColorSensorStatus.NOT_ALLIANCE) {
-                    //TODO: Do outtake here
-                }
-            }
-        }
-    }
 }
 

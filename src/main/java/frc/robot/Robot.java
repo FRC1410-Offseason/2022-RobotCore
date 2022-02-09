@@ -28,7 +28,7 @@ public class Robot extends ScheduledRobot {
 	private final Intake intake = new Intake();
 	private final Shooter shooter = new Shooter();
 	private final ShooterArm shooterArm = new ShooterArm();
-	private final Storage storage = new Storage(DriverStation.getAlliance());
+	private final Storage storage = new Storage();
 	private final Winch winch = new Winch();
 
 	@Override
@@ -42,6 +42,8 @@ public class Robot extends ScheduledRobot {
 		scheduler.scheduleCommand(new RunWinch(winch, getOperatorRightYAxis()));
 		//Intake Default Command
 		scheduler.scheduleCommand(new RunIntake(intake, getOperatorRightTrigger()));
+		//Storage Default Command
+		scheduler.scheduleCommand(new RunStorage(storage, DriverStation.getAlliance()));
 		//Outtake
 		scheduler.scheduleCommand(new ReverseIntake(intake, getOperatorLeftTrigger()).alongWith(new ReverseStorage(storage)));
 
