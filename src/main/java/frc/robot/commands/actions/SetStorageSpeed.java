@@ -6,11 +6,11 @@ import frc.robot.subsystems.Storage;
 import static frc.robotmap.Constants.STORAGE_RUN_SPEED;
 
 
-public class RunStorage extends CommandBase {
+public class SetStorageSpeed extends CommandBase {
 
 	private final Storage storage;
 
-	public RunStorage(Storage storage) {
+	public SetStorageSpeed(Storage storage) {
 		this.storage = storage;
 		addRequirements(storage);
 	}
