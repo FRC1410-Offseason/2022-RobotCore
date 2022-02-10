@@ -33,11 +33,11 @@ public class StorageState {
 		slot2.setColor(alliance ? ColorSensorStatus.ALLIANCE : ColorSensorStatus.NOT_ALLIANCE);
 	}
 
-	public StorageSlot getSlot1 () {
+	public StorageSlot getSlot1() {
 		return slot1;
 	}
 
-	public StorageSlot getSlot2 () {
+	public StorageSlot getSlot2() {
 		return slot2;
 	}
 }
