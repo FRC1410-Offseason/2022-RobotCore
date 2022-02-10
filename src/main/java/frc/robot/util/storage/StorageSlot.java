@@ -23,7 +23,7 @@ public class StorageSlot {
 		return ballPresent;
 	}
 
-	public Storage.ColorSensorStatus getColor () {
+	public Storage.ColorSensorStatus getColor() {
 		return color;
 	}
 }
