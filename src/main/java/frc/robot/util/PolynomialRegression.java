@@ -1,5 +1,6 @@
 package frc.robot.util;
 
+import java.util.List;
 import java.util.Random;
 
 public class PolynomialRegression {
@@ -19,17 +20,17 @@ public class PolynomialRegression {
 		this.buffersize = buffersize;
 	}
 
-	public double error(double[] x, double[] y) {
-		if (x.length != y.length) throw new IllegalArgumentException("Unequal length");
+	public double error(List<Double> x, List<Double> y) {
+		if (x.size() != y.size()) throw new IllegalArgumentException("Unequal length");
 		double error = 0;
 		double terror = 0;
 		double ybar = 0;
-		for (int i = 0; i < x.length; i++) {
-			ybar += y[i];
-			error += Math.pow(f(x[i] )- y[i], 2);
+		for (int i = 0; i < x.size(); i++) {
+			ybar += y.get(i);
+			error += Math.pow(f(x.get(i))- y.get(i), 2);
 		}
-		ybar /= y.length;
-		for (int i = 0; i < x.length; i++) terror += Math.pow(y[i] - ybar, 2);
+		ybar /= y.size();
+		for (int i = 0; i < x.size(); i++) terror += Math.pow(y.get(i) - ybar, 2);
 		return error / terror;
 	}
 
@@ -37,8 +38,13 @@ public class PolynomialRegression {
 	private double[][] lastParameters = null;
 	private double[] lastErrors = null;
 	private int lastParameterIndex = 0;
-
-	public void gradStep(double alpha, double[] x, double[] y, double stepsize, double noise) {
+	public void reset() {
+		for(int i=0;i<parameters.length;i++) {
+			parameters[i]=0;
+		}
+		lastParameterIndex=0;
+	}
+	public void gradStep(double alpha, List<Double> x, List<Double> y, double stepsize, double noise) {
 		if (lastParameters == null) lastParameters = new double[buffersize][parameters.length];
 		if (lastErrors==null) lastErrors = new double[buffersize];
 		double[] deltas = new double[parameters.length];

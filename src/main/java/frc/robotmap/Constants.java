@@ -39,7 +39,7 @@ public final class Constants {
 	public static final double SHOOTER_ARM_MAX_VOLTAGE = 12.0;
 	public static final double SHOOTER_ARM_MAX_VELOCITY = 170; // Deg per Second
 	public static final double SHOOTER_ARM_MAX_ACCEL = 360; // Deg per Second squared
-
+	//DRIVETRAIN
 	public static final double DT = 0.02;
 
 	public static final double KS = 0.676; //Position
@@ -65,6 +65,19 @@ public final class Constants {
 			KA,
 			KV_ANGULAR,
 			KA_ANGULAR);
+	//SHOOTER MATH
+	public static final double SIGNIFICANT_DROP_DETECTION_THSHLD = 0.1;
+	public static final long LOWEST_EXPIRATION_TIME_MS = 150; //Maximum time between negative peaks
+	public static final int REGRESSION_DEGREE = 4;
+	public static final int REGRESSION_STEPS = 5000;
+	public static final int REGRESSION_STEPS_PER_CYCLE = 200;
+	public static final int REGRESSION_BUFFERSIZE = 20;
+	public static final double REGRESSION_ALPHA = 0.000006;
+	public static final double REGRESSION_STEPSIZE = 0.00000000005;
+	public static final double REGRESSION_NOISE = 200;
+	public static final double SHOOTER_WHEEL_RADIUS = 0.0762; //M
+	public static final double SHOOTER_BALL_MASS = 0.270; //KG
+	public static final double SHOOTER_I = 1;
 
 	//STORAGE
 	public static final Color BLUE_TARGET = new Color(new Color8Bit(100, 138, 216));
