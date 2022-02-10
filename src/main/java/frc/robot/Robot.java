@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.commands.looped.*;
 import frc.robot.commands.actions.*;
-import frc.robot.commands.grouped.FiveCargoAuto;
+import frc.robot.commands.grouped.*;
 import frc.robot.framework.control.ControlScheme;
 import frc.robot.framework.scheduler.EnqueuedTask;
 import frc.robot.framework.scheduler.ScheduledRobot;
@@ -38,6 +38,7 @@ public class Robot extends ScheduledRobot implements ControlScheme {
 	private final ShooterArm shooterArm = new ShooterArm();
 	private final Storage storage = new Storage(DriverStation.getAlliance());
 	private final Winch winch = new Winch();
+	private final Limelight limelight = new Limelight();
 	private final Trajectories auto = new Trajectories(this.drivetrain);
 
 	@Override
@@ -67,7 +68,7 @@ public class Robot extends ScheduledRobot implements ControlScheme {
 		NetworkTables.setAutoList(autoList);
 		NetworkTables.setCorrectColor(DriverStation.getAlliance().toString());
 		NetworkTables.setPressure(pressure);
-		if (RobotBase.isReal()) scheduler.scheduleCommand(new PoseEstimation(drivetrain), TIME_OFFSET, DT);
+		if (RobotBase.isReal()) scheduler.scheduleCommand(new PoseEstimation(drivetrain, limelight, shooterArm), TIME_OFFSET, DT);
 		if (RobotBase.isSimulation()) scheduler.scheduleCommand(new DrivetrainSimulation(drivetrain), TIME_OFFSET, DT);
 	}
 
@@ -75,15 +76,10 @@ public class Robot extends ScheduledRobot implements ControlScheme {
 	public void autonomousInit() {
 		drivetrain.setBrake(); // Test, maybe bad idea
 		Command autonomousCommand = null;
+		if (NetworkTables.getAutoChooser() == 4) autonomousCommand = new ThreeCargoTerminalAuto(auto, intake, shooter, shooterArm, storage);
+		if (NetworkTables.getAutoChooser() == 5) autonomousCommand = new FourCargoAuto(auto, intake, shooter, shooterArm, storage);
         if (NetworkTables.getAutoChooser() == 6) autonomousCommand = new FiveCargoAuto(auto, intake, shooter, shooterArm, storage);
         if (autonomousCommand != null) this.autoTask = scheduler.scheduleCommand(autonomousCommand, TIME_OFFSET, DT);
-
-		// if (NetworkTables.getAutoChooser() == 1) autonomousCommand = auto.Taxi();
-        // else if (NetworkTables.getAutoChooser() == 2) autonomousCommand = auto.UpperCargoShoot2();
-        // else if (NetworkTables.getAutoChooser() == 3) autonomousCommand = auto.Terminal3Cargo();
-        // else if (NetworkTables.getAutoChooser() == 4) autonomousCommand = auto.UpRight3Cargo();
-        // else if (NetworkTables.getAutoChooser() == 5) autonomousCommand = auto.UpRightTerminal4Cargo();
-		// else if (NetworkTables.getAutoChooser() == 6) autonomousCommand = auto.FiveCargo();
 	}
 
 	@Override

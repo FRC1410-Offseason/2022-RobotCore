@@ -70,59 +70,60 @@ public class Shooter extends SubsystemBase {
 	}
 
 	public double targetRPM(double vel) {
-		return 30.0*invR.f(Math.pow(vel,2)
-				*((Math.pow(Constants.SHOOTER_WHEEL_RADIUS,2) * Constants.SHOOTER_BALL_MASS)+Constants.SHOOTER_I)
-				/(Constants.SHOOTER_I * Math.pow(Constants.SHOOTER_WHEEL_RADIUS,2)))/Math.PI;
+		return 30.0 * invR.f(Math.pow(vel,2)
+			* ((Math.pow(Constants.SHOOTER_WHEEL_RADIUS, 2) * Constants.SHOOTER_BALL_MASS) + Constants.SHOOTER_I)
+			/ (Constants.SHOOTER_I * Math.pow(Constants.SHOOTER_WHEEL_RADIUS, 2))) / Math.PI;
 	}
 
 	@Override
 	public void periodic() {
-		double rpm = Math.abs((getRightVel()+getLeftVel())*0.5); //Average RPM
-		if(rpm<(Math.min(Math.abs(ptarget), Math.abs(target))*(1-Constants.SIGNIFICANT_DROP_DETECTION_THSHLD))) {
-			if(rpm<lowestRPM || lowestRPM<0) {
+		double rpm = Math.abs((getRightVel() + getLeftVel()) * 0.5); //Average RPM
+		if (rpm < (Math.min(Math.abs(ptarget), Math.abs(target)) * (1 - Constants.SIGNIFICANT_DROP_DETECTION_THSHLD))) {
+			if (rpm < lowestRPM || lowestRPM < 0) {
 				lowestRPM = rpm;
 				lowestTime = System.currentTimeMillis();
 			}
-		} else if(Math.abs((rpm-Math.abs(target))/target) <= Constants.SIGNIFICANT_DROP_DETECTION_THSHLD*0.5) {
+		} else if (Math.abs((rpm - Math.abs(target)) / target) <= Constants.SIGNIFICANT_DROP_DETECTION_THSHLD * 0.5) {
 			ptarget = target;
 		}
-		if(lowestRPM >= 0) {
-			if(System.currentTimeMillis()-lowestTime > Constants.LOWEST_EXPIRATION_TIME_MS) {
+		if (lowestRPM >= 0) {
+			if (System.currentTimeMillis() - lowestTime > Constants.LOWEST_EXPIRATION_TIME_MS) {
 				//Throw out and use the current results - we're done dropping
-				double omegaI = Math.abs(ptarget)*Math.PI/30.0;
-				double omegaF = lowestRPM*Math.PI/30.0;
-				double xvalue = ((Math.pow(omegaI,2)-Math.pow(omegaF,2))*((Math.pow(Constants.SHOOTER_WHEEL_RADIUS,2)*Constants.SHOOTER_BALL_MASS)+Constants.SHOOTER_I))
-						/(Math.pow(Constants.SHOOTER_WHEEL_RADIUS,2)*Constants.SHOOTER_BALL_MASS);
-				if(xvalue<0 || xvalue>Math.pow(omegaI,2)) {
-					throw new IllegalStateException("Incorrect calculation of xvalue stuff. Value: "+xvalue);
+				double omegaI = Math.abs(ptarget) * Math.PI / 30.0;
+				double omegaF = lowestRPM * Math.PI / 30.0;
+				double xvalue = ((Math.pow(omegaI, 2) - Math.pow(omegaF, 2)) * ((Math.pow(Constants.SHOOTER_WHEEL_RADIUS, 2)
+					* Constants.SHOOTER_BALL_MASS) + Constants.SHOOTER_I))
+					/ (Math.pow(Constants.SHOOTER_WHEEL_RADIUS, 2) * Constants.SHOOTER_BALL_MASS);
+				if (xvalue < 0 || xvalue > Math.pow(omegaI, 2)) {
+					throw new IllegalStateException("Incorrect calculation of xvalue stuff. Value: "+ xvalue);
 				}
-				double yvalue=omegaI;
+				double yvalue = omegaI;
 				xvalues.add(xvalue);
 				yvalues.add(yvalue);
-				runningRegression=true;
+				runningRegression = true;
 				//Run normalization process
 				xvalues_normalized.clear();
 				invR.reset();
-				double maximum=0;
-				for(double d : xvalues) {
-					if(d>maximum) maximum=d;
+				double maximum = 0;
+				for (double d : xvalues) {
+					if (d > maximum) maximum = d;
 				}
 				for(double d : xvalues) {
-					xvalues_normalized.add(d/maximum); //Do normalization
+					xvalues_normalized.add(d / maximum); //Do normalization
 				}
 				//Change lowestRPM stuff
 				lowestRPM = -1;
 				lowestTime = 0;
 			}
 		}
-		if(runningRegression) {
-			for(int i=0;i<Constants.REGRESSION_STEPS_PER_CYCLE;i++) {
+		if (runningRegression) {
+			for (int i = 0; i < Constants.REGRESSION_STEPS_PER_CYCLE; i++) {
 				invR.gradStep(Constants.REGRESSION_ALPHA,xvalues_normalized,yvalues,Constants.REGRESSION_STEPSIZE,Constants.REGRESSION_NOISE);
 			}
-			regressionStepcount+=Constants.REGRESSION_STEPS_PER_CYCLE;
-			if(regressionStepcount>Constants.REGRESSION_STEPS) {
+			regressionStepcount += Constants.REGRESSION_STEPS_PER_CYCLE;
+			if (regressionStepcount > Constants.REGRESSION_STEPS) {
 				invR.setLowestInBuffer();
-				runningRegression=false;
+				runningRegression = false;
 				//Finished regression
 			}
 		}

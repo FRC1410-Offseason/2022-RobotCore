@@ -14,7 +14,7 @@ import frc.robot.subsystems.ShooterArm;
 import frc.robot.subsystems.Storage;
 import frc.robot.util.Trajectories;
 
-public class FiveCargoAuto extends ParallelCommandGroup {
+public class FourCargoAuto extends ParallelCommandGroup {
     private double upperTarmacToUpperCargoShootDuration;
     private double upperCargoShootToUpperFieldDuration;
     private double upperFieldToUpRightCargoDuration;
@@ -22,7 +22,6 @@ public class FiveCargoAuto extends ParallelCommandGroup {
 
     private double upperTarmacToUpRightCargoDuration;
     private double upperTarmacToTerminalDuration;
-    private double upperTarmacToFifthCargoReady;
 
 	private double upRightCargoDuration;
 	private double upperCargoShootDuration;
@@ -31,7 +30,6 @@ public class FiveCargoAuto extends ParallelCommandGroup {
     private final double intakeToStorageDuration = 0.5;
     private final double shooterSpinupDuration = 2;
     private final double shooterArmLiftDuration = 0.55; // From sim
-    private final double shooterArmLowerDuration = 0.515; // From sim
     private final double doubleShootDuration = 1;
 
     private final double highestIntakingShooterArmAngle = 24;
@@ -40,7 +38,7 @@ public class FiveCargoAuto extends ParallelCommandGroup {
     private final double upperCargoShotRPM = 3000;
     private final double terminalShotRPM = 4700; 
 
-    public FiveCargoAuto(Trajectories trajectories, Intake intake, Shooter shooter, ShooterArm shooterArm, Storage storage) {        
+    public FourCargoAuto(Trajectories trajectories, Intake intake, Shooter shooter, ShooterArm shooterArm, Storage storage) {        
         trajectories.generateAuto();
         trajectories.setStartingAutonomousPose();
         
@@ -55,8 +53,6 @@ public class FiveCargoAuto extends ParallelCommandGroup {
         upperTarmacToUpRightCargoDuration = upperTarmacToUpperCargoShootDuration + upperCargoShootDuration +
             upperCargoShootToUpperFieldDuration + upperFieldToUpRightCargoDuration;
         upperTarmacToTerminalDuration = upperTarmacToUpRightCargoDuration + upRightCargoDuration + upRightCargoToTerminalShootDuration;
-        upperTarmacToFifthCargoReady = upperTarmacToTerminalDuration + intakeToStorageDuration + shooterArmLiftDuration + 
-        doubleShootDuration + shooterArmLowerDuration;
         
         addCommands(
             // Intake Flipper - Works in theory
@@ -73,7 +69,7 @@ public class FiveCargoAuto extends ParallelCommandGroup {
                 ),
                 new SequentialCommandGroup(
                     new WaitCommand(upperTarmacToTerminalDuration - 0.45),
-                    new SetIntakeSpeed(intake, 1, 5)
+                    new SetIntakeSpeed(intake, 1, 1)
                 )
             ),
             // Shooter - Works in theory
@@ -86,12 +82,6 @@ public class FiveCargoAuto extends ParallelCommandGroup {
                 ),
                 new SequentialCommandGroup(
                     new WaitCommand(upperTarmacToTerminalDuration + intakeToStorageDuration + shooterArmLiftDuration - shooterSpinupDuration),
-                    new SetShooterRPM(shooter, terminalShotRPM),
-                    new WaitCommand(doubleShootDuration + 0.3),
-                    new SetShooterRPM(shooter, 0)
-                ),
-                new SequentialCommandGroup(
-                    new WaitCommand(upperTarmacToFifthCargoReady + intakeToStorageDuration + shooterArmLiftDuration - shooterSpinupDuration),
                     new SetShooterRPM(shooter, terminalShotRPM),
                     new WaitCommand(doubleShootDuration + 0.3),
                     new SetShooterRPM(shooter, 0)
@@ -111,14 +101,6 @@ public class FiveCargoAuto extends ParallelCommandGroup {
                 new SequentialCommandGroup(
                     new WaitCommand(upperTarmacToTerminalDuration + intakeToStorageDuration),
                     new SetShooterArmAngle(shooterArm, highestShooterArmAngle)
-                ),
-                new SequentialCommandGroup(
-                    new WaitCommand(upperTarmacToTerminalDuration + intakeToStorageDuration + shooterArmLiftDuration + doubleShootDuration),
-                    new SetShooterArmAngle(shooterArm, highestIntakingShooterArmAngle)
-                ),
-                new SequentialCommandGroup(
-                    new WaitCommand(upperTarmacToFifthCargoReady + intakeToStorageDuration),
-                    new SetShooterArmAngle(shooterArm, highestShooterArmAngle)
                 )
             ),
             // Storage - Works in theory
@@ -130,10 +112,6 @@ public class FiveCargoAuto extends ParallelCommandGroup {
                 new SequentialCommandGroup(
                     new WaitCommand(upperTarmacToTerminalDuration + intakeToStorageDuration + shooterArmLiftDuration),
                     new RunStorageForTime(storage, doubleShootDuration)
-				),
-				new SequentialCommandGroup(
-					new WaitCommand(upperTarmacToFifthCargoReady + intakeToStorageDuration + shooterArmLiftDuration),
-					new RunStorageForTime(storage, doubleShootDuration)
 				)
             ),
             // Drivetrain - Works in theory

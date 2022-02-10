@@ -65,6 +65,9 @@ public final class Constants {
 			KA,
 			KV_ANGULAR,
 			KA_ANGULAR);
+	//LIMELIGHT
+	public static final double UPPER_HUB_HEIGHT = 104;
+
 	//SHOOTER MATH
 	public static final double SIGNIFICANT_DROP_DETECTION_THSHLD = 0.1;
 	public static final long LOWEST_EXPIRATION_TIME_MS = 150; //Maximum time between negative peaks
