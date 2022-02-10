@@ -70,9 +70,9 @@ public class Shooter extends SubsystemBase {
 	}
 
 	public double targetRPM(double vel) {
-		return invR.f(Math.pow(vel,2)
+		return 30.0*invR.f(Math.pow(vel,2)
 				*((Math.pow(Constants.SHOOTER_WHEEL_RADIUS,2) * Constants.SHOOTER_BALL_MASS)+Constants.SHOOTER_I)
-				/(Constants.SHOOTER_I * Math.pow(Constants.SHOOTER_WHEEL_RADIUS,2)));
+				/(Constants.SHOOTER_I * Math.pow(Constants.SHOOTER_WHEEL_RADIUS,2)))/Math.PI;
 	}
 
 	@Override
