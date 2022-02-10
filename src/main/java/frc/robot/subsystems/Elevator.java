@@ -122,7 +122,6 @@ public class Elevator extends SubsystemBase {
 					)
 			);
 
-
 	public Elevator() {
 		leftMotor.restoreFactoryDefaults();
 		rightMotor.restoreFactoryDefaults();

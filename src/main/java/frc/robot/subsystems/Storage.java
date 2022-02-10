@@ -18,7 +18,7 @@ public class Storage extends SubsystemBase {
     //Color sensor
     private final ColorSensorV3 colorSensor = new ColorSensorV3(I2C.Port.kOnboard);
     //Line break sensor
-    private final DigitalInput lineBreak = new DigitalInput(STORAGE_LINE_BREAK_PORT);
+    private final DigitalInput lineBreak = new DigitalInput(STORAGE_LINE_BREAK_ID);
     private ColorSensorStatus currentColor = null;
     private BallStatus ballStatus = null;
 	private OuttakeStatus outtakeStatus = null;

@@ -165,7 +165,7 @@ public class ShooterArm extends SubsystemBase {
 		tower.setColor(new Color8Bit(Color.kBlue));
 
 		//Send the piston widget to Smart Dashboard
-		SmartDashboard.putData("Piston Sim", pistonSim);
+		SmartDashboard.putData("Shooter Arm Piston", pistonSim);
 
 		//Default state for the brake piston is extended
 		setBrake();

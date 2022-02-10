@@ -15,7 +15,7 @@ public class IDs {
 
 	//STORAGE
 	public static final int STORAGE_MOTOR_ID = 41;
-	public static final int STORAGE_LINE_BREAK_PORT = 0; //To Do: Find out what the actual port on the roborio is
+	public static final int STORAGE_LINE_BREAK_ID = 0; //To Do: Find out what the actual port on the roborio is
 
 	//INTAKE 
 	//To Do: Update with actual ports on the PCM
@@ -34,6 +34,8 @@ public class IDs {
 	public static final int WINCH_BCK = 3;
 	public static final int WINCH_LEFT_MOTOR_ID = 61;
 	public static final int WINCH_RIGHT_MOTOR_ID = 62;
+	public static final int WINCH_LEFT_LIMIT_SWITCH_ID = 1;
+	public static final int WINCH_RIGHT_LIMIT_SWITCH_ID = 2;
 	//SHOOTER ARM
 	public static final int SHOOTER_ARM_LOCK_FWD = 4;
 	public static final int SHOOTER_ARM_LOCK_BCK = 5;
