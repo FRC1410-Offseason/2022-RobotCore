@@ -41,6 +41,9 @@ public class OuttakeHandler extends CommandBase {
 			} else {
 				//Else, we can outtake immediately
 				if (!internalOuttakeStarted) {
+					//Update the flag to say that we have started outtaking
+					internalOuttakeStarted = true;
+
 					//Set the shooter arm to the outtake position
 					shooterArm.setGoal(SHOOTER_ARM_OUTTAKE_ANGLE);
 
@@ -60,6 +63,9 @@ public class OuttakeHandler extends CommandBase {
 					//Stop the timer and reset it for next time
 					outtakeTimer.stop();
 					outtakeTimer.reset();
+
+					//Reset the started flag for next time
+					internalOuttakeStarted = false;
 
 					//Have the shooter arm go back down to the resting position
 					shooterArm.setGoal(0);
