@@ -18,12 +18,11 @@ public class RunWinch extends CommandBase {
 
 	@Override
 	public void execute() {
-		winch.unlock();
-		winch.runWinch(axis.getDeadzoned());
-
-		if (axis.getDeadzoned() == 0) {
+		if (axis.getDeadzoned() != 0) {
+			winch.unlock();
+			winch.runWinch(axis.getDeadzoned());
+		} else {
 			winch.runWinch(0);
-			winch.lock();
 		}
 	}
 
