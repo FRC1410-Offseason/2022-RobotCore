@@ -1,117 +1,121 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
+import com.revrobotics.ColorMatch;
+import com.revrobotics.ColorMatchResult;
+import com.revrobotics.ColorSensorV3;
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.I2C;
+import frc.robot.framework.subsystem.SubsystemBase;
+import frc.robot.util.storage.StorageState;
+
 import static frc.robotmap.IDs.*;
 import static frc.robotmap.Constants.*;
 
-import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
-import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.I2C;
-import edu.wpi.first.wpilibj.util.Color;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
-import com.revrobotics.ColorSensorV3;
-import com.revrobotics.ColorMatch;
-
 public class Storage extends SubsystemBase {
-    //Motor that runs the storage
+
+	public enum ColorSensorStatus {
+		ALLIANCE,
+		NOT_ALLIANCE,
+		EMPTY
+	}
+
 	private final WPI_VictorSPX motor = new WPI_VictorSPX(STORAGE_MOTOR_ID);
-    //Color sensor
-    private final ColorSensorV3 colorSensor = new ColorSensorV3(I2C.Port.kOnboard);
-    //Line break sensor
-    private final DigitalInput lineBreak = new DigitalInput(STORAGE_LINE_BREAK_ID);
-    private ColorSensorStatus currentColor = null;
-    private BallStatus ballStatus = null;
-	private OuttakeStatus outtakeStatus = null;
 
-    public enum ColorSensorStatus {
-        ALLIANCE,
-        NOT_ALLIANCE
-    }
+	private final ColorSensorV3 colorSensor = new ColorSensorV3(I2C.Port.kOnboard);
 
-    public enum BallStatus {
-        INDEXING,
-        INDEXED
-    }
+	private final ColorMatch colorMatch = new ColorMatch();
 
-	public enum OuttakeStatus {
-		OUTTAKING,
-		NOT_OUTTAKING
-	}
+	private final DigitalInput lineBreak = new DigitalInput(STORAGE_LINE_BREAK_ID);
 
-    public Storage() {
+	private final StorageState currentState = new StorageState();
+
+	private boolean lineBreakPrev = true;
+
+	private boolean outtakeFlag = false;
+
+	private final DriverStation.Alliance currentAlliance;
+
+	public Storage(DriverStation.Alliance alliance) {
+		currentAlliance = alliance;
 		motor.configFactoryDefault();
-    }
-
-    /**
-     * Runs the storage at a given speed
-     * @param power double from -1 to 1
-     */
-    public void runStorage(double power) {
-        motor.set(power);
-    }
-
-    /**
-     * Returns the current value that the line break is reporting
-     * @return true if there is no cargo, false if there is
-     */
-    public boolean getLineBreak() {
-        return lineBreak.get();
-    }
-
-	/**
-	 * Returns the current color that the color sensor is reporting
-	 * @return color object of color sensor
-	 */
-	public Color getColorSensor() {
-		return colorSensor.getColor();
+		colorMatch.addColorMatch(RED_TARGET);
+		colorMatch.addColorMatch(BLUE_TARGET);
 	}
 
-	/**
-	 * Returns the current state of the color sensor
-	 * @return either RED or BLUE
-	 */
-	public ColorSensorStatus getCurrentColor() {
-		return currentColor;
+	@Override
+	public void periodic() {
+		//Falling edge
+		if (lineBreakPrev && !lineBreak.get()) {
+			motor.set(STORAGE_INDEX_SPEED);
+			//If there is a ball in the first position, then move it to the second
+			//and reset the first position to be ready for the next ball
+			if (currentState.getSlot1().getBallPresent()) {
+				currentState.setSlot2(true);
+				currentState.resetSlot1();
+			}
+			//Rising Edge
+		} else if (!lineBreakPrev && lineBreak.get()) {
+			//Stop motor so we can read the color
+			motor.set(0);
+			//Read the color from the color sensor
+			ColorMatchResult result = colorMatch.matchClosestColor(colorSensor.getColor());
+			if (result.color.equals(RED_TARGET)) {
+				if (currentAlliance == DriverStation.Alliance.Red) {
+					//If the detected color is red, and we're on the red alliance, then the color is correct
+					currentState.setSlot1(true);
+				} else {
+					//If the detected color is red, and we're on the blue alliance, then the color is incorrect
+					currentState.setSlot1(false);
+					//If the color is wrong then we need to set the outtake flag for the outtake handler
+					outtakeFlag = true;
+				}
+			} else {
+				if (currentAlliance == DriverStation.Alliance.Red) {
+					//If the detected color is blue, and we're on the red alliance, then the color is incorrect
+					currentState.setSlot1(false);
+					//If the color is wrong then we need to set the outtake flag for the outtake handler
+					outtakeFlag = true;
+				} else {
+					//If the detected color is blue, and we're on the blue alliance, then the color is correct
+					currentState.setSlot1(true);
+				}
+			}
+		}
+
+		//Set lineBreakPrev to the current state of the line break in preparation for the next iteration
+		lineBreakPrev = lineBreak.get();
 	}
 
-	/**
-	 * Returns the current state of the ball
-	 * @return either INDEXING or INDEXED
-	 */
-	public BallStatus getBallStatus() {
-		return ballStatus;
+	public boolean getOuttakeFlag() {
+		return outtakeFlag;
 	}
 
-	/**
-	 * Returns the current state of outtaking
-	 * @return either OUTTAKING or NOT_OUTTAKING
-	 */
-	public OuttakeStatus getOuttakeStatus() {
-		return outtakeStatus;
+	public StorageState getCurrentState() {
+		return this.currentState;
 	}
 
-	/**
-	 * Sets the current state of the color sensor
-	 * @param currentColor either ALLIANCE or NOT_ALLIANCE
-	 */
-	public void setCurrentColor(ColorSensorStatus currentColor) {
-		this.currentColor = currentColor;
+	public void runStorage(double power) {
+		motor.set(power);
 	}
 
-	/**
-	 * Sets the current state of the ball
-	 * @param ballStatus either INDEXING or INDEXED
-	 */
-	public void setBallStatus(BallStatus ballStatus) {
-		this.ballStatus = ballStatus;
-	}
+//	public void setSlot1(boolean alliance) {
+//		currentState.setSlot1(alliance);
+//	}
+//
+//	public void setSlot2(boolean alliance) {
+//		currentState.setSlot2(alliance);
+//	}
+//
+//	public void resetSlot1() {
+//		currentState.resetSlot1();
+//	}
+//
+//	public void resetSlot2() {
+//		currentState.resetSlot2();
+//	}
 
-	/**
-	 * Sets the current state of outtaking
-	 * @param outtakeStatus either OUTTAKING or NOT_OUTTAKING
-	 */
-	public void setOuttakeStatus(OuttakeStatus outtakeStatus) {
-		this.outtakeStatus = outtakeStatus;
-	}
+
 }
 

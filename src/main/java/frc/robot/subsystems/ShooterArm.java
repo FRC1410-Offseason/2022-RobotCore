@@ -88,6 +88,10 @@ public class ShooterArm extends SubsystemBase {
 					Units.degreesToRadians(SHOOTER_ARM_MAX_VELOCITY),
 					Units.degreesToRadians(SHOOTER_ARM_MAX_ACCEL)
 			);
+
+	private TrapezoidProfile.State goal;
+	private TrapezoidProfile.State lpr;
+
 	/**
 	 * Used for simulating the mechanism
 	 */
@@ -172,10 +176,23 @@ public class ShooterArm extends SubsystemBase {
 
 		//Reset the state space loop to a known position
 		loop.reset(VecBuilder.fill(getEncoderPosition(), getEncoderVelocity()));
+		lpr = new TrapezoidProfile.State(getEncoderPosition(), getEncoderVelocity());
+		goal = new TrapezoidProfile.State(0, 0);
 	}
 
 	@Override
 	public void periodic() {
+		if (Math.abs(loop.getXHat(0) - goal.position) < Units.degreesToRadians(SHOOTER_ARM_IS_FINISHED_THRESHOLD)) {
+			setBrake();
+			setVoltage(0);
+		} else {
+			releaseBrake();
+			lpr = (new TrapezoidProfile(constraints, goal, lpr)).calculate(DT);
+			loop.setNextR(lpr.position, lpr.velocity);
+			loop.correct(VecBuilder.fill(getEncoderPosition()));
+			loop.predict(DT);
+			setVoltage(loop.getU(0));
+		}
 	}
 
 	@Override
@@ -235,6 +252,10 @@ public class ShooterArm extends SubsystemBase {
 	 */
 	public TrapezoidProfile.Constraints getConstraints() {
 		return constraints;
+	}
+
+	public void setGoal(double angle) {
+		goal = new TrapezoidProfile.State(Units.degreesToRadians(angle), 0);
 	}
 
 	/**

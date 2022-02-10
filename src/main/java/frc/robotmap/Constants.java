@@ -46,6 +46,7 @@ public final class Constants {
 	//SHOOTER ARM
 	public static final double SHOOTER_ARM_RESTING_ANGLE = 10; //Degrees
 	public static final double SHOOTER_ARM_MAX_ANGLE = 55; //Degrees
+	public static final double SHOOTER_ARM_OUTTAKE_ANGLE = 20; //Degrees
 
 	public static final double SHOOTER_ARM_KV = 0;
 	public static final double SHOOTER_ARM_KA = 0;
@@ -110,8 +111,13 @@ public final class Constants {
 	public static final double STORAGE_INDEX_SPEED = 0;
 	public static final double STORAGE_RUN_SPEED = 0;
 	public static final double STORAGE_REVERSE_SPEED = 0;
+	public static final double STORAGE_OUTTAKE_SPEED = 0.5;
+	public static final double STORAGE_OUTTAKE_TIME = 2; //Seconds
 
 	//INTAKE
 	public static final double INTAKE_FORWARD_SPEED = 1;
 	public static final double INTAKE_REVERSE_SPEED = -1;
+
+	//SHOOTER
+	public static final int SHOOTER_OUTTAKE_SPEED = 500;
 }
