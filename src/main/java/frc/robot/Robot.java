@@ -56,7 +56,7 @@ public class Robot extends ScheduledRobot implements ControlScheme {
 
 		//scheduler.scheduleCommand(); //To Do: Add shooter arm incrementing
 
-		getDriverRightBumper(); //To Do: Auto align and shoot
+		getDriverRightBumper().whileHeld(new LimelightShoot(drivetrain, limelight, shooter, storage));
 		getOperatorLeftBumper(); //To Do: Toggle shooter arm position
 		getOperatorRightBumper().whileHeld(new ToggleIntake(intake)); //To Do: Make this toggle when pressed
 		getOperatorXButton(); //To Do: Make this toggle when pressed & add adaptive shooter RPM

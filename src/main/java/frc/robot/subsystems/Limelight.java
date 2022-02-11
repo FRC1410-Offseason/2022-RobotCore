@@ -50,6 +50,8 @@ public class Limelight extends SubsystemBase {
         else return false;
     }
 
+    public double getAcceptableYaw(double distance) {return 5.94 - (0.161 * distance);}
+
     // Radius is the distance from the limelight to the vision target
     // Distance is the distance from the limelight to the center of the robot
     // Distance could be a constant because our high goal shooting is only happening at 53.1deg

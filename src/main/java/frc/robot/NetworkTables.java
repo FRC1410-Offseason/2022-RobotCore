@@ -4,6 +4,7 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.AnalogInput;
+import static frc.robotmap.Tuning.*;
 
 public class NetworkTables {
 
@@ -13,7 +14,7 @@ public class NetworkTables {
 	static final NetworkTable limelight = instance.getTable("photonvision/Limelight 2");
 	static final NetworkTableEntry autoList, autoChooser; // Auto
 	static final NetworkTableEntry x, y, theta, wheelLeft, wheelRight; // Drivetrain
-	static final NetworkTableEntry pitch, visionDistance; // Limelight
+	static final NetworkTableEntry pitch, yaw, visionDistance, limelightAngleKP, limelightAngleKI, limelightAngleKD; // Limelight
 	static final NetworkTableEntry shooterTargetRPM, leftShooterRPM, leftShooterP, leftShooterI, leftShooterD, leftShooterFF,
 		rightShooterP, rightShooterI, rightShooterD, rightShooterFF, rightShooterRPM, lowestRPM; // Shooter
 	static final NetworkTableEntry correctColor, colorReading, lineBroken, storageSpeed; // Storage
@@ -36,7 +37,11 @@ public class NetworkTables {
 		wheelRight = robotState.getEntry("Wheel Speed Right");
 		// Limelight
 		visionDistance = robotState.getEntry("Vision Distance");
+		limelightAngleKP = robotState.getEntry("Limelight Angle P Gain");
+		limelightAngleKI = robotState.getEntry("Limelight Angle I Gain");
+		limelightAngleKD = robotState.getEntry("Limelight Angle D Gain");
 		pitch = limelight.getEntry("targetPitch");
+		yaw = limelight.getEntry("targetYaw");
 		// Shooter
 		shooterTargetRPM = robotState.getEntry("Target RPM");
 		leftShooterRPM = robotState.getEntry("Left RPM");
@@ -85,6 +90,9 @@ public class NetworkTables {
 		wheelRight.setDouble(0);
 		// Limelight
 		visionDistance.setDouble(0);
+		limelightAngleKP.setDouble(LIMELIGHT_ANGLE_KP);
+		limelightAngleKI.setDouble(LIMELIGHT_ANGLE_KI);
+		limelightAngleKD.setDouble(LIMELIGHT_ANGLE_KD);
 		// Shooter
 		shooterTargetRPM.setDouble(0);
 		leftShooterRPM.setDouble(0);
@@ -142,13 +150,14 @@ public class NetworkTables {
 	}
 
 	// Limelight
-	public static void setVisionDistance(double distance) {
-		visionDistance.setDouble(distance);
-	}
+	public static void setVisionDistance(double distance) {visionDistance.setDouble(distance);}
 
-	public static double getPitch() {
-		return pitch.getDouble(0);
-	}
+	public static double getLimelightAngleKP() {return limelightAngleKP.getDouble(LIMELIGHT_ANGLE_KP);}
+	public static double getLimelightAngleKI() {return limelightAngleKP.getDouble(LIMELIGHT_ANGLE_KI);}
+	public static double getLimelightAngleKD() {return limelightAngleKP.getDouble(LIMELIGHT_ANGLE_KD);}
+
+	public static double getPitch() {return pitch.getDouble(0);}
+	public static double getYaw() {return yaw.getDouble(0);}
 
 	// Shooter
 	public static double getShooterTargetRPM() {
