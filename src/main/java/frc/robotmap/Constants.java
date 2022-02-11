@@ -63,6 +63,7 @@ public final class Constants {
 	public static final double SHOOTER_ARM_MAX_VOLTAGE = 12.0;
 	public static final double SHOOTER_ARM_MAX_VELOCITY = 170; // Deg per Second
 	public static final double SHOOTER_ARM_MAX_ACCEL = 360; // Deg per Second squared
+
 	//DRIVETRAIN
 	public static final double DT = 0.02;
 
@@ -113,6 +114,8 @@ public final class Constants {
 	public static final double STORAGE_INDEX_SPEED = 1;
 	public static final double STORAGE_RUN_SPEED = 1;
 	public static final double STORAGE_REVERSE_SPEED = -1;
+	public static final double STORAGE_OUTTAKE_TIME = 2;
+	public static final double STORAGE_OUTTAKE_SPEED = 0.5;
 
 	//INTAKE
 	public static final double INTAKE_FORWARD_SPEED = 1;
