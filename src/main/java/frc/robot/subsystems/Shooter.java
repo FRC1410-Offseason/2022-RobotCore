@@ -83,7 +83,7 @@ public class Shooter extends SubsystemBase {
 				lowestRPM = rpm;
 				lowestTime = System.currentTimeMillis();
 			}
-		} else if (Math.abs((rpm - Math.abs(target)) / target) <= Constants.SIGNIFICANT_DROP_DETECTION_THSHLD * 0.5) {
+		} else if (Math.abs((rpm - Math.abs(target)) / target) <= (Constants.SIGNIFICANT_DROP_DETECTION_THSHLD * 0.5)) {
 			ptarget = target;
 		}
 		if (lowestRPM >= 0) {
@@ -108,7 +108,7 @@ public class Shooter extends SubsystemBase {
 				for (double d : xvalues) {
 					if (d > maximum) maximum = d;
 				}
-				for(double d : xvalues) {
+				for (double d : xvalues) {
 					xvalues_normalized.add(d / maximum); //Do normalization
 				}
 				//Change lowestRPM stuff
@@ -121,7 +121,7 @@ public class Shooter extends SubsystemBase {
 				invR.gradStep(Constants.REGRESSION_ALPHA,xvalues_normalized,yvalues,Constants.REGRESSION_STEPSIZE,Constants.REGRESSION_NOISE);
 			}
 			regressionStepcount += Constants.REGRESSION_STEPS_PER_CYCLE;
-			if (regressionStepcount > Constants.REGRESSION_STEPS) {
+			if (regressionStepcount >= Constants.REGRESSION_STEPS) {
 				invR.setLowestInBuffer();
 				runningRegression = false;
 				//Finished regression
