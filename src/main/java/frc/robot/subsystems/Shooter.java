@@ -13,6 +13,7 @@ import static frc.robotmap.IDs.SHOOTER_RIGHT_MOTOR_ID;
 import static frc.robotmap.Tuning.*;
 
 import java.util.ArrayList;
+import java.util.function.Consumer;
 
 public class Shooter extends SubsystemBase {
 
@@ -33,11 +34,18 @@ public class Shooter extends SubsystemBase {
 	private double lowestRPM = -1;
 	private double lowestTime = 0;
 	private PolynomialRegression invR = new PolynomialRegression(Constants.REGRESSION_DEGREE,Constants.REGRESSION_BUFFERSIZE);
+	private PolynomialRegression PinvR = new PolynomialRegression(Constants.REGRESSION_DEGREE,1);
 	private boolean runningRegression = false;
 	private int regressionStepcount = 0;
 	private ArrayList<Double> xvalues = new ArrayList<Double>();
 	private ArrayList<Double> xvalues_normalized = new ArrayList<Double>();
 	private ArrayList<Double> yvalues = new ArrayList<Double>();
+	private ArrayList<Consumer<Double>> onShot = new ArrayList<Consumer<Double>>();
+
+	public ArrayList<Consumer<Double>> getOnShot() {return onShot;}
+	public void addOnShot(Consumer<Double> v) {onShot.add(v);}
+	public boolean removeOnShot(Consumer<Double> v) {return onShot.remove(v);}
+	public void clearOnShot() {onShot.clear();}
 
 	/**
 	 * Creates a new Shooter.
@@ -70,7 +78,7 @@ public class Shooter extends SubsystemBase {
 	}
 
 	public double targetRPM(double vel) {
-		return 30.0 * invR.f(Math.pow(vel,2)
+		return 30.0 * PinvR.f(Math.pow(vel,2)
 			* ((Math.pow(Constants.SHOOTER_WHEEL_RADIUS, 2) * Constants.SHOOTER_BALL_MASS) + Constants.SHOOTER_I)
 			/ (Constants.SHOOTER_I * Math.pow(Constants.SHOOTER_WHEEL_RADIUS, 2))) / Math.PI;
 	}
@@ -91,6 +99,10 @@ public class Shooter extends SubsystemBase {
 				//Throw out and use the current results - we're done dropping
 				double omegaI = Math.abs(ptarget) * Math.PI / 30.0;
 				double omegaF = lowestRPM * Math.PI / 30.0;
+				double exitvel = Math.pow((Constants.SHOOTER_I / Constants.SHOOTER_BALL_MASS) * (Math.pow(omegaI, 2) - Math.pow(omegaF, 2)), 0.5);
+				for (Consumer<Double> o : onShot) {
+					o.accept(exitvel);
+				}
 				double xvalue = ((Math.pow(omegaI, 2) - Math.pow(omegaF, 2)) * ((Math.pow(Constants.SHOOTER_WHEEL_RADIUS, 2)
 					* Constants.SHOOTER_BALL_MASS) + Constants.SHOOTER_I))
 					/ (Math.pow(Constants.SHOOTER_WHEEL_RADIUS, 2) * Constants.SHOOTER_BALL_MASS);
@@ -124,6 +136,10 @@ public class Shooter extends SubsystemBase {
 			if (regressionStepcount >= Constants.REGRESSION_STEPS) {
 				invR.setLowestInBuffer();
 				runningRegression = false;
+				//Copy parameter values over to PinvR
+				for (int i=0;i<invR.parameters.length;i++) {
+					PinvR.parameters[i]=invR.parameters[i];
+				}
 				//Finished regression
 			}
 		}
