@@ -9,6 +9,7 @@ import frc.robot.framework.scheduler.ScheduledRobot;
 import frc.robot.subsystems.*;
 
 import static frc.robotmap.IDs.PRESSURE_SENSOR;
+import static frc.robotmap.Constants.*;
 
 public class Robot extends ScheduledRobot {
 
@@ -54,8 +55,8 @@ public class Robot extends ScheduledRobot {
 		getOperatorRightBumper().whileHeld(new ToggleIntake(intake)); //TODO: Make this toggle when pressed
 		getOperatorXButton(); //TODO: Make this toggle when pressed & add adaptive shooter RPM
 
-		getDriverAButton().whenPressed(new SetShooterArmAngle(shooterArm,50));
-		getDriverBButton().whenPressed(new SetShooterArmAngle(shooterArm,0));
+		getDriverAButton().whenPressed(new SetShooterArmAngle(shooterArm, SHOOTER_ARM_MAX_ANGLE));
+		getDriverBButton().whenPressed(new SetShooterArmAngle(shooterArm, SHOOTER_ARM_RESTING_ANGLE));
 	}
 
 	@Override

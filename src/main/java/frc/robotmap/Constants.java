@@ -44,7 +44,7 @@ public final class Constants {
 
 	//SHOOTER ARM
 	public static final double SHOOTER_ARM_RESTING_ANGLE = 10; //Degrees
-	public static final double SHOOTER_ARM_MAX_ANGLE = 55; //Degrees
+	public static final double SHOOTER_ARM_MAX_ANGLE = 54; //Degrees
 	public static final double SHOOTER_ARM_OUTTAKE_ANGLE = 20; //Degrees
 	public static final double SHOOTER_ARM_ANGLE_OFFSET = 5;
 
