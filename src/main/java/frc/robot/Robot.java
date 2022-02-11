@@ -22,14 +22,9 @@ public class Robot extends ScheduledRobot implements ControlScheme {
 	private final String[] autoList = {"Taxi", "2Cargo", "3CargoTerminal", "3CargoUpRight", "4Cargo", "5Cargo"};
 	private final AnalogInput pressure = new AnalogInput(PRESSURE_SENSOR);
 	private EnqueuedTask autoTask = null;
-
-	private Robot() {
-		super(20);
-	}
-
-	public static void main(String[] args) {
-		RobotBase.startRobot(Robot::new);
-	}
+	
+	public static void main(String[] args) {RobotBase.startRobot(Robot::new);}
+	private Robot() {super(20);}
 
 	private final Drivetrain drivetrain = new Drivetrain();
 	private final Elevator elevator = new Elevator();
@@ -42,9 +37,7 @@ public class Robot extends ScheduledRobot implements ControlScheme {
 	private final Trajectories auto = new Trajectories(this.drivetrain);
 
 	@Override
-	public TaskScheduler getScheduler() {
-		return scheduler;
-	}
+	public TaskScheduler getScheduler() {return scheduler;}
 
 	@Override
 	public void registerControls() {
@@ -76,6 +69,7 @@ public class Robot extends ScheduledRobot implements ControlScheme {
 	public void autonomousInit() {
 		drivetrain.setBrake(); // Test, maybe bad idea
 		Command autonomousCommand = null;
+		if (NetworkTables.getAutoChooser() == 3) autonomousCommand = new ThreeCargoAutoClose(auto, intake, shooter, shooterArm, storage);
 		if (NetworkTables.getAutoChooser() == 4) autonomousCommand = new ThreeCargoTerminalAuto(auto, intake, shooter, shooterArm, storage);
 		if (NetworkTables.getAutoChooser() == 5) autonomousCommand = new FourCargoAuto(auto, intake, shooter, shooterArm, storage);
         if (NetworkTables.getAutoChooser() == 6) autonomousCommand = new FiveCargoAuto(auto, intake, shooter, shooterArm, storage);
