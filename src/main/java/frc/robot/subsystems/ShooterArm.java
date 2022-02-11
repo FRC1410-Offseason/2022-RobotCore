@@ -220,7 +220,6 @@ public class ShooterArm extends SubsystemBase {
 
 	/**
 	 * Get the current position of the mechanism
-	 *
 	 * @return average encoder position in radians
 	 */
 	public double getEncoderPosition() {
@@ -229,7 +228,6 @@ public class ShooterArm extends SubsystemBase {
 
 	/**
 	 * Get the current velocity of the encoders
-	 *
 	 * @return average encoder velocity in radians per second
 	 */
 	public double getEncoderVelocity() {
@@ -238,7 +236,6 @@ public class ShooterArm extends SubsystemBase {
 
 	/**
 	 * Get the state space loop
-	 *
 	 * @return a linear system loop that contains the plant, observer, and controller for the mechanism
 	 */
 	public LinearSystemLoop<N2, N1, N1> getLoop() {
@@ -247,20 +244,30 @@ public class ShooterArm extends SubsystemBase {
 
 	/**
 	 * Get the physical constraints of the mechanism
-	 *
 	 * @return contains the maximum velocity and acceleration of the mechanism
 	 */
 	public TrapezoidProfile.Constraints getConstraints() {
 		return constraints;
 	}
 
-	public void setGoal(double angle) {
+	/**
+	 * Set the target angle of state space loop
+	 * @param angle desired (Radians)
+	 */
+	public void setGoalPos(double angle) {
 		goal = new TrapezoidProfile.State(Units.degreesToRadians(angle), 0);
 	}
 
 	/**
+	 * Return the target angle of state space loop
+	 * @return position (Degrees) and velocity (m/s)
+	 */
+	public double getGoalPos() {
+		return Units.radiansToDegrees(goal.position);
+	}
+
+	/**
 	 * Set the voltage of the motors
-	 *
 	 * @param voltage desired voltage
 	 */
 	public void setVoltage(double voltage) {
@@ -271,7 +278,6 @@ public class ShooterArm extends SubsystemBase {
 
 	/**
 	 * Get the state of the brake piston
-	 *
 	 * @return false -> retracted / true -> extended
 	 */
 	public boolean getBrakeState() {
