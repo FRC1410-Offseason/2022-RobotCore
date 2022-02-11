@@ -42,11 +42,11 @@ public final class Constants {
 	public static final double ELEVATOR_MIN_POS = 0; //Meters
 
 
-
 	//SHOOTER ARM
 	public static final double SHOOTER_ARM_RESTING_ANGLE = 10; //Degrees
 	public static final double SHOOTER_ARM_MAX_ANGLE = 55; //Degrees
 	public static final double SHOOTER_ARM_OUTTAKE_ANGLE = 20; //Degrees
+	public static final double SHOOTER_ARM_ANGLE_OFFSET = 5;
 
 	public static final double SHOOTER_ARM_KV = 0;
 	public static final double SHOOTER_ARM_KA = 0;

@@ -258,6 +258,10 @@ public class ShooterArm extends SubsystemBase {
 		goal = new TrapezoidProfile.State(Units.degreesToRadians(angle), 0);
 	}
 
+	public TrapezoidProfile.State getGoal() {
+		return goal;
+	}
+
 	/**
 	 * Set the voltage of the motors
 	 *

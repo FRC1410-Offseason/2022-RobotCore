@@ -45,19 +45,15 @@ public class Robot extends ScheduledRobot {
 		//Storage Default Command
 		scheduler.scheduleCommand(new OuttakeHandler(shooter, shooterArm, storage));
 
-		//scheduler.scheduleCommand(); //TODO: Add shooter arm incrementing
+		getOperatorDPadUp().whenPressed(new IncrementShooterArmAngle(shooterArm));
+		getOperatorDPadDown().whenPressed(new DecrementShooterArmAngle(shooterArm));
 
 		getDriverRightBumper(); //TODO: Auto align and shoot
 
 //		getOperatorLeftBumper().whileHeld(new ToggleShooterArm(shooterArm)); //TODO: Make this when pressed
 		getOperatorRightBumper().whileHeld(new ToggleIntake(intake)); //TODO: Make this toggle when pressed
 		getOperatorXButton(); //TODO: Make this toggle when pressed & add adaptive shooter RPM
-//		getOperatorYButton().whileHeld(new SetStorageSpeed(storage));
 
-        // getDriverAButton().whenPressed(new TestActionCommand());
-        // getDriverBButton().toggleWhenPressed(new TestLoopedCommand());
-        
-        // scheduler.scheduleCommand(new TestAxisCommand(getDriverLeftXAxis()));
 		getDriverAButton().whenPressed(new SetShooterArmAngle(shooterArm,50));
 		getDriverBButton().whenPressed(new SetShooterArmAngle(shooterArm,0));
 	}
