@@ -34,7 +34,7 @@ public class PolynomialRegression {
 		return error / terror;
 	}
 
-	private Random random = new Random();
+	private final Random random = new Random();
 	private double[][] lastParameters = null;
 	private double[] lastErrors = null;
 	private int lastParameterIndex = 0;
@@ -68,11 +68,11 @@ public class PolynomialRegression {
 	public void setLowestInBuffer() {
 		int num = Math.min(lastParameterIndex,buffersize);
 		double lowestError = -1;
-		for (int i=0; i < num; i++) {
+		for (int i = 0; i < num; i++) {
 			double error = lastErrors[i];
 			if (error < lowestError || lowestError < 0) {
 				lowestError = error;
-				for (int j = 0; j < parameters.length; j++) {parameters[j]=lastParameters[i][j];}
+				for (int j = 0; j < parameters.length; j++) parameters[j] = lastParameters[i][j];
 			}
 		}
 	}

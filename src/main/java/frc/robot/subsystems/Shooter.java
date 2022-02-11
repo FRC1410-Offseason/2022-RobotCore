@@ -12,6 +12,7 @@ import static frc.robotmap.IDs.SHOOTER_LEFT_MOTOR_ID;
 import static frc.robotmap.IDs.SHOOTER_RIGHT_MOTOR_ID;
 import static frc.robotmap.Tuning.*;
 
+import java.util.List;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
@@ -33,19 +34,30 @@ public class Shooter extends SubsystemBase {
 	private double ptarget = 0;
 	private double lowestRPM = -1;
 	private double lowestTime = 0;
-	private PolynomialRegression invR = new PolynomialRegression(Constants.REGRESSION_DEGREE,Constants.REGRESSION_BUFFERSIZE);
-	private PolynomialRegression PinvR = new PolynomialRegression(Constants.REGRESSION_DEGREE,1);
+	private PolynomialRegression invR = new PolynomialRegression(Constants.REGRESSION_DEGREE, Constants.REGRESSION_BUFFERSIZE);
+	private PolynomialRegression PinvR = new PolynomialRegression(Constants.REGRESSION_DEGREE, 1);
 	private boolean runningRegression = false;
 	private int regressionStepcount = 0;
-	private ArrayList<Double> xvalues = new ArrayList<Double>();
-	private ArrayList<Double> xvalues_normalized = new ArrayList<Double>();
-	private ArrayList<Double> yvalues = new ArrayList<Double>();
+	private final List<Double> xValues = new ArrayList<Double>();
+	private final List<Double> xValuesNormalized = new ArrayList<Double>();
+	private final List<Double> yValues = new ArrayList<Double>();
 	private ArrayList<Consumer<Double>> onShot = new ArrayList<Consumer<Double>>();
 
-	public ArrayList<Consumer<Double>> getOnShot() {return onShot;}
-	public void addOnShot(Consumer<Double> v) {onShot.add(v);}
-	public boolean removeOnShot(Consumer<Double> v) {return onShot.remove(v);}
-	public void clearOnShot() {onShot.clear();}
+	public List<Consumer<Double>> getOnShotCallbacks() {
+	    return onShot;
+    }
+    
+	public void addOnShot(Consumer<Double> v) {
+	    onShot.add(v);
+    }
+    
+	public boolean removeOnShotCallback(Consumer<Double> v) {
+	    return onShot.remove(v);
+    }
+    
+	public void clearOnShotCallbacks() {
+	    onShot.clear();
+    }
 
 	/**
 	 * Creates a new Shooter.

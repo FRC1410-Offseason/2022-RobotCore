@@ -76,7 +76,9 @@ public class Trajectories {
 		);
 	}
 
-	public void setStartingAutonomousPose() {drivetrain.resetPoseEstimation(upperTarmacToUpperCargoShot.getInitialPose());}
+	public void setStartingAutonomousPose() {
+		drivetrain.resetPoseEstimation(upperTarmacToUpperCargoShot.getInitialPose());
+	}
 
 	public void generateAuto() {
 		taxiCommand = generateRamsete(taxi);

@@ -30,19 +30,33 @@ public class Limelight extends SubsystemBase {
             Math.tan(Units.degreesToRadians(getLimelightAngle(shooterAngle) + getPitch()));
     }
 
-    public double getLimelightHeight(double shooterAngle) {return (24.08 * Math.sin(shooterAngle)) + 4.7;}
+    public double getLimelightHeight(double shooterAngle) {
+        return (24.08 * Math.sin(shooterAngle)) + 4.7;
+    }
 
-    public double getDistanceToRobot(double shooterAngle) {return (24.08 * Math.cos(shooterAngle)) - 2.527;}
+    public double getDistanceToRobot(double shooterAngle) {
+        return (24.08 * Math.cos(shooterAngle)) - 2.527;
+    }
 
-    public double getLimelightAngle(double shooterAngle) {return shooterAngle - 20;}
+    public double getLimelightAngle(double shooterAngle) {
+        return shooterAngle - 20;
+    }
 
-    public void turnOffLimelightLEDs() {limelight.setLED(VisionLEDMode.kOff);}
+    public void turnOffLimelightLEDs() {
+        limelight.setLED(VisionLEDMode.kOff);
+    }
 
-    public void turnOnLimelightLEDs() {limelight.setLED(VisionLEDMode.kOn);}
+    public void turnOnLimelightLEDs() {
+        limelight.setLED(VisionLEDMode.kOn);
+    }
 
-    public double getPitch() {return target.getPitch();}
+    public double getPitch() {
+        return target.getPitch();
+    }
 
-    public double getYaw() {return target.getYaw();}
+    public double getYaw() {
+        return target.getYaw();
+    }
 
     public boolean isYawAcceptable(double distance, double yaw) {
         double acceptableYaw = 5.94 - (0.161 * distance);
@@ -50,7 +64,9 @@ public class Limelight extends SubsystemBase {
         else return false;
     }
 
-    public double getAcceptableYaw(double distance) {return 5.94 - (0.161 * distance);}
+    public double getAcceptableYaw(double distance) {
+        return 5.94 - (0.161 * distance);
+    }
 
     // Radius is the distance from the limelight to the vision target
     // Distance is the distance from the limelight to the center of the robot
@@ -58,11 +74,11 @@ public class Limelight extends SubsystemBase {
     // getDistanceToRobot is measuring the distance between the limelight and the center of the robot (one axis)
 
     public double getCameraX(double radius, double angularTheta, double cameraTheta) {
-        return (-radius) * Math.cos(angularTheta + cameraTheta);
+        return -radius * Math.cos(angularTheta + cameraTheta);
     }
 
     public double getCameraY(double radius, double angularTheta, double cameraTheta) {
-        return (-radius) * Math.sin(angularTheta + cameraTheta);
+        return -radius * Math.sin(angularTheta + cameraTheta);
     }
 
     public double getX(double cameraX, double angularTheta, double distance) {

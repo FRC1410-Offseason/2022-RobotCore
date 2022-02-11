@@ -34,7 +34,7 @@ public class Robot extends ScheduledRobot implements ControlScheme {
 	private final Storage storage = new Storage(DriverStation.getAlliance());
 	private final Winch winch = new Winch();
 	private final Limelight limelight = new Limelight();
-	private final Trajectories auto = new Trajectories(this.drivetrain);
+	private final Trajectories auto = new Trajectories(drivetrain);
 
 	@Override
 	public TaskScheduler getScheduler() {return scheduler;}

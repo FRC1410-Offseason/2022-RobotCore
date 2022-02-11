@@ -19,7 +19,9 @@ public class SetIntakeSpeed extends CommandBase {
     }
 
     @Override
-    public void initialize() {timer.start();}
+    public void initialize() {
+        timer.start();
+    }
 
     @Override
     public void execute() {
