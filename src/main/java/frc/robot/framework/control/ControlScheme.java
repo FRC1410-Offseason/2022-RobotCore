@@ -1,6 +1,7 @@
 package frc.robot.framework.control;
 
 import edu.wpi.first.wpilibj.XboxController;
+import frc.robot.framework.control.Button;
 import frc.robot.framework.scheduler.TaskScheduler;
 
 import static frc.robotmap.IDs.*;
@@ -50,6 +51,22 @@ public interface ControlScheme {
 	default Button getDriverRightStickButton() {
 		return new Button(driverController, getScheduler(), ButtonId.RIGHT_STICK_BUTTON);
 	}
+
+    default Button getDriverDPadUp() {
+		return new Button(driverController, getScheduler(), ButtonId.DPAD_UP);
+	}
+
+    default Button getDriverDPadDown() {
+		return new Button(driverController, getScheduler(), ButtonId.DPAD_DOWN);
+	}
+
+    default Button getDriverDPadLeft() {
+		return new Button(driverController, getScheduler(), ButtonId.DPAD_LEFT);
+	}
+
+    default Button getDriverDPadRight() {
+		return new Button(driverController, getScheduler(), ButtonId.DPAD_RIGHT);
+	}
 	// </editor-fold>
 
 	// <editor-fold desc="> Operator buttons">
@@ -85,8 +102,20 @@ public interface ControlScheme {
 		return new Button(operatorController, getScheduler(), ButtonId.RIGHT_STICK_BUTTON);
 	}
 
-	default DirectionalPad getOperatorDPad() {
-		return new DirectionalPad(operatorController);
+	default Button getOperatorDPadUp() {
+		return new Button(operatorController, getScheduler(), ButtonId.DPAD_UP);
+	}
+
+    default Button getOperatorDPadDown() {
+		return new Button(operatorController, getScheduler(), ButtonId.DPAD_DOWN);
+	}
+
+    default Button getOperatorDPadLeft() {
+		return new Button(operatorController, getScheduler(), ButtonId.DPAD_LEFT);
+	}
+
+    default Button getOperatorDPadRight() {
+		return new Button(operatorController, getScheduler(), ButtonId.DPAD_RIGHT);
 	}
 	// </editor-fold>
 
@@ -139,10 +168,6 @@ public interface ControlScheme {
 
 	default Axis getOperatorRightTrigger() {
 		return new Axis(operatorController, AXIS_ID.RIGHT_TRIGGER, DRIVER_DEADZONE_VALUE);
-	}
-
-	default DirectionalPad getDriverDPad() {
-		return new DirectionalPad(driverController);
 	}
 	// </editor-fold>
 }

@@ -12,9 +12,33 @@ import edu.wpi.first.math.numbers.N1;
 
 public final class Constants {
 
-	//Elevator
+	//ELEVATOR
 	public static final double GEAR_RATIO = 10.61;
+	public static final double ELEVATOR_MASS = 2.7; //kg, placeholder
+	public static final double ELEVATOR_KV = 1; //Placeholder
+	public static final double ELEVATOR_KA = 1; //Placeholder
+	public static final double ELEVATOR_METERS_PER_REV = 0.0151;
+
+	public static final double ELEVATOR_POS_CONFIDENCE = 0.0001; //Meters
+	public static final double ELEVATOR_VEL_CONFIDENCE = 0.0001; //Meters per second
+	public static final double ELEVATOR_ENC_CONFIDENCE = 0.0001; //Rotations
+
+	public static final double ELEVATOR_POS_TOLERANCE = .001; //Meters
+	public static final double ELEVATOR_VEL_TOLERANCE = .1; //Meters per second
+	public static final double ELEVATOR_CTRL_TOLERANCE = 12; //Volts
+
+	public static final double ELEVATOR_MAX_VEL = 1; //Meters per second
+	public static final double ELEVATOR_MAX_ACCEL = 1; //Meters per second^2
+	public static final double ELEVATOR_MAX_POS = 2; //Meters
+	public static final double ELEVATOR_MIN_POS = 0; //Meters
+
+
 	//SHOOTER ARM
+	public static final double SHOOTER_ARM_RESTING_ANGLE = 10; //Degrees
+	public static final double SHOOTER_ARM_MAX_ANGLE = 54; //Degrees
+	public static final double SHOOTER_ARM_OUTTAKE_ANGLE = 20; //Degrees
+	public static final double SHOOTER_ARM_ANGLE_OFFSET = 5;
+
 	public static final double SHOOTER_ARM_KV = 0;
 	public static final double SHOOTER_ARM_KA = 0;
 
@@ -93,4 +117,7 @@ public final class Constants {
 	//INTAKE
 	public static final double INTAKE_FORWARD_SPEED = 1;
 	public static final double INTAKE_REVERSE_SPEED = -1;
+
+	//SHOOTER
+	public static final int SHOOTER_OUTTAKE_SPEED = 500;
 }
