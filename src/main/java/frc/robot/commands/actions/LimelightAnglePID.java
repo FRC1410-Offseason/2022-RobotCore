@@ -10,9 +10,8 @@ public class LimelightAnglePID extends CommandBase {
     private final Drivetrain drivetrain;
     private final Limelight limelight;
     private PIDController pid;
-    private double pidOutput;
 
-    public LimelightAnglePID(Limelight limelight, Drivetrain drivetrain) {
+	public LimelightAnglePID(Limelight limelight, Drivetrain drivetrain) {
         this.limelight = limelight;
         this.drivetrain = drivetrain;
         // addRequirements(drivetrain, limelight);
@@ -27,14 +26,16 @@ public class LimelightAnglePID extends CommandBase {
 
     @Override
     public void execute() {
-        pidOutput = pid.calculate(limelight.getYaw());
+		double pidOutput = pid.calculate(limelight.getYaw());
         if (limelight.getTarget() != null) {
             drivetrain.tankDriveVolts(pidOutput, -pidOutput); // maybe needs to be inverse
         } else drivetrain.tankDriveVolts(0, 0);
     }
     
     @Override
-    public void end(boolean interrupted) {drivetrain.tankDriveVolts(0, 0);}
+    public void end(boolean interrupted) {
+		drivetrain.tankDriveVolts(0, 0);
+	}
 
     @Override
     public boolean isFinished() {
