@@ -54,7 +54,7 @@ public class IDs {
 		RIGHT_TRIGGER
 	}
 
-	public enum ButtonId {
+	public enum BUTTON_ID {
 		A(1),
 		B(2),
 		X(3),
@@ -70,7 +70,7 @@ public class IDs {
 
 		private final int id;
 
-		ButtonId(int id) {
+		BUTTON_ID(int id) {
 			this.id = id;
 		}
 
@@ -84,5 +84,22 @@ public class IDs {
         WHEN_UNPRESSED,
         WHILE_HELD,
         TOGGLE_WHEN_PRESSED
+	}
+
+    public enum OBSERVER_PRIORITY {
+		NULL(0),
+        LOW(1),
+        MEDIUM(2),
+        HIGH(3);
+
+		private final int id;
+
+		OBSERVER_PRIORITY(int id) {
+			this.id = id;
+		}
+
+		public int getId() {
+			return id;
+		}
 	}
 }

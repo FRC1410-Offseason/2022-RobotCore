@@ -9,7 +9,7 @@ import static frc.robotmap.IDs.*;
 public class ButtonStateObserver extends Observer {
 
     private final XboxController controller;
-	private final ButtonId id;
+	private final BUTTON_ID id;
 
     private boolean pressed = false;
     private boolean wasPressed = false;
@@ -19,7 +19,7 @@ public class ButtonStateObserver extends Observer {
     private ButtonState buttonState = ButtonState.UNCHANGED;
     private ButtonStateCondition stateToCheck = null;
 
-	public ButtonStateObserver(ButtonStateCondition stateToCheck, XboxController controller, ButtonId id) {
+	public ButtonStateObserver(ButtonStateCondition stateToCheck, XboxController controller, BUTTON_ID id) {
 		this.stateToCheck = stateToCheck;
         this.controller = controller;
 		this.id = id;

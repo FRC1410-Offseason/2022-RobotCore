@@ -11,9 +11,9 @@ public class Button {
 
 	private final XboxController controller;
 	private final TaskScheduler scheduler;
-	private final ButtonId id;
+	private final BUTTON_ID id;
 
-	public Button(XboxController controller, TaskScheduler scheduler, ButtonId button) {
+	public Button(XboxController controller, TaskScheduler scheduler, BUTTON_ID button) {
 		this.controller = controller;
 		this.scheduler = scheduler;
 		this.id = button;
