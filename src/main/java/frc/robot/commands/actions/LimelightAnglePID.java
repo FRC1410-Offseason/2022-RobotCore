@@ -28,7 +28,7 @@ public class LimelightAnglePID extends CommandBase {
     @Override
     public void execute() {
         pidOutput = pid.calculate(limelight.getYaw());
-        if (limelight.target != null) {
+        if (limelight.getTarget() != null) {
             drivetrain.tankDriveVolts(pidOutput, -pidOutput); // maybe needs to be inverse
         } else drivetrain.tankDriveVolts(0, 0);
     }
@@ -38,7 +38,7 @@ public class LimelightAnglePID extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        if (limelight.target != null) {
+        if (limelight.getTarget() != null) {
             return Math.abs(limelight.getYaw()) < limelight.getAcceptableYaw(limelight.getDistanceToTarget());  
         } else return false;
     }

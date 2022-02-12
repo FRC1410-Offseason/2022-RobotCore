@@ -13,9 +13,9 @@ import static frc.robotmap.Constants.*;
 public class Limelight extends SubsystemBase {
 
     private final PhotonCamera limelight = new PhotonCamera("Limelight 2");
-    public PhotonPipelineResult latestResult;
+    private PhotonPipelineResult latestResult;
     private double shooterAngle = 9.981;
-    public PhotonTrackedTarget target;
+    private PhotonTrackedTarget target;
 
     public Limelight() {limelight.setDriverMode(false);}
 
@@ -30,7 +30,15 @@ public class Limelight extends SubsystemBase {
             Math.tan(Units.degreesToRadians(getLimelightAngle(shooterAngle) + getPitch()));
     }
 
-    public double getLimelightHeight(double shooterAngle) {
+	public PhotonPipelineResult getLatestResult() {
+		return latestResult;
+	}
+
+	public PhotonTrackedTarget getTarget() {
+		return target;
+	}
+
+	public double getLimelightHeight(double shooterAngle) {
         return (24.08 * Math.sin(shooterAngle)) + 4.7;
     }
 
@@ -58,6 +66,7 @@ public class Limelight extends SubsystemBase {
         return target.getYaw();
     }
 
+	// TODO – docs & move to constant
     public boolean isYawAcceptable(double distance, double yaw) {
         double acceptableYaw = 5.94 - (0.161 * distance);
         if (Math.abs(yaw) < acceptableYaw) return true;
@@ -68,6 +77,7 @@ public class Limelight extends SubsystemBase {
         return 5.94 - (0.161 * distance);
     }
 
+	// TODO – move to javadoc
     // Radius is the distance from the limelight to the vision target
     // Distance is the distance from the limelight to the center of the robot
     // Distance could be a constant because our high goal shooting is only happening at 53.1deg

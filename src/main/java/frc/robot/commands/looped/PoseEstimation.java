@@ -30,7 +30,7 @@ public class PoseEstimation extends CommandBase {
         currentPitch = limelight.getPitch();
         currentYaw = limelight.getYaw();
 
-        imageCaptureTime = timer.getFPGATimestamp() - limelight.latestResult.getLatencyMillis();
+        imageCaptureTime = timer.getFPGATimestamp() - limelight.getLatestResult().getLatencyMillis();
         drivetrain.leftEncoderPosition = (drivetrain.leftLeader.getSelectedSensorPosition(0) +
             drivetrain.leftFollower.getSelectedSensorPosition(0)) * ENCODER_CONSTANT / 2;
         drivetrain.leftEncoderVelocity = (drivetrain.leftLeader.getSelectedSensorVelocity(0) +
@@ -42,7 +42,7 @@ public class PoseEstimation extends CommandBase {
 
         drivetrain.poseEstimator.update(drivetrain.gyro.getRotation2d(), drivetrain.getWheelSpeeds(),
             drivetrain.leftEncoderPosition, drivetrain.rightEncoderPosition);
-        if (lastPitch != currentPitch && lastYaw != currentYaw && limelight.target != null) {
+        if (lastPitch != currentPitch && lastYaw != currentYaw && limelight.getTarget() != null) {
             drivetrain.poseEstimator.addVisionMeasurement(limelight.getVisionRobotPose(drivetrain.gyro.getRotation2d().getDegrees(),
                 Units.radiansToDegrees(shooterArm.getEncoderPosition())), imageCaptureTime);
         }
