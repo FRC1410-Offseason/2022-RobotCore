@@ -4,6 +4,7 @@ import edu.wpi.first.hal.NotifierJNI;
 import edu.wpi.first.wpilibj.DSControlWord;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.framework.control.observers.Observer;
 import frc.robot.framework.scheduler.task.CommandTask;
 import frc.robot.framework.scheduler.task.Task;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
@@ -44,11 +45,11 @@ public class TaskScheduler {
         
         System.out.println("Dumpign Observer Queue:");
         for (Observer observer : observerQueue) {
-            System.out.println("- Observer: " + observer);
+            System.out.println("- Observer: " + observer + " with priority: " + observer.getPriority());
         }
 
         for (EnqueuedTask task : taskQueue) {
-            System.out.println("Task: " + task.getTask());
+            System.out.println("- Task: " + task.getTask());
         }
     }
 

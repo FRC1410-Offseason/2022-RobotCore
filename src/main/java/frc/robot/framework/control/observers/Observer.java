@@ -1,8 +1,10 @@
-package frc.robot.framework.scheduler;
+package frc.robot.framework.control.observers;
 
 import java.util.EnumSet;
 import java.util.Set;
 
+import frc.robot.framework.scheduler.EnqueuedTask;
+import frc.robot.framework.scheduler.RobotMode;
 import frc.robotmap.IDs.OBSERVER_PRIORITY;
 
 public abstract class Observer implements Comparable<Observer> {
@@ -14,7 +16,7 @@ public abstract class Observer implements Comparable<Observer> {
         this.task = task;
     }
 
-    public void swtPriority(OBSERVER_PRIORITY priority) {
+    public void setPriority(OBSERVER_PRIORITY priority) {
         this.priority = priority;
     }
 
