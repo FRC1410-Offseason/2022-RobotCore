@@ -36,5 +36,7 @@ public class SetIntakeSpeed extends CommandBase {
     }
 
     @Override
-    public boolean isFinished() {return timer.get() >= duration;}
+    public boolean isFinished() {
+        return timer.get() >= duration;
+    }
 }
