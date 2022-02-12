@@ -6,6 +6,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.AnalogInput;
 import static frc.robotmap.Tuning.*;
 
+@SuppressWarnings("unused")
 public class NetworkTables {
 
 	static final NetworkTableInstance instance = NetworkTableInstance.getDefault();
@@ -152,12 +153,25 @@ public class NetworkTables {
 	// Limelight
 	public static void setVisionDistance(double distance) {visionDistance.setDouble(distance);}
 
-	public static double getLimelightAngleKP() {return limelightAngleKP.getDouble(LIMELIGHT_ANGLE_KP);}
-	public static double getLimelightAngleKI() {return limelightAngleKP.getDouble(LIMELIGHT_ANGLE_KI);}
-	public static double getLimelightAngleKD() {return limelightAngleKP.getDouble(LIMELIGHT_ANGLE_KD);}
+	public static double getLimelightAngleKP() {
+		return limelightAngleKP.getDouble(LIMELIGHT_ANGLE_KP);
+	}
 
-	public static double getPitch() {return pitch.getDouble(0);}
-	public static double getYaw() {return yaw.getDouble(0);}
+	public static double getLimelightAngleKI() {
+		return limelightAngleKP.getDouble(LIMELIGHT_ANGLE_KI);
+	}
+
+	public static double getLimelightAngleKD() {
+		return limelightAngleKP.getDouble(LIMELIGHT_ANGLE_KD);
+	}
+
+	public static double getPitch() {
+		return pitch.getDouble(0);
+	}
+
+	public static double getYaw() {
+		return yaw.getDouble(0);
+	}
 
 	// Shooter
 	public static double getShooterTargetRPM() {
