@@ -2,7 +2,15 @@ package frc.robot.subsystems;
 
 import com.revrobotics.*;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import frc.robot.NetworkTables;
 import frc.robot.framework.subsystem.SubsystemBase;
+import frc.robot.util.PolynomialRegression;
+import frc.robotmap.Constants;
+import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.DoubleConsumer;
 
 import static frc.robotmap.IDs.SHOOTER_LEFT_MOTOR_ID;
 import static frc.robotmap.IDs.SHOOTER_RIGHT_MOTOR_ID;
@@ -23,6 +31,33 @@ public class Shooter extends SubsystemBase {
 	private final SparkMaxPIDController rightController = rightMotor.getPIDController();
 
 	private double target = 0;
+	private double pTarget = 0;
+	private double lowestRPM = -1;
+	private double lowestTime = 0;
+	private final PolynomialRegression invR = new PolynomialRegression(Constants.REGRESSION_DEGREE, Constants.REGRESSION_BUFFERSIZE);
+	private final PolynomialRegression pInvR = new PolynomialRegression(Constants.REGRESSION_DEGREE, 1);
+	private boolean runningRegression = false;
+	private int regressionStepCount = 0;
+	private final List<Double> xValues = new DoubleArrayList();
+	private final List<Double> xValuesNormalized = new DoubleArrayList();
+	private final List<Double> yValues = new DoubleArrayList();
+	private final List<DoubleConsumer> onShot = new ArrayList<>();
+
+	public List<DoubleConsumer> getOnShotCallbacks() {
+	    return onShot;
+    }
+    
+	public void addOnShotCallback(DoubleConsumer callback) {
+	    onShot.add(callback);
+    }
+    
+	public boolean removeOnShotCallback(DoubleConsumer callback) {
+	    return onShot.remove(callback);
+    }
+    
+	public void clearOnShotCallbacks() {
+	    onShot.clear();
+    }
 
 	/**
 	 * Creates a new Shooter.
@@ -41,70 +76,147 @@ public class Shooter extends SubsystemBase {
 
 		//Set PID loops to default values from the tuning file
 		setLeftPID(
-				SHOOTER_LEFT_KP,
-				SHOOTER_LEFT_KI,
-				SHOOTER_LEFT_KD,
-				SHOOTER_LEFT_KFF
+			SHOOTER_LEFT_KP,
+			SHOOTER_LEFT_KI,
+			SHOOTER_LEFT_KD,
+			SHOOTER_LEFT_KFF
 		);
 		setRightPID(
-				SHOOTER_RIGHT_KP,
-				SHOOTER_RIGHT_KI,
-				SHOOTER_RIGHT_KD,
-				SHOOTER_RIGHT_KFF
+			SHOOTER_RIGHT_KP,
+			SHOOTER_RIGHT_KI,
+			SHOOTER_RIGHT_KD,
+			SHOOTER_RIGHT_KFF
 		);
+	}
+
+	public double targetRPM(double vel) {
+		return 30.0 * pInvR.f(Math.pow(vel,2)
+			* ((Math.pow(Constants.SHOOTER_WHEEL_RADIUS, 2) * Constants.SHOOTER_BALL_MASS) + Constants.SHOOTER_I)
+			/ (Constants.SHOOTER_I * Math.pow(Constants.SHOOTER_WHEEL_RADIUS, 2))) / Math.PI;
 	}
 
 	@Override
 	public void periodic() {
-		// This method will be called once per scheduler run
+		double rpm = Math.abs((getRightVel() + getLeftVel()) * 0.5); //Average RPM
+		if (rpm < (Math.min(Math.abs(pTarget), Math.abs(target)) * (1 - Constants.SIGNIFICANT_DROP_DETECTION_THSHLD))) {
+			if (rpm < lowestRPM || lowestRPM < 0) {
+				lowestRPM = rpm;
+				lowestTime = System.currentTimeMillis();
+			}
+		} else if (Math.abs((rpm - Math.abs(target)) / target) <= (Constants.SIGNIFICANT_DROP_DETECTION_THSHLD * 0.5)) {
+			pTarget = target;
+		}
+
+		if (lowestRPM >= 0) {
+			if (System.currentTimeMillis() - lowestTime > Constants.LOWEST_EXPIRATION_TIME_MS) {
+				//Throw out and use the current results - we're done dropping
+				double omegaI = Math.abs(pTarget) * Math.PI / 30.0;
+				double omegaF = lowestRPM * Math.PI / 30.0;
+				double exitVelocity = Math.sqrt(Constants.SHOOTER_I / Constants.SHOOTER_BALL_MASS * (Math.pow(omegaI, 2) - Math.pow(omegaF, 2)));
+
+				for (DoubleConsumer callback : onShot) {
+					callback.accept(exitVelocity);
+				}
+
+				double xValue = ((Math.pow(omegaI, 2) - Math.pow(omegaF, 2)) * ((Math.pow(Constants.SHOOTER_WHEEL_RADIUS, 2)
+					* Constants.SHOOTER_BALL_MASS) + Constants.SHOOTER_I))
+					/ (Math.pow(Constants.SHOOTER_WHEEL_RADIUS, 2) * Constants.SHOOTER_BALL_MASS);
+
+				if (xValue < 0 || xValue > Math.pow(omegaI, 2)) {
+					throw new IllegalStateException("Incorrect calculation of xvalue stuff. Value: " + xValue);
+				}
+
+				xValues.add(xValue);
+				yValues.add(omegaI);
+
+				runningRegression = true;
+				//Run normalization process
+				xValuesNormalized.clear();
+				invR.reset();
+				double maximum = 0;
+
+				for (double value : xValues) {
+					if (value > maximum) maximum = value;
+				}
+
+				for (double value : xValues) {
+					xValuesNormalized.add(value / maximum); //Do normalization
+				}
+
+				//Change lowestRPM stuff
+				lowestRPM = -1;
+				lowestTime = 0;
+			}
+		}
+
+		if (runningRegression) {
+			for (int i = 0; i < Constants.REGRESSION_STEPS_PER_CYCLE; i++) {
+				invR.gradStep(
+						Constants.REGRESSION_ALPHA, xValuesNormalized, yValues,
+						Constants.REGRESSION_STEPSIZE, Constants.REGRESSION_NOISE
+				);
+			}
+
+			regressionStepCount += Constants.REGRESSION_STEPS_PER_CYCLE;
+			if (regressionStepCount >= Constants.REGRESSION_STEPS) {
+				invR.setLowestInBuffer();
+				runningRegression = false;
+
+				//Copy parameter values over to PinvR
+				System.arraycopy(invR.getParameters(), 0, pInvR.getParameters(), 0, invR.getParameters().length);
+			}
+		}
+
+		NetworkTables.setLowestRPM(lowestRPM);
 	}
 
-	public void setLeftPID(double P, double I, double D) {
-		setLeftPID(P, I, D, 0);
+	public void setLeftPID(double p, double i, double d) {
+		setLeftPID(p, i, d, 0);
 	}
 
 	/**
 	 * Set the PID constants for the left controller
 	 *
-	 * @param P  proportional gain
-	 * @param I  integral gain
-	 * @param D  derivative gain
-	 * @param FF feed-forward gain
+	 * @param p  proportional gain
+	 * @param i  integral gain
+	 * @param d  derivative gain
+	 * @param ff feed-forward gain
 	 */
-	public void setLeftPID(double P, double I, double D, double FF) {
-		leftController.setP(P);
-		leftController.setI(I);
-		leftController.setD(D);
-		leftController.setFF(FF);
+	public void setLeftPID(double p, double i, double d, double ff) {
+		leftController.setP(p);
+		leftController.setI(i);
+		leftController.setD(d);
+		leftController.setFF(ff);
 	}
 
-	public void setRightPID(double P, double I, double D) {
-		setRightPID(P, I, D, 0);
+	public void setRightPID(double p, double i, double d) {
+		setRightPID(p, i, d, 0);
 	}
 
 	/**
 	 * Set PID Constants for the right controller
 	 *
-	 * @param P  proportional gain
-	 * @param I  integral gain
-	 * @param D  derivative gain
-	 * @param FF feed-forward gain
+	 * @param p  proportional gain
+	 * @param i  integral gain
+	 * @param d  derivative gain
+	 * @param ff feed-forward gain
 	 */
-	public void setRightPID(double P, double I, double D, double FF) {
-		rightController.setP(P);
-		rightController.setI(I);
-		rightController.setD(D);
-		rightController.setFF(FF);
+	public void setRightPID(double p, double i, double d, double ff) {
+		rightController.setP(p);
+		rightController.setI(i);
+		rightController.setD(d);
+		rightController.setFF(ff);
 	}
 
 
 	/**
 	 * Sets the target velocities for the two NEOs in revolutions per minute
 	 *
-	 * @param RPM speed of motors in revolutions per minute
+	 * @param rpm speed of motors in revolutions per minute
 	 */
-	public void setSpeeds(double RPM) {
-		target = RPM;
+	public void setSpeeds(double rpm) {
+		target = rpm;
+
 		leftController.setReference(target, CANSparkMax.ControlType.kVelocity);
 		rightController.setReference(target, CANSparkMax.ControlType.kVelocity);
 	}
