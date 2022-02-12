@@ -15,8 +15,12 @@ import java.util.PriorityQueue;
 public class TaskScheduler {
 
 	private final DSControlWord controlWord = new DSControlWord();
-	private final PriorityQueue<EnqueuedTask> queue = new PriorityQueue<>();
+
+    private final PriorityQueue<Observer> observerQueue = new PriorityQueue<>();
+
+	private final PriorityQueue<EnqueuedTask> taskQueue = new PriorityQueue<>();
 	private final IntOpenHashSet pendingCancellation = new IntOpenHashSet();
+    private final IntOpenHashSet pendingInitialization = new IntOpenHashSet();
 	private final long defaultPeriod;
 	private final int m_notifier = NotifierJNI.initializeNotifier();
 	private boolean stopped = false;
@@ -35,10 +39,16 @@ public class TaskScheduler {
     public void enableDebugTelemetry() {
         dumpingDebugTelemetry = true;
     }
-    
+
     public void debugDump() {
         System.out.println("Current Control Word: " + controlWord);
-        for (EnqueuedTask task : queue) {
+        
+        System.out.println("Dumpign Observer Queue:");
+        for (Observer observer : observerQueue) {
+            System.out.println("- Observer: " + observer);
+        }
+
+        for (EnqueuedTask task : taskQueue) {
             System.out.println("Task: " + task.getTask());
         }
     }
@@ -72,7 +82,7 @@ public class TaskScheduler {
 	}
 
 	public void halt() {
-		queue.clear();
+		taskQueue.clear();
 		stopped = true;
 	}
 
@@ -82,11 +92,11 @@ public class TaskScheduler {
 
 		EnqueuedTask next;
 		//noinspection StatementWithEmptyBody – no logic needed; block until a task is available
-		while ((next = queue.peek()) == null || next.getTargetTime() > System.currentTimeMillis()) {
+		while ((next = taskQueue.peek()) == null || next.getTargetTime() > System.currentTimeMillis()) {
 		}
 
-		if (next != queue.poll()) {
-			throw new IllegalStateException("Mismatch in next task and next item in queue");
+		if (next != taskQueue.poll()) {
+			throw new IllegalStateException("Mismatch in next task and next item in taskQueue");
 		}
 
 		if (next.isPendingCancellation || pendingCancellation.contains(next.getId())) {
@@ -96,7 +106,7 @@ public class TaskScheduler {
 
 		if (next.isPeriodic() && !next.getTask().isFinished()) {
 			next.tickPeriod();
-			queue.add(next);
+			taskQueue.add(next);
 		}
 
 		// Run task if it subscribes to the current mode
@@ -111,24 +121,24 @@ public class TaskScheduler {
 	}
 
 	@Contract(value = "_ -> param1", mutates = "this")
-	private EnqueuedTask queue(EnqueuedTask task) {
-		queue.add(task);
+	private EnqueuedTask taskQueue(EnqueuedTask task) {
+		taskQueue.add(task);
 		return task;
 	}
 
 	@Contract(value = "_, _ -> new", mutates = "this")
-	public EnqueuedTask queue(@NotNull Task task, long delay) {
-		return queue(new EnqueuedTask(task, nextTaskId(), delay));
+	public EnqueuedTask taskQueue(@NotNull Task task, long delay) {
+		return taskQueue(new EnqueuedTask(task, nextTaskId(), delay));
 	}
 
 	@Contract(value = "_ -> new", mutates = "this")
-	public EnqueuedTask queue(@NotNull Task task) {
-		return queue(new EnqueuedTask(task, nextTaskId()));
+	public EnqueuedTask taskQueue(@NotNull Task task) {
+		return taskQueue(new EnqueuedTask(task, nextTaskId()));
 	}
 
 	@Contract(value = "_, _, _ -> new", mutates = "this")
 	public EnqueuedTask queuePeriodic(@NotNull Task task, long initialDelay, long period) {
-		return queue(new EnqueuedTask(task, nextTaskId(), initialDelay, period));
+		return taskQueue(new EnqueuedTask(task, nextTaskId(), initialDelay, period));
 	}
 
 	@Contract(value = "_, _ -> new", mutates = "this")

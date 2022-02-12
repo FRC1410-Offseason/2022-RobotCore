@@ -7,7 +7,7 @@ package frc.robot.framework.scheduler;
 import edu.wpi.first.hal.HAL;
 import edu.wpi.first.wpilibj.DSControlWord;
 import edu.wpi.first.wpilibj.RobotBase;
-import frc.robot.framework.control.ControlScheme;
+import frc.robot.framework.control.controllers.ControlScheme;
 import frc.robot.framework.scheduler.task.SubsystemPeriodicTask;
 import frc.robot.framework.scheduler.task.Task;
 

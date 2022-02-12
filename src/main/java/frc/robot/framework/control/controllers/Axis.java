@@ -1,4 +1,4 @@
-package frc.robot.framework.control;
+package frc.robot.framework.control.controllers;
 
 import edu.wpi.first.wpilibj.XboxController;
 

@@ -3,8 +3,8 @@ package frc.robot.framework.scheduler.task.button;
 import java.util.Set;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.framework.control.ButtonStateObserver;
-import frc.robot.framework.control.ButtonStateObserver.ButtonState;
+import frc.robot.framework.control.observers.ButtonStateObserver;
+import frc.robot.framework.control.observers.ButtonStateObserver.ButtonState;
 import frc.robot.framework.scheduler.RobotMode;
 import frc.robot.framework.scheduler.task.Task;
 

@@ -58,6 +58,8 @@ public class Robot extends ScheduledRobot {
         // getDriverBButton().toggleWhenPressed(new TestLoopedCommand());
         
         // scheduler.scheduleCommand(new TestAxisCommand(getDriverLeftXAxis()));
+
+        scheduler.debugDump();
 	}
 
 	@Override
