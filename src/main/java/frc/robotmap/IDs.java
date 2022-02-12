@@ -1,8 +1,8 @@
 package frc.robotmap;
 
 public class IDs {
-	public static final int[] LEFT_ENCODER_PORTS = new int[] {6, 7};
-	public static final int[] RIGHT_ENCODER_PORTS = new int[] {8, 9};
+	public static final int[] LEFT_ENCODER_PORTS = { 6, 7 };
+	public static final int[] RIGHT_ENCODER_PORTS = { 8, 9 };
 
 	public static final int DRIVETRAIN_LEFT_FRONT_MOTOR_ID = 1;
 	public static final int DRIVETRAIN_LEFT_BACK_MOTOR_ID = 2;
@@ -15,7 +15,7 @@ public class IDs {
 
 	//STORAGE
 	public static final int STORAGE_MOTOR_ID = 41;
-	public static final int STORAGE_LINE_BREAK_ID = 8; //To Do: Find out what the actual port on the roborio is
+	public static final int STORAGE_LINE_BREAK_ID = 0;
 
 	//INTAKE
 	public static final int INTAKE_FLIPPER_FWD = 6;
