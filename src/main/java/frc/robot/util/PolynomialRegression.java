@@ -21,7 +21,7 @@ public class PolynomialRegression {
 	 * @param x
 	 * @return f(x)
 	 */
-	public double f(double x) {
+	public double function(double x) {
 		double ret = 0;
 		for (int i = 0; i < parameters.length; i++) {
 			ret += parameters[i] * Math.pow(x, i+1);
@@ -53,7 +53,7 @@ public class PolynomialRegression {
 
 		for (int i = 0; i < x.size(); i++) {
 			yBar += y.get(i);
-			error += Math.pow(f(x.get(i))- y.get(i), 2);
+			error += Math.pow(function(x.get(i))- y.get(i), 2);
 		}
 
 		yBar /= y.size();

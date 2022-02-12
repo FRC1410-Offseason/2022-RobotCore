@@ -94,34 +94,43 @@ public class Shooter extends SubsystemBase {
 	 * @return RPM
 	 */
 	public double targetRPM(double vel) {
-		return 30.0 * pInvR.f(Math.pow(vel,2)
+		return 30.0 * pInvR.function(Math.pow(vel,2)
 			* ((Math.pow(Constants.SHOOTER_WHEEL_RADIUS, 2) * Constants.SHOOTER_BALL_MASS) + Constants.SHOOTER_I)
 			/ (Constants.SHOOTER_I * Math.pow(Constants.SHOOTER_WHEEL_RADIUS, 2))) / Math.PI;
 	}
 
 	@Override
 	public void periodic() {
+		//Get average RPM between right + left.
 		double rpm = Math.abs((getRightVel() + getLeftVel()) * 0.5); //Average RPM
+		//If we drop below a proportional threshold
+		//Use pTarget for comparison, and it's not updated when target is updated.
 		if (rpm < (Math.min(Math.abs(pTarget), Math.abs(target)) * (1 - Constants.SIGNIFICANT_DROP_DETECTION_THSHLD))) {
 			if (rpm < lowestRPM || lowestRPM < 0) {
 				lowestRPM = rpm;
 				lowestTime = System.currentTimeMillis();
 			}
+		//When rpm gets close enough to the actual target
 		} else if (Math.abs((rpm - Math.abs(target)) / target) <= (Constants.SIGNIFICANT_DROP_DETECTION_THSHLD * 0.5)) {
+			//Update pTarget
 			pTarget = target;
 		}
-
+		//If we have a lowestRPM
 		if (lowestRPM >= 0) {
+			//If it's been LOWEST_EXPIRATION_TIME_MS since we collected our last point
 			if (System.currentTimeMillis() - lowestTime > Constants.LOWEST_EXPIRATION_TIME_MS) {
 				//Throw out and use the current results - we're done dropping
+
+				//Compute omega values
 				double omegaI = Math.abs(pTarget) * Math.PI / 30.0;
 				double omegaF = lowestRPM * Math.PI / 30.0;
+				//Find exit velocity ((I/m)(w_i^2-w_f^2))^(1/2)
 				double exitVelocity = Math.sqrt(Constants.SHOOTER_I / Constants.SHOOTER_BALL_MASS * (Math.pow(omegaI, 2) - Math.pow(omegaF, 2)));
-
+				//Run callbacks
 				for (DoubleConsumer callback : onShot) {
 					callback.accept(exitVelocity);
 				}
-
+				//Get the abstract value w^2T(w) as an x value
 				double xValue = ((Math.pow(omegaI, 2) - Math.pow(omegaF, 2)) * ((Math.pow(Constants.SHOOTER_WHEEL_RADIUS, 2)
 					* Constants.SHOOTER_BALL_MASS) + Constants.SHOOTER_I))
 					/ (Math.pow(Constants.SHOOTER_WHEEL_RADIUS, 2) * Constants.SHOOTER_BALL_MASS);
@@ -129,31 +138,34 @@ public class Shooter extends SubsystemBase {
 				if (xValue < 0 || xValue > Math.pow(omegaI, 2)) {
 					throw new IllegalStateException("Incorrect calculation of xvalue stuff. Value: " + xValue);
 				}
-
+				//Add values
 				xValues.add(xValue);
 				yValues.add(omegaI);
 
+				//Start out regression - reset everything
 				runningRegression = true;
-				//Run normalization process
 				xValuesNormalized.clear();
 				invR.reset();
+				//Run normalization process
+				//Find maximum
 				double maximum = 0;
-
 				for (double value : xValues) {
 					if (value > maximum) maximum = value;
 				}
-
+				//Divide everything
 				for (double value : xValues) {
 					xValuesNormalized.add(value / maximum); //Do normalization
 				}
-
-				//Change lowestRPM stuff
+				//Sync to networktables
+				NetworkTables.setLowestRPM(lowestRPM);
+				//Change lowestRPM stuff to reset the state
 				lowestRPM = -1;
 				lowestTime = 0;
 			}
 		}
 
 		if (runningRegression) {
+			//Run some steps per cycle
 			for (int i = 0; i < Constants.REGRESSION_STEPS_PER_CYCLE; i++) {
 				invR.gradStep(
 						Constants.REGRESSION_ALPHA, xValuesNormalized, yValues,
@@ -163,15 +175,14 @@ public class Shooter extends SubsystemBase {
 
 			regressionStepCount += Constants.REGRESSION_STEPS_PER_CYCLE;
 			if (regressionStepCount >= Constants.REGRESSION_STEPS) {
+				//Set to the lowest in buffer to undo randomness error
 				invR.setLowestInBuffer();
 				runningRegression = false;
 
-				//Copy parameter values over to PinvR
+				//Copy parameter values over to PinvR so we don't try and get targets while we're running stuff
 				System.arraycopy(invR.getParameters(), 0, pInvR.getParameters(), 0, invR.getParameters().length);
 			}
 		}
-
-		NetworkTables.setLowestRPM(lowestRPM);
 	}
 
 	public void setLeftPID(double p, double i, double d) {
