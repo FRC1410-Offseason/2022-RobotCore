@@ -88,7 +88,11 @@ public class Shooter extends SubsystemBase {
 			SHOOTER_RIGHT_KFF
 		);
 	}
-
+	/**
+	 * Use the regression to find a target RPM based on a target velocity in m/s.
+	 * @param vel
+	 * @return RPM
+	 */
 	public double targetRPM(double vel) {
 		return 30.0 * pInvR.f(Math.pow(vel,2)
 			* ((Math.pow(Constants.SHOOTER_WHEEL_RADIUS, 2) * Constants.SHOOTER_BALL_MASS) + Constants.SHOOTER_I)
