@@ -37,10 +37,12 @@ public class OuttakeHandler extends CommandBase {
 		if (storage.getOuttakeFlag()) {
 			//If there is a ball in the second storage slot
 			if (storage.getCurrentState().getSlot2().getBallPresent()) {
-				//TODO: Set flag to tell shooter what to do during the shooting sequence
+				//If there is a cargo in the way of us automatically outtaking, we have to tell the shooter to outtake the next time that we shoot
+				shooter.queueOuttake();
 			} else {
 				//Else, we can outtake immediately
 				if (!internalOuttakeStarted) {
+					shooter.resetShotCount();
 					//Update the flag to say that we have started outtaking
 					internalOuttakeStarted = true;
 
@@ -49,20 +51,16 @@ public class OuttakeHandler extends CommandBase {
 
 					//Set the speed of the shooter flywheels
 					shooter.setSpeeds(SHOOTER_OUTTAKE_SPEED);
-
-					//Start the timer
-					outtakeTimer.start();
 				}
 
-				if (outtakeTimer.get() < STORAGE_OUTTAKE_TIME) {
+				if (shooter.getShotCount() < 1) {
 					//Run the storage and outtake the ball
 					storage.runStorage(STORAGE_OUTTAKE_SPEED);
 
 				} else {
 					//If the outtake sequence has been running for long enough, we are good to stop it and reset everything for next time
-					//Stop the timer and reset it for next time
-					outtakeTimer.stop();
-					outtakeTimer.reset();
+					//Reset the storage state because now the cargo is no longer in the robot
+					storage.getCurrentState().resetSlot1();
 
 					//Reset the started flag for next time
 					internalOuttakeStarted = false;

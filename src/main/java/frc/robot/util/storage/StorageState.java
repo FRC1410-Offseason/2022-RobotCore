@@ -15,6 +15,13 @@ public class StorageState {
 		slot2 = new StorageSlot();
 	}
 
+	public int getNumCargo() {
+		int num = 0;
+		num += slot1.getBallPresent() ? 1 : 0;
+		num += slot2.getBallPresent() ? 1 : 0;
+		return num;
+	}
+
 	/**
 	 * Set the alliance of the first slot
 	 * @param alliance True -> Correct Alliance, False -> Incorrect Alliance

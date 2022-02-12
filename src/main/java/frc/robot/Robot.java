@@ -46,7 +46,7 @@ public class Robot extends ScheduledRobot implements ControlScheme {
 		scheduler.scheduleCommand(new RunWinch(winch, getOperatorRightYAxis())); //Winch Default Command
 		scheduler.scheduleCommand(new RunIntake(intake, getOperatorRightTrigger())); //Intake Default Command
 
-		getDriverRightBumper().whileHeld(new LimelightShoot(drivetrain, limelight, shooter, storage));
+		getDriverRightBumper().whileHeld(new LimelightShoot(drivetrain, limelight, shooter, storage, shooterArm));
 		getOperatorRightBumper().whileHeld(new ToggleIntake(intake)); //To Do: Make this toggle when pressed
 	}
 
