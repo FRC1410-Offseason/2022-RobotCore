@@ -17,19 +17,20 @@ public class ButtonStateObserver extends Observer {
     private boolean running = false;
 
     private ButtonState buttonState = ButtonState.UNCHANGED;
-    private StateCondition stateToCheck = null;
+    private ButtonStateCondition stateToCheck = null;
 
-	public ButtonStateObserver(XboxController controller, ButtonId id) {
-		this.controller = controller;
+	public ButtonStateObserver(ButtonStateCondition stateToCheck, XboxController controller, ButtonId id) {
+		this.stateToCheck = stateToCheck;
+        this.controller = controller;
 		this.id = id;
 	}
 
-    public ButtonStateObserver(XboxController controller, ButtonId id, EnqueuedTask task) {
-		this.controller = controller;
-		this.id = id;
+    // public ButtonStateObserver(XboxController controller, ButtonId id, EnqueuedTask task) {
+	// 	this.controller = controller;
+	// 	this.id = id;
 
-        this.bind(task);
-	}
+    //     this.bind(task);
+	// }
 
     public void bindTask(EnqueuedTask task) {
         bind(task);
@@ -104,7 +105,7 @@ public class ButtonStateObserver extends Observer {
         UNCHANGED
     }
 
-    private enum StateCondition {
+    public enum ButtonStateCondition {
         WHEN_PRESSED,
         WHEN_RELEASED,
         WHILE_HELD,

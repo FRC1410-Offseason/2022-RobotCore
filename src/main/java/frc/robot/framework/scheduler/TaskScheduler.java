@@ -158,43 +158,43 @@ public class TaskScheduler {
 
     @Contract(value = "_, _, _ -> new", mutates = "this")
 	public EnqueuedTask queObservedTask(@NotNull Task task, @NotNull Observer observer, long initialDelay, long period) {
-        observer.bind(queueTask(new EnqueuedTask(task, nextTaskId(), initialDelay, period)));
         queueObserver(observer);
+        observer.bind(queueTask(new EnqueuedTask(task, nextTaskId(), initialDelay, period)));
 		return observer.getTask();
 	}
 
 	@Contract(value = "_, _ -> new", mutates = "this")
 	public EnqueuedTask queueObservedTask(@NotNull Task target, @NotNull Observer observer, long period) {
-		observer.bind(queuePeriodic(target, period, period));
         queueObserver(observer);
+        observer.bind(queuePeriodic(target, period, period));
         return observer.getTask();
 	}
 
 	@Contract(value = "_ -> new", mutates = "this")
 	public EnqueuedTask queueObservedTask(@NotNull Task target, @NotNull Observer observer) {
-		observer.bind(queuePeriodic(target, defaultPeriod, defaultPeriod));
-        queueObserver(observer);
+		queueObserver(observer);
+        observer.bind(queuePeriodic(target, defaultPeriod, defaultPeriod));
         return observer.getTask();
 	}
 
     @Contract(value = "_, _, _ -> new", mutates = "this")
 	public EnqueuedTask queueObservedCommand(@NotNull Command command, @NotNull Observer observer, long initialDelay, long period) {
-        observer.bind(scheduleCommand(command, initialDelay, period));
         queueObserver(observer);
+        observer.bind(scheduleCommand(command, initialDelay, period));
 		return observer.getTask();
 	}
 
 	@Contract(value = "_, _ -> new", mutates = "this")
 	public EnqueuedTask queueObservedCommand(@NotNull Command command, @NotNull Observer observer, long period) {
-		observer.bind(scheduleCommand(command, period));
-        queueObserver(observer);
+		queueObserver(observer);
+        observer.bind(scheduleCommand(command, period));
 		return observer.getTask();
 	}
 
 	@Contract(value = "_ -> new", mutates = "this")
 	public EnqueuedTask queueObservedCommand(@NotNull Command command, @NotNull Observer observer) {
-		observer.bind(scheduleCommand(command));
         queueObserver(observer);
+        observer.bind(scheduleCommand(command));
 		return observer.getTask();
 	}
 

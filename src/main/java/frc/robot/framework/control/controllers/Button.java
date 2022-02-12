@@ -3,6 +3,7 @@ package frc.robot.framework.control.controllers;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.framework.control.observers.ButtonStateObserver;
+import frc.robot.framework.control.observers.ButtonStateObserver.ButtonStateCondition;
 import frc.robot.framework.scheduler.TaskScheduler;
 import static frc.robotmap.IDs.*;
 
@@ -19,18 +20,18 @@ public class Button {
 	}
 
 	public void whenPressed(Command command) {
-		scheduler.queuePeriodic(new WhenPressedTask(new ButtonStateObserver(controller, id), command));
+		scheduler.queueObservedCommand(command, new ButtonStateObserver(ButtonStateCondition.WHEN_PRESSED, controller, id));
 	}
 
     public void whenReleased(Command command) {
-		scheduler.queuePeriodic(new WhenReleasedTask(new ButtonStateObserver(controller, id), command));
-	}
+        scheduler.queueObservedCommand(command, new ButtonStateObserver(ButtonStateCondition.WHEN_RELEASED, controller, id));
+    }
 
     public void toggleWhenPressed(Command command) {
-		scheduler.queuePeriodic(new ToggleWhenPressedTask(new ButtonStateObserver(controller, id), command));
-	}
+        scheduler.queueObservedCommand(command, new ButtonStateObserver(ButtonStateCondition.TOGGLE_WHEN_PRESSED, controller, id));
+    }
 
     public void whileHeld(Command command) {
-		scheduler.queuePeriodic(new WhileHeldTask(new ButtonStateObserver(controller, id), command));
-	}
+        scheduler.queueObservedCommand(command, new ButtonStateObserver(ButtonStateCondition.WHILE_HELD, controller, id));
+    }
 }
