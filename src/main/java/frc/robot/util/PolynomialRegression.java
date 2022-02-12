@@ -90,4 +90,8 @@ public class PolynomialRegression {
 			}
 		}
 	}
+
+	public double[] getParameters() {
+		return parameters;
+	}
 }

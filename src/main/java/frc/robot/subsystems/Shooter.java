@@ -163,7 +163,7 @@ public class Shooter extends SubsystemBase {
 				runningRegression = false;
 
 				//Copy parameter values over to PinvR
-				System.arraycopy(invR.parameters, 0, pInvR.parameters, 0, invR.parameters.length);
+				System.arraycopy(invR.getParameters(), 0, pInvR.getParameters(), 0, invR.getParameters().length);
 			}
 		}
 
