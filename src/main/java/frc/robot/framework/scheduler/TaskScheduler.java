@@ -20,7 +20,6 @@ public class TaskScheduler {
 
 	private final PriorityQueue<EnqueuedTask> taskQueue = new PriorityQueue<>();
 	private final IntOpenHashSet pendingCancellation = new IntOpenHashSet();
-    private final IntOpenHashSet pendingInitialization = new IntOpenHashSet();
 	private final long defaultPeriod;
 	private final int m_notifier = NotifierJNI.initializeNotifier();
 	private boolean stopped = false;
@@ -121,24 +120,24 @@ public class TaskScheduler {
 	}
 
 	@Contract(value = "_ -> param1", mutates = "this")
-	private EnqueuedTask taskQueue(EnqueuedTask task) {
+	private EnqueuedTask queueTask(EnqueuedTask task) {
 		taskQueue.add(task);
 		return task;
 	}
 
 	@Contract(value = "_, _ -> new", mutates = "this")
-	public EnqueuedTask taskQueue(@NotNull Task task, long delay) {
-		return taskQueue(new EnqueuedTask(task, nextTaskId(), delay));
+	public EnqueuedTask queueTask(@NotNull Task task, long delay) {
+		return queueTask(new EnqueuedTask(task, nextTaskId(), delay));
 	}
 
 	@Contract(value = "_ -> new", mutates = "this")
-	public EnqueuedTask taskQueue(@NotNull Task task) {
-		return taskQueue(new EnqueuedTask(task, nextTaskId()));
+	public EnqueuedTask queueTask(@NotNull Task task) {
+		return queueTask(new EnqueuedTask(task, nextTaskId()));
 	}
 
 	@Contract(value = "_, _, _ -> new", mutates = "this")
 	public EnqueuedTask queuePeriodic(@NotNull Task task, long initialDelay, long period) {
-		return taskQueue(new EnqueuedTask(task, nextTaskId(), initialDelay, period));
+		return queueTask(new EnqueuedTask(task, nextTaskId(), initialDelay, period));
 	}
 
 	@Contract(value = "_, _ -> new", mutates = "this")
@@ -149,6 +148,29 @@ public class TaskScheduler {
 	@Contract(value = "_ -> new", mutates = "this")
 	public EnqueuedTask queuePeriodic(@NotNull Task target) {
 		return queuePeriodic(target, defaultPeriod, defaultPeriod);
+	}
+
+    @Contract(value = "_, _, _ -> new", mutates = "this")
+	public EnqueuedTask queObservedTask(@NotNull Task task, @NotNull Observer observer, long initialDelay, long period) {
+		return queueTask(new EnqueuedTask(task, nextTaskId(), initialDelay, period));
+	}
+
+	@Contract(value = "_, _ -> new", mutates = "this")
+	public EnqueuedTask queueObservedTask(@NotNull Task target, long period) {
+		return queuePeriodic(target, period, period);
+	}
+
+	@Contract(value = "_ -> new", mutates = "this")
+	public EnqueuedTask queueObservedTask(@NotNull Task target, @NotNull Observer observer) {
+		return queuePeriodic(target, defaultPeriod, defaultPeriod);
+	}
+
+
+    @Contract(value = "_ -> new", mutates = "this")
+	public Observer queueObserved(@NotNull Task target, @NotNull Observer observer) {
+        queuePeriodic(target, defaultPeriod, defaultPeriod);
+        
+		return observer;
 	}
 
 	public EnqueuedTask scheduleCommand(Command command) {

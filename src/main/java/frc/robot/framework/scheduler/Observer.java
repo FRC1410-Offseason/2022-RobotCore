@@ -3,13 +3,21 @@ package frc.robot.framework.scheduler;
 import java.util.EnumSet;
 import java.util.Set;
 
-public interface Observer {
+public abstract class Observer {
 
-    final EnqueuedTask task = null;
+    protected EnqueuedTask task = null;
 
-    void check();
+    public void bind(EnqueuedTask task) {
+        this.task = task;
+    }
 
-    default Set<RobotMode> getDisallowedModes() {
+    public EnqueuedTask getTask() {
+        return task;
+    }
+
+    public abstract void check();
+
+    Set<RobotMode> getDisallowedModes() {
 		return EnumSet.of(RobotMode.DISABLED);
 	}
 }

@@ -1,11 +1,12 @@
 package frc.robot.framework.control.observers;
 
 import edu.wpi.first.wpilibj.XboxController;
+import frc.robot.framework.scheduler.EnqueuedTask;
 import frc.robot.framework.scheduler.Observer;
 
 import static frc.robotmap.IDs.*;
 
-public class ButtonStateObserver implements Observer{
+public class ButtonStateObserver extends Observer {
 
     private final XboxController controller;
 	private final ButtonId id;
@@ -22,6 +23,17 @@ public class ButtonStateObserver implements Observer{
 		this.controller = controller;
 		this.id = id;
 	}
+
+    public ButtonStateObserver(XboxController controller, ButtonId id, EnqueuedTask task) {
+		this.controller = controller;
+		this.id = id;
+
+        this.bind(task);
+	}
+
+    public void bindTask(EnqueuedTask task) {
+        bind(task);
+    }
 
     public void check() {
         updateState();
