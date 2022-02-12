@@ -10,6 +10,8 @@ public class EnqueuedTask implements Comparable<EnqueuedTask> {
 	boolean isPendingCancellation = false;
 	private long targetTime;
 
+    private boolean enabled;
+
 	public EnqueuedTask(Task task, int id, long initialDelay, long period) {
 		this.task = task;
 		this.id = id;
@@ -25,6 +27,18 @@ public class EnqueuedTask implements Comparable<EnqueuedTask> {
 		this(task, id, 0L, -1L);
 		this.targetTime = 0;
 	}
+
+    public void enable() {
+        enabled = true;
+    }
+
+    public void disable() {
+        enabled = false;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
 
 	public Task getTask() {
 		return task;

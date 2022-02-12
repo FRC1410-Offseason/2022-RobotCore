@@ -1,10 +1,11 @@
 package frc.robot.framework.control.observers;
 
 import edu.wpi.first.wpilibj.XboxController;
+import frc.robot.framework.scheduler.Observer;
 
 import static frc.robotmap.IDs.*;
 
-public class ButtonStateObserver {
+public class ButtonStateObserver implements Observer{
 
     private final XboxController controller;
 	private final ButtonId id;
@@ -12,35 +13,44 @@ public class ButtonStateObserver {
     private boolean pressed = false;
     private boolean wasPressed = false;
 
-    private ButtonState internalButtonState = ButtonState.UNCHANGED;
+    private boolean running = false;
+
+    private ButtonState buttonState = ButtonState.UNCHANGED;
+    private StateCondition stateToCheck = null;
 
 	public ButtonStateObserver(XboxController controller, ButtonId id) {
 		this.controller = controller;
 		this.id = id;
 	}
 
-    public enum ButtonState {
-        PRESSED,
-        RELEASED,
-        UNCHANGED
-    }
+    public void check() {
+        updateState();
 
-    public void updateState() {
-        pressed = getRaw();
+        switch (stateToCheck) {
+            case WHEN_PRESSED: 
+                if (buttonState == ButtonState.PRESSED) task.enable(); 
+                break;
+            case WHEN_RELEASED:
+                if (buttonState == ButtonState.RELEASED) task.enable();
+                break;
+            case WHILE_HELD:
+                if (buttonState == ButtonState.PRESSED) task.enable(); 
+                if (buttonState == ButtonState.RELEASED) task.disable();
+                break;
+            case TOGGLE_WHEN_PRESSED:
+                if (buttonState == ButtonState.PRESSED) {
+                    if (!running) {
+                        task.enable();
+                        running = true;
+                    } else {
+                        task.disable();
+                        running = false;
+                    }
+                }
+                break;
 
-        if (pressed && !wasPressed) {
-            internalButtonState = ButtonState.PRESSED;
-        } else if (!pressed && wasPressed) {
-            internalButtonState = ButtonState.RELEASED;
-        } else {
-            internalButtonState = ButtonState.UNCHANGED;
+            default: break;
         }
-
-        wasPressed = pressed;
-    }
-
-    public ButtonState getState() {
-        return internalButtonState;
     }
 
     public boolean getRaw() {
@@ -60,5 +70,32 @@ public class ButtonStateObserver {
 
             default: return false;
         }
+    }
+
+    public void updateState() {
+        pressed = getRaw();
+
+        if (pressed && !wasPressed) {
+            buttonState = ButtonState.PRESSED;
+        } else if (!pressed && wasPressed) {
+            buttonState = ButtonState.RELEASED;
+        } else {
+            buttonState = ButtonState.UNCHANGED;
+        }
+
+        wasPressed = pressed;
+    }
+
+    public enum ButtonState {
+        PRESSED,
+        RELEASED,
+        UNCHANGED
+    }
+
+    private enum StateCondition {
+        WHEN_PRESSED,
+        WHEN_RELEASED,
+        WHILE_HELD,
+        TOGGLE_WHEN_PRESSED
     }
 }
