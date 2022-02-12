@@ -152,7 +152,7 @@ public class Shooter extends SubsystemBase {
 		if (runningRegression) {
 			for (int i = 0; i < Constants.REGRESSION_STEPS_PER_CYCLE; i++) {
 				invR.gradStep(
-						Constants.REGRESSION_ALPHA, xValuesNormalized, xValues,
+						Constants.REGRESSION_ALPHA, xValuesNormalized, yValues,
 						Constants.REGRESSION_STEPSIZE, Constants.REGRESSION_NOISE
 				);
 			}
