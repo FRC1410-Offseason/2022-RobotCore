@@ -1,7 +1,7 @@
 package frc.robot.framework.control.observers;
 
 import frc.robotmap.IDs.OBSERVER_PRIORITY;
-
+ 
 public class DefaultCommandObserver extends Observer {
     
     public DefaultCommandObserver() {
@@ -9,6 +9,8 @@ public class DefaultCommandObserver extends Observer {
     }
     
     public void check() {
-
+        if (!task.isEnabled()) {
+            
+        }
     }
 }

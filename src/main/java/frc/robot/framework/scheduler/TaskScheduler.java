@@ -49,7 +49,7 @@ public class TaskScheduler {
         }
 
         for (EnqueuedTask task : taskQueue) {
-            System.out.println("- Task: " + task.getTask());
+            System.out.println("- Task: " + task.getTask() + " whose enabled state is: " + task.isEnabled());
         }
     }
 
@@ -198,6 +198,8 @@ public class TaskScheduler {
         queueObserver(observer);
 		return observer.getTask();
 	}
+
+
 
 	public EnqueuedTask scheduleCommand(Command command) {
 		return queuePeriodic(new CommandTask(command));
