@@ -32,8 +32,9 @@ public class ButtonStateObserver extends Observer {
     //     this.bind(task);
 	// }
 
+    @Override
     public void check() {
-        updateState();
+        updateButtonPressedState();
 
         switch (stateToCheck) {
             case WHEN_PRESSED: 
@@ -82,7 +83,7 @@ public class ButtonStateObserver extends Observer {
         }
     }
 
-    public void updateState() {
+    public void updateButtonPressedState() {
         pressed = getRaw();
 
         if (pressed && !wasPressed) {
