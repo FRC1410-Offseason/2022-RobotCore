@@ -4,6 +4,7 @@ import edu.wpi.first.hal.NotifierJNI;
 import edu.wpi.first.wpilibj.DSControlWord;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.framework.control.observers.DefaultCommandObserver;
 import frc.robot.framework.control.observers.Observer;
 import frc.robot.framework.scheduler.task.CommandTask;
 import frc.robot.framework.scheduler.task.Task;
@@ -43,7 +44,7 @@ public class TaskScheduler {
     public void debugDump() {
         System.out.println("Current Control Word: " + controlWord);
         
-        System.out.println("Dumpign Observer Queue:");
+        System.out.println("Dumping Observer Queue:");
         for (Observer observer : observerQueue) {
             System.out.println("- Observer: " + observer + " with priority: " + observer.getPriority());
         }
@@ -199,7 +200,26 @@ public class TaskScheduler {
 		return observer.getTask();
 	}
 
+    public EnqueuedTask scheduleDefaultCommand(Command command) {
+		final Observer observer = new DefaultCommandObserver();
+        observer.bind(scheduleCommand(command));
+        queueObserver(observer);
+        return observer.getTask();
+	}
 
+    public EnqueuedTask scheduleDefaultCommand(Command command, long period) {
+		final Observer observer = new DefaultCommandObserver();
+        observer.bind(scheduleCommand(command, period));
+        queueObserver(observer);
+        return observer.getTask();
+	}
+
+    public EnqueuedTask scheduleDefaultCommand(Command command, long initialDelay, long period) {
+		final Observer observer = new DefaultCommandObserver();
+        observer.bind(scheduleCommand(command, initialDelay, period));
+        queueObserver(observer);
+        return observer.getTask();
+	}
 
 	public EnqueuedTask scheduleCommand(Command command) {
 		return queuePeriodic(new CommandTask(command));

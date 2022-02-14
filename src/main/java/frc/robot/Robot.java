@@ -35,15 +35,15 @@ public class Robot extends ScheduledRobot {
 	public void registerControls() {
         
         //Drivetrain Default Command
-		scheduler.scheduleCommand(new TankDrive(drivetrain, getDriverLeftYAxis(), getDriverRightYAxis()));
+		scheduler.scheduleDefaultCommand(new TankDrive(drivetrain, getDriverLeftYAxis(), getDriverRightYAxis()));
 		//Elevator Default Command
-		scheduler.scheduleCommand(new RunElevator(elevator, getOperatorLeftYAxis()));
+		scheduler.scheduleDefaultCommand(new RunElevator(elevator, getOperatorLeftYAxis()));
 		//Winch Default Command
-		scheduler.scheduleCommand(new RunWinch(winch, getOperatorRightYAxis()));
+		scheduler.scheduleDefaultCommand(new RunWinch(winch, getOperatorRightYAxis()));
 		//Intake Default Command
-		scheduler.scheduleCommand(new RunIntake(intake, getOperatorRightTrigger()));
+		scheduler.scheduleDefaultCommand(new RunIntake(intake, getOperatorRightTrigger()));
 		//Outtake
-		scheduler.scheduleCommand(new ReverseIntake(intake, getOperatorLeftTrigger()).alongWith(new ReverseStorage(storage)));
+		scheduler.scheduleDefaultCommand(new ReverseIntake(intake, getOperatorLeftTrigger()).alongWith(new ReverseStorage(storage)));
 
 		//scheduler.scheduleCommand(); //TODO: Add shooter arm incrementing
 
