@@ -48,6 +48,9 @@ public class Robot extends ScheduledRobot implements ControlScheme {
 
 		getDriverRightBumper().whileHeld(new LimelightShoot(drivetrain, limelight, shooter, storage, shooterArm));
 		getOperatorRightBumper().whileHeld(new ToggleIntake(intake)); //To Do: Make this toggle when pressed
+
+		getOperatorDPadUp().whenPressed(new IncrementShooterArmAngle(shooterArm));
+		getOperatorDPadDown().whenPressed(new DecrementShooterArmAngle(shooterArm));
 	}
 
 	@Override
