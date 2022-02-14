@@ -12,20 +12,47 @@ public abstract class Observer implements Comparable<Observer> {
     protected EnqueuedTask task = null;
     protected OBSERVER_PRIORITY priority = OBSERVER_PRIORITY.NULL;
 
+    private boolean requesting = false;
+    private boolean cancelling = false;
+
     public void bind(EnqueuedTask task) {
         this.task = task;
-    }
-
-    public void setPriority(OBSERVER_PRIORITY priority) {
-        this.priority = priority;
     }
 
     public EnqueuedTask getTask() {
         return task;
     }
 
+    public void setPriority(OBSERVER_PRIORITY priority) {
+        this.priority = priority;
+    }
+
     public OBSERVER_PRIORITY getPriority() {
         return priority;
+    }
+
+    public void requestExecution() {
+        requesting = true;
+    }
+
+    public void removeRequestExecution() {
+        requesting = true;
+    }
+
+    public boolean isRequestingExecution() {
+        return requesting;
+    }
+
+    public void requestCancellation() {
+        cancelling = true;
+    }
+
+    public void removeRequestCancellation() {
+        cancelling = false;
+    }
+
+    public boolean isRequestingCancellation() {
+        return cancelling;
     }
 
     public abstract void check();

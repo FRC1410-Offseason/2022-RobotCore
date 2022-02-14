@@ -37,22 +37,23 @@ public class ButtonStateObserver extends Observer {
 
         switch (stateToCheck) {
             case WHEN_PRESSED: 
-                if (buttonState == ButtonState.PRESSED) task.enable(); 
+                if (buttonState == ButtonState.PRESSED) requestExecution(); 
                 break;
             case WHEN_RELEASED:
-                if (buttonState == ButtonState.RELEASED) task.enable();
+                if (buttonState == ButtonState.RELEASED) requestExecution();
                 break;
             case WHILE_HELD:
-                if (buttonState == ButtonState.PRESSED) task.enable(); 
-                if (buttonState == ButtonState.RELEASED) task.disable();
+                if (buttonState == ButtonState.PRESSED) requestExecution(); 
+                if (buttonState == ButtonState.RELEASED) requestCancellation();
                 break;
             case TOGGLE_WHEN_PRESSED:
                 if (buttonState == ButtonState.PRESSED) {
                     if (!running) {
-                        task.enable();
+                        requestExecution();
                         running = true;
                     } else {
-                        task.disable();
+                        //TODO: Add check from task to set running to false if task finishes independently
+                        requestCancellation();
                         running = false;
                     }
                 }
