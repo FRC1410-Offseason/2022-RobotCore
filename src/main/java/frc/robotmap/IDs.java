@@ -86,7 +86,7 @@ public class IDs {
         TOGGLE_WHEN_PRESSED
 	}
 
-    public enum OBSERVER_PRIORITY {
+    public enum SCHEDULER_PRIORITY {
 		NULL(0),
         LOW(1),
         MEDIUM(2),
@@ -94,7 +94,7 @@ public class IDs {
 
 		private final int id;
 
-		OBSERVER_PRIORITY(int id) {
+		SCHEDULER_PRIORITY(int id) {
 			this.id = id;
 		}
 

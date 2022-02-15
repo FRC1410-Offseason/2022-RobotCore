@@ -1,11 +1,11 @@
 package frc.robot.framework.control.observers;
 
-import frc.robotmap.IDs.OBSERVER_PRIORITY;
+import frc.robotmap.IDs.SCHEDULER_PRIORITY;
  
 public class DefaultCommandObserver extends Observer {
     
     public DefaultCommandObserver() {
-        setPriority(OBSERVER_PRIORITY.LOW);
+        setPriority(SCHEDULER_PRIORITY.LOW);
     }
     
     public void check() {
