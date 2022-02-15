@@ -106,6 +106,15 @@ public final class Constants {
 	public static final double SHOOTER_WHEEL_RADIUS = 0.0762; //M
 	public static final double SHOOTER_BALL_MASS = 0.270; //KG
 	public static final double SHOOTER_I = 1;
+	public static final double SHOOTER_TARGET_HEIGHT = 2.6416;
+	public static final double SHOOTER_CONE_ANGLE_RADIANS = 1;
+	public static final double SHOOTER_ACCELERATION = -9.80665;
+	public static final int SHOOTER_ALPHA_OPTIMIZER_STEPS = 100;
+	public static final double SHOOTER_ALPHA_OPTIMIZER_ALPHA = 0.01;
+	public static final double SHOOTER_CONSTANT_HEIGHT_OFFSET = 0.1096;
+	public static final double SHOOTER_SIN_ALPHA_MULTIPLIER_HEIGHT_OFFSET = -0.612;
+	public static final double SHOOTER_MAX_ALPHA = Math.toRadians(53.1);
+	public static final double SHOOTER_MIN_ALPHA = Math.toRadians(10);
 
 	//STORAGE
 	public static final Color BLUE_TARGET = new Color(new Color8Bit(100, 138, 216));

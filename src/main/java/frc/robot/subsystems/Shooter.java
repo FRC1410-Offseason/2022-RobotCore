@@ -4,6 +4,7 @@ import com.revrobotics.*;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import frc.robot.NetworkTables;
 import frc.robot.framework.subsystem.SubsystemBase;
+import frc.robot.util.GradientDescentOptimized;
 import frc.robot.util.PolynomialRegression;
 import frc.robotmap.Constants;
 import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
@@ -98,9 +99,68 @@ public class Shooter extends SubsystemBase {
 			* ((Math.pow(Constants.SHOOTER_WHEEL_RADIUS, 2) * Constants.SHOOTER_BALL_MASS) + Constants.SHOOTER_I)
 			/ (Constants.SHOOTER_I * Math.pow(Constants.SHOOTER_WHEEL_RADIUS, 2))) / Math.PI;
 	}
+	private GradientDescentOptimized alphaOptimizer=new GradientDescentOptimized(1, 5) {
+		@Override public double error(Object... errorparams) {
+			Double distance = (Double)errorparams[0];
+			return Shooter.this.bounceError(distance,getParameters()[0]);
+		}
+	};
+	private double bounceError(double distance, double alpha) {
+		double h = Constants.SHOOTER_TARGET_HEIGHT+Constants.SHOOTER_CONSTANT_HEIGHT_OFFSET+(Constants.SHOOTER_SIN_ALPHA_MULTIPLIER_HEIGHT_OFFSET * Math.sin(alpha));
 
+		double beta = Math.atan((2*h/distance - Math.tan(alpha)));
+		if(beta > 0) {
+			throw new IllegalStateException("Shooter intersection does not have a positive beta value.");
+		}
+		double reflectedBeta = (2 * Constants.SHOOTER_CONE_ANGLE_RADIANS) - beta;
+		double v = (Math.sqrt(-Constants.SHOOTER_ACCELERATION) * distance) / (Math.cos(alpha) * Math.sqrt(2 * distance * Math.tan(alpha) - 2.0 * h));
+		double vertvel = -Math.sqrt(2.0 * Constants.SHOOTER_ACCELERATION * h
+				+ Math.pow(v * Math.sin(alpha), 2.0));
+		double horizvel = Math.cos(alpha)*v;
+		double velAtTarget = Math.sqrt(Math.pow(horizvel,2)+Math.pow(vertvel,2));
+		double twiceReflectedBeta = (-2 * Constants.SHOOTER_CONE_ANGLE_RADIANS) - reflectedBeta; //Not actually correct, but it's off by a factor of 2pi. So it ends up working.
+
+		return velAtTarget * Math.sin(twiceReflectedBeta); //Vertical component of the projected bounce
+	}
+	/**
+	 * Return an array of [vel (m/s), optimized angle (radians) from horizontal] given distance in meters.
+	 */
+	public double[] distanceTargeting(double distance) {
+		alphaOptimizer.getParameters()[0] = Math.toRadians(80); //Yes, it's stupid. But yes, it works.
+		try {
+			for(int i=0;i<Constants.SHOOTER_ALPHA_OPTIMIZER_STEPS;i++) {
+				alphaOptimizer.gradStep(Constants.SHOOTER_ALPHA_OPTIMIZER_ALPHA, Constants.REGRESSION_STEPSIZE, 0, (Double)distance);
+			}
+			alphaOptimizer.setLowestInBuffer(); //No noise - so this shouldn't help or hurt anything
+		} catch (IllegalStateException e) {
+			//We hit a problem - our beta value is >0.
+			System.err.println("Invalid beta value when running gradient steps: ");
+			e.printStackTrace();
+			System.err.println("Defaulting to default arm angle.");
+			alphaOptimizer.getParameters()[0] = Constants.SHOOTER_MAX_ALPHA;
+		}
+		double alpha = alphaOptimizer.getParameters()[0];
+		alpha = Math.max(alpha, Constants.SHOOTER_MIN_ALPHA);
+		alpha = Math.min(alpha, Constants.SHOOTER_MAX_ALPHA);
+		double h = Constants.SHOOTER_TARGET_HEIGHT + Constants.SHOOTER_CONSTANT_HEIGHT_OFFSET + (Constants.SHOOTER_SIN_ALPHA_MULTIPLIER_HEIGHT_OFFSET * Math.sin(alpha));
+		double v = (Math.sqrt(-Constants.SHOOTER_ACCELERATION) * distance) / (Math.cos(alpha)*Math.sqrt(2 * distance * Math.tan(alpha) - 2.0 * h));
+		double beta = Math.atan((2 * h / distance - Math.tan(alpha)));
+		if(v == Double.NaN || beta > 0) {
+			//Invalid trajectory - something is broken
+			throw new IllegalStateException("Unable to generate a valid trajectory.");
+		}
+		return new double[] {v, alphaOptimizer.getParameters()[0]};
+	}
 	@Override
 	public void periodic() {
+
+
+		{ //Stupid test for simulation, it's whatever. Delete this ASAP.
+			double[] distTarget=distanceTargeting(6);
+			System.out.println(distTarget[0]+"m/s, "+Math.toDegrees(distTarget[1])+"deg.");
+		}
+
+
 		//Get average RPM between right + left.
 		double rpm = Math.abs((getRightVel() + getLeftVel()) * 0.5); //Average RPM
 		//If we drop below a proportional threshold
@@ -168,8 +228,9 @@ public class Shooter extends SubsystemBase {
 			//Run some steps per cycle
 			for (int i = 0; i < Constants.REGRESSION_STEPS_PER_CYCLE; i++) {
 				invR.gradStep(
-						Constants.REGRESSION_ALPHA, xValuesNormalized, yValues,
-						Constants.REGRESSION_STEPSIZE, Constants.REGRESSION_NOISE
+						Constants.REGRESSION_ALPHA,
+						Constants.REGRESSION_STEPSIZE, Constants.REGRESSION_NOISE,
+						xValuesNormalized, yValues
 				);
 			}
 
