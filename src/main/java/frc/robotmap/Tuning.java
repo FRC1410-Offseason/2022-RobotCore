@@ -35,7 +35,7 @@ public final class Tuning {
 
 	// public static final double DRIVETRAIN_MAX_VOLTAGE = 12;
 	public static final double DRIVETRAIN_MAX_SPEED = 3.4; // m/s
-	public static final double DRIVETRAIN_MAX_ACCEL = 4.0; // m/s^2
+	public static final double DRIVETRAIN_MAX_ACCEL = 4; // m/s^2
 	// public static final double DRIVETRAIN_MAX_CENTRIPETAL_ACCEL = 3.2; // m/s^2
 
 	// These values trust vision the most, then physics (characterization etc) and the measurements (gyro, encoders) equally
