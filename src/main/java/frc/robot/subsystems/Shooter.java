@@ -153,14 +153,6 @@ public class Shooter extends SubsystemBase {
 	}
 	@Override
 	public void periodic() {
-
-
-		{ //Stupid test for simulation, it's whatever. Delete this ASAP.
-			double[] distTarget=distanceTargeting(6);
-			System.out.println(distTarget[0]+"m/s, "+Math.toDegrees(distTarget[1])+"deg.");
-		}
-
-
 		//Get average RPM between right + left.
 		double rpm = Math.abs((getRightVel() + getLeftVel()) * 0.5); //Average RPM
 		//If we drop below a proportional threshold
