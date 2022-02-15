@@ -19,7 +19,7 @@ public abstract class Observer implements Comparable<Observer> {
         this.task = task;
     }
 
-    public EnqueuedTask getTask() {
+    public EnqueuedTask getEnqueuedTask() {
         return task;
     }
 
