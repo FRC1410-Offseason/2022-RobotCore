@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.NetworkTables;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -54,8 +55,7 @@ public class Drivetrain extends SubsystemBase {
 	public EncoderSim rightEncoderSim;
 
 	public final AHRS gyro = new AHRS(SPI.Port.kMXP);
-	public int dev;
-	public SimDouble angle;
+	public SimDouble fusedAngle;
 
 	public Drivetrain() {
 		initializeTalonFX(leftLeader);
@@ -73,22 +73,25 @@ public class Drivetrain extends SubsystemBase {
 
 		resetEncoders();
 		zeroHeading();
+		
+		NetworkTables.setNavXMagCalibration(gyro.isMagnetometerCalibrated());
 	}
 
 	public void simulationInit() {
 		drivetrainSimulator = new DifferentialDrivetrainSim(
-				DRIVETRAIN_PLANT, DCMotor.getFalcon500(2), GEARING, TRACKWIDTH, WHEEL_DIAMETER, NOISE);
+			DRIVETRAIN_PLANT, DCMotor.getFalcon500(2), GEARING, TRACKWIDTH, WHEEL_DIAMETER, NOISE);
 
 		leftLeader.setInverted(false);
 		leftEncoder.setDistancePerPulse(ENCODER_DISTANCE_PER_PULSE);
 		rightEncoder.setDistancePerPulse(ENCODER_DISTANCE_PER_PULSE);
 		leftEncoderSim = new EncoderSim(leftEncoder);
 		rightEncoderSim = new EncoderSim(rightEncoder);
-		dev = SimDeviceDataJNI.getSimDeviceHandle("navX-Sensor[0]");
-		angle = new SimDouble(SimDeviceDataJNI.getSimValueHandle(dev, "Yaw"));
+		fusedAngle = new SimDouble(SimDeviceDataJNI.getSimValueHandle(SimDeviceDataJNI.getSimDeviceHandle("navX-Sensor[0]"), "FusedHeading"));
 		fieldSim = new Field2d();
 		SmartDashboard.putData("Field", fieldSim);
 	}
+
+	public void periodic() {NetworkTables.setNavXMagDisturbance(gyro.isMagneticDisturbance());}
 
 	public void initializeTalonFX(WPI_TalonFX motor) {
 		motor.configFactoryDefault();
@@ -98,7 +101,8 @@ public class Drivetrain extends SubsystemBase {
 	}
 
 	public void tankDriveDeadzoned(double deadzonedLeftAxis, double deadzonedRightAxis) {
-		drive.tankDrive(deadzonedLeftAxis, deadzonedRightAxis);
+		drive.tankDrive(deadzonedLeftAxis, deadzonedRightAxis); 
+		// This is squared (x^2), but we normally do sqrt(x), test both (also test both for limelight pid (but sqrt would be better there))
 		drive.feed();
 	}
 
