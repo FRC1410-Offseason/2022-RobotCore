@@ -1,26 +1,28 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.*;
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
+import com.ctre.phoenix.motorcontrol.RemoteLimitSwitchSource;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
-import edu.wpi.first.wpilibj.*;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.smartdashboard.*;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-import static frc.robotmap.Constants.DT;
 import static frc.robotmap.IDs.*;
 
 public class Winch extends SubsystemBase {
 
-	//Winch motors
+	// Winch motors
 	private final VictorSPX leftMotor = new VictorSPX(WINCH_LEFT_MOTOR_ID);
 	private final VictorSPX rightMotor = new VictorSPX(WINCH_RIGHT_MOTOR_ID);
-	//Winch brake
+	// Winch brake
 	private final DoubleSolenoid lock = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, WINCH_FWD, WINCH_BCK);
 
-	//State variable to track state of locks
+	// State variable to track state of locks
 	private boolean lockEngaged = false;
 
 	private final Mechanism2d pistonSim = new Mechanism2d(60, 60);
@@ -45,15 +47,15 @@ public class Winch extends SubsystemBase {
 			);
 
 	public Winch() {
-		//Configure motors
+		// Configure motors
 		leftMotor.configFactoryDefault();
 		rightMotor.configFactoryDefault();
-		//Configure limit switch motor integration
+		// Configure limit switch motor integration
 		leftMotor.configForwardLimitSwitchSource(RemoteLimitSwitchSource.RemoteCANifier, LimitSwitchNormal.NormallyOpen, WINCH_LEFT_LIMIT_SWITCH_ID);
 		leftMotor.configReverseLimitSwitchSource(RemoteLimitSwitchSource.RemoteCANifier, LimitSwitchNormal.NormallyOpen, WINCH_LEFT_LIMIT_SWITCH_ID);
 		rightMotor.configForwardLimitSwitchSource(RemoteLimitSwitchSource.RemoteCANifier, LimitSwitchNormal.NormallyOpen, WINCH_RIGHT_LIMIT_SWITCH_ID);
 		rightMotor.configReverseLimitSwitchSource(RemoteLimitSwitchSource.RemoteCANifier, LimitSwitchNormal.NormallyOpen, WINCH_RIGHT_LIMIT_SWITCH_ID);
-		//Lock on startup
+		// Lock on startup
 		lock();
 
 		SmartDashboard.putData("Winch Piston", pistonSim);

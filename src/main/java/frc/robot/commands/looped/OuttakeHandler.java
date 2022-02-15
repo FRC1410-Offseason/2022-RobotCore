@@ -33,45 +33,45 @@ public class OuttakeHandler extends CommandBase {
 
 	@Override
 	public void execute() {
-		//If we need to outtake
+		// If we need to outtake
 		if (storage.getOuttakeFlag()) {
-			//If there is a ball in the second storage slot
+			// If there is a ball in the second storage slot
 			if (storage.getCurrentState().getSlot2().getBallPresent()) {
-				//If there is a cargo in the way of us automatically outtaking, we have to tell the shooter to outtake the next time that we shoot
+				// If there is a cargo in the way of us automatically outtaking, we have to tell the shooter to outtake the next time that we shoot
 				shooter.queueOuttake();
 			} else {
-				//Else, we can outtake immediately
+				// Else, we can outtake immediately
 				if (!internalOuttakeStarted) {
 					shooter.resetShotCount();
-					//Update the flag to say that we have started outtaking
+					// Update the flag to say that we have started outtaking
 					internalOuttakeStarted = true;
 
-					//Set the shooter arm to the outtake position
+					// Set the shooter arm to the outtake position
 					shooterArm.setGoalPos(SHOOTER_ARM_OUTTAKE_ANGLE);
 
-					//Set the speed of the shooter flywheels
+					// Set the speed of the shooter flywheels
 					shooter.setSpeeds(SHOOTER_OUTTAKE_SPEED);
 				}
 
 				if (shooter.getShotCount() < 1) {
-					//Run the storage and outtake the ball
+					// Run the storage and outtake the ball
 					storage.runStorage(STORAGE_OUTTAKE_SPEED);
 
 				} else {
-					//If the outtake sequence has been running for long enough, we are good to stop it and reset everything for next time
-					//Reset the storage state because now the cargo is no longer in the robot
+					// If the outtake sequence has been running for long enough, we are good to stop it and reset everything for next time
+					// Reset the storage state because now the cargo is no longer in the robot
 					storage.getCurrentState().resetSlot1();
 
-					//Reset the started flag for next time
+					// Reset the started flag for next time
 					internalOuttakeStarted = false;
 
-					//Have the shooter arm go back down to the resting position
+					// Have the shooter arm go back down to the resting position
 					shooterArm.setGoalPos(0);
 
-					//Spin down the shooter motors
+					// Spin down the shooter motors
 					shooter.setSpeeds(0);
 
-					//Stop running the storage
+					// Stop running the storage
 					storage.runStorage(0);
 				}
 			}

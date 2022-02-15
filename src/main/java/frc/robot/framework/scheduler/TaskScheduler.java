@@ -65,7 +65,7 @@ public class TaskScheduler {
 
 	public void tick() {
 		EnqueuedTask next;
-		//noinspection StatementWithEmptyBody – no logic needed; block until a task is available
+		// noinspection StatementWithEmptyBody – no logic needed; block until a task is available
 		while ((next = queue.peek()) == null || next.getTargetTime() > System.currentTimeMillis()) {
 		}
 

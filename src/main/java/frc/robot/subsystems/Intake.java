@@ -11,11 +11,11 @@ import static frc.robotmap.IDs.*;
 
 public class Intake extends SubsystemBase {
 
-	//Flipping Solenoids
+	// Flipping Solenoids
 	private final DoubleSolenoid flipper = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, INTAKE_FLIPPER_FWD, INTAKE_FLIPPER_BCK);
-	//Motor that runs the intake
+	// Motor that runs the intake
 	private final CANSparkMax intakeMotor = new CANSparkMax(INTAKE_MOTOR, CANSparkMaxLowLevel.MotorType.kBrushless);
-	//Internal state variable to keep track of flipper state
+	// Internal state variable to keep track of flipper state
 	private boolean extended = false;
 
 	public Intake() {

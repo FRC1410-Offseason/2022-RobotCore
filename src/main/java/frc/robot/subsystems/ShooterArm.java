@@ -151,30 +151,30 @@ public class ShooterArm extends SubsystemBase {
 	private double currentVoltage = 0;
 
 	public ShooterArm() {
-		//Reset the controllers
+		// Reset the controllers
 		leftMotor.restoreFactoryDefaults();
 		rightMotor.restoreFactoryDefaults();
-		//Set them to use brake mode
+		// Set them to use brake mode
 		leftMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
 		rightMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
 
-		//Set the internal conversions of the motors so that they report in radians
+		// Set the internal conversions of the motors so that they report in radians
 		leftEncoder.setPositionConversionFactor(Math.PI * 2);
 		rightEncoder.setPositionConversionFactor(Math.PI * 2);
 		leftEncoder.setVelocityConversionFactor(Math.PI * 2);
 		rightEncoder.setVelocityConversionFactor(Math.PI * 2);
 
-		//Send the arm widget to Smart Dashboard
+		// Send the arm widget to Smart Dashboard
 		SmartDashboard.putData("Arm Sim", simMech);
 		tower.setColor(new Color8Bit(Color.kBlue));
 
-		//Send the piston widget to Smart Dashboard
+		// Send the piston widget to Smart Dashboard
 		SmartDashboard.putData("Shooter Arm Piston", pistonSim);
 
-		//Default state for the brake piston is extended
+		// Default state for the brake piston is extended
 		setBrake();
 
-		//Reset the state space loop to a known position
+		// Reset the state space loop to a known position
 		loop.reset(VecBuilder.fill(getEncoderPosition(), getEncoderVelocity()));
 		lpr = new TrapezoidProfile.State(getEncoderPosition(), getEncoderVelocity());
 		goal = new TrapezoidProfile.State(0, 0);
@@ -197,24 +197,24 @@ public class ShooterArm extends SubsystemBase {
 
 	@Override
 	public void simulationPeriodic() {
-		//Update the arm widget if the brake is extended
+		// Update the arm widget if the brake is extended
 		if (getBrakeState()) {
 			pistonInnards.setLength(40);
 		} else {
 			pistonInnards.setLength(0);
 		}
 
-		//Set inputs to the simulator
+		// Set inputs to the simulator
 		sim.setInputVoltage(currentVoltage);
 
-		//Update the sim (default time is 20 ms)
+		// Update the sim (default time is 20 ms)
 		sim.update(DT);
 
-		//Update the position of the encoders from the sim
+		// Update the position of the encoders from the sim
 		leftEncoder.setPosition(sim.getAngleRads());
 		rightEncoder.setPosition(sim.getAngleRads());
 
-		//Set the angle of the arm widget from the kalman filter
+		// Set the angle of the arm widget from the kalman filter
 		arm.setAngle(Units.radiansToDegrees(loop.getObserver().getXhat(0)));
 	}
 
