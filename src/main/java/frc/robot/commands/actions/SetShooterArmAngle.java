@@ -12,7 +12,7 @@ public class SetShooterArmAngle extends CommandBase {
 	public SetShooterArmAngle(ShooterArm shooterArm, double angle) {
 		this.shooterArm = shooterArm;
 		this.angle = angle;
-		addRequirements(this.shooterArm);
+		// addRequirements(this.shooterArm);
 	}
 
 	@Override

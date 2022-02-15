@@ -16,8 +16,10 @@ public class DecrementShooterArmAngle extends CommandBase {
 	}
 
 	@Override
-	public void initialize() {
-		if (shooterArm.getGoalPos() - SHOOTER_ARM_ANGLE_OFFSET > SHOOTER_ARM_RESTING_ANGLE) shooterArm.setGoalPos(shooterArm.getGoalPos() - SHOOTER_ARM_ANGLE_OFFSET);
+	public void execute() {
+		if (shooterArm.getGoalPos() - SHOOTER_ARM_ANGLE_OFFSET > SHOOTER_ARM_RESTING_ANGLE) {
+			shooterArm.setGoalPos(shooterArm.getGoalPos() - SHOOTER_ARM_ANGLE_OFFSET);
+		}
 	}
 
 	@Override

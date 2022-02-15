@@ -22,7 +22,7 @@ public class Robot extends ScheduledRobot implements ControlScheme {
 	private final String[] autoList = {"Taxi", "2Cargo", "3CargoTerminal", "3CargoUpRight", "4Cargo", "5Cargo"};
 	private final AnalogInput pressure = new AnalogInput(PRESSURE_SENSOR);
 	private EnqueuedTask autoTask = null;
-	
+
 	public static void main(String[] args) {RobotBase.startRobot(Robot::new);}
 	private Robot() {super(20);}
 
@@ -46,8 +46,11 @@ public class Robot extends ScheduledRobot implements ControlScheme {
 		scheduler.scheduleCommand(new RunWinch(winch, getOperatorRightYAxis())); //Winch Default Command
 		scheduler.scheduleCommand(new RunIntake(intake, getOperatorRightTrigger())); //Intake Default Command
 
-		getDriverRightBumper().whileHeld(new LimelightShoot(drivetrain, limelight, shooter, storage));
+		getDriverRightBumper().whileHeld(new LimelightShoot(drivetrain, limelight, shooter, storage, shooterArm));
 		getOperatorRightBumper().whileHeld(new ToggleIntake(intake)); //To Do: Make this toggle when pressed
+
+		getOperatorDPadUp().whenPressed(new IncrementShooterArmAngle(shooterArm));
+		getOperatorDPadDown().whenPressed(new DecrementShooterArmAngle(shooterArm));
 	}
 
 	@Override
@@ -66,8 +69,8 @@ public class Robot extends ScheduledRobot implements ControlScheme {
 		if (NetworkTables.getAutoChooser() == 3) autonomousCommand = new ThreeCargoAutoClose(auto, intake, shooter, shooterArm, storage);
 		if (NetworkTables.getAutoChooser() == 4) autonomousCommand = new ThreeCargoTerminalAuto(auto, intake, shooter, shooterArm, storage);
 		if (NetworkTables.getAutoChooser() == 5) autonomousCommand = new FourCargoAuto(auto, intake, shooter, shooterArm, storage);
-        if (NetworkTables.getAutoChooser() == 6) autonomousCommand = new FiveCargoAuto(auto, intake, shooter, shooterArm, storage);
-        if (autonomousCommand != null) this.autoTask = scheduler.scheduleCommand(autonomousCommand, TIME_OFFSET, DT);
+		if (NetworkTables.getAutoChooser() == 6) autonomousCommand = new FiveCargoAuto(auto, intake, shooter, shooterArm, storage);
+		if (autonomousCommand != null) this.autoTask = scheduler.scheduleCommand(autonomousCommand, TIME_OFFSET, DT);
 	}
 
 	@Override

@@ -6,7 +6,6 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.AnalogInput;
 import static frc.robotmap.Tuning.*;
 
-@SuppressWarnings("unused")
 public class NetworkTables {
 
 	static final NetworkTableInstance instance = NetworkTableInstance.getDefault();
@@ -14,7 +13,7 @@ public class NetworkTables {
 	static final NetworkTable robotState = instance.getTable("Robot State");
 	static final NetworkTable limelight = instance.getTable("photonvision/Limelight 2");
 	static final NetworkTableEntry autoList, autoChooser; // Auto
-	static final NetworkTableEntry x, y, theta, wheelLeft, wheelRight; // Drivetrain
+	static final NetworkTableEntry x, y, theta, wheelLeft, wheelRight, navxMagDisturbance, navxMagCalibrated; // Drivetrain
 	static final NetworkTableEntry pitch, yaw, visionDistance, limelightAngleKP, limelightAngleKI, limelightAngleKD; // Limelight
 	static final NetworkTableEntry shooterTargetRPM, leftShooterRPM, leftShooterP, leftShooterI, leftShooterD, leftShooterFF,
 		rightShooterP, rightShooterI, rightShooterD, rightShooterFF, rightShooterRPM, lowestRPM; // Shooter
@@ -25,6 +24,7 @@ public class NetworkTables {
 	static final NetworkTableEntry leftWinchHeight, leftWinchLocked, rightWinchHeight, rightWinchLocked; // Winches
 	static final NetworkTableEntry leftTelescopingArmHeight, leftTelescopingArmLocked,
 			rightTelescopingArmHeight, rightTelescopingArmLocked; // Telescoping Arms
+	static final NetworkTableEntry poseEstimationUpdateRate; // Hz Calcs
 
 	static {
 		// Autonomous
@@ -36,6 +36,8 @@ public class NetworkTables {
 		theta = robotState.getEntry("Heading");
 		wheelLeft = robotState.getEntry("Wheel Speed Left");
 		wheelRight = robotState.getEntry("Wheel Speed Right");
+		navxMagDisturbance = robotState.getEntry("Navx Magnetometer Is Disturbed");
+		navxMagCalibrated = robotState.getEntry("Navx Magnetometer is Calibrated");
 		// Limelight
 		visionDistance = robotState.getEntry("Vision Distance");
 		limelightAngleKP = robotState.getEntry("Limelight Angle P Gain");
@@ -79,6 +81,8 @@ public class NetworkTables {
 		rightTelescopingArmHeight = robotState.getEntry("Right Telescoping Arm Height");
 		leftTelescopingArmLocked = robotState.getEntry("Left Telescoping Arm is Locked");
 		rightTelescopingArmLocked = robotState.getEntry("Right Telescoping Arm is Locked");
+		// Hz Calcs
+		poseEstimationUpdateRate = robotState.getEntry("Pose Estimation Updates In Last Second");
 
 		// Initializing
 		// Autonomous
@@ -89,6 +93,8 @@ public class NetworkTables {
 		theta.setDouble(0);
 		wheelLeft.setDouble(0);
 		wheelRight.setDouble(0);
+		navxMagDisturbance.setBoolean(false);
+		navxMagCalibrated.setBoolean(false);
 		// Limelight
 		visionDistance.setDouble(0);
 		limelightAngleKP.setDouble(LIMELIGHT_ANGLE_KP);
@@ -130,16 +136,14 @@ public class NetworkTables {
 		rightTelescopingArmHeight.setDouble(0);
 		leftTelescopingArmLocked.setBoolean(false);
 		rightTelescopingArmLocked.setBoolean(false);
+		// Hz Calcs
+		poseEstimationUpdateRate.setDouble(0);
 	}
 
 	// Autonomous
-	public static void setAutoList(String[] AUTO_LIST) {
-		autoList.setStringArray(AUTO_LIST);
-	}
+	public static void setAutoList(String[] AUTO_LIST) {autoList.setStringArray(AUTO_LIST);}
 
-	public static double getAutoChooser() {
-		return autoChooser.getDouble(0);
-	}
+	public static double getAutoChooser() {return autoChooser.getDouble(0);}
 
 	// Drivetrain
 	public static void setPoseEstimation(double X, double Y, double THETA, double wheelSpeedLeft, double wheelSpeedRight) {
@@ -149,6 +153,8 @@ public class NetworkTables {
 		wheelLeft.setDouble(wheelSpeedLeft);
 		wheelRight.setDouble(wheelSpeedRight);
 	}
+	public static void setNavXMagDisturbance(boolean isDisturbed) {navxMagDisturbance.setBoolean(isDisturbed);}
+	public static void setNavXMagCalibration(boolean isCalibrated) {navxMagCalibrated.setBoolean(isCalibrated);}
 
 	// Limelight
 	public static void setVisionDistance(double distance) {visionDistance.setDouble(distance);}
@@ -156,11 +162,9 @@ public class NetworkTables {
 	public static double getLimelightAngleKP() {
 		return limelightAngleKP.getDouble(LIMELIGHT_ANGLE_KP);
 	}
-
 	public static double getLimelightAngleKI() {
 		return limelightAngleKP.getDouble(LIMELIGHT_ANGLE_KI);
 	}
-
 	public static double getLimelightAngleKD() {
 		return limelightAngleKP.getDouble(LIMELIGHT_ANGLE_KD);
 	}
@@ -177,7 +181,6 @@ public class NetworkTables {
 	public static double getShooterTargetRPM() {
 		return shooterTargetRPM.getDouble(0);
 	}
-
 	public static void setShooterTargetRPM(double RPM) {
 		shooterTargetRPM.setDouble(RPM);
 	}
@@ -185,19 +188,15 @@ public class NetworkTables {
 	public static double getLeftShooterP() {
 		return leftShooterP.getDouble(0);
 	}
-
 	public static double getLeftShooterI() {
 		return leftShooterI.getDouble(0);
 	}
-
 	public static double getLeftShooterD() {
 		return leftShooterD.getDouble(0);
 	}
-
 	public static double getLeftShooterFF() {
 		return leftShooterFF.getDouble(0);
 	}
-
 	public static double getLeftShooterRPM() {
 		return leftShooterRPM.getDouble(0);
 	}
@@ -205,19 +204,15 @@ public class NetworkTables {
 	public static double getRightShooterP() {
 		return leftShooterP.getDouble(0);
 	}
-
 	public static double getRightShooterI() {
 		return leftShooterI.getDouble(0);
 	}
-
 	public static double getRightShooterD() {
 		return leftShooterD.getDouble(0);
 	}
-
 	public static double getRightShooterFF() {
 		return leftShooterFF.getDouble(0);
 	}
-
 	public static double getRightShooterRPM() {
 		return leftShooterRPM.getDouble(0);
 	}
@@ -238,11 +233,10 @@ public class NetworkTables {
 
 	public static void setLowestRPM(double RPM) {lowestRPM.setDouble(RPM);}
 
+	// Storage
 	public static String getCorrectColor() {
 		return correctColor.getString("");
 	}
-
-	// Storage
 	public static void setCorrectColor(String color) {
 		correctColor.setString(color);
 	}
@@ -250,7 +244,6 @@ public class NetworkTables {
 	public static String getColorReading() {
 		return colorReading.getString("");
 	}
-
 	public static void setColorReading(String color) {
 		colorReading.setString(color);
 	}
@@ -258,7 +251,6 @@ public class NetworkTables {
 	public static boolean getLineBroken() {
 		return lineBroken.getBoolean(false);
 	}
-
 	public static void setLineBroken(boolean broken) {
 		lineBroken.setBoolean(broken);
 	}
@@ -267,11 +259,10 @@ public class NetworkTables {
 		storageSpeed.setDouble(RPM);
 	}
 
+	// Shooter Arm
 	public static double getShooterAngle() {
 		return shooterArmAngle.getDouble(0);
 	}
-
-	// Shooter Arm
 	public static void setShooterAngle(double angle) {
 		shooterArmAngle.setDouble(angle);
 	}
@@ -279,7 +270,6 @@ public class NetworkTables {
 	public static void setShooterArmLocked(boolean locked) {
 		shooterArmLocked.setBoolean(locked);
 	}
-
 	public static boolean getShooterLocked() {
 		return shooterArmLocked.getBoolean(false);
 	}
@@ -288,16 +278,14 @@ public class NetworkTables {
 	public static double getPressure(AnalogInput pressureInput) {
 		return (50 * pressureInput.getVoltage()) - 25;
 	}
-
 	public static void setPressure(AnalogInput pressureInput) {
 		pressure.setDouble((50 * pressureInput.getVoltage()) - 25);
 	}
 
+	// Intake
 	public static double getIntakeRPM() {
 		return intakeSpeed.getDouble(0);
 	}
-
-	// Intake
 	public static void setIntakeSpeed(double speed) {
 		intakeSpeed.setDouble(speed);
 	}
@@ -305,16 +293,15 @@ public class NetworkTables {
 	public static boolean getIntakeDeployed() {
 		return intakeDeployed.getBoolean(false);
 	}
-
 	public static void setIntakeDeployed(boolean deployed) {
 		intakeDeployed.setBoolean(deployed);
 	}
 
+
+	// Winches
 	public static double getLeftWinchHeight() {
 		return leftWinchHeight.getDouble(0);
 	}
-
-	// Winches
 	public static void setLeftWinchHeight(double height) {
 		leftWinchHeight.setDouble(height);
 	}
@@ -322,7 +309,6 @@ public class NetworkTables {
 	public static boolean getLeftWinchLocked() {
 		return rightWinchLocked.getBoolean(false);
 	}
-
 	public static void setLeftWinchLocked(boolean locked) {
 		leftWinchLocked.setBoolean(locked);
 	}
@@ -330,7 +316,6 @@ public class NetworkTables {
 	public static double getRightWinchHeight() {
 		return rightWinchHeight.getDouble(0);
 	}
-
 	public static void setRightWinchHeight(double height) {
 		rightWinchHeight.setDouble(height);
 	}
@@ -338,16 +323,14 @@ public class NetworkTables {
 	public static boolean getRightWinchLocked() {
 		return rightWinchLocked.getBoolean(false);
 	}
-
 	public static void setRightWinchLocked(boolean locked) {
 		rightWinchLocked.setBoolean(locked);
 	}
 
+	// Telescoping Arms
 	public static double getLeftTelescopingArmHeight() {
 		return leftTelescopingArmHeight.getDouble(0);
 	}
-
-	// Telescoping Arms
 	public static void setLeftTelescopingArmHeight(double height) {
 		leftTelescopingArmHeight.setDouble(height);
 	}
@@ -355,7 +338,6 @@ public class NetworkTables {
 	public static boolean getLeftTelescopingArmLocked() {
 		return rightTelescopingArmLocked.getBoolean(false);
 	}
-
 	public static void setLeftTelescopingArmLocked(boolean locked) {
 		leftTelescopingArmLocked.setBoolean(locked);
 	}
@@ -363,7 +345,6 @@ public class NetworkTables {
 	public static double getRightTelescopingArmHeight() {
 		return rightTelescopingArmHeight.getDouble(0);
 	}
-
 	public static void setRightTelescopingArmHeight(double height) {
 		rightTelescopingArmHeight.setDouble(height);
 	}
@@ -371,8 +352,11 @@ public class NetworkTables {
 	public static boolean getRightTelescopingArmLocked() {
 		return rightTelescopingArmLocked.getBoolean(false);
 	}
-
 	public static void setRightTelescopingArmLocked(boolean locked) {
 		rightTelescopingArmLocked.setBoolean(locked);
+	}
+	// Hz Calcs
+	public static void setPoseEstimationHz(double hz) {
+		poseEstimationUpdateRate.setDouble(hz);
 	}
 }
