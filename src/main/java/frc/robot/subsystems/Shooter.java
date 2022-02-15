@@ -109,6 +109,7 @@ public class Shooter extends SubsystemBase {
 	public boolean isOuttakeQueued() {
 		return outtakeQueued;
 	}
+  
   /**
 	 * Use the regression to find a target RPM based on a target velocity in m/s.
 	 * @param vel
@@ -119,12 +120,15 @@ public class Shooter extends SubsystemBase {
 			* ((Math.pow(Constants.SHOOTER_WHEEL_RADIUS, 2) * Constants.SHOOTER_BALL_MASS) + Constants.SHOOTER_I)
 			/ (Constants.SHOOTER_I * Math.pow(Constants.SHOOTER_WHEEL_RADIUS, 2))) / Math.PI;
 	}
-	private GradientDescentOptimized alphaOptimizer=new GradientDescentOptimized(1, 5) {
-		@Override public double error(Object... errorparams) {
-			Double distance = (Double)errorparams[0];
-			return Shooter.this.bounceError(distance,getParameters()[0]);
+	private GradientDescentOptimized alphaOptimizer = new GradientDescentOptimized(1, 5) {
+``` Also this needs to be directly under the class header.
+		@Override 
+		public double error(Object... errorparams) {
+			double distance = (double) errorparams[0];
+			return Shooter.this.bounceError(distance, getParameters()[0]);
 		}
 	};
+	
 	private double bounceError(double distance, double alpha) {
 		double h = Constants.SHOOTER_TARGET_HEIGHT+Constants.SHOOTER_CONSTANT_HEIGHT_OFFSET+(Constants.SHOOTER_SIN_ALPHA_MULTIPLIER_HEIGHT_OFFSET * Math.sin(alpha));
 
@@ -142,14 +146,15 @@ public class Shooter extends SubsystemBase {
 
 		return velAtTarget * Math.sin(twiceReflectedBeta); //Vertical component of the projected bounce
 	}
+	
 	/**
 	 * Return an array of [vel (m/s), optimized angle (radians) from horizontal] given distance in meters.
 	 */
 	public double[] distanceTargeting(double distance) {
 		alphaOptimizer.getParameters()[0] = Math.toRadians(80); //Yes, it's stupid. But yes, it works.
 		try {
-			for(int i=0;i<Constants.SHOOTER_ALPHA_OPTIMIZER_STEPS;i++) {
-				alphaOptimizer.gradStep(Constants.SHOOTER_ALPHA_OPTIMIZER_ALPHA, Constants.REGRESSION_STEPSIZE, 0, (Double)distance);
+			for(int i = 0; i < Constants.SHOOTER_ALPHA_OPTIMIZER_STEPS; i++) {
+				alphaOptimizer.gradStep(Constants.SHOOTER_ALPHA_OPTIMIZER_ALPHA, Constants.REGRESSION_STEPSIZE, 0, distance);
 			}
 			alphaOptimizer.setLowestInBuffer(); //No noise - so this shouldn't help or hurt anything
 		} catch (IllegalStateException e) {
@@ -163,9 +168,9 @@ public class Shooter extends SubsystemBase {
 		alpha = Math.max(alpha, Constants.SHOOTER_MIN_ALPHA);
 		alpha = Math.min(alpha, Constants.SHOOTER_MAX_ALPHA);
 		double h = Constants.SHOOTER_TARGET_HEIGHT + Constants.SHOOTER_CONSTANT_HEIGHT_OFFSET + (Constants.SHOOTER_SIN_ALPHA_MULTIPLIER_HEIGHT_OFFSET * Math.sin(alpha));
-		double v = (Math.sqrt(-Constants.SHOOTER_ACCELERATION) * distance) / (Math.cos(alpha)*Math.sqrt(2 * distance * Math.tan(alpha) - 2.0 * h));
+		double v = (Math.sqrt(-Constants.SHOOTER_ACCELERATION) * distance) / (Math.cos(alpha) * Math.sqrt(2 * distance * Math.tan(alpha) - 2.0 * h));
 		double beta = Math.atan((2 * h / distance - Math.tan(alpha)));
-		if(v == Double.NaN || beta > 0) {
+		if (Double.isNaN(v) || beta > 0) {
 			//Invalid trajectory - something is broken
 			throw new IllegalStateException("Unable to generate a valid trajectory.");
 		}

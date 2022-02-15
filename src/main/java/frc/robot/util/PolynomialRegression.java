@@ -24,8 +24,8 @@ public class PolynomialRegression extends GradientDescentOptimized {
 	 * @param degree
 	 * @param bufferSize
 	 */
-	public PolynomialRegression(int degree, int buffersize) {
-		super(degree,buffersize);
+	public PolynomialRegression(int degree, int bufferSize) {
+		super(degree , bufferSize);
 	}
 	/**
 	 * Finds 1-r^2 for the polynomial regression
@@ -35,8 +35,8 @@ public class PolynomialRegression extends GradientDescentOptimized {
 	 */
 	@SuppressWarnings("unchecked")
 	@Override public double error(Object... errorparams) {
-		List<Double> x=(List<Double>)(errorparams[0]);
-		List<Double> y=(List<Double>)(errorparams[1]);
+		List<Double> x = (List<Double>) errorparams[0];
+		List<Double> y = (List<Double>) errorparams[1];
 		if (x.size() != y.size()) throw new IllegalArgumentException("Unequal length");
 
 		double error = 0;
@@ -45,7 +45,7 @@ public class PolynomialRegression extends GradientDescentOptimized {
 
 		for (int i = 0; i < x.size(); i++) {
 			yBar += y.get(i);
-			error += Math.pow(function(x.get(i))- y.get(i), 2);
+			error += Math.pow(function(x.get(i)) - y.get(i), 2);
 		}
 
 		yBar /= y.size();

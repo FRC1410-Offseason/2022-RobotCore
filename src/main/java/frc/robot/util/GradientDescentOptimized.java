@@ -16,7 +16,7 @@ public abstract class GradientDescentOptimized {
 	 */
 	public void reset() {
 		Arrays.fill(parameters, 0);
-		lastParameterIndex=0;
+		lastParameterIndex = 0;
 	}
     public abstract double error(Object... errorparams);
     /**
