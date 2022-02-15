@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.DoubleConsumer;
 
+import static frc.robotmap.Constants.SHOOTER_RPM_TOLERANCE;
 import static frc.robotmap.IDs.SHOOTER_LEFT_MOTOR_ID;
 import static frc.robotmap.IDs.SHOOTER_RIGHT_MOTOR_ID;
 import static frc.robotmap.Tuning.*;
@@ -43,6 +44,9 @@ public class Shooter extends SubsystemBase {
 	private final List<Double> xValuesNormalized = new DoubleArrayList();
 	private final List<Double> yValues = new DoubleArrayList();
 	private final List<DoubleConsumer> onShot = new ArrayList<>();
+
+	private double shotCount = 0;
+	private boolean outtakeQueued = false;
 
 	public List<DoubleConsumer> getOnShotCallbacks() {
 	    return onShot;
@@ -88,8 +92,24 @@ public class Shooter extends SubsystemBase {
 			SHOOTER_RIGHT_KD,
 			SHOOTER_RIGHT_KFF
 		);
+  }
+
+	public double getShotCount() {
+		return shotCount;
 	}
-	/**
+
+	public void resetShotCount() {
+		shotCount = 0;
+	}
+
+	public void queueOuttake() {
+		outtakeQueued = true;
+	}
+
+	public boolean isOuttakeQueued() {
+		return outtakeQueued;
+	}
+  /**
 	 * Use the regression to find a target RPM based on a target velocity in m/s.
 	 * @param vel
 	 * @return RPM
@@ -178,7 +198,11 @@ public class Shooter extends SubsystemBase {
 				double omegaF = lowestRPM * Math.PI / 30.0;
 				//Find exit velocity ((I/m)(w_i^2-w_f^2))^(1/2)
 				double exitVelocity = Math.sqrt(Constants.SHOOTER_I / Constants.SHOOTER_BALL_MASS * (Math.pow(omegaI, 2) - Math.pow(omegaF, 2)));
-				//Run callbacks
+
+				//At this point, we know that a ball has passed through the flywheels, so we increment the shot count
+				shotCount++;
+
+        //Run callbacks
 				for (DoubleConsumer callback : onShot) {
 					callback.accept(exitVelocity);
 				}
@@ -314,6 +338,10 @@ public class Shooter extends SubsystemBase {
 	 */
 	public double getRightVel() {
 		return rightEncoder.getVelocity();
+	}
+
+	public boolean isAtTarget() {
+		return Math.abs((getLeftVel() + getRightVel()) / 2 - target) < SHOOTER_RPM_TOLERANCE;
 	}
 
 }

@@ -266,6 +266,10 @@ public class ShooterArm extends SubsystemBase {
 		return Units.radiansToDegrees(goal.position);
 	}
 
+	public boolean isAtTarget() {
+		return getBrakeState();
+	}
+
 	/**
 	 * Set the voltage of the motors
 	 * @param voltage desired voltage

@@ -1,27 +1,28 @@
 package frc.robot.commands.grouped;
 
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.commands.actions.LimelightAnglePID;
-import frc.robot.commands.actions.RunStorageForTime;
-import frc.robot.commands.actions.SetShooterRPM;
-import frc.robot.subsystems.Drivetrain;
-import frc.robot.subsystems.Limelight;
-import frc.robot.subsystems.Shooter;
-import frc.robot.subsystems.Storage;
+import frc.robot.commands.actions.*;
+import frc.robot.subsystems.*;
 
-public class LimelightShoot extends ParallelCommandGroup {
-    private double RPM;
+import java.util.ArrayList;
 
-    public LimelightShoot(Drivetrain drivetrain, Limelight limelight, Shooter shooter, Storage storage) {
-        RPM = shooter.targetRPM(1);// Make real value
+public class LimelightShoot extends SequentialCommandGroup {
 
-        addCommands(
-            new SetShooterRPM(shooter, RPM),
-            new SequentialCommandGroup(
-                new LimelightAnglePID(limelight, drivetrain), 
-                new RunStorageForTime(storage, 1)// tune durations
-            )
-        );
+    public LimelightShoot(Drivetrain drivetrain, Limelight limelight, Shooter shooter, Storage storage, ShooterArm shooterArm) {
+        int RPM = (int) shooter.targetRPM(1);// Make real value
+
+		ArrayList<Command> toRun = new ArrayList<>();
+
+		toRun.add(new LimelightAnglePID(limelight, drivetrain));
+
+		if (shooter.isOuttakeQueued()) {
+			toRun.add(new Shoot(shooter, shooterArm, storage, RPM, 1));
+			toRun.add(new ShootOuttake(shooter, shooterArm, storage));
+		} else {
+			toRun.add(new Shoot(shooter, shooterArm, storage, RPM, storage.getCurrentState().getNumCargo()));
+		}
+
+		addCommands(toRun.toArray(Command[]::new));
     }
 }

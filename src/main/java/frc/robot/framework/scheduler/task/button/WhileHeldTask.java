@@ -1,14 +1,14 @@
 package frc.robot.framework.scheduler.task.button;
 
-import java.util.Set;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.framework.control.ButtonStateObserver;
 import frc.robot.framework.control.ButtonStateObserver.ButtonState;
 import frc.robot.framework.scheduler.RobotMode;
 import frc.robot.framework.scheduler.task.Task;
 
-public class WhileHeldTask implements Task{
+import java.util.Set;
+
+public class WhileHeldTask implements Task {
     
     private final ButtonStateObserver observer;
     private final Command command;
@@ -20,11 +20,11 @@ public class WhileHeldTask implements Task{
         this.command = command;
     }
 
-    @Override
+	@Override
 	public void execute() {
         observer.updateState();
-        
-		if (observer.getState() == ButtonState.PRESSED) {
+
+		if (!running && observer.getRaw()) {
             command.initialize();
             running = true;
         } else if (running && observer.getState() == ButtonState.RELEASED) {
@@ -32,12 +32,13 @@ public class WhileHeldTask implements Task{
             running = false;
         }
 
-        if (running) command.execute();
-
-        if (running && command.isFinished()){
-            command.end(false);
-            running = false;
-        }
+		if (running) {
+			command.execute();
+			if (command.isFinished()) {
+				running = false;
+				command.end(false);
+			}
+		}
 	}
 
     @Override
