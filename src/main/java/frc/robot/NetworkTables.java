@@ -23,7 +23,7 @@ public class NetworkTables {
 	static final NetworkTableEntry intakeDeployed, intakeSpeed; // Intake
 	static final NetworkTableEntry leftWinchHeight, leftWinchLocked, rightWinchHeight, rightWinchLocked; // Winches
 	static final NetworkTableEntry leftTelescopingArmHeight, leftTelescopingArmLocked,
-			rightTelescopingArmHeight, rightTelescopingArmLocked; // Telescoping Arms
+		rightTelescopingArmHeight, rightTelescopingArmLocked; // Telescoping Arms
 	static final NetworkTableEntry poseEstimationUpdateRate; // Hz Calcs
 
 	static {
