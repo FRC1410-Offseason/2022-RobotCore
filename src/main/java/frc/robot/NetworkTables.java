@@ -13,6 +13,7 @@ public class NetworkTables {
 	static final NetworkTable robotState = instance.getTable("Robot State");
 	static final NetworkTable limelight = instance.getTable("photonvision/Limelight 2");
 	static final NetworkTableEntry autoList, autoChooser; // Auto
+	static final NetworkTableEntry maxVelocity, maxAcceleration, maxCentripetalAcceleration;
 	static final NetworkTableEntry x, y, theta, wheelLeft, wheelRight, navxMagDisturbance, navxMagCalibrated; // Drivetrain
 	static final NetworkTableEntry pitch, yaw, visionDistance, limelightAngleKP, limelightAngleKI, limelightAngleKD; // Limelight
 	static final NetworkTableEntry shooterTargetRPM, leftShooterRPM, leftShooterP, leftShooterI, leftShooterD, leftShooterFF,
@@ -30,6 +31,10 @@ public class NetworkTables {
 		// Autonomous
 		autoList = table.getEntry("Auto List");
 		autoChooser = table.getEntry("Auto Chooser");
+		// Trajectories
+		maxVelocity = table.getEntry("Maximum Velocity Constraint");
+		maxAcceleration = table.getEntry("Maximum Acceleration Constraint");
+		maxCentripetalAcceleration = table.getEntry("Maximum Centripetal Acceleration Constraint");
 		// Drivetrain
 		x = robotState.getEntry("X");
 		y = robotState.getEntry("Y");
@@ -87,6 +92,10 @@ public class NetworkTables {
 		// Initializing
 		// Autonomous
 		autoChooser.setDouble(0);
+		// Trajectories
+		maxVelocity.setDouble(0);
+		maxAcceleration.setDouble(0);
+		maxCentripetalAcceleration.setDouble(0);
 		// Drivetrain
 		x.setDouble(0);
 		y.setDouble(0);
@@ -144,7 +153,10 @@ public class NetworkTables {
 	public static void setAutoList(String[] AUTO_LIST) {autoList.setStringArray(AUTO_LIST);}
 
 	public static double getAutoChooser() {return autoChooser.getDouble(0);}
-
+	// Trajectories
+	public static double getVelocityConstraint() {return maxVelocity.getDouble(0);}
+	public static double getAccelerationConstraint() {return maxAcceleration.getDouble(0);}
+	public static double getCentripetalAccelerationConstraint() {return maxCentripetalAcceleration.getDouble(0);}
 	// Drivetrain
 	public static void setPoseEstimation(double X, double Y, double THETA, double wheelSpeedLeft, double wheelSpeedRight) {
 		x.setDouble(X);

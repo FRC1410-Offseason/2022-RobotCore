@@ -12,6 +12,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.math.trajectory.constraint.CentripetalAccelerationConstraint;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 
@@ -24,16 +25,23 @@ public class Trajectories {
 	// private static final DifferentialDriveVoltageConstraint autoVoltageConstraint = new DifferentialDriveVoltageConstraint(
 	// 	new SimpleMotorFeedforward(KS, KV, KA), DRIVE_KINEMATICS, DRIVETRAIN_MAX_VOLTAGE);
 
-	private static final TrajectoryConfig config = new TrajectoryConfig(DRIVETRAIN_MAX_SPEED, DRIVETRAIN_MAX_ACCEL)
+	// private static final TrajectoryConfig config = new TrajectoryConfig(DRIVETRAIN_MAX_SPEED, DRIVETRAIN_MAX_ACCEL)
+	// 	.setKinematics(DRIVE_KINEMATICS)
+	// 	.setReversed(false);
+	// 	// .addConstraint(CentripetalAccelerationConstraint)
+	// 	// .addConstraint(autoVoltageConstraint)
+	// private static final TrajectoryConfig reverseConfig = new TrajectoryConfig(DRIVETRAIN_MAX_SPEED, DRIVETRAIN_MAX_ACCEL)
+	// 	.setKinematics(DRIVE_KINEMATICS)
+	// 	.setReversed(true);
+	// 	// .addConstraint(CentripetalAccelerationConstraint)
+	// 	// .addConstraint(autoVoltageConstraint)
+
+	private static TrajectoryConfig config = new TrajectoryConfig(DRIVETRAIN_MAX_SPEED, DRIVETRAIN_MAX_ACCEL)
 		.setKinematics(DRIVE_KINEMATICS)
 		.setReversed(false);
-		// .addConstraint(CentripetalAccelerationConstraint)
-		// .addConstraint(autoVoltageConstraint)
-	private static final TrajectoryConfig reverseConfig = new TrajectoryConfig(DRIVETRAIN_MAX_SPEED, DRIVETRAIN_MAX_ACCEL)
+	private static TrajectoryConfig reverseConfig = new TrajectoryConfig(DRIVETRAIN_MAX_SPEED, DRIVETRAIN_MAX_ACCEL)
 		.setKinematics(DRIVE_KINEMATICS)
 		.setReversed(true);
-		// .addConstraint(CentripetalAccelerationConstraint)
-		// .addConstraint(autoVoltageConstraint)
 
 	public final Trajectory taxi = TrajectoryGenerator.generateTrajectory(List.of(
 		new Pose2d(8.70, 6.50, new Rotation2d(Units.degreesToRadians(90))),
@@ -76,6 +84,19 @@ public class Trajectories {
 
 	public void setStartingAutonomousPose() {
 		drivetrain.resetPoseEstimation(upperTarmacToUpperCargoShot.getInitialPose());
+	}
+
+	public void generateConfig(double maxVelocity, double maxAcceleration, double maxCentripetalAcceleration) {
+		CentripetalAccelerationConstraint centripetalAccelerationConstraint =
+			new CentripetalAccelerationConstraint(maxCentripetalAcceleration);
+		config = new TrajectoryConfig(maxVelocity, maxAcceleration)
+			.setKinematics(DRIVE_KINEMATICS)
+			.addConstraint(centripetalAccelerationConstraint)
+			.setReversed(false);
+		reverseConfig = new TrajectoryConfig(maxVelocity, maxAcceleration)
+			.setKinematics(DRIVE_KINEMATICS)
+			.addConstraint(centripetalAccelerationConstraint)
+			.setReversed(true);
 	}
 
 	public void generateAuto() {
