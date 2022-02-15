@@ -121,8 +121,7 @@ public class Shooter extends SubsystemBase {
 			/ (Constants.SHOOTER_I * Math.pow(Constants.SHOOTER_WHEEL_RADIUS, 2))) / Math.PI;
 	}
 	private GradientDescentOptimized alphaOptimizer = new GradientDescentOptimized(1, 5) {
-``` Also this needs to be directly under the class header.
-		@Override 
+		@Override
 		public double error(Object... errorparams) {
 			double distance = (double) errorparams[0];
 			return Shooter.this.bounceError(distance, getParameters()[0]);
