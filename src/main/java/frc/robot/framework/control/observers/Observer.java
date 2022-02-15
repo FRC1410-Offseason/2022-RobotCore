@@ -24,7 +24,7 @@ public abstract class Observer implements Comparable<Observer> {
         return task;
     }
 
-    public void setPriority(SCHEDULER_PRIORITY priority) {
+    public void configurePriority(SCHEDULER_PRIORITY priority) {
         this.priority = priority;
     }
 
@@ -64,6 +64,6 @@ public abstract class Observer implements Comparable<Observer> {
 
     @Override
 	public int compareTo(Observer comparedObserver) {
-		return Double.compare(priority.getId(), comparedObserver.getPriority().getId());
+		return Double.compare(priority.getValue(), comparedObserver.getPriority().getValue());
 	}
 }

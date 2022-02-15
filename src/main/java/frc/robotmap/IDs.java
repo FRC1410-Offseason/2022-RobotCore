@@ -98,7 +98,7 @@ public class IDs {
 			this.id = id;
 		}
 
-		public int getId() {
+		public int getValue() {
 			return id;
 		}
 	}

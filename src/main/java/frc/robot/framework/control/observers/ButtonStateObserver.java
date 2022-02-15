@@ -22,15 +22,8 @@ public class ButtonStateObserver extends Observer {
         this.controller = controller;
 		this.id = id;
 
-        setPriority(SCHEDULER_PRIORITY.HIGH);
+        configurePriority(SCHEDULER_PRIORITY.HIGH);
 	}
-
-    // public ButtonStateObserver(XboxController controller, ButtonId id, EnqueuedTask task) {
-	// 	this.controller = controller;
-	// 	this.id = id;
-
-    //     this.bind(task);
-	// }
 
     @Override
     public void check() {

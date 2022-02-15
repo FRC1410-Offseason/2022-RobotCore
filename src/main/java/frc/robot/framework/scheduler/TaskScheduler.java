@@ -13,6 +13,7 @@ import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.PriorityQueue;
@@ -24,6 +25,7 @@ public class TaskScheduler {
     private final PriorityQueue<Observer> observerQueue = new PriorityQueue<>();
 
 	private final PriorityQueue<EnqueuedTask> taskQueue = new PriorityQueue<>();
+    private final ArrayList<EnqueuedTask> tasksToCancel = new ArrayList<>();
     private Map<EnqueuedTask, Boolean> wasEnabled = new HashMap<>();
 
 	private final IntOpenHashSet pendingCancellation = new IntOpenHashSet();
@@ -110,12 +112,18 @@ public class TaskScheduler {
 
         if (nextObserver.isRequestingExecution()) {
             if (nextObserver.getEnqueuedTask().getTask() instanceof CommandTask) {
-                CommandTask boundTask = (CommandTask) nextObserver.getEnqueuedTask().getTask();
+                Command boundCommand = ((CommandTask) nextObserver.getEnqueuedTask().getTask()).getCommand();
 
-                if (!boundTask.getCommand().getRequirements().isEmpty()) {
-                    for (Subsystem requirement : boundTask.getCommand().getRequirements()) {
-                        if (!(SubsystemRegistry.getLockedCommand(requirement) == null)) {
-                            
+                if (!boundCommand.getRequirements().isEmpty()) {
+                    boolean isHighestPriority = true;
+                    for (Subsystem requirement : boundCommand.getRequirements()) {
+                        if (!(SubsystemRegistry.getLockingTask(requirement) == null)) {
+                            if (nextObserver.getPriority().getValue() < SubsystemRegistry.getLockingTask(requirement).getPriority().getValue()) {
+                                isHighestPriority = false;
+                                break;
+                            } else {
+                                tasksToCancel.add(SubsystemRegistry.getLockingTask(requirement));
+                            }
                         }
                     }
                 } else {

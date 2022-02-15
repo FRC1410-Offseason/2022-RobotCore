@@ -25,7 +25,7 @@ public class SubsystemRegistry {
 		return !requirementLocks.containsKey(subsystem) || requirementLocks.get(subsystem) == task;
 	}
 
-	public static EnqueuedTask getLockedCommand(Subsystem subsystem) {
+	public static EnqueuedTask getLockingTask(Subsystem subsystem) {
 		return requirementLocks.get(subsystem);
 	}
 
