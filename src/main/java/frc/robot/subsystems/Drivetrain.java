@@ -101,8 +101,7 @@ public class Drivetrain extends SubsystemBase {
 	}
 
 	public void tankDriveDeadzoned(double deadzonedLeftAxis, double deadzonedRightAxis) {
-		drive.tankDrive(deadzonedLeftAxis, deadzonedRightAxis); 
-		// This is squared (x^2), but we normally do sqrt(x), test both (also test both for limelight pid (but sqrt would be better there))
+		drive.tankDrive(deadzonedLeftAxis, deadzonedRightAxis, false);
 		drive.feed();
 	}
 
@@ -110,7 +109,8 @@ public class Drivetrain extends SubsystemBase {
 		drive.arcadeDrive(forward, rotation);}
 
 	public void tankDrive(double left, double right) {
-		drive.tankDrive(left, right);
+		drive.tankDrive(left, right, false);
+		drive.feed();
 	}
 
 	public Pose2d getPoseEstimation() {return poseEstimator.getEstimatedPosition();}
