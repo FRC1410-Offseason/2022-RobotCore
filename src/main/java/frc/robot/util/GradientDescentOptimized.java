@@ -20,7 +20,7 @@ public abstract class GradientDescentOptimized {
 	}
     public abstract double error(Object... errorparams);
     /**
-	 * degree - Largest power in the polynomial.
+	 * numparams - Number of parameters
 	 * bufferSize - Number of parameters in the path to store to combat randomness errors (20 is about good).
 	 * @param degree
 	 * @param bufferSize
@@ -31,15 +31,13 @@ public abstract class GradientDescentOptimized {
 	}
 	/**
 	 * Alpha - learning rate
-	 * x - x values
-	 * y - y values
 	 * stepSize - make as low as possible
 	 * noise - Amount of randomness/entropy to use for escaping local minima. Proportional to alpha. 200 is about good for a 0-1 normalized x-value.
-	 * @param alpha
-	 * @param x
-	 * @param y
+	 * errorparams - a list of objects as parameters for the error function.
+     * @param alpha
 	 * @param stepSize
 	 * @param noise
+     * @param errorparams
 	 */
 	public void gradStep(double alpha, double stepSize, double noise, Object... errorparams) {
 		if (lastParameters == null) lastParameters = new double[bufferSize][parameters.length];

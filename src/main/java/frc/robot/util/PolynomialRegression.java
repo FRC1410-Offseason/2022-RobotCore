@@ -29,8 +29,8 @@ public class PolynomialRegression extends GradientDescentOptimized {
 	}
 	/**
 	 * Finds 1-r^2 for the polynomial regression
-	 * @param xvalues
-	 * @param yvalues
+	 * Errorparams is a list of parameters for the error function.
+	 * @param errorparams
 	 * @return error
 	 */
 	@SuppressWarnings("unchecked")
