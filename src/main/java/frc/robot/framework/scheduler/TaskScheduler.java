@@ -89,30 +89,39 @@ public class TaskScheduler {
 
 	public void tick() {
 
+        //Dump queues if debugging
         if (dumpingDebugTelemetry) debugDump();
 
-		EnqueuedTask next;
-		//noinspection StatementWithEmptyBody – no logic needed; block until a task is available
-		while ((next = taskQueue.peek()) == null || next.getTargetTime() > System.currentTimeMillis()) {
-		}
+        //Iterate until found observer
+        Observer nextObserver;
+		while ((nextObserver = observerQueue.peek()) == null) {}
 
-		if (next != taskQueue.poll()) {
+        //Verify matching system states
+		if (nextObserver != observerQueue.poll()) {
+			throw new IllegalStateException("Mismatch in next observer and next item in observerQueue");
+		}
+        
+        EnqueuedTask nextTask;
+		//noinspection StatementWithEmptyBody – no logic needed; block until a task is available
+		while ((nextTask = taskQueue.peek()) == null || nextTask.getTargetTime() > System.currentTimeMillis()) {}
+
+		if (nextTask != taskQueue.poll()) {
 			throw new IllegalStateException("Mismatch in next task and next item in taskQueue");
 		}
 
-		if (next.isPendingCancellation || pendingCancellation.contains(next.getId())) {
-			pendingCancellation.remove(next.getId());
+		if (nextTask.isPendingCancellation || pendingCancellation.contains(nextTask.getId())) {
+			pendingCancellation.remove(nextTask.getId());
 			return;
 		}
 
-		if (next.isPeriodic() && !next.getTask().isFinished()) {
-			next.tickPeriod();
-			taskQueue.add(next);
+		if (nextTask.isPeriodic() && !nextTask.getTask().isFinished()) {
+			nextTask.tickPeriod();
+			taskQueue.add(nextTask);
 		}
 
 		// Run task if it subscribes to the current mode
-		if (!next.getTask().getDisallowedModes().contains(getCurrentMode())) {
-			next.getTask().execute();
+		if (!nextTask.getTask().getDisallowedModes().contains(getCurrentMode())) {
+			nextTask.getTask().execute();
 		}
 	}
 
