@@ -9,28 +9,28 @@ public class IDs {
 	public static final int DRIVETRAIN_RIGHT_FRONT_MOTOR_ID = 3;
 	public static final int DRIVETRAIN_RIGHT_BACK_MOTOR_ID = 4;
 
-	//SHOOTER
+	// SHOOTER
 	public static final int SHOOTER_LEFT_MOTOR_ID = 11;
 	public static final int SHOOTER_RIGHT_MOTOR_ID = 12;
 
-	//STORAGE
+	// STORAGE
 	public static final int STORAGE_MOTOR_ID = 41;
 	public static final int STORAGE_LINE_BREAK_ID = 0;
 
-	//INTAKE
+	// INTAKE
 	public static final int INTAKE_FLIPPER_FWD = 6;
 	public static final int INTAKE_FLIPPER_BCK = 7;
 	public static final int INTAKE_MOTOR = 31;
 
-	//ELEVATOR
-	//TODO: Update with ports on PCM
+	// ELEVATOR
+	// TODO: Update with ports on PCM
 	public static final int ELEVATOR_FWD = 0;
 	public static final int ELEVATOR_BCK = 1;
 	public static final int ELEVATOR_LEFT_MOTOR_ID = 51;
 	public final static int ELEVATOR_RIGHT_MOTOR_ID = 52;
 
-	//WINCH
-	//TODO: Update with actual ports on the PCM
+	// WINCH
+	// TODO: Update with actual ports on the PCM
 	public static final int WINCH_FWD = 2;
 	public static final int WINCH_BCK = 3;
 	public static final int WINCH_LEFT_MOTOR_ID = 61;
@@ -38,14 +38,14 @@ public class IDs {
 	public static final int WINCH_LEFT_LIMIT_SWITCH_ID = 1;
 	public static final int WINCH_RIGHT_LIMIT_SWITCH_ID = 2;
 
-	//SHOOTER ARM
+	// SHOOTER ARM
 	public static final int SHOOTER_ARM_LOCK_FWD = 4;
 	public static final int SHOOTER_ARM_LOCK_BCK = 5;
 	public static final int SHOOTER_ARM_L_MOTOR = 21;
 	public static final int SHOOTER_ARM_R_MOTOR = 22;
 	public static final int PRESSURE_SENSOR = 0;
 
-    //CONTROLLERS, DO NOT TOUCH
+    // CONTROLLERS, DO NOT TOUCH
 	public static final int DRIVER_CONTROLLER_PORT = 0;
 	public static final int OPERATOR_CONTROLLER_PORT = 1;
 

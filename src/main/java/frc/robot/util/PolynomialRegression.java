@@ -1,33 +1,41 @@
 package frc.robot.util;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 
-public class PolynomialRegression {
-	private final Random random = new Random();
-	private double[][] lastParameters = null;
-	private double[] lastErrors = null;
-	private int lastParameterIndex = 0;
-
-	private final double[] parameters;
-    private final int bufferSize;
-
-	// TODO: docs
-	public double f(double x) {
+/**
+ * Class for managing polynomial regressions. Each instance has its own parameters and coefficients.
+ */
+public class PolynomialRegression extends GradientDescentOptimized {
+	/**
+	 * Compute f(x) from the coefficients and parameters. n degree polynomial, but without any a_0 coefficient due to the fact that we want f(0)=0.
+	 * @param x
+	 * @return f(x)
+	 */
+	public double function(double x) {
 		double ret = 0;
-		for (int i = 0; i < parameters.length; i++) {
-			ret += parameters[i] * Math.pow(x, i+1);
+		for (int i = 0; i < getParameters().length; i++) {
+			ret += getParameters()[i] * Math.pow(x, i+1);
 		}
 		return ret;
 	}
 
+	/**
+	 * @param degree Largest power in the polynomial
+	 * @param bufferSize Number of parameters in the path to store to combat randomness errors (20 is about good)
+	 */
 	public PolynomialRegression(int degree, int bufferSize) {
-		parameters = new double[degree];
-		this.bufferSize = bufferSize;
+		super(degree , bufferSize);
 	}
 
-	public double error(List<Double> x, List<Double> y) {
+	/**
+	 * Finds 1-r^2 for the polynomial regression
+	 * @param errorparams is a list of parameters for the error function
+	 * @return error
+	 */
+	@SuppressWarnings("unchecked")
+	@Override public double error(Object... errorparams) {
+		List<Double> x = (List<Double>) errorparams[0];
+		List<Double> y = (List<Double>) errorparams[1];
 		if (x.size() != y.size()) throw new IllegalArgumentException("Unequal length");
 
 		double error = 0;
@@ -36,7 +44,7 @@ public class PolynomialRegression {
 
 		for (int i = 0; i < x.size(); i++) {
 			yBar += y.get(i);
-			error += Math.pow(f(x.get(i))- y.get(i), 2);
+			error += Math.pow(function(x.get(i)) - y.get(i), 2);
 		}
 
 		yBar /= y.size();
@@ -44,54 +52,5 @@ public class PolynomialRegression {
 		for (int i = 0; i < x.size(); i++) tError += Math.pow(y.get(i) - yBar, 2);
 
 		return error / tError;
-	}
-
-	public void reset() {
-		Arrays.fill(parameters, 0);
-		lastParameterIndex=0;
-	}
-
-	public void gradStep(double alpha, List<Double> x, List<Double> y, double stepSize, double noise) {
-		if (lastParameters == null) lastParameters = new double[bufferSize][parameters.length];
-		if (lastErrors == null) lastErrors = new double[bufferSize];
-
-		double[] deltas = new double[parameters.length];
-		double currError = error(x, y);
-
-		System.arraycopy(parameters, 0, lastParameters[lastParameterIndex % bufferSize], 0, parameters.length);
-
-		lastErrors[lastParameterIndex % bufferSize] = currError;
-		lastParameterIndex++;
-
-		for (int i = 0; i < parameters.length; i++) {
-			parameters[i] += stepSize;
-			double newError = error(x, y);
-			deltas[i] = (newError - currError) / stepSize;
-			parameters[i] -= stepSize;
-		}
-
-		for (int i = 0; i < parameters.length; i++) {
-			double r = random.nextDouble();
-			r *= noise * alpha * Math.signum(deltas[i]);
-			parameters[i] -= (alpha * deltas[i] + r);
-		}
-	}
-    
-	public void setLowestInBuffer() {
-		int num = Math.min(lastParameterIndex, bufferSize);
-		double lowestError = -1;
-
-		for (int i = 0; i < num; i++) {
-			double error = lastErrors[i];
-
-			if (error < lowestError || lowestError < 0) {
-				lowestError = error;
-				System.arraycopy(lastParameters[i], 0, parameters, 0, parameters.length);
-			}
-		}
-	}
-
-	public double[] getParameters() {
-		return parameters;
 	}
 }

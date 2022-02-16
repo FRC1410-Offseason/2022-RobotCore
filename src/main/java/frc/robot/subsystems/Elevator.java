@@ -30,9 +30,7 @@ import static frc.robotmap.IDs.*;
 
 public class Elevator extends SubsystemBase {
 
-	/**
-	 * Motors
-	 */
+	// Elevator motors
 	private final CANSparkMax leftMotor = new CANSparkMax(ELEVATOR_LEFT_MOTOR_ID, CANSparkMaxLowLevel.MotorType.kBrushless);
 	private final CANSparkMax rightMotor = new CANSparkMax(ELEVATOR_RIGHT_MOTOR_ID, CANSparkMaxLowLevel.MotorType.kBrushless);
 	private double currentVoltage = 0;
@@ -43,10 +41,10 @@ public class Elevator extends SubsystemBase {
 	private final RelativeEncoder leftEncoder = leftMotor.getEncoder();
 	private final RelativeEncoder rightEncoder = rightMotor.getEncoder();
 
-	/**
-	 * Solenoid that runs the brake pistons
-	 */
+	// Elevator Brakes
 	private final DoubleSolenoid lock = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, ELEVATOR_FWD, ELEVATOR_BCK);
+
+	// State variable to track state of locks
 	private boolean locked = false;
 
 	/**
