@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
@@ -15,7 +16,10 @@ public class Intake extends SubsystemBase {
 	// TODO: This is probably going to need to be changed to a talon because the intake is no longer actuated with a piston
 	private final DoubleSolenoid flipper = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, INTAKE_FLIPPER_FWD, INTAKE_FLIPPER_BCK);
 
-	// Motor that runs the intake
+	// Motor that controls the flipping action
+	private final TalonSRX flipperMotor = new TalonSRX(INTAKE_FLIPPER_MOTOR);
+
+	//Motor that runs the intake
 	private final CANSparkMax intakeMotor = new CANSparkMax(INTAKE_MOTOR, CANSparkMaxLowLevel.MotorType.kBrushless);
 
 	// Internal state variable to keep track of flipper state
