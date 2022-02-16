@@ -10,7 +10,8 @@ import java.util.ArrayList;
 public class LimelightShoot extends SequentialCommandGroup {
 
     public LimelightShoot(Drivetrain drivetrain, Limelight limelight, Shooter shooter, Storage storage, ShooterArm shooterArm) {
-        int RPM = (int) shooter.targetRPM(1);// Make real value
+		// TODO: Add calculation for desired exit velocity of cargo instead of just 1
+        int RPM = (int) shooter.targetRPM(1);
 
 		ArrayList<Command> toRun = new ArrayList<>();
 

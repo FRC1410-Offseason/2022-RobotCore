@@ -28,6 +28,7 @@ public class OuttakeHandler extends CommandBase {
 
 	@Override
 	public void initialize() {
+		// TODO: This timer shouldn't be needed anymore, probably have to refactor
 		outtakeTimer.reset();
 	}
 

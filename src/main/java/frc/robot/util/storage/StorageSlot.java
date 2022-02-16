@@ -11,7 +11,7 @@ public class StorageSlot {
 
 	/**
 	 * Keeps track of the color of the cargo in the slot
-	 * There is an EMPTY state that corresponds to neither red or blue
+	 * There is an EMPTY state that corresponds to neither red nor blue
 	 */
 	private Storage.ColorSensorStatus color;
 
