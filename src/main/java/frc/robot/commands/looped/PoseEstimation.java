@@ -20,6 +20,8 @@ public class PoseEstimation extends CommandBase {
     private double imageCaptureTime;
     private double currentPitch = 0, currentYaw = 0, lastPitch, lastYaw;
 
+	//TODO: Same here as with the drivetrain simulation command, we can probably condense a lot of this into function calls
+
     public PoseEstimation(Drivetrain drivetrain, Limelight limelight, ShooterArm shooterArm) {
         hzTimer.start();
         limelightTimer.start();

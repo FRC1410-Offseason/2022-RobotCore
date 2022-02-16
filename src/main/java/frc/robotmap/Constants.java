@@ -19,6 +19,7 @@ public final class Constants {
 	public static final double ELEVATOR_KA = 1; //Placeholder
 	public static final double ELEVATOR_METERS_PER_REV = .0151;
 
+	//State space stuff, not currently used
 	public static final double ELEVATOR_POS_CONFIDENCE = .0001; //Meters
 	public static final double ELEVATOR_VEL_CONFIDENCE = .0001; //Meters per second
 	public static final double ELEVATOR_ENC_CONFIDENCE = .0001; //Rotations
@@ -31,6 +32,7 @@ public final class Constants {
 	public static final double ELEVATOR_MAX_ACCEL = 1; //Meters per second^2
 	public static final double ELEVATOR_MAX_POS = 2; //Meters
 	public static final double ELEVATOR_MIN_POS = 0; //Meters
+	//End of state space stuff
 
 
 	//SHOOTER ARM
@@ -45,6 +47,8 @@ public final class Constants {
 	public static final int SHOOTER_ARM_GEARING = 125;
 	public static final double SHOOTER_ARM_LENGTH = .8025; //Meters (nice)
 	public static final double SHOOTER_ARM_MASS = 8.61; //Kg
+
+	//These can probably be removed
 	public static final double SHOOTER_ARM_MIN_ROT = 0; //Deg
 	public static final double SHOOTER_ARM_MAX_ROT = 60; //Deg
 
@@ -119,7 +123,6 @@ public final class Constants {
 
 	//INTAKE
 	public static final double INTAKE_FORWARD_SPEED = 1;
-	public static final double INTAKE_REVERSE_SPEED = -1;
 
 	//SHOOTER
 	public static final int SHOOTER_OUTTAKE_SPEED = 500;

@@ -182,11 +182,17 @@ public class ShooterArm extends SubsystemBase {
 
 	@Override
 	public void periodic() {
+		// Do we need to run the control loop?
 		if (Math.abs(loop.getXHat(0) - goal.position) < Units.degreesToRadians(SHOOTER_ARM_IS_FINISHED_THRESHOLD)) {
+			// If no, we set the brake and stop the motors
 			setBrake();
 			setVoltage(0);
 		} else {
+			// If yes, we need to release the brake and start the control loop
 			releaseBrake();
+
+			// It is possible to do this without a profile, but having it profiled makes it more accurate
+			// See https://docs.wpilib.org/en/stable/docs/software/advanced-controls/state-space/index.html for more info
 			lpr = (new TrapezoidProfile(constraints, goal, lpr)).calculate(DT);
 			loop.setNextR(lpr.position, lpr.velocity);
 			loop.correct(VecBuilder.fill(getEncoderPosition()));

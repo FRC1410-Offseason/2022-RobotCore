@@ -22,6 +22,7 @@ public final class Tuning {
 	public static final double SHOOTER_RIGHT_KI = 0;
 	public static final double SHOOTER_RIGHT_KD = 0;
 	public static final double SHOOTER_RIGHT_KFF = 0.000165;
+
 	//LIMELIGHT
 	public static final double LIMELIGHT_ANGLE_KP = 0;
 	public static final double LIMELIGHT_ANGLE_KI = 0;

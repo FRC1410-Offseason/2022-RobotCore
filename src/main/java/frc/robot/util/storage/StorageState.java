@@ -7,8 +7,8 @@ public class StorageState {
 	/**
 	 * We have the capability to store 2 cargo in the storage, so we need two slot objects
 	 */
-	private StorageSlot slot1;
-	private StorageSlot slot2;
+	private final StorageSlot slot1;
+	private final StorageSlot slot2;
 
 	public StorageState() {
 		slot1 = new StorageSlot();

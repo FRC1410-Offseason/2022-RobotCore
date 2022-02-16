@@ -271,6 +271,10 @@ public class Shooter extends SubsystemBase {
 		return rightEncoder.getVelocity();
 	}
 
+	/**
+	 * Whether the flywheels are close enough to their target velocity to start shooting
+	 * @return boolean True -> We are good to shoot, False -> Can't start shooting yet
+	 */
 	public boolean isAtTarget() {
 		return Math.abs((getLeftVel() + getRightVel()) / 2 - target) < SHOOTER_RPM_TOLERANCE;
 	}

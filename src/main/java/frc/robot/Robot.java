@@ -66,6 +66,7 @@ public class Robot extends ScheduledRobot implements ControlScheme {
 	public void autonomousInit() {
 		drivetrain.setBrake(); // Test, maybe bad idea
 		Command autonomousCommand = null;
+		// TODO: Move to a switch statement
 		if (NetworkTables.getAutoChooser() == 3) autonomousCommand = new ThreeCargoAutoClose(auto, intake, shooter, shooterArm, storage);
 		if (NetworkTables.getAutoChooser() == 4) autonomousCommand = new ThreeCargoTerminalAuto(auto, intake, shooter, shooterArm, storage);
 		if (NetworkTables.getAutoChooser() == 5) autonomousCommand = new FourCargoAuto(auto, intake, shooter, shooterArm, storage);

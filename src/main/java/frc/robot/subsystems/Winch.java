@@ -14,15 +14,25 @@ import static frc.robotmap.IDs.*;
 
 public class Winch extends SubsystemBase {
 
-	//Winch motors
+	/**
+	 * Motors
+	 */
 	private final VictorSPX leftMotor = new VictorSPX(WINCH_LEFT_MOTOR_ID);
 	private final VictorSPX rightMotor = new VictorSPX(WINCH_RIGHT_MOTOR_ID);
-	//Winch brake
+
+	/**
+	 * Solenoid for brake pistons
+	 */
 	private final DoubleSolenoid lock = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, WINCH_FWD, WINCH_BCK);
 
-	//State variable to track state of locks
+	/**
+	 * Keeps track of whether the brake pistons are extended or not
+	 */
 	private boolean lockEngaged = false;
 
+	/**
+	 * Used for the simulation widgets, not currently functional
+	 */
 	private final Mechanism2d pistonSim = new Mechanism2d(60, 60);
 	private final MechanismRoot2d pistonSimRoot = pistonSim.getRoot("Piston", 30, 10);
 	private final MechanismLigament2d piston =
@@ -48,11 +58,14 @@ public class Winch extends SubsystemBase {
 		//Configure motors
 		leftMotor.configFactoryDefault();
 		rightMotor.configFactoryDefault();
+
 		//Configure limit switch motor integration
+		// TODO: Make sure this actually works like we expect it does
 		leftMotor.configForwardLimitSwitchSource(RemoteLimitSwitchSource.RemoteCANifier, LimitSwitchNormal.NormallyOpen, WINCH_LEFT_LIMIT_SWITCH_ID);
 		leftMotor.configReverseLimitSwitchSource(RemoteLimitSwitchSource.RemoteCANifier, LimitSwitchNormal.NormallyOpen, WINCH_LEFT_LIMIT_SWITCH_ID);
 		rightMotor.configForwardLimitSwitchSource(RemoteLimitSwitchSource.RemoteCANifier, LimitSwitchNormal.NormallyOpen, WINCH_RIGHT_LIMIT_SWITCH_ID);
 		rightMotor.configReverseLimitSwitchSource(RemoteLimitSwitchSource.RemoteCANifier, LimitSwitchNormal.NormallyOpen, WINCH_RIGHT_LIMIT_SWITCH_ID);
+
 		//Lock on startup
 		lock();
 

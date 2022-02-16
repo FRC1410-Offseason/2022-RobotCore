@@ -14,6 +14,7 @@ public class PolynomialRegression {
     private final int bufferSize;
 
 	// TODO: docs
+	// No shit lol
 	public double f(double x) {
 		double ret = 0;
 		for (int i = 0; i < parameters.length; i++) {
