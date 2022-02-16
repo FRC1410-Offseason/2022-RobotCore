@@ -13,7 +13,8 @@ public class NetworkTables {
 	static final NetworkTable robotState = instance.getTable("Robot State");
 	static final NetworkTable limelight = instance.getTable("photonvision/Limelight 2");
 	static final NetworkTableEntry autoList, autoChooser; // Auto
-	static final NetworkTableEntry x, y, theta, wheelLeft, wheelRight, navxMagDisturbance, navxMagCalibrated; // Drivetrain
+	static final NetworkTableEntry maxVelocity, maxAcceleration, maxCentripetalAcceleration;
+	static final NetworkTableEntry x, y, theta, wheelLeft, wheelRight, navxMagDisturbance, navxMagCalibrated, leftEncoderDistanceAverage, rightEncoderDistanceAverage; // Drivetrain
 	static final NetworkTableEntry pitch, yaw, visionDistance, limelightAngleKP, limelightAngleKI, limelightAngleKD; // Limelight
 	static final NetworkTableEntry shooterTargetRPM, leftShooterRPM, leftShooterP, leftShooterI, leftShooterD, leftShooterFF,
 		rightShooterP, rightShooterI, rightShooterD, rightShooterFF, rightShooterRPM, lowestRPM; // Shooter
@@ -23,13 +24,17 @@ public class NetworkTables {
 	static final NetworkTableEntry intakeDeployed, intakeSpeed; // Intake
 	static final NetworkTableEntry leftWinchHeight, leftWinchLocked, rightWinchHeight, rightWinchLocked; // Winches
 	static final NetworkTableEntry leftTelescopingArmHeight, leftTelescopingArmLocked,
-			rightTelescopingArmHeight, rightTelescopingArmLocked; // Telescoping Arms
+		rightTelescopingArmHeight, rightTelescopingArmLocked; // Telescoping Arms
 	static final NetworkTableEntry poseEstimationUpdateRate; // Hz Calcs
 
 	static {
 		// Autonomous
 		autoList = table.getEntry("Auto List");
 		autoChooser = table.getEntry("Auto Chooser");
+		// Trajectories
+		maxVelocity = table.getEntry("Maximum Velocity Constraint");
+		maxAcceleration = table.getEntry("Maximum Acceleration Constraint");
+		maxCentripetalAcceleration = table.getEntry("Maximum Centripetal Acceleration Constraint");
 		// Drivetrain
 		x = robotState.getEntry("X");
 		y = robotState.getEntry("Y");
@@ -38,6 +43,8 @@ public class NetworkTables {
 		wheelRight = robotState.getEntry("Wheel Speed Right");
 		navxMagDisturbance = robotState.getEntry("Navx Magnetometer Is Disturbed");
 		navxMagCalibrated = robotState.getEntry("Navx Magnetometer is Calibrated");
+		leftEncoderDistanceAverage = robotState.getEntry("Left Encoder Distance Average");
+		rightEncoderDistanceAverage = robotState.getEntry("Right Encoder Distance Average");
 		// Limelight
 		visionDistance = robotState.getEntry("Vision Distance");
 		limelightAngleKP = robotState.getEntry("Limelight Angle P Gain");
@@ -87,6 +94,10 @@ public class NetworkTables {
 		// Initializing
 		// Autonomous
 		autoChooser.setDouble(0);
+		// Trajectories
+		maxVelocity.setDouble(0);
+		maxAcceleration.setDouble(0);
+		maxCentripetalAcceleration.setDouble(0);
 		// Drivetrain
 		x.setDouble(0);
 		y.setDouble(0);
@@ -95,6 +106,8 @@ public class NetworkTables {
 		wheelRight.setDouble(0);
 		navxMagDisturbance.setBoolean(false);
 		navxMagCalibrated.setBoolean(false);
+		leftEncoderDistanceAverage.setDouble(0);
+		rightEncoderDistanceAverage.setDouble(0);
 		// Limelight
 		visionDistance.setDouble(0);
 		limelightAngleKP.setDouble(LIMELIGHT_ANGLE_KP);
@@ -141,9 +154,26 @@ public class NetworkTables {
 	}
 
 	// Autonomous
-	public static void setAutoList(String[] AUTO_LIST) {autoList.setStringArray(AUTO_LIST);}
+	public static void setAutoList(String[] AUTO_LIST) {
+		autoList.setStringArray(AUTO_LIST);
+	}
 
-	public static double getAutoChooser() {return autoChooser.getDouble(0);}
+	public static double getAutoChooser() {
+		return autoChooser.getDouble(0);
+	}
+
+	// Trajectories
+	public static double getVelocityConstraint() {
+		return maxVelocity.getDouble(0);
+	}
+
+	public static double getAccelerationConstraint() {
+		return maxAcceleration.getDouble(0);
+	}
+
+	public static double getCentripetalAccelerationConstraint() {
+		return maxCentripetalAcceleration.getDouble(0);
+	}
 
 	// Drivetrain
 	public static void setPoseEstimation(double X, double Y, double THETA, double wheelSpeedLeft, double wheelSpeedRight) {
@@ -153,11 +183,22 @@ public class NetworkTables {
 		wheelLeft.setDouble(wheelSpeedLeft);
 		wheelRight.setDouble(wheelSpeedRight);
 	}
-	public static void setNavXMagDisturbance(boolean isDisturbed) {navxMagDisturbance.setBoolean(isDisturbed);}
-	public static void setNavXMagCalibration(boolean isCalibrated) {navxMagCalibrated.setBoolean(isCalibrated);}
+	public static void setNavXMagDisturbance(boolean isDisturbed) {
+		navxMagDisturbance.setBoolean(isDisturbed);
+	}
 
+	public static void setNavXMagCalibration(boolean isCalibrated) {
+		navxMagCalibrated.setBoolean(isCalibrated);
+	}
+
+	public static void setEncoderDistance(double leftEncoderDistance, double rightEncoderDistance) {
+		leftEncoderDistanceAverage.setDouble(leftEncoderDistance);
+		rightEncoderDistanceAverage.setDouble(rightEncoderDistance);
+	}
 	// Limelight
-	public static void setVisionDistance(double distance) {visionDistance.setDouble(distance);}
+	public static void setVisionDistance(double distance) {
+		visionDistance.setDouble(distance);
+	}
 
 	public static double getLimelightAngleKP() {
 		return limelightAngleKP.getDouble(LIMELIGHT_ANGLE_KP);
@@ -231,7 +272,9 @@ public class NetworkTables {
 		rightShooterFF.setDouble(FF);
 	}
 
-	public static void setLowestRPM(double RPM) {lowestRPM.setDouble(RPM);}
+	public static void setLowestRPM(double RPM) {
+		lowestRPM.setDouble(RPM);
+	}
 
 	// Storage
 	public static String getCorrectColor() {

@@ -1,7 +1,7 @@
 package frc.robot.commands.looped;
 
+import frc.robot.NetworkTables;
 import frc.robot.subsystems.Drivetrain;
-
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import static frc.robotmap.Tuning.*;
@@ -37,5 +37,7 @@ public class DrivetrainSimulation extends CommandBase {
         drivetrain.poseEstimator.update(drivetrain.drivetrainSimulator.getHeading(), drivetrain.getWheelSpeeds(),
             drivetrain.leftEncoder.getDistance(), drivetrain.rightEncoder.getDistance());
         drivetrain.fieldSim.setRobotPose(drivetrain.getPoseEstimation());
+        NetworkTables.setPoseEstimation(drivetrain.getPoseEstimation().getX(), drivetrain.getPoseEstimation().getY(),
+            drivetrain.getPoseEstimation().getRotation().getDegrees(), 0, 0);
     }
 }

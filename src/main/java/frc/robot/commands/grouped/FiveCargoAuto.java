@@ -3,6 +3,7 @@ package frc.robot.commands.grouped;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.NetworkTables;
 import frc.robot.commands.actions.ExtendIntake;
 import frc.robot.commands.actions.RunStorageForTime;
 import frc.robot.commands.actions.SetIntakeSpeed;
@@ -43,6 +44,10 @@ public class FiveCargoAuto extends ParallelCommandGroup {
     public FiveCargoAuto(Trajectories trajectories, Intake intake, Shooter shooter, ShooterArm shooterArm, Storage storage) {        
         trajectories.generateAuto();
         trajectories.setStartingAutonomousPose();
+        trajectories.generateConfig(
+            NetworkTables.getVelocityConstraint(),
+            NetworkTables.getAccelerationConstraint(),
+            NetworkTables.getCentripetalAccelerationConstraint());
         
         upperTarmacToUpperCargoShootDuration = trajectories.upperTarmacToUpperCargoShot.getTotalTimeSeconds();
         upperCargoShootToUpperFieldDuration = trajectories.upperCargoToUpperField.getTotalTimeSeconds();

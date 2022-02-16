@@ -7,7 +7,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.commands.looped.*;
 import frc.robot.commands.actions.*;
 import frc.robot.commands.grouped.*;
-import frc.robot.framework.control.ControlScheme;
 import frc.robot.framework.scheduler.EnqueuedTask;
 import frc.robot.framework.scheduler.ScheduledRobot;
 import frc.robot.framework.scheduler.TaskScheduler;
@@ -17,7 +16,7 @@ import static frc.robotmap.Tuning.*;
 
 import static frc.robotmap.IDs.PRESSURE_SENSOR;
 
-public class Robot extends ScheduledRobot implements ControlScheme {
+public class Robot extends ScheduledRobot {
 
 	private final String[] autoList = {"Taxi", "2Cargo", "3CargoTerminal", "3CargoUpRight", "4Cargo", "5Cargo"};
 	private final AnalogInput pressure = new AnalogInput(PRESSURE_SENSOR);
