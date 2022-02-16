@@ -9,7 +9,7 @@ public class IDs {
 	public static final int DRIVETRAIN_RIGHT_FRONT_MOTOR_ID = 3; // Talon FX / Falcon 500
 	public static final int DRIVETRAIN_RIGHT_BACK_MOTOR_ID = 4; // Talon FX / Falcon 500
 
-	// SHOOTER
+	//SHOOTER
 	public static final int SHOOTER_LEFT_MOTOR_ID = 11; // Spark Max / NEO
 	public static final int SHOOTER_RIGHT_MOTOR_ID = 12; // Spark Max / NEO
 
