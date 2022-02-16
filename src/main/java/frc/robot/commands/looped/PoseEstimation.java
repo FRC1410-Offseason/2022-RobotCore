@@ -55,6 +55,8 @@ public class PoseEstimation extends CommandBase {
         drivetrain.poseEstimator.update(new Rotation2d(Units.degreesToRadians(drivetrain.gyro.getFusedHeading())), drivetrain.getWheelSpeeds(),
             drivetrain.leftEncoderPosition, drivetrain.rightEncoderPosition);
 
+        NetworkTables.setEncoderDistance(drivetrain.leftEncoderPosition, drivetrain.rightEncoderPosition);
+
         if (lastPitch != currentPitch && lastYaw != currentYaw && limelight.getTarget() != null) {
             drivetrain.poseEstimator.addVisionMeasurement(limelight.getVisionRobotPose(drivetrain.gyro.getFusedHeading(),
                 Units.radiansToDegrees(shooterArm.getEncoderPosition())), imageCaptureTime);

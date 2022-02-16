@@ -14,7 +14,7 @@ public class NetworkTables {
 	static final NetworkTable limelight = instance.getTable("photonvision/Limelight 2");
 	static final NetworkTableEntry autoList, autoChooser; // Auto
 	static final NetworkTableEntry maxVelocity, maxAcceleration, maxCentripetalAcceleration;
-	static final NetworkTableEntry x, y, theta, wheelLeft, wheelRight, navxMagDisturbance, navxMagCalibrated; // Drivetrain
+	static final NetworkTableEntry x, y, theta, wheelLeft, wheelRight, navxMagDisturbance, navxMagCalibrated, leftEncoderDistanceAverage, rightEncoderDistanceAverage; // Drivetrain
 	static final NetworkTableEntry pitch, yaw, visionDistance, limelightAngleKP, limelightAngleKI, limelightAngleKD; // Limelight
 	static final NetworkTableEntry shooterTargetRPM, leftShooterRPM, leftShooterP, leftShooterI, leftShooterD, leftShooterFF,
 		rightShooterP, rightShooterI, rightShooterD, rightShooterFF, rightShooterRPM, lowestRPM; // Shooter
@@ -43,6 +43,8 @@ public class NetworkTables {
 		wheelRight = robotState.getEntry("Wheel Speed Right");
 		navxMagDisturbance = robotState.getEntry("Navx Magnetometer Is Disturbed");
 		navxMagCalibrated = robotState.getEntry("Navx Magnetometer is Calibrated");
+		leftEncoderDistanceAverage = robotState.getEntry("Left Encoder Distance Average");
+		rightEncoderDistanceAverage = robotState.getEntry("Right Encoder Distance Average");
 		// Limelight
 		visionDistance = robotState.getEntry("Vision Distance");
 		limelightAngleKP = robotState.getEntry("Limelight Angle P Gain");
@@ -104,6 +106,8 @@ public class NetworkTables {
 		wheelRight.setDouble(0);
 		navxMagDisturbance.setBoolean(false);
 		navxMagCalibrated.setBoolean(false);
+		leftEncoderDistanceAverage.setDouble(0);
+		rightEncoderDistanceAverage.setDouble(0);
 		// Limelight
 		visionDistance.setDouble(0);
 		limelightAngleKP.setDouble(LIMELIGHT_ANGLE_KP);
@@ -187,6 +191,10 @@ public class NetworkTables {
 		navxMagCalibrated.setBoolean(isCalibrated);
 	}
 
+	public static void setEncoderDistance(double leftEncoderDistance, double rightEncoderDistance) {
+		leftEncoderDistanceAverage.setDouble(leftEncoderDistance);
+		rightEncoderDistanceAverage.setDouble(rightEncoderDistance);
+	}
 	// Limelight
 	public static void setVisionDistance(double distance) {
 		visionDistance.setDouble(distance);
