@@ -21,6 +21,7 @@ public class IDs {
 	public static final int INTAKE_FLIPPER_FWD = 6;
 	public static final int INTAKE_FLIPPER_BCK = 7;
 	public static final int INTAKE_MOTOR = 31; // Spark Max / NEO 550
+	public static final int INTAKE_FLIPPER_MOTOR = 32; // Talon SRX / Bag
 
 	//ELEVATOR
 	//TODO: Update with ports on PCM

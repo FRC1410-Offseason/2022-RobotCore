@@ -21,7 +21,7 @@ public class SetStorageSpeed extends CommandBase {
 
 	public SetStorageSpeed(Storage storage, double time) {
 		this.storage = storage;
-		this. time = time;
+		this.time = time;
 	}
 
 	@Override
