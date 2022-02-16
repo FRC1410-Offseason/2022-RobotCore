@@ -11,6 +11,9 @@ public abstract class GradientDescentOptimized {
 
 	private final double[] parameters;
     private final int bufferSize;
+
+	public abstract double error(Object... errorparams);
+
 	/**
 	 * Reset all parameters and buffers.
 	 */
@@ -18,26 +21,21 @@ public abstract class GradientDescentOptimized {
 		Arrays.fill(parameters, 0);
 		lastParameterIndex = 0;
 	}
-    public abstract double error(Object... errorparams);
+
     /**
-	 * numparams - Number of parameters
-	 * bufferSize - Number of parameters in the path to store to combat randomness errors (20 is about good).
-	 * @param degree
-	 * @param bufferSize
+	 * @param numparams Number of parameters
+	 * @param bufferSize Number of parameters in the path to store to combat randomness errors (20 is about good).
 	 */
 	public GradientDescentOptimized(int numparams, int bufferSize) {
 		parameters = new double[numparams];
 		this.bufferSize = bufferSize;
 	}
+
 	/**
-	 * Alpha - learning rate
-	 * stepSize - make as low as possible
-	 * noise - Amount of randomness/entropy to use for escaping local minima. Proportional to alpha. 200 is about good for a 0-1 normalized x-value.
-	 * errorparams - a list of objects as parameters for the error function.
-     * @param alpha
-	 * @param stepSize
-	 * @param noise
-     * @param errorparams
+     * @param alpha learning rate
+	 * @param stepSize make as low as possible
+	 * @param noise Amount of randomness/entropy to use for escaping local minima. Proportional to alpha. 200 is about good for a 0-1 normalized x-value.
+     * @param errorparams a list of objects as parameters for the error function
 	 */
 	public void gradStep(double alpha, double stepSize, double noise, Object... errorparams) {
 		if (lastParameters == null) lastParameters = new double[bufferSize][parameters.length];
@@ -64,10 +62,11 @@ public abstract class GradientDescentOptimized {
 			parameters[i] -= (alpha * deltas[i] + r);
 		}
 	}
+
     /**
 	 * Set the current parameters to the lowest in the buffer of bufferSize previous parameters and their errors.
-	 * This is useful to eliminate some of the error that noise adds, and get the actual lowest values.
-	 * Noise is incredibly useful, but sometimes it will cause errors, and buffering helps getting rid of them.
+	 * This is useful to eliminate some error that noise adds, and get the actual lowest values.
+	 * Noise is incredibly useful, but sometimes it will cause errors, and buffering helps to get rid of them.
 	 */
 	public void setLowestInBuffer() {
 		int num = Math.min(lastParameterIndex, bufferSize);
@@ -82,6 +81,7 @@ public abstract class GradientDescentOptimized {
 			}
 		}
 	}
+
 	/**
 	 * Get the parameters
 	 * @return parameters
