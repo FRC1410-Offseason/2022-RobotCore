@@ -18,19 +18,18 @@ public class PolynomialRegression extends GradientDescentOptimized {
 		}
 		return ret;
 	}
+
 	/**
-	 * degree - Largest power in the polynomial.
-	 * bufferSize - Number of parameters in the path to store to combat randomness errors (20 is about good).
-	 * @param degree
-	 * @param bufferSize
+	 * @param degree Largest power in the polynomial
+	 * @param bufferSize Number of parameters in the path to store to combat randomness errors (20 is about good)
 	 */
 	public PolynomialRegression(int degree, int bufferSize) {
 		super(degree , bufferSize);
 	}
+
 	/**
 	 * Finds 1-r^2 for the polynomial regression
-	 * Errorparams is a list of parameters for the error function.
-	 * @param errorparams
+	 * @param errorparams is a list of parameters for the error function
 	 * @return error
 	 */
 	@SuppressWarnings("unchecked")
