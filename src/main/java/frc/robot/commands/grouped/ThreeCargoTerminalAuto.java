@@ -5,10 +5,10 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.NetworkTables;
 import frc.robot.commands.actions.ExtendIntake;
-import frc.robot.commands.actions.RunStorageForTime;
 import frc.robot.commands.actions.SetIntakeSpeed;
 import frc.robot.commands.actions.SetShooterArmAngle;
 import frc.robot.commands.actions.SetShooterRPM;
+import frc.robot.commands.actions.*;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.ShooterArm;
@@ -41,7 +41,7 @@ public class ThreeCargoTerminalAuto extends ParallelCommandGroup {
             NetworkTables.getVelocityConstraint(),
             NetworkTables.getAccelerationConstraint(),
             NetworkTables.getCentripetalAccelerationConstraint());
-        
+
         upperTarmacToUpperCargoShotDuration = trajectories.upperTarmacToUpperCargoShot.getTotalTimeSeconds();
         upperCargoShotToUpperFieldDuration = trajectories.upperCargoToUpperField.getTotalTimeSeconds();
         upperFieldToTerminalDuration = trajectories.upperFieldToTerminalShot.getTotalTimeSeconds();
@@ -100,11 +100,11 @@ public class ThreeCargoTerminalAuto extends ParallelCommandGroup {
             new ParallelCommandGroup(
                 new SequentialCommandGroup(
                     new WaitCommand(upperTarmacToUpperCargoShotDuration + intakeToStorageDuration + shooterArmLiftDuration),
-                    new RunStorageForTime(storage, doubleShootDuration)
+                    new SetStorageSpeed(storage, doubleShootDuration)
                 ),
                 new SequentialCommandGroup(
                     new WaitCommand(upperTarmacToTerminalDuration + intakeToStorageDuration + shooterArmLiftDuration),
-                    new RunStorageForTime(storage, doubleShootDuration)
+                    new SetStorageSpeed(storage, doubleShootDuration)
 				)
             ),
             // Drivetrain - Works in theory
