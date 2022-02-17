@@ -11,7 +11,7 @@ public class PolynomialRegression extends GradientDescentOptimized {
 	 * @param x
 	 * @return f(x)
 	 */
-	public double function(double x) {
+	public double polynomialFunction(double x) {
 		double ret = 0;
 		for (int i = 0; i < getParameters().length; i++) {
 			ret += getParameters()[i] * Math.pow(x, i+1);
@@ -44,7 +44,7 @@ public class PolynomialRegression extends GradientDescentOptimized {
 
 		for (int i = 0; i < x.size(); i++) {
 			yBar += y.get(i);
-			error += Math.pow(function(x.get(i)) - y.get(i), 2);
+			error += Math.pow(polynomialFunction(x.get(i)) - y.get(i), 2);
 		}
 
 		yBar /= y.size();
