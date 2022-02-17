@@ -30,4 +30,9 @@ public class RunWinch extends CommandBase {
 	public boolean isFinished() {
 		return false;
 	}
+
+	@Override
+	public void end(boolean interrupted) {
+		winch.runWinch(0);
+	}
 }

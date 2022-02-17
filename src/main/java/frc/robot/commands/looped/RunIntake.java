@@ -28,4 +28,9 @@ public class RunIntake extends CommandBase {
 	public boolean isFinished() {
 		return false;
 	}
+
+	@Override
+	public void end(boolean interrupted) {
+		intake.setSpeed(0);
+	}
 }

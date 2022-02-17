@@ -123,7 +123,7 @@ public class Shooter extends SubsystemBase {
 	 * @return RPM
 	 */
 	public double targetRPM(double vel) {
-		return 30.0 * pInvR.function(Math.pow(vel, 2)
+		return 30.0 * pInvR.polynomialFunction(Math.pow(vel, 2)
 			* ((Math.pow(SHOOTER_WHEEL_RADIUS, 2) * SHOOTER_BALL_MASS) + SHOOTER_I)
 			/ (SHOOTER_I * Math.pow(SHOOTER_WHEEL_RADIUS, 2))) / Math.PI;
 	}
@@ -353,6 +353,10 @@ public class Shooter extends SubsystemBase {
 		return rightEncoder.getVelocity();
 	}
 
+	/**
+	 * Whether the flywheels are close enough to their target velocity to start shooting
+	 * @return boolean True -> We are good to shoot, False -> Can't start shooting yet
+	 */
 	public boolean isAtTarget() {
 		return Math.abs((getLeftVel() + getRightVel()) / 2 - target) < SHOOTER_RPM_TOLERANCE;
 	}

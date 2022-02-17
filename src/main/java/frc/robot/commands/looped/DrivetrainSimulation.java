@@ -17,6 +17,9 @@ public class DrivetrainSimulation extends CommandBase {
 
     @Override
     public void execute() {
+		// We can probably move a lot of this to methods in the drivetrain itself
+		// The important thing about having it in here is that it runs faster
+		// We can replace all of this with a couple of function calls
         drivetrain.drivetrainSimulator.setInputs(
             drivetrain.leftLeader.get() * RobotController.getBatteryVoltage(),
             drivetrain.rightLeader.get() * RobotController.getBatteryVoltage());

@@ -19,17 +19,29 @@ public class LimelightAnglePID extends CommandBase {
 
     @Override
     public void initialize() {
+		//Create a new PID controller with the constants from networktables
         pid = new PIDController(NetworkTables.getLimelightAngleKP(), 
             NetworkTables.getLimelightAngleKI(), NetworkTables.getLimelightAngleKD());
+
+		// Set the target of the controller to 0, as that is the middle of the limelight's view
         pid.setSetpoint(0);
     }
 
     @Override
     public void execute() {
+		// Calculate an output from the controller using the current yaw angle from the target
 		double pidOutput = pid.calculate(limelight.getYaw());
+
+		// Square root it to get an anti-friction value
         double antifrictionOutput = Math.sqrt(pidOutput);
-        if (limelight.getTarget() != null) drivetrain.tankDriveVolts(antifrictionOutput, -antifrictionOutput);
-        else drivetrain.tankDriveVolts(0, 0);
+
+		// If the limelight has a target, then we can set the drivetrain to the outputs from the controller and actually spin the robot
+        if (limelight.getTarget() != null) {
+			drivetrain.tankDriveVolts(antifrictionOutput, -antifrictionOutput);
+		} else {
+			//If not then we don't actually want to move
+			drivetrain.tankDriveVolts(0, 0);
+		}
     }
     
     @Override
@@ -39,8 +51,11 @@ public class LimelightAnglePID extends CommandBase {
 
     @Override
     public boolean isFinished() {
+		// If the current error from the target is within out acceptable margin, then we are done aligning and can shoot
         if (limelight.getTarget() != null) {
             return Math.abs(limelight.getYaw()) < limelight.getAcceptableYaw(limelight.getDistanceToTarget());
-        } else return false;
+        } else {
+			return false;
+		}
     }
 }

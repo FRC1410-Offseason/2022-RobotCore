@@ -18,11 +18,16 @@ public class TankDrive extends CommandBase {
 
 	@Override
 	public void execute() {
-		this.drivetrain.tankDrive(leftAxis.getTeleopAntifriction(), rightAxis.getTeleopAntifriction());
+		drivetrain.tankDrive(leftAxis.getTeleopAntifriction(), rightAxis.getTeleopAntifriction());
 	}
 
 	@Override
 	public boolean isFinished() {
 		return false;
+	}
+
+	@Override
+	public void end(boolean interrupted) {
+		drivetrain.tankDriveVolts(0, 0);
 	}
 }
