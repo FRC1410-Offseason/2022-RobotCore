@@ -6,6 +6,7 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import frc.robot.framework.subsystem.SubsystemBase;
 
 import static frc.robotmap.Constants.*;
+import static frc.robotmap.Constants.DT;
 import static frc.robotmap.Tuning.*;
 import static frc.robotmap.IDs.*;
 
@@ -27,10 +28,6 @@ public class Intake extends SubsystemBase {
 
 	// The physical limits of the mechanism
 	private final TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(INTAKE_MAX_VEL, INTAKE_MAX_ACCEL);
-
-	// The possible states of the intake
-	private final TrapezoidProfile.State extendedState = new TrapezoidProfile.State(27, 0);
-	private final TrapezoidProfile.State retractedState = new TrapezoidProfile.State(0, 0);
 
 	// Used for control
 	private TrapezoidProfile.State goal = null;
@@ -54,7 +51,7 @@ public class Intake extends SubsystemBase {
 		rightController.setD(INTAKE_D);
 
 		// Default state is retracted
-		goal = retractedState;
+		goal = INTAKE_RETRACTED_STATE;
 		lpr = new TrapezoidProfile.State();
 	}
 
@@ -64,7 +61,7 @@ public class Intake extends SubsystemBase {
 		var profile = new TrapezoidProfile(constraints, goal, lpr);
 
 		// Calculate the desired state based the profile
-		lpr = profile.calculate(0.02);
+		lpr = profile.calculate(DT);
 
 		// Set the references of the PID controllers
 		leftController.setReference(lpr.position, CANSparkMax.ControlType.kPosition, 0, feedforward.calculate(lpr.velocity));
@@ -104,7 +101,7 @@ public class Intake extends SubsystemBase {
 	 * Toggle the position of the intake
 	 */
 	public void toggle() {
-		if (goal == extendedState) {
+		if (goal == INTAKE_EXTENDED_STATE) {
 			retract();
 		} else {
 			extend();
@@ -115,8 +112,8 @@ public class Intake extends SubsystemBase {
 	 * Extend the intake
 	 */
 	public void extend() {
-		if (goal != extendedState) {
-			goal = extendedState;
+		if (goal != INTAKE_EXTENDED_STATE) {
+			goal = INTAKE_EXTENDED_STATE;
 		}
 	}
 
@@ -124,8 +121,8 @@ public class Intake extends SubsystemBase {
 	 * Retract the intake
 	 */
 	public void retract() {
-		if (goal != retractedState) {
-			goal = retractedState;
+		if (goal != INTAKE_RETRACTED_STATE) {
+			goal = INTAKE_RETRACTED_STATE;
 		};
 	}
 }

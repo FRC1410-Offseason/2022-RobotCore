@@ -6,6 +6,7 @@ import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.numbers.N2;
 import edu.wpi.first.math.system.LinearSystem;
 import edu.wpi.first.math.system.plant.LinearSystemId;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.math.numbers.N1;
@@ -132,6 +133,9 @@ public final class Constants {
 
 	// INTAKE
 	public static final double INTAKE_FORWARD_SPEED = 1;
+
+	public static final TrapezoidProfile.State INTAKE_EXTENDED_STATE = new TrapezoidProfile.State(27, 0);
+	public static final TrapezoidProfile.State INTAKE_RETRACTED_STATE = new TrapezoidProfile.State(0, 0);
 
 	public static final double INTAKE_KS = 1;
 	public static final double INTAKE_KV = 1;
