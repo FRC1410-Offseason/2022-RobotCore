@@ -12,12 +12,21 @@ import static frc.robotmap.Constants.*;
 
 public class Limelight extends SubsystemBase {
 
+	// The camera itself
     private final PhotonCamera limelight = new PhotonCamera("Limelight 2");
+
+	// Stores the current values reported by the camera
     private PhotonPipelineResult latestResult;
+
+	//TODO: This should probably be moved to a constant
     private double shooterAngle = 9.981;
+
+	// The current target if there is one
     private PhotonTrackedTarget target;
 
-    public Limelight() {limelight.setDriverMode(false);}
+    public Limelight() {
+		limelight.setDriverMode(false);
+	}
 
     @Override
     public void periodic() {        
@@ -38,6 +47,7 @@ public class Limelight extends SubsystemBase {
 		return target;
 	}
 
+	// TODO: Lots of things here that probably need to be constants
 	public double getLimelightHeight(double shooterAngle) {
         return (24.08 * Math.sin(shooterAngle)) + 4.7;
     }
@@ -50,11 +60,11 @@ public class Limelight extends SubsystemBase {
         return shooterAngle - 20;
     }
 
-    public void turnOffLimelightLEDs() {
+    public void turnOffLEDs() {
         limelight.setLED(VisionLEDMode.kOff);
     }
 
-    public void turnOnLimelightLEDs() {
+    public void turnOnLEDs() {
         limelight.setLED(VisionLEDMode.kOn);
     }
 
@@ -94,9 +104,11 @@ public class Limelight extends SubsystemBase {
     public double getX(double cameraX, double angularTheta, double distance) {
         return cameraX - (distance * Math.cos(angularTheta));
     }
+
     public double getX(double radius, double angularTheta, double cameraTheta, double distance) {
         return (-radius * Math.cos(angularTheta + cameraTheta)) - (distance * Math.cos(angularTheta));
     }
+
     public double getX(double angularTheta, double shooterAngle) {
         return (-getDistanceToTarget() * Math.cos(angularTheta + getYaw())) - (getDistanceToRobot(shooterAngle) * Math.cos(angularTheta));
     }
@@ -104,9 +116,11 @@ public class Limelight extends SubsystemBase {
     public double getY(double cameraY, double angularTheta, double distance) {
         return cameraY - (distance * Math.sin(angularTheta));
     }
+
     public double getY(double radius, double angularTheta, double cameraTheta, double distance) {
         return (-radius * Math.sin(angularTheta + cameraTheta)) - (distance * Math.sin(angularTheta));
     }
+
     public double getY(double angularTheta, double shooterAngle) {
         return (-getDistanceToTarget() * Math.sin(angularTheta + getYaw())) - (getDistanceToRobot(shooterAngle) * Math.sin(angularTheta));
     }

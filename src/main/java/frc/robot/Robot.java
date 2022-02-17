@@ -65,10 +65,28 @@ public class Robot extends ScheduledRobot {
 	public void autonomousInit() {
 		drivetrain.setBrake(); // Test, maybe bad idea
 		Command autonomousCommand = null;
-		if (NetworkTables.getAutoChooser() == 3) autonomousCommand = new ThreeCargoAutoClose(auto, intake, shooter, shooterArm, storage);
-		if (NetworkTables.getAutoChooser() == 4) autonomousCommand = new ThreeCargoTerminalAuto(auto, intake, shooter, shooterArm, storage);
-		if (NetworkTables.getAutoChooser() == 5) autonomousCommand = new FourCargoAuto(auto, intake, shooter, shooterArm, storage);
-		if (NetworkTables.getAutoChooser() == 6) autonomousCommand = new FiveCargoAuto(auto, intake, shooter, shooterArm, storage);
+
+		switch ((int)NetworkTables.getAutoChooser()) {
+			case 3:
+				autonomousCommand = new ThreeCargoAutoClose(auto, intake, shooter, shooterArm, storage);
+				break;
+
+			case 4:
+				autonomousCommand = new ThreeCargoTerminalAuto(auto, intake, shooter, shooterArm, storage);
+				break;
+
+			case 5:
+				autonomousCommand = new FourCargoAuto(auto, intake, shooter, shooterArm, storage);
+				break;
+
+			case 6:
+				autonomousCommand = new FiveCargoAuto(auto, intake, shooter, shooterArm, storage);
+				break;
+
+			default:
+				break;
+		}
+
 		if (autonomousCommand != null) this.autoTask = scheduler.scheduleCommand(autonomousCommand, TIME_OFFSET, DT);
 	}
 

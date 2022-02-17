@@ -46,18 +46,23 @@ public class Trajectories {
 	public final Trajectory taxi = TrajectoryGenerator.generateTrajectory(List.of(
 		new Pose2d(8.70, 6.50, new Rotation2d(Units.degreesToRadians(90))),
 		new Pose2d(8.70, 7.60, new Rotation2d(Units.degreesToRadians(90)))), config);
+
 	public final Trajectory upperTarmacToUpperCargoShot = TrajectoryGenerator.generateTrajectory(List.of(
 		new Pose2d(8.75, 6.51, new Rotation2d(Units.degreesToRadians(91.3))),
 		new Pose2d(8.85, 7.50, new Rotation2d(Units.degreesToRadians(80.56)))), config);
+
 	public final Trajectory upperCargoToUpperField = TrajectoryGenerator.generateTrajectory(List.of(
 		new Pose2d(8.85, 7.50, new Rotation2d(Units.degreesToRadians(80.56))),
 		new Pose2d(8.30, 6.90, new Rotation2d(Units.degreesToRadians(-15)))), reverseConfig);
+
 	public final Trajectory upperFieldToUpRightCargo = TrajectoryGenerator.generateTrajectory(List.of(
 		new Pose2d(8.30, 6.90, new Rotation2d(Units.degreesToRadians(-15))),
 		new Pose2d(10.97, 6.38, new Rotation2d(Units.degreesToRadians(0)))), config);
+
 	public final Trajectory upRightCargoToTerminalShot = TrajectoryGenerator.generateTrajectory(List.of(
 		new Pose2d(10.97, 6.36, new Rotation2d(Units.degreesToRadians(0))),
 		new Pose2d(15.02, 6.955, new Rotation2d(Units.degreesToRadians(22.96)))), config);
+
 	public final Trajectory upperFieldToTerminalShot = TrajectoryGenerator.generateTrajectory(List.of(
 		new Pose2d(8.30, 6.30, new Rotation2d(Units.degreesToRadians(-15))),
 		new Pose2d(15.10, 7.00, new Rotation2d(Units.degreesToRadians(22.9)))), config);
