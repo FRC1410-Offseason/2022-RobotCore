@@ -130,6 +130,12 @@ public final class Constants {
 	public static final double INTAKE_FORWARD_SPEED = 1;
 	public static final double INTAKE_REVERSE_SPEED = -1;
 
+	public static final double INTAKE_KS = 1;
+	public static final double INTAKE_KV = 1;
+
+	public static final double INTAKE_MAX_VEL = 1;
+	public static final double INTAKE_MAX_ACCEL = 1;
+
 	// SHOOTER
 	public static final int SHOOTER_OUTTAKE_SPEED = 500;
 	public static final int SHOOTER_RPM_TOLERANCE = 10;

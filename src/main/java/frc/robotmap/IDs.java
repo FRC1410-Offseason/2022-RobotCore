@@ -18,8 +18,8 @@ public class IDs {
 	public static final int STORAGE_LINE_BREAK_ID = 0;
 
 	// INTAKE
-	public static final int INTAKE_FLIPPER_FWD = 6;
-	public static final int INTAKE_FLIPPER_BCK = 7;
+	public static final int INTAKE_FLIPPER_LEFT = 32;
+	public static final int INTAKE_FLIPPER_RIGHT = 33;
 	public static final int INTAKE_MOTOR = 31;
 
 	// ELEVATOR
