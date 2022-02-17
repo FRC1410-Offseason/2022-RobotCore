@@ -18,10 +18,9 @@ public class IDs {
 	public static final int STORAGE_LINE_BREAK_ID = 0;
 
 	// INTAKE
-	public static final int INTAKE_FLIPPER_FWD = 6;
-	public static final int INTAKE_FLIPPER_BCK = 7;
+	public static final int INTAKE_FLIPPER_LEFT = 32; // Spark Max / NEO 550
+	public static final int INTAKE_FLIPPER_RIGHT = 33; // Spark Max / NEO 550
 	public static final int INTAKE_MOTOR = 31; // Spark Max / NEO 550
-	public static final int INTAKE_FLIPPER_MOTOR = 32; // Talon SRX / Bag
 
 	// ELEVATOR
 	public static final int ELEVATOR_FWD = 0;

@@ -55,4 +55,9 @@ public final class Tuning {
 	public static final double VISION_THETA = 0.0001;
 
 	public static final Matrix<N7, N1> NOISE = VecBuilder.fill(0.001, 0.001, 0.001, 0.1, 0.1, 0.005, 0.005);
+
+	// INTAKE
+	public static final double INTAKE_P = 1;
+	public static final double INTAKE_I = 0;
+	public static final double INTAKE_D = 0;
 }
