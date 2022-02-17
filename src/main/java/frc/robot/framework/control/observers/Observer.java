@@ -64,6 +64,6 @@ public abstract class Observer implements Comparable<Observer> {
 
     @Override
 	public int compareTo(Observer comparedObserver) {
-		return Double.compare(priority.getValue(), comparedObserver.getPriority().getValue());
+		return Double.compare(comparedObserver.getPriority().getValue(), priority.getValue());
 	}
 }

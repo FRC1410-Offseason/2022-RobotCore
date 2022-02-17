@@ -79,7 +79,7 @@ public class EnqueuedTask implements Comparable<EnqueuedTask> {
 	}
 
 	@Override
-	public int compareTo(EnqueuedTask o) {
-		return Double.compare(this.targetTime, o.targetTime);
+	public int compareTo(EnqueuedTask comparedTask) {
+		return Double.compare(this.targetTime, comparedTask.targetTime);
 	}
 }

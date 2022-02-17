@@ -26,8 +26,8 @@ public abstract class ScheduledRobot extends RobotBase implements ControlScheme 
 
 	@Override
 	public final void startCompetition() {
-		scheduler.queuePeriodic(new GameModeObserverTask());
-		scheduler.queuePeriodic(new SubsystemPeriodicTask());
+		scheduler.queuePeriodic(new GameModeObserverTask()).enable();
+		scheduler.queuePeriodic(new SubsystemPeriodicTask()).enable();
 
 		robotInit();
 		if (!RobotBase.isReal()) {

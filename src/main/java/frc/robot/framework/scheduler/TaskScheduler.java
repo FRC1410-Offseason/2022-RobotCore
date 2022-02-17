@@ -71,6 +71,7 @@ public class TaskScheduler {
 				// Feed the watchdog
 				NotifierJNI.updateNotifierAlarm(m_notifier, (long) (1e6));
 			} catch (Throwable e) {
+                System.out.println("Error encountered: " + e);
 				DriverStation.reportError("Encountered error while ticking scheduler!", e.getStackTrace());
 			}
 		}
@@ -109,6 +110,8 @@ public class TaskScheduler {
 
         //Check state and interrupt commands if necessary and possible
         nextObserver.check();
+
+        System.out.println("=========== CURRENTLY CHECKING: " + nextObserver);
 
         //Bless this mess
         if (nextObserver.isRequestingExecution()) {
@@ -161,6 +164,8 @@ public class TaskScheduler {
         if (nextObserver.isRequestingCancellation()) {
             nextObserver.getEnqueuedTask().disable();
         }
+
+        observerQueue.add(nextObserver);
         
         EnqueuedTask nextTask;
 		//noinspection StatementWithEmptyBody – no logic needed; block until a task is available
@@ -177,7 +182,7 @@ public class TaskScheduler {
 			return;
 		}
 
-        //Update time state for tasks 
+        //Update time state for tasks and re-queue them to lists 
 		if (nextTask.isPeriodic() && !nextTask.getTask().isFinished()) {
 			nextTask.tickPeriod();
 			taskQueue.add(nextTask);
