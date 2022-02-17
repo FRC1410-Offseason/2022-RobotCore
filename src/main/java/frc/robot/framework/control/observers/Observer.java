@@ -33,11 +33,11 @@ public abstract class Observer implements Comparable<Observer> {
     }
 
     public void requestExecution() {
-        requesting = true;
+        if (!task.isEnabled()) requesting = true;
     }
 
     public void removeRequestExecution() {
-        requesting = true;
+        requesting = false;
     }
 
     public boolean isRequestingExecution() {

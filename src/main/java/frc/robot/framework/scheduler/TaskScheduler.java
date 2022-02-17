@@ -13,7 +13,6 @@ import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.PriorityQueue;
@@ -26,7 +25,9 @@ public class TaskScheduler {
 
 	private final PriorityQueue<EnqueuedTask> taskQueue = new PriorityQueue<>();
     private final Map<EnqueuedTask, Subsystem> bindingSubsystemTasksToCancel = new HashMap<>();
+
 	private final IntOpenHashSet pendingCancellation = new IntOpenHashSet();
+
 	private final long defaultPeriod;
 	private final int m_notifier = NotifierJNI.initializeNotifier();
 	private boolean stopped = false;
@@ -46,9 +47,9 @@ public class TaskScheduler {
         dumpingDebugTelemetry = true;
     }
 
-    public void debugDump() {
+    public void debugDumpList() {
         System.out.println("Current Control Word: " + controlWord);
-        
+
         System.out.println("Dumping Observer Queue:");
         for (Observer observer : observerQueue) {
             System.out.println("- Observer: " + observer + " with priority: " + observer.getPriority());
@@ -60,6 +61,9 @@ public class TaskScheduler {
     }
 
 	public void start() {
+
+        if (dumpingDebugTelemetry) debugDumpList();
+
 		while (!stopped) {
 			try {
 				tick();
@@ -93,9 +97,6 @@ public class TaskScheduler {
 	}
 
 	public void tick() {
-
-        //Dump queues if debugging
-        if (dumpingDebugTelemetry) debugDump();
 
         //Iterate until found observer
         Observer nextObserver;
@@ -140,39 +141,50 @@ public class TaskScheduler {
 
                         if (dumpingDebugTelemetry) System.out.println("Succeeded interruption by " + nextObserver.getEnqueuedTask());
                         nextObserver.getEnqueuedTask().enable();
+                        nextObserver.removeRequestExecution();
                     } else {
                         if (dumpingDebugTelemetry) System.out.println("Failed interruption by " + nextObserver.getEnqueuedTask());
                     }
                 } else {
                     if (dumpingDebugTelemetry) System.out.println("Succeeded interruption by " + nextObserver.getEnqueuedTask() + " due to lack of subsystem requirements");
                     nextObserver.getEnqueuedTask().enable();
+                    nextObserver.removeRequestExecution();
                 }
             } else {
                 if (dumpingDebugTelemetry) System.out.println("Succeeded interruption by " + nextObserver.getEnqueuedTask() + " due to not being a CommandTask");
                 nextObserver.getEnqueuedTask().enable();
+                nextObserver.removeRequestExecution();
             }
+        }
+
+        //Disable if requesting cancellation
+        if (nextObserver.isRequestingCancellation()) {
+            nextObserver.getEnqueuedTask().disable();
         }
         
         EnqueuedTask nextTask;
 		//noinspection StatementWithEmptyBody – no logic needed; block until a task is available
 		while ((nextTask = taskQueue.peek()) == null || nextTask.getTargetTime() > System.currentTimeMillis()) {}
 
+        //Ensure task system state
 		if (nextTask != taskQueue.poll()) {
 			throw new IllegalStateException("Mismatch in next task and next item in taskQueue");
 		}
 
+        //Remove tasks configured by scheduler.cancel()
 		if (nextTask.isPendingCancellation || pendingCancellation.contains(nextTask.getId())) {
 			pendingCancellation.remove(nextTask.getId());
 			return;
 		}
 
+        //Update time state for tasks 
 		if (nextTask.isPeriodic() && !nextTask.getTask().isFinished()) {
 			nextTask.tickPeriod();
 			taskQueue.add(nextTask);
 		}
 
 		// Run task if it subscribes to the current mode
-		if (!nextTask.getTask().getDisallowedModes().contains(getCurrentMode())) {
+		if (nextTask.isEnabled() && !nextTask.getTask().getDisallowedModes().contains(getCurrentMode())) {
 			nextTask.getTask().execute();
 		}
 	}

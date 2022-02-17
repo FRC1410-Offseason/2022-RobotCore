@@ -31,35 +31,36 @@ public class Robot extends ScheduledRobot {
 	private final Storage storage = new Storage(DriverStation.getAlliance());
 	private final Winch winch = new Winch();
 
+    private final TestSubsystem testSubsystem = new TestSubsystem();
+
 	@Override
 	public void registerControls() {
         
-        //Drivetrain Default Command
-		scheduler.scheduleDefaultCommand(new TankDrive(drivetrain, getDriverLeftYAxis(), getDriverRightYAxis()));
-		//Elevator Default Command
-		scheduler.scheduleDefaultCommand(new RunElevator(elevator, getOperatorLeftYAxis()));
-		//Winch Default Command
-		scheduler.scheduleDefaultCommand(new RunWinch(winch, getOperatorRightYAxis()));
-		//Intake Default Command
-		scheduler.scheduleDefaultCommand(new RunIntake(intake, getOperatorRightTrigger()));
-		//Outtake
-		scheduler.scheduleDefaultCommand(new ReverseIntake(intake, getOperatorLeftTrigger()).alongWith(new ReverseStorage(storage)));
+        //TODO: Uncomment Post-Testing
+        // //Drivetrain Default Command
+		// scheduler.scheduleDefaultCommand(new TankDrive(drivetrain, getDriverLeftYAxis(), getDriverRightYAxis()));
+		// //Elevator Default Command
+		// scheduler.scheduleDefaultCommand(new RunElevator(elevator, getOperatorLeftYAxis()));
+		// //Winch Default Command
+		// scheduler.scheduleDefaultCommand(new RunWinch(winch, getOperatorRightYAxis()));
+		// //Intake Default Command
+		// scheduler.scheduleDefaultCommand(new RunIntake(intake, getOperatorRightTrigger()));
+		// //Outtake
+		// scheduler.scheduleDefaultCommand(new ReverseIntake(intake, getOperatorLeftTrigger()).alongWith(new ReverseStorage(storage)));
 
-		//scheduler.scheduleCommand(); //TODO: Add shooter arm incrementing
+		// //scheduler.scheduleCommand(); //TODO: Add shooter arm incrementing
 
-		getDriverRightBumper(); //TODO: Auto align and shoot
+		// getDriverRightBumper(); //TODO: Auto align and shoot
 
-		getOperatorLeftBumper().whileHeld(new ToggleShooterArm(shooterArm)); //TODO: Make this when pressed
-		getOperatorRightBumper().whileHeld(new ToggleIntake(intake)); //TODO: Make this toggle when pressed
-		getOperatorXButton(); //TODO: Make this toggle when pressed & add adaptive shooter RPM
-		getOperatorYButton().whileHeld(new RunStorage(storage));
+		// getOperatorLeftBumper().whileHeld(new ToggleShooterArm(shooterArm)); //TODO: Make this when pressed
+		// getOperatorRightBumper().whileHeld(new ToggleIntake(intake)); //TODO: Make this toggle when pressed
+		// getOperatorXButton(); //TODO: Make this toggle when pressed & add adaptive shooter RPM
+		// getOperatorYButton().whileHeld(new RunStorage(storage));
 
-        // getDriverAButton().whenPressed(new TestActionCommand());
-        // getDriverBButton().toggleWhenPressed(new TestLoopedCommand());
+        getDriverAButton().whenPressed(new TestActionCommand(testSubsystem));
+        getDriverBButton().toggleWhenPressed(new TestLoopedCommand(testSubsystem));
         
-        // scheduler.scheduleCommand(new TestAxisCommand(getDriverLeftXAxis()));
-
-        scheduler.debugDump();
+        scheduler.enableDebugTelemetry();        
 	}
 
 	@Override
