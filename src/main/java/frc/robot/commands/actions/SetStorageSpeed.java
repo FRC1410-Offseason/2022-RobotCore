@@ -1,6 +1,5 @@
 package frc.robot.commands.actions;
 
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.NetworkTables;
 import frc.robot.subsystems.Storage;
@@ -17,14 +16,6 @@ public class SetStorageSpeed extends CommandBase {
 		// addRequirements(storage);
 	}
 
-<<<<<<< HEAD
-	public SetStorageSpeed(Storage storage, double time) {
-		this.storage = storage;
-		this.time = time;
-	}
-
-=======
->>>>>>> parent of c822060 (feat(Storage): Consolidate commands with an overloaded constructor)
 	@Override
 	public void initialize() {
 		storage.runStorage(STORAGE_RUN_SPEED);
