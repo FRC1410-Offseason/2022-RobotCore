@@ -1,11 +1,11 @@
 package frc.robot.framework.control;
 
 import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.framework.control.Button;
 import frc.robot.framework.scheduler.TaskScheduler;
 
 import static frc.robotmap.IDs.*;
 import static frc.robotmap.Tuning.DRIVER_DEADZONE_VALUE;
+import static frc.robotmap.Tuning.OPERATOR_DEADZONE_VALUE;
 
 /**
  * A mixin used to receive button getters.
@@ -147,27 +147,27 @@ public interface ControlScheme {
 
 	// <editor-fold desc="> Operator axes">
 	default Axis getOperatorLeftXAxis() {
-		return new Axis(operatorController, AXIS_ID.LEFT_X, DRIVER_DEADZONE_VALUE);
+		return new Axis(operatorController, AXIS_ID.LEFT_X, OPERATOR_DEADZONE_VALUE);
 	}
 
 	default Axis getOperatorRightXAxis() {
-		return new Axis(operatorController, AXIS_ID.RIGHT_X, DRIVER_DEADZONE_VALUE);
+		return new Axis(operatorController, AXIS_ID.RIGHT_X, OPERATOR_DEADZONE_VALUE);
 	}
 
 	default Axis getOperatorLeftYAxis() {
-		return new Axis(operatorController, AXIS_ID.LEFT_Y, DRIVER_DEADZONE_VALUE);
+		return new Axis(operatorController, AXIS_ID.LEFT_Y, OPERATOR_DEADZONE_VALUE);
 	}
 
 	default Axis getOperatorRightYAxis() {
-		return new Axis(operatorController, AXIS_ID.RIGHT_Y, DRIVER_DEADZONE_VALUE);
+		return new Axis(operatorController, AXIS_ID.RIGHT_Y, OPERATOR_DEADZONE_VALUE);
 	}
 
 	default Axis getOperatorLeftTrigger() {
-		return new Axis(operatorController, AXIS_ID.LEFT_TRIGGER, DRIVER_DEADZONE_VALUE);
+		return new Axis(operatorController, AXIS_ID.LEFT_TRIGGER, OPERATOR_DEADZONE_VALUE);
 	}
 
 	default Axis getOperatorRightTrigger() {
-		return new Axis(operatorController, AXIS_ID.RIGHT_TRIGGER, DRIVER_DEADZONE_VALUE);
+		return new Axis(operatorController, AXIS_ID.RIGHT_TRIGGER, OPERATOR_DEADZONE_VALUE);
 	}
 	// </editor-fold>
 }
