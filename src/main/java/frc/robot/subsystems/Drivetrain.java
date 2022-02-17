@@ -84,7 +84,7 @@ public class Drivetrain extends SubsystemBase {
 	 * Gyro and sim handle for the gyro
 	 */
 	public final AHRS gyro = new AHRS(SPI.Port.kMXP);
-	public SimDouble fusedAngle;
+	public SimDouble yaw;
 
 	public Drivetrain() {
 		//Config motors
@@ -128,13 +128,9 @@ public class Drivetrain extends SubsystemBase {
 		rightEncoder.setDistancePerPulse(ENCODER_DISTANCE_PER_PULSE);
 		leftEncoderSim = new EncoderSim(leftEncoder);
 		rightEncoderSim = new EncoderSim(rightEncoder);
-		fusedAngle = new SimDouble(SimDeviceDataJNI.getSimValueHandle(SimDeviceDataJNI.getSimDeviceHandle("navX-Sensor[0]"), "FusedHeading"));
+		yaw = new SimDouble(SimDeviceDataJNI.getSimValueHandle(SimDeviceDataJNI.getSimDeviceHandle("navX-Sensor[0]"), "Yaw"));
 		fieldSim = new Field2d();
 		SmartDashboard.putData("Field", fieldSim);
-	}
-
-	public void periodic() {
-		NetworkTables.setNavXMagDisturbance(gyro.isMagneticDisturbance());
 	}
 
 	/**

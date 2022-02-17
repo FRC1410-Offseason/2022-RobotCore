@@ -22,7 +22,7 @@ public class DrivetrainSimulation extends CommandBase {
             drivetrain.rightLeader.get() * RobotController.getBatteryVoltage());
         drivetrain.drivetrainSimulator.update(DT / 1000.0);
 
-        drivetrain.fusedAngle.set(-drivetrain.drivetrainSimulator.getHeading().getDegrees());
+        drivetrain.yaw.set(-drivetrain.drivetrainSimulator.getHeading().getDegrees());
 
         drivetrain.leftEncoderPosition = drivetrain.drivetrainSimulator.getLeftPositionMeters();
         drivetrain.leftEncoderVelocity = drivetrain.drivetrainSimulator.getLeftVelocityMetersPerSecond();

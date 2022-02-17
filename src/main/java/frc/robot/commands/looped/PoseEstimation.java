@@ -4,7 +4,6 @@ import frc.robot.NetworkTables;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.ShooterArm;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -15,8 +14,8 @@ public class PoseEstimation extends CommandBase {
     private final Limelight limelight;
     private final ShooterArm shooterArm;
     private final Timer hzTimer = new Timer();
-    private double hzCounter = 0;
     private final Timer limelightTimer = new Timer();
+    private double hzCounter = 0;
     private double imageCaptureTime;
     private double currentPitch = 0, currentYaw = 0, lastPitch, lastYaw;
 
@@ -51,12 +50,12 @@ public class PoseEstimation extends CommandBase {
             drivetrain.rightFollower.getSelectedSensorPosition(0)) * ENCODER_CONSTANT / 2;
         drivetrain.rightEncoderVelocity = (drivetrain.rightLeader.getSelectedSensorVelocity(0) +
             drivetrain.rightFollower.getSelectedSensorVelocity(0)) * ENCODER_CONSTANT / 2 * 10;
-        // Because this wants the continuous angle like 360 to 361 instead of 360 to 0, you might need to convert heading to a new rotation2d
-        drivetrain.poseEstimator.update(new Rotation2d(Units.degreesToRadians(drivetrain.gyro.getFusedHeading())), drivetrain.getWheelSpeeds(),
+            
+        drivetrain.poseEstimator.update(drivetrain.gyro.getRotation2d(), drivetrain.getWheelSpeeds(),
             drivetrain.leftEncoderPosition, drivetrain.rightEncoderPosition);
 
         if (lastPitch != currentPitch && lastYaw != currentYaw && limelight.getTarget() != null) {
-            drivetrain.poseEstimator.addVisionMeasurement(limelight.getVisionRobotPose(drivetrain.gyro.getFusedHeading(),
+            drivetrain.poseEstimator.addVisionMeasurement(limelight.getVisionRobotPose(drivetrain.gyro.getYaw(),
                 Units.radiansToDegrees(shooterArm.getEncoderPosition())), imageCaptureTime);
         }
     }
