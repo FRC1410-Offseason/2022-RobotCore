@@ -102,8 +102,6 @@ public class TaskScheduler {
 
 	public void tick() {
 
-        System.out.println("Ticking Scheduler ----------------------------------------------");
-
         //Iterate until found observer
         EnqueuedObserver nextEnqueuedObserver;
 		while ((nextEnqueuedObserver = observerQueue.peek()) == null) {}
@@ -147,19 +145,19 @@ public class TaskScheduler {
                             SubsystemRegistry.applyLock(requirement, nextObserver.getEnqueuedTask());
                         }
 
-                        if (dumpingDebugTelemetry) System.out.println("Succeeded interruption by " + nextObserver.getEnqueuedTask());
+                        if (dumpingDebugTelemetry) System.out.println("Succeeded interruption by " + nextObserver.getEnqueuedTask().getTask());
                         nextObserver.getEnqueuedTask().enable();
                         nextObserver.removeRequestExecution();
                     } else {
-                        if (dumpingDebugTelemetry) System.out.println("Failed interruption by " + nextObserver.getEnqueuedTask());
+                        if (dumpingDebugTelemetry) System.out.println("Failed interruption by " + nextObserver.getEnqueuedTask().getTask());
                     }
                 } else {
-                    if (dumpingDebugTelemetry) System.out.println("Succeeded interruption by " + nextObserver.getEnqueuedTask() + " due to lack of subsystem requirements");
+                    if (dumpingDebugTelemetry) System.out.println("Succeeded interruption by " + nextObserver.getEnqueuedTask().getTask() + " due to lack of subsystem requirements");
                     nextObserver.getEnqueuedTask().enable();
                     nextObserver.removeRequestExecution();
                 }
             } else {
-                if (dumpingDebugTelemetry) System.out.println("Succeeded interruption by " + nextObserver.getEnqueuedTask() + " due to not being a CommandTask");
+                if (dumpingDebugTelemetry) System.out.println("Succeeded interruption by " + nextObserver.getEnqueuedTask().getTask() + " due to not being a CommandTask");
                 nextObserver.getEnqueuedTask().enable();
                 nextObserver.removeRequestExecution();
             }

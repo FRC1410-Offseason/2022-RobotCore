@@ -73,9 +73,7 @@ public class Axis {
 
 	public double getDeadzoned() {
 		double value = getRaw();
-		double oppositeValue = getOpposite();
-
-		double magnitude = Math.sqrt(Math.pow(value, 2) + Math.pow(oppositeValue, 2));
+		double magnitude = Math.abs(value);
 
 		if (magnitude <= deadzone) {
 			return 0;
@@ -83,5 +81,15 @@ public class Axis {
 			return ((magnitude - deadzone) / (1 - deadzone)) * (value / magnitude);
 		}
 	}
-}
 
+	// For teleopdriving, includes deadzone and cap
+	public double getTeleopAntifriction() {
+		double value = getRaw();
+		double magnitude = Math.abs(value);
+
+		if (magnitude <= deadzone) return 0;
+		else if (magnitude <= 0.5) return Math.sqrt(magnitude - 0.1);
+		else if (magnitude <= 0.9) return (magnitude * 0.9) + 0.185;
+		else return 1;
+	}
+}

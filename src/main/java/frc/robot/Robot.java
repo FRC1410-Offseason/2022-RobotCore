@@ -16,7 +16,7 @@ public class Robot extends ScheduledRobot {
 	private final AnalogInput pressure = new AnalogInput(PRESSURE_SENSOR);
 
 	private Robot() {
-		super(500);
+		super(1000);
 	}
 
 	public static void main(String[] args) {
@@ -37,8 +37,8 @@ public class Robot extends ScheduledRobot {
 	public void registerControls() {
         
         //TODO: Uncomment Post-Testing
-        // //Drivetrain Default Command
-		// scheduler.scheduleDefaultCommand(new TankDrive(drivetrain, getDriverLeftYAxis(), getDriverRightYAxis()));
+        //Drivetrain Default Command
+		scheduler.scheduleDefaultCommand(new TankDrive(drivetrain, getDriverLeftYAxis(), getDriverRightYAxis()));
 		// //Elevator Default Command
 		// scheduler.scheduleDefaultCommand(new RunElevator(elevator, getOperatorLeftYAxis()));
 		// //Winch Default Command
