@@ -26,17 +26,12 @@ public class CommandTask implements Task {
 
 			case RUNNING: {
 				command.execute();
+
 				if (command.isFinished()) {
 					state = CommandState.FINISHED;
 					command.end(false);
 				}
 
-				break;
-			}
-
-			case INTERRUPTION_PENDING: {
-				state = CommandState.FINISHED;
-				command.end(false);
 				break;
 			}
 		}
@@ -47,8 +42,14 @@ public class CommandTask implements Task {
 		return state == CommandState.FINISHED;
 	}
 
+    @Override
+	public void end() {
+        state = CommandState.PENDING;
+	}
+
 	public void interrupt() {
-		state = CommandState.INTERRUPTION_PENDING;
+        command.end(true);
+		state = CommandState.FINISHED;
 	}
 
 	private enum CommandState {

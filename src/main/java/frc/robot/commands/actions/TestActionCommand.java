@@ -20,7 +20,7 @@ public class TestActionCommand extends CommandBase {
 
     @Override
 	public void execute() {
-        System.out.println("Executing Action Command, currently binding" + subsystem);
+        System.out.println("Executing Action Command, currently binding " + subsystem);
 	}
 
 	@Override

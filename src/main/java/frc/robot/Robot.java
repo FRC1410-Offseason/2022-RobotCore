@@ -23,7 +23,7 @@ public class Robot extends ScheduledRobot {
 		RobotBase.startRobot(Robot::new);
 	}
 
-	private final Drivetrain drivetrain = new Drivetrain();
+	// private final Drivetrain drivetrain = new Drivetrain();
 	private final Elevator elevator = new Elevator();
 	private final Intake intake = new Intake();
 	private final Shooter shooter = new Shooter();
@@ -37,8 +37,8 @@ public class Robot extends ScheduledRobot {
 	public void registerControls() {
         
         //TODO: Uncomment Post-Testing
-        //Drivetrain Default Command
-		scheduler.scheduleDefaultCommand(new TankDrive(drivetrain, getDriverLeftYAxis(), getDriverRightYAxis()));
+        // //Drivetrain Default Command
+		// scheduler.scheduleDefaultCommand(new TankDrive(drivetrain, getDriverLeftYAxis(), getDriverRightYAxis()));
 		// //Elevator Default Command
 		// scheduler.scheduleDefaultCommand(new RunElevator(elevator, getOperatorLeftYAxis()));
 		// //Winch Default Command
