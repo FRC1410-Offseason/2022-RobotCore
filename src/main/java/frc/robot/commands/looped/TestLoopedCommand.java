@@ -30,6 +30,6 @@ public class TestLoopedCommand extends CommandBase {
 
     @Override
 	public void end(boolean interrupted) {
-        System.out.println("Ending Looped Command, Interrupted: " + interrupted);
+        System.out.println("Ending Looped Command " + this + ", Interrupted: " + interrupted);
 	}
 }

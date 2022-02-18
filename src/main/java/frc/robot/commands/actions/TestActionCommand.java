@@ -30,6 +30,6 @@ public class TestActionCommand extends CommandBase {
 
     @Override
 	public void end(boolean interrupted) {
-        System.out.println("Ending Action Command, Interrupted: " + interrupted);
+        System.out.println("Ending Action Command " + this + ", Interrupted: " + interrupted);
 	}
 }

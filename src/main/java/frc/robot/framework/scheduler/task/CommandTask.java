@@ -34,6 +34,12 @@ public class CommandTask implements Task {
 
 				break;
 			}
+
+            case INTERRUPTION_PENDING: {
+				state = CommandState.FINISHED;
+				command.end(true);
+				break;
+			}
 		}
 	}
 

@@ -207,11 +207,12 @@ public class TaskScheduler {
 		}
 
         if (nextTask.getTask().isFinished()) {
-            if (nextObserver.getEnqueuedTask().getTask() instanceof CommandTask) {
-                for (Subsystem requirement : ((CommandTask) nextObserver.getEnqueuedTask().getTask()).getCommand().getRequirements()) {
-                    SubsystemRegistry.releaseLock(requirement, nextObserver.getEnqueuedTask());
+            if (nextTask.getTask() instanceof CommandTask) {
+                for (Subsystem requirement : ((CommandTask) nextTask.getTask()).getCommand().getRequirements()) {
+                    SubsystemRegistry.releaseLock(requirement, nextTask);
                 }
             }
+            nextTask.getTask().end();
             nextTask.disable();
         }
 	}
