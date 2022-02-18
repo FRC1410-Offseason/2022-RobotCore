@@ -29,7 +29,6 @@ public class ButtonStateObserver extends Observer {
     public void check() {
         updateButtonPressedState();
 
-        System.out.println("AYO WE'RE DOING THE SHIT CHIEF");
         switch (stateToCheck) {
             case WHEN_PRESSED: 
                 if (buttonState == ButtonState.PRESSED) requestExecution(); 

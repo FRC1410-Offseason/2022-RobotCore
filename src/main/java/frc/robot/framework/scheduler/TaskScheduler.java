@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.framework.control.observers.DefaultCommandObserver;
+import frc.robot.framework.control.observers.EnqueuedObserver;
 import frc.robot.framework.control.observers.Observer;
 import frc.robot.framework.scheduler.task.CommandTask;
 import frc.robot.framework.scheduler.task.Task;
@@ -21,7 +22,7 @@ public class TaskScheduler {
 
 	private final DSControlWord controlWord = new DSControlWord();
 
-    private final PriorityQueue<Observer> observerQueue = new PriorityQueue<>();
+    private final PriorityQueue<EnqueuedObserver> observerQueue = new PriorityQueue<>();
 
 	private final PriorityQueue<EnqueuedTask> taskQueue = new PriorityQueue<>();
     private final Map<EnqueuedTask, Subsystem> bindingSubsystemTasksToCancel = new HashMap<>();
@@ -31,7 +32,9 @@ public class TaskScheduler {
 	private final long defaultPeriod;
 	private final int m_notifier = NotifierJNI.initializeNotifier();
 	private boolean stopped = false;
+
 	private int currentTaskId = -1;
+    private int currentObserverId = -1;
 
     private boolean dumpingDebugTelemetry = false;
 
@@ -51,8 +54,8 @@ public class TaskScheduler {
         System.out.println("Current Control Word: " + controlWord);
 
         System.out.println("Dumping Observer Queue:");
-        for (Observer observer : observerQueue) {
-            System.out.println("- Observer: " + observer + " with priority: " + observer.getPriority());
+        for (EnqueuedObserver observer : observerQueue) {
+            System.out.println("- Observer: " + observer + " with priority: " + observer.getObserver().getPriority());
         }
 
         for (EnqueuedTask task : taskQueue) {
@@ -99,19 +102,21 @@ public class TaskScheduler {
 
 	public void tick() {
 
+        System.out.println("Ticking Scheduler ----------------------------------------------");
+
         //Iterate until found observer
-        Observer nextObserver;
-		while ((nextObserver = observerQueue.peek()) == null) {}
+        EnqueuedObserver nextEnqueuedObserver;
+		while ((nextEnqueuedObserver = observerQueue.peek()) == null) {}
 
         //Verify matching system states
-		if (nextObserver != observerQueue.poll()) {
+		if (nextEnqueuedObserver != observerQueue.poll()) {
 			throw new IllegalStateException("Mismatch in next observer and next item in observerQueue");
 		}
 
+        Observer nextObserver = nextEnqueuedObserver.getObserver();
+
         //Check state and interrupt commands if necessary and possible
         nextObserver.check();
-
-        System.out.println("=========== CURRENTLY CHECKING: " + nextObserver);
 
         //Bless this mess
         if (nextObserver.isRequestingExecution()) {
@@ -165,7 +170,9 @@ public class TaskScheduler {
             nextObserver.getEnqueuedTask().disable();
         }
 
-        observerQueue.add(nextObserver);
+        //Tick target time and add them back to the queue
+        nextEnqueuedObserver.tickPeriod();
+        observerQueue.add(nextEnqueuedObserver);
         
         EnqueuedTask nextTask;
 		//noinspection StatementWithEmptyBody – no logic needed; block until a task is available
@@ -199,6 +206,11 @@ public class TaskScheduler {
 		return currentTaskId;
 	}
 
+    private int nextObserverId() {
+		currentObserverId++;
+		return currentObserverId;
+	}
+
 	@Contract(value = "_ -> param1", mutates = "this")
 	private EnqueuedTask queueTask(EnqueuedTask task) {
 		taskQueue.add(task);
@@ -206,7 +218,7 @@ public class TaskScheduler {
 	}
 
     @Contract(value = "_ -> param1", mutates = "this")
-	private Observer queueObserver(Observer observer) {
+	private EnqueuedObserver queueObserver(EnqueuedObserver observer) {
 		observerQueue.add(observer);
 		return observer;
 	}
@@ -239,63 +251,63 @@ public class TaskScheduler {
     @Contract(value = "_, _, _ -> new", mutates = "this")
 	public EnqueuedTask queObservedTask(@NotNull Task task, @NotNull Observer observer, long initialDelay, long period) {
         observer.bind(queueTask(new EnqueuedTask(task, nextTaskId(), initialDelay, period)));
-        queueObserver(observer);
+        queueObserver(new EnqueuedObserver(observer, nextObserverId(), initialDelay, period));
 		return observer.getEnqueuedTask();
 	}
 
 	@Contract(value = "_, _ -> new", mutates = "this")
 	public EnqueuedTask queueObservedTask(@NotNull Task target, @NotNull Observer observer, long period) {
 		observer.bind(queuePeriodic(target, period, period));
-        queueObserver(observer);
+        queueObserver(new EnqueuedObserver(observer, nextObserverId(), period));
         return observer.getEnqueuedTask();
 	}
 
 	@Contract(value = "_ -> new", mutates = "this")
 	public EnqueuedTask queueObservedTask(@NotNull Task target, @NotNull Observer observer) {
 		observer.bind(queuePeriodic(target, defaultPeriod, defaultPeriod));
-        queueObserver(observer);
+        queueObserver(new EnqueuedObserver(observer, nextObserverId()));
         return observer.getEnqueuedTask();
 	}
 
     @Contract(value = "_, _, _ -> new", mutates = "this")
 	public EnqueuedTask queueObservedCommand(@NotNull Command command, @NotNull Observer observer, long initialDelay, long period) {
         observer.bind(scheduleCommand(command, initialDelay, period));
-        queueObserver(observer);
+        queueObserver(new EnqueuedObserver(observer, nextObserverId(), initialDelay, period));
 		return observer.getEnqueuedTask();
 	}
 
 	@Contract(value = "_, _ -> new", mutates = "this")
 	public EnqueuedTask queueObservedCommand(@NotNull Command command, @NotNull Observer observer, long period) {
 		observer.bind(scheduleCommand(command, period));
-        queueObserver(observer);
+        queueObserver(new EnqueuedObserver(observer, nextObserverId(), period));
 		return observer.getEnqueuedTask();
 	}
 
 	@Contract(value = "_ -> new", mutates = "this")
 	public EnqueuedTask queueObservedCommand(@NotNull Command command, @NotNull Observer observer) {
 		observer.bind(scheduleCommand(command));
-        queueObserver(observer);
+        queueObserver(new EnqueuedObserver(observer, nextObserverId()));
 		return observer.getEnqueuedTask();
 	}
 
     public EnqueuedTask scheduleDefaultCommand(Command command) {
 		final Observer observer = new DefaultCommandObserver();
         observer.bind(scheduleCommand(command));
-        queueObserver(observer);
+        queueObserver(new EnqueuedObserver(observer, nextObserverId()));
         return observer.getEnqueuedTask();
 	}
 
     public EnqueuedTask scheduleDefaultCommand(Command command, long period) {
 		final Observer observer = new DefaultCommandObserver();
         observer.bind(scheduleCommand(command, period));
-        queueObserver(observer);
+        queueObserver(new EnqueuedObserver(observer, nextObserverId(), period));
         return observer.getEnqueuedTask();
 	}
 
     public EnqueuedTask scheduleDefaultCommand(Command command, long initialDelay, long period) {
 		final Observer observer = new DefaultCommandObserver();
         observer.bind(scheduleCommand(command, initialDelay, period));
-        queueObserver(observer);
+        queueObserver(new EnqueuedObserver(observer, nextObserverId(), initialDelay, period));
         return observer.getEnqueuedTask();
 	}
 
