@@ -36,7 +36,7 @@ public class CommandTask implements Task {
 			}
 
             case INTERRUPTION_PENDING: {
-				state = CommandState.FINISHED;
+				state = CommandState.INTERRUPTION_PENDING;
 				command.end(true);
 				break;
 			}

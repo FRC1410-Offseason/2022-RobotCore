@@ -26,7 +26,7 @@ public class TaskScheduler {
 
 	private final PriorityQueue<EnqueuedTask> taskQueue = new PriorityQueue<>();
     private final Map<EnqueuedTask, Subsystem> bindingSubsystemTasksToCancel = new HashMap<>();
-
+    
 	private final IntOpenHashSet pendingCancellation = new IntOpenHashSet();
 
 	private final long defaultPeriod;
@@ -141,6 +141,7 @@ public class TaskScheduler {
                             taskToCancel.disable();
                             SubsystemRegistry.releaseLock(bindingSubsystemTasksToCancel.get(taskToCancel), taskToCancel);
                         }
+                        bindingSubsystemTasksToCancel.clear();
 
                         //Add currently requested command
                         for (Subsystem requirement : requestedCommand.getRequirements()) {
@@ -152,6 +153,7 @@ public class TaskScheduler {
                         nextObserver.removeRequestExecution();
                     } else {
                         if (dumpingDebugTelemetry) System.out.println("Failed interruption by " + ((CommandTask) nextObserver.getEnqueuedTask().getTask()).getCommand());
+                        bindingSubsystemTasksToCancel.clear();
                     }
                 } else {
                     if (dumpingDebugTelemetry) System.out.println("Succeeded interruption by " + nextObserver.getEnqueuedTask().getTask() + " due to lack of subsystem requirements");
@@ -172,6 +174,7 @@ public class TaskScheduler {
                     SubsystemRegistry.releaseLock(requirement, nextObserver.getEnqueuedTask());
                 }
             }
+            nextObserver.getEnqueuedTask().getTask().end();
             nextObserver.getEnqueuedTask().disable();
             nextObserver.removeRequestCancellation();
         }
