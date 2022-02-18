@@ -7,9 +7,11 @@ import frc.robot.subsystems.TestSubsystem;
 public class TestLoopedCommand extends CommandBase {
 
     private final TestSubsystem subsystem;
+    private final String dumpString;
 
-    public TestLoopedCommand(TestSubsystem subsystem) {
+    public TestLoopedCommand(TestSubsystem subsystem, String dumpstring) {
         this.subsystem = subsystem;
+        this.dumpString = dumpstring;
         addRequirements(subsystem);
     }
 
@@ -20,7 +22,7 @@ public class TestLoopedCommand extends CommandBase {
 
     @Override
 	public void execute() {
-        System.out.println("Executing Looped Command, currently binding " + subsystem);
+        System.out.println(dumpString);
 	}
 
 	@Override

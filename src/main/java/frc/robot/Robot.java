@@ -16,7 +16,7 @@ public class Robot extends ScheduledRobot {
 	private final AnalogInput pressure = new AnalogInput(PRESSURE_SENSOR);
 
 	private Robot() {
-		super(1000);
+		super(20);
 	}
 
 	public static void main(String[] args) {
@@ -58,11 +58,9 @@ public class Robot extends ScheduledRobot {
 		// getOperatorYButton().whileHeld(new RunStorage(storage));
 
         getDriverAButton().whenPressed(new TestActionCommand(testSubsystem));
-        getDriverBButton().toggleWhenPressed(new TestLoopedCommand(testSubsystem));
+        getDriverBButton().whileHeld(new TestLoopedCommand(testSubsystem, "WHILE HELD COMMAND"));
 
-        scheduler.scheduleDefaultCommand(new TestLoopedCommand(testSubsystem));
-        
-        scheduler.enableDebugTelemetry();        
+        scheduler.scheduleDefaultCommand(new TestLoopedCommand(testSubsystem, "DEFAULT COMMAND"));
 	}
 
 	@Override
