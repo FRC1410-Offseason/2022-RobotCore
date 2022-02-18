@@ -83,6 +83,10 @@ public class Robot extends ScheduledRobot {
 				autonomousCommand = new FiveCargoAuto(auto, intake, shooter, shooterArm, storage);
 				break;
 
+			case 7:
+				autonomousCommand = new FiveCargoAutoCornerStart(auto, intake, shooter, shooterArm, storage);
+				break;
+
 			default:
 				break;
 		}
