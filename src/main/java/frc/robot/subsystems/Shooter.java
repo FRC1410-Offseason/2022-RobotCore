@@ -42,6 +42,7 @@ public class Shooter extends SubsystemBase {
 	private final List<Double> xValues = new DoubleArrayList();
 	private final List<Double> xValuesNormalized = new DoubleArrayList();
 	private final List<Double> yValues = new DoubleArrayList();
+	private double normalization_divisor = 1.0f;
 	private final List<DoubleConsumer> onShot = new ArrayList<>();
 
 	private final GradientDescentOptimized alphaOptimizer = new GradientDescentOptimized(1, 5) {
@@ -123,9 +124,9 @@ public class Shooter extends SubsystemBase {
 	 * @return RPM
 	 */
 	public double targetRPM(double vel) {
-		return 30.0 * pInvR.polynomialFunction(Math.pow(vel, 2)
+		return 30.0 * pInvR.polynomialFunction((Math.pow(vel, 2)
 			* ((Math.pow(SHOOTER_WHEEL_RADIUS, 2) * SHOOTER_BALL_MASS) + SHOOTER_I)
-			/ (SHOOTER_I * Math.pow(SHOOTER_WHEEL_RADIUS, 2))) / Math.PI;
+			/ (SHOOTER_I * Math.pow(SHOOTER_WHEEL_RADIUS, 2))) / normalization_divisor) / Math.PI;
 	}
 	
 	private double bounceError(double distance, double alpha) {
@@ -245,6 +246,7 @@ public class Shooter extends SubsystemBase {
 				for (double value : xValues) {
 					xValuesNormalized.add(value / maximum); // Do normalization
 				}
+				normalization_divisor=maximum;
 				// Sync to networktables
 				NetworkTables.setLowestRPM(lowestRPM);
 				// Change lowestRPM stuff to reset the state
