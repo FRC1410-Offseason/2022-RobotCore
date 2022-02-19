@@ -1,47 +1,49 @@
 package frc.robotmap;
 
 public class IDs {
-	public static final int[] LEFT_ENCODER_PORTS = new int[] {6, 7};
-	public static final int[] RIGHT_ENCODER_PORTS = new int[] {8, 9};
+	public static final int[] LEFT_ENCODER_PORTS = { 6, 7 };
+	public static final int[] RIGHT_ENCODER_PORTS = { 8, 9 };
 
-	public static final int DRIVETRAIN_LEFT_FRONT_MOTOR_ID = 1;
-	public static final int DRIVETRAIN_LEFT_BACK_MOTOR_ID = 2;
-	public static final int DRIVETRAIN_RIGHT_FRONT_MOTOR_ID = 3;
-	public static final int DRIVETRAIN_RIGHT_BACK_MOTOR_ID = 4;
+	public static final int DRIVETRAIN_LEFT_FRONT_MOTOR_ID = 1; // Talon FX / Falcon 500
+	public static final int DRIVETRAIN_LEFT_BACK_MOTOR_ID = 2; // Talon FX / Falcon 500
+	public static final int DRIVETRAIN_RIGHT_FRONT_MOTOR_ID = 3; // Talon FX / Falcon 500
+	public static final int DRIVETRAIN_RIGHT_BACK_MOTOR_ID = 4; // Talon FX / Falcon 500
 
 	//SHOOTER
-	public static final int SHOOTER_LEFT_MOTOR_ID = 11;
-	public static final int SHOOTER_RIGHT_MOTOR_ID = 12;
+	public static final int SHOOTER_LEFT_MOTOR_ID = 11; // Spark Max / NEO
+	public static final int SHOOTER_RIGHT_MOTOR_ID = 12; // Spark Max / NEO
 
-	//STORAGE
-	public static final int STORAGE_MOTOR_ID = 41;
-	public static final int STORAGE_LINE_BREAK_PORT = 0; //To Do: Find out what the actual port on the roborio is
+	// STORAGE
+	public static final int STORAGE_MOTOR_ID = 41; // Talon SRX / Bag Motor
+	public static final int STORAGE_LINE_BREAK_ID = 0;
 
-	//INTAKE 
-	//To Do: Update with actual ports on the PCM
-	public static final int INTAKE_FLIPPER_FWD = 6;
-	public static final int INTAKE_FLIPPER_BCK = 7;
-	public static final int INTAKE_MOTOR = 31;
-	//Elevator
-	//T0 D0: Update with motor ports
+	// INTAKE
+	public static final int INTAKE_FLIPPER_LEFT = 32; // Spark Max / NEO 550
+	public static final int INTAKE_FLIPPER_RIGHT = 33; // Spark Max / NEO 550
+	public static final int INTAKE_MOTOR = 31; // Spark Max / NEO 550
+
+	// ELEVATOR
 	public static final int ELEVATOR_FWD = 0;
 	public static final int ELEVATOR_BCK = 1;
-	public static final int ELEVATOR_LEFT_MOTOR_ID = 51;
-	public final static int ELEVATOR_RIGHT_MOTOR_ID = 52;
-	//WINCH
-	//To Do: Update with actual ports on the PCM
+	public static final int ELEVATOR_LEFT_MOTOR_ID = 51; // Spark Max / NEO 550
+	public final static int ELEVATOR_RIGHT_MOTOR_ID = 52; // Spark Max / NEO 550
+
+	// WINCH
 	public static final int WINCH_FWD = 2;
 	public static final int WINCH_BCK = 3;
-	public static final int WINCH_LEFT_MOTOR_ID = 61;
-	public static final int WINCH_RIGHT_MOTOR_ID = 62;
-	//SHOOTER ARM
+	public static final int WINCH_LEFT_MOTOR_ID = 61; // Victor SPX / Bag?
+	public static final int WINCH_RIGHT_MOTOR_ID = 62; // Victor SPX / Bag?
+	public static final int WINCH_LEFT_LIMIT_SWITCH_ID = 1;
+	public static final int WINCH_RIGHT_LIMIT_SWITCH_ID = 2;
+
+	// SHOOTER ARM
 	public static final int SHOOTER_ARM_LOCK_FWD = 4;
 	public static final int SHOOTER_ARM_LOCK_BCK = 5;
-	public static final int SHOOTER_ARM_L_MOTOR = 21;
-	public static final int SHOOTER_ARM_R_MOTOR = 22;
+	public static final int SHOOTER_ARM_L_MOTOR = 21; // Spark Max / NEO
+	public static final int SHOOTER_ARM_R_MOTOR = 22; // Spark Max / NEO
 	public static final int PRESSURE_SENSOR = 0;
 
-    //CONTROLLERS, DO NOT TOUCH
+    // CONTROLLERS, DO NOT TOUCH
 	public static final int DRIVER_CONTROLLER_PORT = 0;
 	public static final int OPERATOR_CONTROLLER_PORT = 1;
 

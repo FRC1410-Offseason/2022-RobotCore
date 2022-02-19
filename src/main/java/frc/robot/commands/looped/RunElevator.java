@@ -41,6 +41,6 @@ public class RunElevator extends CommandBase {
 
 	@Override
 	public void end(boolean interrupted) {
-
+		elevator.set(0);
 	}
 }

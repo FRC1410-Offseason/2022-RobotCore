@@ -45,11 +45,11 @@ public final class Tuning {
 	public static final double STATE_THETA = 0.01;
 	public static final double STATE_LEFT_DIST = 0.01;
 	public static final double STATE_RIGHT_DIST = 0.01;
-	
+
 	public static final double LOCAL_LEFT_DIST = 0.01;
 	public static final double LOCAL_RIGHT_DIST = 0.01;
 	public static final double LOCAL_THETA = 0.001;
-	
+
 	public static final double VISION_X = 0.0001;
 	public static final double VISION_Y = 0.0001;
 	public static final double VISION_THETA = 0.0001;

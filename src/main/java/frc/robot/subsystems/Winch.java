@@ -1,28 +1,86 @@
 package frc.robot.subsystems;
 
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
+import com.ctre.phoenix.motorcontrol.RemoteLimitSwitchSource;
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.smartdashboard.*;
+import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import static frc.robotmap.IDs.*;
 
 public class Winch extends SubsystemBase {
 
-	//Winch motors
-	private final CANSparkMax leftMotor = new CANSparkMax(WINCH_LEFT_MOTOR_ID, MotorType.kBrushless);
-	private final CANSparkMax rightMotor = new CANSparkMax(WINCH_RIGHT_MOTOR_ID, MotorType.kBrushless);
-	//Winch Brakes
+	/**
+	 * Motors
+	 */
+	private final VictorSPX leftMotor = new VictorSPX(WINCH_LEFT_MOTOR_ID);
+	private final VictorSPX rightMotor = new VictorSPX(WINCH_RIGHT_MOTOR_ID);
+
+	/**
+	 * Solenoid for brake pistons
+	 */
 	private final DoubleSolenoid lock = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, WINCH_FWD, WINCH_BCK);
 
-	//State variable to track state of locks
+	/**
+	 * Keeps track of whether the brake pistons are extended or not
+	 */
 	private boolean lockEngaged = false;
 
+	/**
+	 * Used for the simulation widgets, not currently functional
+	 */
+	private final Mechanism2d pistonSim = new Mechanism2d(60, 60);
+	private final MechanismRoot2d pistonSimRoot = pistonSim.getRoot("Piston", 30, 10);
+	private final MechanismLigament2d piston =
+			pistonSimRoot.append(
+					new MechanismLigament2d(
+							"Piston Casing",
+							20,
+							90
+					)
+			);
+	private final MechanismLigament2d pistonInnards =
+			pistonSimRoot.append(
+					new MechanismLigament2d(
+							"Piston",
+							20,
+							90,
+							4,
+							new Color8Bit(Color.kRed)
+					)
+			);
+
 	public Winch() {
-		leftMotor.restoreFactoryDefaults();
-		rightMotor.restoreFactoryDefaults();
+		// Configure motors
+		leftMotor.configFactoryDefault();
+		rightMotor.configFactoryDefault();
+
+		// Configure limit switch motor integration
+		// TODO: Make sure this actually works like we expect it does
+		leftMotor.configForwardLimitSwitchSource(RemoteLimitSwitchSource.RemoteCANifier, LimitSwitchNormal.NormallyOpen, WINCH_LEFT_LIMIT_SWITCH_ID);
+		leftMotor.configReverseLimitSwitchSource(RemoteLimitSwitchSource.RemoteCANifier, LimitSwitchNormal.NormallyOpen, WINCH_LEFT_LIMIT_SWITCH_ID);
+		rightMotor.configForwardLimitSwitchSource(RemoteLimitSwitchSource.RemoteCANifier, LimitSwitchNormal.NormallyOpen, WINCH_RIGHT_LIMIT_SWITCH_ID);
+		rightMotor.configReverseLimitSwitchSource(RemoteLimitSwitchSource.RemoteCANifier, LimitSwitchNormal.NormallyOpen, WINCH_RIGHT_LIMIT_SWITCH_ID);
+
+		// Lock on startup
+		lock();
+
+		SmartDashboard.putData("Winch Piston", pistonSim);
+	}
+
+	@Override
+	public void simulationPeriodic() {
+		if (lock.get() == Value.kForward) {
+			pistonInnards.setLength(40);
+		} else {
+			pistonInnards.setLength(0);
+		}
 	}
 
 	/**
@@ -31,8 +89,8 @@ public class Winch extends SubsystemBase {
 	 * @param speed Speed from -1 to 1
 	 */
 	public void runWinch(double speed) {
-		leftMotor.set(speed);
-		rightMotor.set(speed);
+		leftMotor.set(ControlMode.PercentOutput, speed);
+		rightMotor.set(ControlMode.PercentOutput, speed);
 	}
 
 	/**

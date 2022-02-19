@@ -88,6 +88,10 @@ public class ShooterArm extends SubsystemBase {
 					Units.degreesToRadians(SHOOTER_ARM_MAX_VELOCITY),
 					Units.degreesToRadians(SHOOTER_ARM_MAX_ACCEL)
 			);
+
+	private TrapezoidProfile.State goal;
+	private TrapezoidProfile.State lpr;
+
 	/**
 	 * Used for simulating the mechanism
 	 */
@@ -147,63 +151,81 @@ public class ShooterArm extends SubsystemBase {
 	private double currentVoltage = 0;
 
 	public ShooterArm() {
-		//Reset the controllers
+		// Reset the controllers
 		leftMotor.restoreFactoryDefaults();
 		rightMotor.restoreFactoryDefaults();
-		//Set them to use brake mode
+		// Set them to use brake mode
 		leftMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
 		rightMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
 
-		//Set the internal conversions of the motors so that they report in radians
+		// Set the internal conversions of the motors so that they report in radians
 		leftEncoder.setPositionConversionFactor(Math.PI * 2);
 		rightEncoder.setPositionConversionFactor(Math.PI * 2);
 		leftEncoder.setVelocityConversionFactor(Math.PI * 2);
 		rightEncoder.setVelocityConversionFactor(Math.PI * 2);
 
-		//Send the arm widget to Smart Dashboard
+		// Send the arm widget to Smart Dashboard
 		SmartDashboard.putData("Arm Sim", simMech);
 		tower.setColor(new Color8Bit(Color.kBlue));
 
-		//Send the piston widget to Smart Dashboard
-		SmartDashboard.putData("Piston Sim", pistonSim);
+		// Send the piston widget to Smart Dashboard
+		SmartDashboard.putData("Shooter Arm Piston", pistonSim);
 
-		//Default state for the brake piston is extended
+		// Default state for the brake piston is extended
 		setBrake();
 
-		//Reset the state space loop to a known position
+		// Reset the state space loop to a known position
 		loop.reset(VecBuilder.fill(getEncoderPosition(), getEncoderVelocity()));
+		lpr = new TrapezoidProfile.State(getEncoderPosition(), getEncoderVelocity());
+		goal = new TrapezoidProfile.State(0, 0);
 	}
 
 	@Override
 	public void periodic() {
+		// Do we need to run the control loop?
+		if (Math.abs(loop.getXHat(0) - goal.position) < Units.degreesToRadians(SHOOTER_ARM_IS_FINISHED_THRESHOLD)) {
+			// If no, we set the brake and stop the motors
+			setBrake();
+			setVoltage(0);
+		} else {
+			// If yes, we need to release the brake and start the control loop
+			releaseBrake();
+
+			// It is possible to do this without a profile, but having it profiled makes it more accurate
+			// See https://docs.wpilib.org/en/stable/docs/software/advanced-controls/state-space/index.html for more info
+			lpr = (new TrapezoidProfile(constraints, goal, lpr)).calculate(DT);
+			loop.setNextR(lpr.position, lpr.velocity);
+			loop.correct(VecBuilder.fill(getEncoderPosition()));
+			loop.predict(DT);
+			setVoltage(loop.getU(0));
+		}
 	}
 
 	@Override
 	public void simulationPeriodic() {
-		//Update the arm widget if the brake is extended
+		// Update the arm widget if the brake is extended
 		if (getBrakeState()) {
 			pistonInnards.setLength(40);
 		} else {
 			pistonInnards.setLength(0);
 		}
 
-		//Set inputs to the simulator
+		// Set inputs to the simulator
 		sim.setInputVoltage(currentVoltage);
 
-		//Update the sim (default time is 20 ms)
+		// Update the sim (default time is 20 ms)
 		sim.update(DT);
 
-		//Update the position of the encoders from the sim
+		// Update the position of the encoders from the sim
 		leftEncoder.setPosition(sim.getAngleRads());
 		rightEncoder.setPosition(sim.getAngleRads());
 
-		//Set the angle of the arm widget from the kalman filter
+		// Set the angle of the arm widget from the kalman filter
 		arm.setAngle(Units.radiansToDegrees(loop.getObserver().getXhat(0)));
 	}
 
 	/**
 	 * Get the current position of the mechanism
-	 *
 	 * @return average encoder position in radians
 	 */
 	public double getEncoderPosition() {
@@ -212,7 +234,6 @@ public class ShooterArm extends SubsystemBase {
 
 	/**
 	 * Get the current velocity of the encoders
-	 *
 	 * @return average encoder velocity in radians per second
 	 */
 	public double getEncoderVelocity() {
@@ -221,7 +242,6 @@ public class ShooterArm extends SubsystemBase {
 
 	/**
 	 * Get the state space loop
-	 *
 	 * @return a linear system loop that contains the plant, observer, and controller for the mechanism
 	 */
 	public LinearSystemLoop<N2, N1, N1> getLoop() {
@@ -230,7 +250,6 @@ public class ShooterArm extends SubsystemBase {
 
 	/**
 	 * Get the physical constraints of the mechanism
-	 *
 	 * @return contains the maximum velocity and acceleration of the mechanism
 	 */
 	public TrapezoidProfile.Constraints getConstraints() {
@@ -238,8 +257,27 @@ public class ShooterArm extends SubsystemBase {
 	}
 
 	/**
+	 * Set the target angle of state space loop
+	 * @param angle desired (Radians)
+	 */
+	public void setGoalPos(double angle) {
+		goal = new TrapezoidProfile.State(Units.degreesToRadians(angle), 0);
+	}
+
+	/**
+	 * Return the target angle of state space loop
+	 * @return position (Degrees) and velocity (m/s)
+	 */
+	public double getGoalPos() {
+		return Units.radiansToDegrees(goal.position);
+	}
+
+	public boolean isAtTarget() {
+		return getBrakeState();
+	}
+
+	/**
 	 * Set the voltage of the motors
-	 *
 	 * @param voltage desired voltage
 	 */
 	public void setVoltage(double voltage) {
@@ -250,7 +288,6 @@ public class ShooterArm extends SubsystemBase {
 
 	/**
 	 * Get the state of the brake piston
-	 *
 	 * @return false -> retracted / true -> extended
 	 */
 	public boolean getBrakeState() {

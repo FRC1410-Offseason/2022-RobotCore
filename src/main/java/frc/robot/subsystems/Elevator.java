@@ -30,20 +30,28 @@ import static frc.robotmap.IDs.*;
 
 public class Elevator extends SubsystemBase {
 
-	//Elevator motors
+	// Elevator motors
 	private final CANSparkMax leftMotor = new CANSparkMax(ELEVATOR_LEFT_MOTOR_ID, CANSparkMaxLowLevel.MotorType.kBrushless);
 	private final CANSparkMax rightMotor = new CANSparkMax(ELEVATOR_RIGHT_MOTOR_ID, CANSparkMaxLowLevel.MotorType.kBrushless);
 	private double currentVoltage = 0;
 
+	/**
+	 * Grab the encoders from the motor objects
+	 */
 	private final RelativeEncoder leftEncoder = leftMotor.getEncoder();
 	private final RelativeEncoder rightEncoder = rightMotor.getEncoder();
 
-	//Elevator Brakes
+	// Elevator Brakes
 	private final DoubleSolenoid lock = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, ELEVATOR_FWD, ELEVATOR_BCK);
 
-	//State variable to track state of locks
+	// State variable to track state of locks
 	private boolean locked = false;
 
+	/**
+	 * A constraints object that represents the physical limits of the mechanism
+	 * Used in some implementations of state space control
+	 * Not used currently because we are not currently using state space control for the mechanism
+	 */
 	private final TrapezoidProfile.Constraints constraints =
 			new TrapezoidProfile.Constraints(
 					ELEVATOR_MAX_VEL,
@@ -56,6 +64,10 @@ public class Elevator extends SubsystemBase {
 //					ELEVATOR_KA
 //			);
 
+	/**
+	 * The state space model of the mechanism, currently it is only used for the simulation
+	 * Used for the observer, controller, and loop
+	 */
 	private final LinearSystem<N2, N1, N1> plant =
 			LinearSystemId.createElevatorSystem(
 					DCMotor.getNEO(1),
@@ -64,6 +76,12 @@ public class Elevator extends SubsystemBase {
 					GEAR_RATIO
 			);
 
+	/**
+	 * The observer for the mechanism, not currently used
+	 * Given the last known position and the state space system,
+	 * it estimates the current position
+	 * We call the `correct()` method with the current encoder position periodically to correct the filter's position
+	 */
 	private final KalmanFilter<N2, N1, N1> observer =
 			new KalmanFilter<>(
 					Nat.N2(),
@@ -74,6 +92,9 @@ public class Elevator extends SubsystemBase {
 					DT
 			);
 
+	/**
+	 * The controller for the mechanism, not currently used
+	 */
 	private final LinearQuadraticRegulator<N2, N1, N1> controller =
 			new LinearQuadraticRegulator<>(
 					plant,
@@ -82,11 +103,21 @@ public class Elevator extends SubsystemBase {
 					DT
 			);
 
+	/**
+	 * The loop pulls a plant, a controller, and observer into one object
+	 * It just makes using it a lot nicer overall
+	 */
 	private final LinearSystemLoop<N2, N1, N1> loop =
 			new LinearSystemLoop<>(plant, controller, observer, ELEVATOR_CTRL_TOLERANCE, DT);
 
+	/**
+	 * The simulation system
+	 */
 	private final LinearSystemSim<N2, N1, N1> sim = new LinearSystemSim<>(plant);
 
+	/**
+	 * Used for the widget that shows the height of hte elevator in the simulator
+	 */
 	private final Mechanism2d simWidget = new Mechanism2d(20, 50);
 	private final MechanismRoot2d widgetRoot = simWidget.getRoot("Elevator Root", 10, 0);
 	private final MechanismLigament2d elevatorSim =
@@ -122,24 +153,22 @@ public class Elevator extends SubsystemBase {
 					)
 			);
 
-
 	public Elevator() {
+		//Reset the motors
 		leftMotor.restoreFactoryDefaults();
 		rightMotor.restoreFactoryDefaults();
-
+		
+		//The motors to brake mode
 		leftMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
 		rightMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
 
+		//Set the conversion factor for the encoders so that they report in meters instead of rev ticks
 		leftEncoder.setPositionConversionFactor(ELEVATOR_METERS_PER_REV);
 		rightEncoder.setPositionConversionFactor(ELEVATOR_METERS_PER_REV);
 
+		// Send the sim stuff to the simulation over networktables
 		SmartDashboard.putData("Elevator Sim", simWidget);
 		SmartDashboard.putData("Elevator Piston", pistonSim);
-	}
-
-	@Override
-	public void periodic() {
-
 	}
 
 	@Override
@@ -160,37 +189,69 @@ public class Elevator extends SubsystemBase {
 		elevatorSim.setLength(sim.getOutput(0) * 23);
 	}
 
+	/**
+	 * Get the control loop
+	 * @return a LinearSystemLoop object that contains the plant, observer, and controller for the mech
+	 */
 	public LinearSystemLoop<N2, N1, N1> getLoop() {
 		return loop;
 	}
 
+	/**
+	 * Get the physical constraints of the mechanism
+	 * @return has a max velocity and max acceleration of the mech
+	 */
 	public TrapezoidProfile.Constraints getConstraints() {
 		return constraints;
 	}
 
+	/**
+	 * Get the current position of the mechanism in meters
+	 * @return the pose of the mech in meters from 0
+	 */
 	public double getEncoderPosition() {
 		return (leftEncoder.getPosition() + rightEncoder.getPosition()) / 2;
 	}
 
+	/**
+	 * Get the current velocity of the mechanism in meters per second
+	 * @return the velocity of the mech in meters per second
+	 */
 	public double getEncoderVelocity() {
 		return (leftEncoder.getVelocity() + rightEncoder.getVelocity()) / 2;
 	}
 
+	/**
+	 * Set the voltage of the motors
+	 * @param voltage -12 to 12 volts
+	 */
 	public void setVoltage(double voltage) {
 		currentVoltage = voltage;
 		leftMotor.setVoltage(voltage);
 		rightMotor.setVoltage(voltage);
 	}
 
+	/**
+	 * Set the speed of the motors
+	 * @param speed a double -1 to 1
+	 */
 	public void set(double speed) {
 		leftMotor.set(speed);
 		rightMotor.set(speed);
 	}
 
+	/**
+	 * Get the current speed as a double between -1 and 1
+	 * @return a double between -1 and 1
+	 */
 	public double getSpeed() {
 		return (leftMotor.get() + rightMotor.get()) / 2;
 	}
 
+	/**
+	 * Get the current voltage applied to the motors
+	 * @return a voltage between -12 and 12
+	 */
 	public double getCurrentVoltage() {
 		return currentVoltage;
 	}
