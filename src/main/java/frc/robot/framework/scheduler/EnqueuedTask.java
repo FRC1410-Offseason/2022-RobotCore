@@ -1,6 +1,7 @@
 package frc.robot.framework.scheduler;
 
 import frc.robot.framework.scheduler.task.Task;
+import frc.robotmap.IDs.SCHEDULER_PRIORITY;
 
 public class EnqueuedTask implements Comparable<EnqueuedTask> {
 
@@ -9,6 +10,9 @@ public class EnqueuedTask implements Comparable<EnqueuedTask> {
 	private final long period;
 	boolean isPendingCancellation = false;
 	private long targetTime;
+    private SCHEDULER_PRIORITY priority = SCHEDULER_PRIORITY.NULL;
+
+    private boolean enabled;
 
 	public EnqueuedTask(Task task, int id, long initialDelay, long period) {
 		this.task = task;
@@ -25,6 +29,26 @@ public class EnqueuedTask implements Comparable<EnqueuedTask> {
 		this(task, id, 0L, -1L);
 		this.targetTime = 0;
 	}
+
+    public SCHEDULER_PRIORITY getPriority() {
+        return priority;
+    }
+
+    public void setPriority(SCHEDULER_PRIORITY priority) {
+        this.priority = priority;
+    }
+
+    public void enable() {
+        enabled = true;
+    }
+
+    public void disable() {
+        enabled = false;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
 
 	public Task getTask() {
 		return task;
@@ -55,7 +79,7 @@ public class EnqueuedTask implements Comparable<EnqueuedTask> {
 	}
 
 	@Override
-	public int compareTo(EnqueuedTask o) {
-		return Double.compare(this.targetTime, o.targetTime);
+	public int compareTo(EnqueuedTask comparedTask) {
+		return Double.compare(this.targetTime, comparedTask.targetTime);
 	}
 }
