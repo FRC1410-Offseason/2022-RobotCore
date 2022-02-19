@@ -44,6 +44,15 @@ public class Shooter extends SubsystemBase {
 	private final List<Double> yValues = new DoubleArrayList();
 	private double normalization_divisor = 1.0f;
 	private final List<DoubleConsumer> onShot = new ArrayList<>();
+	private double heightTarget = SHOOTER_TARGET_HEIGHT_HIGH;
+
+	/**
+	 * Whether or not to target the low goal
+	 * @param lowgoal
+	 */
+	public void setLowGoalTarget(boolean lowgoal) {
+		heightTarget=lowgoal?SHOOTER_TARGET_HEIGHT_LOW:SHOOTER_TARGET_HEIGHT_HIGH;
+	}
 
 	private final GradientDescentOptimized alphaOptimizer = new GradientDescentOptimized(1, 5) {
 		@Override
@@ -129,25 +138,23 @@ public class Shooter extends SubsystemBase {
 			/ (SHOOTER_I * Math.pow(SHOOTER_WHEEL_RADIUS, 2))) / normalization_divisor) / Math.PI;
 	}
 	
-	private double bounceError(double distance, double alpha) {
-		double h = SHOOTER_TARGET_HEIGHT + SHOOTER_CONSTANT_HEIGHT_OFFSET + (SHOOTER_SIN_ALPHA_MULTIPLIER_HEIGHT_OFFSET * Math.sin(alpha));
+	private double bounceError(double distanceFromCenter, double alpha) {
+		double distance=distanceFromCenter - SHOOTER_DISTANCE_OFFSET;
+		double h = heightTarget + SHOOTER_CONSTANT_HEIGHT_OFFSET + (SHOOTER_SIN_ALPHA_MULTIPLIER_HEIGHT_OFFSET * Math.sin(alpha));
 
 		double beta = Math.atan((2 * h / distance - Math.tan(alpha)));
 		if(beta > 0) {
 			throw new IllegalStateException("Shooter intersection does not have a positive beta value.");
 		}
 		
-		double reflectedBeta = (2 * SHOOTER_CONE_ANGLE_RADIANS) - beta;
 		double v = (Math.sqrt(-SHOOTER_ACCELERATION) * distance) / (Math.cos(alpha) * Math.sqrt(2 * distance * Math.tan(alpha) - 2.0 * h));
 		
 		double verticalVelocity = -Math.sqrt(2.0 * SHOOTER_ACCELERATION * h
 				+ Math.pow(v * Math.sin(alpha), 2.0));
 		double horizontalVelocity = Math.cos(alpha)*v;
 		double velocityAtTarget = Math.sqrt(Math.pow(horizontalVelocity, 2) + Math.pow(verticalVelocity, 2));
-		// Not actually correct, but it's off by a factor of 2pi. So it ends up working.
-		double twiceReflectedBeta = (-2 * SHOOTER_CONE_ANGLE_RADIANS) - reflectedBeta;
 
-		return velocityAtTarget * Math.sin(twiceReflectedBeta); // Vertical component of the projected bounce
+		return velocityAtTarget; //We want to minimize velocity at target.
 	}
 	
 	/**
@@ -173,7 +180,7 @@ public class Shooter extends SubsystemBase {
 		alpha = Math.max(alpha, SHOOTER_MIN_ALPHA);
 		alpha = Math.min(alpha, SHOOTER_MAX_ALPHA);
 		
-		double h = SHOOTER_TARGET_HEIGHT + SHOOTER_CONSTANT_HEIGHT_OFFSET + (SHOOTER_SIN_ALPHA_MULTIPLIER_HEIGHT_OFFSET * Math.sin(alpha));
+		double h = heightTarget + SHOOTER_CONSTANT_HEIGHT_OFFSET + (SHOOTER_SIN_ALPHA_MULTIPLIER_HEIGHT_OFFSET * Math.sin(alpha));
 		double v = (Math.sqrt(-SHOOTER_ACCELERATION) * distance) / (Math.cos(alpha) * Math.sqrt(2 * distance * Math.tan(alpha) - 2 * h));
 		double beta = Math.atan((2 * h / distance - Math.tan(alpha)));
 		
