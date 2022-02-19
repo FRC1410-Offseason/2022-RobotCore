@@ -15,7 +15,7 @@ public class IDs {
 
 	// STORAGE
 	public static final int STORAGE_MOTOR_ID = 41; // Talon SRX / Bag Motor
-	public static final int STORAGE_LINE_BREAK_ID = 0;
+	public static final int STORAGE_LINE_BREAK_ID = 3;
 
 	// INTAKE
 	public static final int INTAKE_FLIPPER_LEFT = 32; // Spark Max / NEO 550
