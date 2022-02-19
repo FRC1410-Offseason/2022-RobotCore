@@ -65,7 +65,9 @@ public class TaskScheduler {
 
 	public void start() {
 
-        if (dumpingDebugTelemetry) debugDumpList();
+        if (dumpingDebugTelemetry) {
+            debugDumpList();
+        }
 
 		while (!stopped) {
 			try {
