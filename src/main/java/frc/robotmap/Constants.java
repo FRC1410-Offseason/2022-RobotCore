@@ -111,7 +111,9 @@ public final class Constants {
 	public static final double SHOOTER_WHEEL_RADIUS = .0762; // M
 	public static final double SHOOTER_BALL_MASS = .270; // KG
 	public static final double SHOOTER_I = 1;
-	public static final double SHOOTER_TARGET_HEIGHT = 2.6416;
+	public static final double SHOOTER_DISTANCE_OFFSET = 0.61; //Radius of the catcher hoop in meters
+	public static final double SHOOTER_TARGET_HEIGHT_HIGH = 2.64;
+	public static final double SHOOTER_TARGET_HEIGHT_LOW = 1.04;
 	public static final double SHOOTER_CONE_ANGLE_RADIANS = 1;
 	public static final double SHOOTER_ACCELERATION = -9.80665;
 	public static final int SHOOTER_ALPHA_OPTIMIZER_STEPS = 100;
