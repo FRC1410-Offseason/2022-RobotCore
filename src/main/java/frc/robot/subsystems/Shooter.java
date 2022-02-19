@@ -139,7 +139,7 @@ public class Shooter extends SubsystemBase {
 	}
 	
 	private double bounceError(double distanceFromCenter, double alpha) {
-		double distance=distanceFromCenter - SHOOTER_DISTANCE_OFFSET;
+		double distance = distanceFromCenter - SHOOTER_DISTANCE_OFFSET;
 		double h = heightTarget + SHOOTER_CONSTANT_HEIGHT_OFFSET + (SHOOTER_SIN_ALPHA_MULTIPLIER_HEIGHT_OFFSET * Math.sin(alpha));
 
 		double beta = Math.atan((2 * h / distance - Math.tan(alpha)));
