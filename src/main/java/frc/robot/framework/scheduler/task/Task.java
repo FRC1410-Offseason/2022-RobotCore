@@ -10,6 +10,8 @@ public interface Task {
 
 	void execute();
 
+    default void end() {}
+
 	default boolean isFinished() {
 		return false;
 	}

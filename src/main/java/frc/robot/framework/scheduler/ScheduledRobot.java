@@ -7,7 +7,7 @@ package frc.robot.framework.scheduler;
 import edu.wpi.first.hal.HAL;
 import edu.wpi.first.wpilibj.DSControlWord;
 import edu.wpi.first.wpilibj.RobotBase;
-import frc.robot.framework.control.ControlScheme;
+import frc.robot.framework.control.controllers.ControlScheme;
 import frc.robot.framework.scheduler.task.SubsystemPeriodicTask;
 import frc.robot.framework.scheduler.task.Task;
 
@@ -26,8 +26,8 @@ public abstract class ScheduledRobot extends RobotBase implements ControlScheme 
 
 	@Override
 	public final void startCompetition() {
-		scheduler.queuePeriodic(new GameModeObserverTask());
-		scheduler.queuePeriodic(new SubsystemPeriodicTask());
+		scheduler.queuePeriodic(new GameModeObserverTask()).enable();
+		scheduler.queuePeriodic(new SubsystemPeriodicTask()).enable();
 
 		robotInit();
 		if (!RobotBase.isReal()) {

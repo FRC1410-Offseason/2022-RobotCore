@@ -9,7 +9,7 @@ import edu.wpi.first.math.system.LinearSystemLoop;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.framework.control.Axis;
+import frc.robot.framework.control.controllers.Axis;
 import frc.robot.subsystems.Elevator;
 
 

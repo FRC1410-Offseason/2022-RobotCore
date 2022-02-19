@@ -40,10 +40,10 @@ public class Robot extends ScheduledRobot {
 
 	@Override
 	public void registerControls() {
-		scheduler.scheduleCommand(new TankDrive(drivetrain, getDriverLeftYAxis(), getDriverRightYAxis())); // Elevator Default Command
-		scheduler.scheduleCommand(new RunElevator(elevator, getOperatorLeftYAxis())); // Elevator Default Command
-		scheduler.scheduleCommand(new RunWinch(winch, getOperatorRightYAxis())); // Winch Default Command
-		scheduler.scheduleCommand(new RunIntake(intake, getOperatorRightTrigger())); // Intake Default Command
+		scheduler.scheduleDefaultCommand(new TankDrive(drivetrain, getDriverLeftYAxis(), getDriverRightYAxis())); // Elevator Default Command
+		scheduler.scheduleDefaultCommand(new RunElevator(elevator, getOperatorLeftYAxis())); // Elevator Default Command
+		scheduler.scheduleDefaultCommand(new RunWinch(winch, getOperatorRightYAxis())); // Winch Default Command
+		scheduler.scheduleDefaultCommand(new RunIntake(intake, getOperatorRightTrigger())); // Intake Default Command
 
 		getDriverRightBumper().whileHeld(new LimelightShoot(drivetrain, limelight, shooter, storage, shooterArm));
 		getOperatorRightBumper().whileHeld(new ToggleIntake(intake)); // To Do: Make this toggle when pressed
