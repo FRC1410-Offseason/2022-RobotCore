@@ -47,7 +47,7 @@ public class RunElevatorStateSpace extends CommandBase {
 
 			armLoop.setNextR(goal.position, goal.velocity);
 			armLoop.correct(VecBuilder.fill(elevator.getEncoderPosition()));
-			armLoop.predict(DT);
+			armLoop.predict(DT50HZ);
 
 			elevator.setVoltage(armLoop.getU(0));
 		} else {

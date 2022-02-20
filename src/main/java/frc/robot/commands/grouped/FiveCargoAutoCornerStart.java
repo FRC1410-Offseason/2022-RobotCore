@@ -15,8 +15,8 @@ import frc.robot.subsystems.ShooterArm;
 import frc.robot.subsystems.Storage;
 import frc.robot.util.Trajectories;
 
-public class FiveCargoAuto extends ParallelCommandGroup {
-    private double upperTarmacToUpperCargoShootDuration;
+public class FiveCargoAutoCornerStart extends ParallelCommandGroup {
+    private double upRightTarmacToUpperCargoShootDuration;
     private double upperCargoShootToUpperFieldDuration;
     private double upperFieldToUpRightCargoDuration;
     private double upRightCargoToTerminalShootDuration;
@@ -41,15 +41,15 @@ public class FiveCargoAuto extends ParallelCommandGroup {
     private final double upperCargoShotRPM = 3000;
     private final double terminalShotRPM = 4700; 
 
-    public FiveCargoAuto(Trajectories trajectories, Intake intake, Shooter shooter, ShooterArm shooterArm, Storage storage) {        
+    public FiveCargoAutoCornerStart(Trajectories trajectories, Intake intake, Shooter shooter, ShooterArm shooterArm, Storage storage) {        
         trajectories.generateAuto();
-        trajectories.setStartingAutonomousPose(trajectories.upperTarmacToUpperCargoShot);
+        trajectories.setStartingAutonomousPose(trajectories.upRightTarmacToUpperCargoShot);
         trajectories.generateConfig(
             NetworkTables.getVelocityConstraint(),
             NetworkTables.getAccelerationConstraint(),
             NetworkTables.getCentripetalAccelerationConstraint());
         
-        upperTarmacToUpperCargoShootDuration = trajectories.upperTarmacToUpperCargoShot.getTotalTimeSeconds();
+        upRightCargoToTerminalShootDuration = trajectories.upRightTarmacToUpperCargoShot.getTotalTimeSeconds();
         upperCargoShootToUpperFieldDuration = trajectories.upperCargoToUpperField.getTotalTimeSeconds();
         upperFieldToUpRightCargoDuration = trajectories.upperFieldToUpRightCargo.getTotalTimeSeconds();
         upRightCargoToTerminalShootDuration = trajectories.upRightCargoToTerminalShot.getTotalTimeSeconds();
@@ -57,7 +57,7 @@ public class FiveCargoAuto extends ParallelCommandGroup {
         upRightCargoDuration = intakeToStorageDuration - 0.25;
         upperCargoShootDuration = intakeToStorageDuration + shooterArmLiftDuration + doubleShootDuration;
 
-        upperTarmacToUpRightCargoDuration = upperTarmacToUpperCargoShootDuration + upperCargoShootDuration +
+        upperTarmacToUpRightCargoDuration = upRightTarmacToUpperCargoShootDuration + upperCargoShootDuration +
             upperCargoShootToUpperFieldDuration + upperFieldToUpRightCargoDuration;
         upperTarmacToTerminalDuration = upperTarmacToUpRightCargoDuration + upRightCargoDuration + upRightCargoToTerminalShootDuration;
         upperTarmacToFifthCargoReady = upperTarmacToTerminalDuration + intakeToStorageDuration + shooterArmLiftDuration + 
@@ -69,7 +69,7 @@ public class FiveCargoAuto extends ParallelCommandGroup {
             // Intake - Works in theory
             new ParallelCommandGroup(
                 new SequentialCommandGroup(
-                    new WaitCommand(upperTarmacToUpperCargoShootDuration - 0.45),
+                    new WaitCommand(upRightTarmacToUpperCargoShootDuration - 0.45),
                     new SetIntakeSpeed(intake, 1, 1)
                 ),
                 new SequentialCommandGroup(
@@ -84,9 +84,9 @@ public class FiveCargoAuto extends ParallelCommandGroup {
             // Shooter - Works in theory
             new ParallelCommandGroup(
                 new SequentialCommandGroup(
-                    new WaitCommand(upperTarmacToUpperCargoShootDuration - shooterSpinupDuration),
+                    new WaitCommand(upRightTarmacToUpperCargoShootDuration - shooterSpinupDuration),
                     new SetShooterRPM(shooter, upperCargoShotRPM),
-                    new WaitCommand(upperTarmacToUpperCargoShootDuration + upperCargoShootDuration + 0.3),
+                    new WaitCommand(upRightTarmacToUpperCargoShootDuration + upperCargoShootDuration + 0.3),
                     new SetShooterRPM(shooter, 0)
                 ),
                 new SequentialCommandGroup(
@@ -106,11 +106,11 @@ public class FiveCargoAuto extends ParallelCommandGroup {
             new ParallelCommandGroup(
                 new SetShooterArmAngle(shooterArm, highestIntakingShooterArmAngle),
                 new SequentialCommandGroup(
-                    new WaitCommand(upperTarmacToUpperCargoShootDuration + intakeToStorageDuration),
+                    new WaitCommand(upRightTarmacToUpperCargoShootDuration + intakeToStorageDuration),
                     new SetShooterArmAngle(shooterArm, highestShooterArmAngle)
                 ),
                 new SequentialCommandGroup(
-                    new WaitCommand(upperTarmacToUpperCargoShootDuration + upperCargoShootDuration),
+                    new WaitCommand(upRightTarmacToUpperCargoShootDuration + upperCargoShootDuration),
                     new SetShooterArmAngle(shooterArm, highestIntakingShooterArmAngle)
                 ),
                 new SequentialCommandGroup(
@@ -129,7 +129,7 @@ public class FiveCargoAuto extends ParallelCommandGroup {
             // Storage - Works in theory
             new ParallelCommandGroup(
                 new SequentialCommandGroup(
-                    new WaitCommand(upperTarmacToUpperCargoShootDuration + intakeToStorageDuration + shooterArmLiftDuration),
+                    new WaitCommand(upRightTarmacToUpperCargoShootDuration + intakeToStorageDuration + shooterArmLiftDuration),
                     new RunStorageForTime(storage, doubleShootDuration)
                 ),
                 new SequentialCommandGroup(
@@ -143,7 +143,7 @@ public class FiveCargoAuto extends ParallelCommandGroup {
             ),
             // Drivetrain - Works in theory
             new SequentialCommandGroup(
-                trajectories.upperTarmacToUpperCargoShotCommand,
+                trajectories.upRightTarmacToUpperCargoShotCommand,
                 new WaitCommand(upperCargoShootDuration),
                 trajectories.upperCargoToUpperFieldCommand,
                 trajectories.upperFieldToUpRightCargoCommand,

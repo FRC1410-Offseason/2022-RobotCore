@@ -13,6 +13,11 @@ import edu.wpi.first.math.numbers.N1;
 
 public final class Constants {
 
+	//TIMING
+	public static final double DT50HZ = 20;
+	public static final double DT200HZ = 5;
+	public static final long TIME_OFFSET = 3;
+
 	// ELEVATOR
 	public static final double GEAR_RATIO = 10.61;
 	public static final double ELEVATOR_MASS = 2.7; // kg, placeholder
@@ -70,7 +75,6 @@ public final class Constants {
 	public static final double SHOOTER_ARM_MAX_ACCEL = 360; // Deg per Second squared
 
 	// DRIVETRAIN
-	public static final double DT = .02;
 
 	public static final double KS = .676; // Position
 	public static final double KV = 2.67; // Velocity

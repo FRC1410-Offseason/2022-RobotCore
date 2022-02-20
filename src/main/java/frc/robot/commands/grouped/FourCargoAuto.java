@@ -41,7 +41,7 @@ public class FourCargoAuto extends ParallelCommandGroup {
 
     public FourCargoAuto(Trajectories trajectories, Intake intake, Shooter shooter, ShooterArm shooterArm, Storage storage) {        
         trajectories.generateAuto();
-        trajectories.setStartingAutonomousPose();
+        trajectories.setStartingAutonomousPose(trajectories.upperTarmacToUpperCargoShot);
         trajectories.generateConfig(
             NetworkTables.getVelocityConstraint(),
             NetworkTables.getAccelerationConstraint(),

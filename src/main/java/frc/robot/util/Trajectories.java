@@ -47,6 +47,10 @@ public class Trajectories {
 		new Pose2d(8.70, 6.50, new Rotation2d(Units.degreesToRadians(90))),
 		new Pose2d(8.70, 7.60, new Rotation2d(Units.degreesToRadians(90)))), config);
 
+	public final Trajectory upRightTarmacToUpperCargoShot = TrajectoryGenerator.generateTrajectory(List.of(
+		new Pose2d(8.95, 6.53, new Rotation2d(Units.degreesToRadians(91.3))),
+		new Pose2d(8.85, 7.50, new Rotation2d(Units.degreesToRadians(80.56)))), config);
+
 	public final Trajectory upperTarmacToUpperCargoShot = TrajectoryGenerator.generateTrajectory(List.of(
 		new Pose2d(8.75, 6.51, new Rotation2d(Units.degreesToRadians(91.3))),
 		new Pose2d(8.85, 7.50, new Rotation2d(Units.degreesToRadians(80.56)))), config);
@@ -67,7 +71,7 @@ public class Trajectories {
 		new Pose2d(8.30, 6.30, new Rotation2d(Units.degreesToRadians(-15))),
 		new Pose2d(15.10, 7.00, new Rotation2d(Units.degreesToRadians(22.9)))), config);
 
-	public RamseteCommand taxiCommand, upperTarmacToUpperCargoShotCommand, upperCargoToUpperFieldCommand;
+	public RamseteCommand taxiCommand, upperTarmacToUpperCargoShotCommand, upRightTarmacToUpperCargoShotCommand, upperCargoToUpperFieldCommand;
 	public RamseteCommand upperFieldToTerminalShotCommand, upperFieldToUpRightCargoCommand, upRightCargoToTerminalShotCommand;
 
 	public Trajectories(Drivetrain drivetrain) {this.drivetrain = drivetrain;}
@@ -80,15 +84,15 @@ public class Trajectories {
 			new SimpleMotorFeedforward(KS, KV, KA),
 			DRIVE_KINEMATICS,
 			drivetrain::getWheelSpeeds,
-			new PIDController(KP_VEL, 0, 0, 0.005),
-			new PIDController(KP_VEL, 0, 0, 0.005),
+			new PIDController(KP_VEL, 0, 0, DT200HZ / 1000),
+			new PIDController(KP_VEL, 0, 0, DT200HZ / 1000),
 			drivetrain::tankDriveVolts,
 			drivetrain
 		);
 	}
 
-	public void setStartingAutonomousPose() {
-		drivetrain.resetPoseEstimation(upperTarmacToUpperCargoShot.getInitialPose());
+	public void setStartingAutonomousPose(Trajectory trajectory) {
+		drivetrain.resetPoseEstimation(trajectory.getInitialPose());
 	}
 
 	public void generateConfig(double maxVelocity, double maxAcceleration, double maxCentripetalAcceleration) {
@@ -107,6 +111,7 @@ public class Trajectories {
 	public void generateAuto() {
 		taxiCommand = generateRamsete(taxi);
 		upperTarmacToUpperCargoShotCommand = generateRamsete(upperTarmacToUpperCargoShot);
+		upRightTarmacToUpperCargoShotCommand = generateRamsete(upRightTarmacToUpperCargoShot);
 		upperCargoToUpperFieldCommand = generateRamsete(upperCargoToUpperField);
 		upperFieldToUpRightCargoCommand = generateRamsete(upperFieldToUpRightCargo);
 		upperFieldToTerminalShotCommand = generateRamsete(upperFieldToTerminalShot);

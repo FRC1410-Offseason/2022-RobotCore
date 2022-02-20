@@ -6,7 +6,6 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import frc.robot.framework.subsystem.SubsystemBase;
 
 import static frc.robotmap.Constants.*;
-import static frc.robotmap.Constants.DT;
 import static frc.robotmap.Tuning.*;
 import static frc.robotmap.IDs.*;
 
@@ -61,7 +60,7 @@ public class Intake extends SubsystemBase {
 		var profile = new TrapezoidProfile(constraints, goal, lpr);
 
 		// Calculate the desired state based the profile
-		lpr = profile.calculate(DT);
+		lpr = profile.calculate(DT50HZ);
 
 		// Set the references of the PID controllers
 		leftController.setReference(lpr.position, CANSparkMax.ControlType.kPosition, 0, feedforward.calculate(lpr.velocity));
