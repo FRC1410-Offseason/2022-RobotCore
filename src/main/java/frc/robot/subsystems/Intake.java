@@ -60,7 +60,7 @@ public class Intake extends SubsystemBase {
 		var profile = new TrapezoidProfile(constraints, goal, lpr);
 
 		// Calculate the desired state based the profile
-		lpr = profile.calculate(dt);
+		lpr = profile.calculate(DT50HZ);
 
 		// Set the references of the PID controllers
 		leftController.setReference(lpr.position, CANSparkMax.ControlType.kPosition, 0, feedforward.calculate(lpr.velocity));

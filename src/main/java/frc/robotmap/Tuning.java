@@ -7,9 +7,6 @@ import edu.wpi.first.math.numbers.N7;
 
 public final class Tuning {
 
-	public static final long DT = 5; // ms
-	public static final long TIME_OFFSET = 3; // ms
-
 	public static final double DRIVER_DEADZONE_VALUE = 0.05;
 	public static final double OPERATOR_DEADZONE_VALUE = 0.05;
 

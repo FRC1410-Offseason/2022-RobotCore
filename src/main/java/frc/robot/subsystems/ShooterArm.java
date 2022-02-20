@@ -63,7 +63,7 @@ public class ShooterArm extends SubsystemBase {
 					plant,
 					VecBuilder.fill(SHOOTER_ARM_POS_CONFIDENCE, SHOOTER_ARM_VEL_CONFIDENCE),
 					VecBuilder.fill(SHOOTER_ARM_ENC_CONFIDENCE),
-					dt
+					DT50HZ
 			);
 	/**
 	 * Controller for the mechanism, part of the state space loop
@@ -73,13 +73,13 @@ public class ShooterArm extends SubsystemBase {
 					plant,
 					VecBuilder.fill(SHOOTER_ARM_POS_TOLERANCE, SHOOTER_ARM_VEL_TOLERANCE),
 					VecBuilder.fill(SHOOTER_ARM_CTRL_TOLERANCE),
-					dt
+					DT50HZ
 			);
 	/**
 	 * Pulls all the different state space parts into one loop to make things easier
 	 */
 	private final LinearSystemLoop<N2, N1, N1> loop =
-			new LinearSystemLoop<>(plant, controller, observer, SHOOTER_ARM_MAX_VOLTAGE, dt);
+			new LinearSystemLoop<>(plant, controller, observer, SHOOTER_ARM_MAX_VOLTAGE, DT50HZ);
 	/**
 	 * Constraints for the control
 	 */
@@ -193,10 +193,10 @@ public class ShooterArm extends SubsystemBase {
 
 			// It is possible to do this without a profile, but having it profiled makes it more accurate
 			// See https://docs.wpilib.org/en/stable/docs/software/advanced-controls/state-space/index.html for more info
-			lpr = (new TrapezoidProfile(constraints, goal, lpr)).calculate(dt);
+			lpr = (new TrapezoidProfile(constraints, goal, lpr)).calculate(DT50HZ);
 			loop.setNextR(lpr.position, lpr.velocity);
 			loop.correct(VecBuilder.fill(getEncoderPosition()));
-			loop.predict(dt);
+			loop.predict(DT50HZ);
 			setVoltage(loop.getU(0));
 		}
 	}
@@ -214,7 +214,7 @@ public class ShooterArm extends SubsystemBase {
 		sim.setInputVoltage(currentVoltage);
 
 		// Update the sim (default time is 20 ms)
-		sim.update(dt);
+		sim.update(DT50HZ);
 
 		// Update the position of the encoders from the sim
 		leftEncoder.setPosition(sim.getAngleRads());

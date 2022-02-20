@@ -12,7 +12,8 @@ import frc.robot.framework.scheduler.ScheduledRobot;
 import frc.robot.framework.scheduler.TaskScheduler;
 import frc.robot.subsystems.*;
 import frc.robot.util.Trajectories;
-import static frc.robotmap.Tuning.*;
+
+import static frc.robotmap.Constants.*;
 
 import static frc.robotmap.IDs.PRESSURE_SENSOR;
 
@@ -23,7 +24,9 @@ public class Robot extends ScheduledRobot {
 	private EnqueuedTask autoTask = null;
 
 	public static void main(String[] args) {RobotBase.startRobot(Robot::new);}
-	private Robot() {super(20);}
+	private Robot() {
+		super((long) DT50HZ);
+	}
 
 	private final Drivetrain drivetrain = new Drivetrain();
 	private final Elevator elevator = new Elevator();
@@ -57,8 +60,8 @@ public class Robot extends ScheduledRobot {
 		NetworkTables.setAutoList(autoList);
 		NetworkTables.setCorrectColor(DriverStation.getAlliance().toString());
 		NetworkTables.setPressure(pressure);
-		if (RobotBase.isReal()) scheduler.scheduleCommand(new PoseEstimation(drivetrain, limelight, shooterArm), TIME_OFFSET, DT);
-		if (RobotBase.isSimulation()) scheduler.scheduleCommand(new DrivetrainSimulation(drivetrain), TIME_OFFSET, DT);
+		if (RobotBase.isReal()) scheduler.scheduleCommand(new PoseEstimation(drivetrain, limelight, shooterArm), TIME_OFFSET, (long) DT200HZ);
+		if (RobotBase.isSimulation()) scheduler.scheduleCommand(new DrivetrainSimulation(drivetrain), TIME_OFFSET, (long) DT200HZ);
 	}
 
 	@Override
@@ -91,7 +94,7 @@ public class Robot extends ScheduledRobot {
 				break;
 		}
 
-		if (autonomousCommand != null) this.autoTask = scheduler.scheduleCommand(autonomousCommand, TIME_OFFSET, DT);
+		if (autonomousCommand != null) this.autoTask = scheduler.scheduleCommand(autonomousCommand, TIME_OFFSET, (long) DT200HZ);
 	}
 
 	@Override

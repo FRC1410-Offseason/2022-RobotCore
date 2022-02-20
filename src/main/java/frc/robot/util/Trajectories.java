@@ -84,8 +84,8 @@ public class Trajectories {
 			new SimpleMotorFeedforward(KS, KV, KA),
 			DRIVE_KINEMATICS,
 			drivetrain::getWheelSpeeds,
-			new PIDController(KP_VEL, 0, 0, ((double)DT) / 1000),
-			new PIDController(KP_VEL, 0, 0, ((double)DT) / 1000),
+			new PIDController(KP_VEL, 0, 0, DT200HZ / 1000),
+			new PIDController(KP_VEL, 0, 0, DT200HZ / 1000),
 			drivetrain::tankDriveVolts,
 			drivetrain
 		);

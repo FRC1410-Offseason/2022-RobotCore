@@ -89,7 +89,7 @@ public class Elevator extends SubsystemBase {
 					plant,
 					VecBuilder.fill(ELEVATOR_POS_CONFIDENCE, ELEVATOR_VEL_CONFIDENCE),
 					VecBuilder.fill(ELEVATOR_ENC_CONFIDENCE),
-					dt
+					DT50HZ
 			);
 
 	/**
@@ -100,7 +100,7 @@ public class Elevator extends SubsystemBase {
 					plant,
 					VecBuilder.fill(ELEVATOR_POS_TOLERANCE, ELEVATOR_VEL_TOLERANCE),
 					VecBuilder.fill(ELEVATOR_CTRL_TOLERANCE),
-					dt
+					DT50HZ
 			);
 
 	/**
@@ -108,7 +108,7 @@ public class Elevator extends SubsystemBase {
 	 * It just makes using it a lot nicer overall
 	 */
 	private final LinearSystemLoop<N2, N1, N1> loop =
-			new LinearSystemLoop<>(plant, controller, observer, ELEVATOR_CTRL_TOLERANCE, dt);
+			new LinearSystemLoop<>(plant, controller, observer, ELEVATOR_CTRL_TOLERANCE, DT50HZ);
 
 	/**
 	 * The simulation system
@@ -180,7 +180,7 @@ public class Elevator extends SubsystemBase {
 			sim.update(0);
 		} else {
 			pistonInnards.setLength(0);
-			sim.update(dt);
+			sim.update(DT50HZ);
 		}
 
 		leftEncoder.setPosition(sim.getOutput(0));

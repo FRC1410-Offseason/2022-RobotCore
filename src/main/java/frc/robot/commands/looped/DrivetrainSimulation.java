@@ -4,7 +4,8 @@ import frc.robot.NetworkTables;
 import frc.robot.subsystems.Drivetrain;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import static frc.robotmap.Tuning.*;
+
+import static frc.robotmap.Constants.DT200HZ;
 
 
 public class DrivetrainSimulation extends CommandBase {
@@ -23,7 +24,7 @@ public class DrivetrainSimulation extends CommandBase {
         drivetrain.drivetrainSimulator.setInputs(
             drivetrain.leftLeader.get() * RobotController.getBatteryVoltage(),
             drivetrain.rightLeader.get() * RobotController.getBatteryVoltage());
-        drivetrain.drivetrainSimulator.update(DT / 1000.0);
+        drivetrain.drivetrainSimulator.update(DT200HZ / 1000.0);
 
         drivetrain.yaw.set(-drivetrain.drivetrainSimulator.getHeading().getDegrees());
 
