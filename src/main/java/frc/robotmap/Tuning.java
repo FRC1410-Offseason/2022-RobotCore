@@ -9,6 +9,7 @@ public final class Tuning {
 
 	public static final double DRIVER_DEADZONE_VALUE = 0.05;
 	public static final double OPERATOR_DEADZONE_VALUE = 0.05;
+    public static final double TEST_DEADZONE_VALUE = 0.10;
 
 	public static final double SHOOTER_LEFT_KP = 0.000135;
 	public static final double SHOOTER_LEFT_KI = 0;
