@@ -60,8 +60,8 @@ public class Robot extends ScheduledRobot {
 		NetworkTables.setAutoList(autoList);
 		NetworkTables.setCorrectColor(DriverStation.getAlliance().toString());
 		NetworkTables.setPressure(pressure);
-		if (RobotBase.isReal()) scheduler.scheduleCommand(new PoseEstimation(drivetrain, limelight, shooterArm), TIME_OFFSET, (long) DT200HZ);
-		if (RobotBase.isSimulation()) scheduler.scheduleCommand(new DrivetrainSimulation(drivetrain), TIME_OFFSET, (long) DT200HZ);
+		if (RobotBase.isReal()) scheduler.scheduleDefaultCommand(new PoseEstimation(drivetrain, limelight, shooterArm), TIME_OFFSET, (long) DT200HZ);
+		if (RobotBase.isSimulation()) scheduler.scheduleDefaultCommand(new DrivetrainSimulation(drivetrain), TIME_OFFSET, (long) DT200HZ);
 	}
 
 	@Override
@@ -94,7 +94,7 @@ public class Robot extends ScheduledRobot {
 				break;
 		}
 
-		if (autonomousCommand != null) this.autoTask = scheduler.scheduleCommand(autonomousCommand, TIME_OFFSET, (long) DT200HZ);
+		if (autonomousCommand != null) this.autoTask = scheduler.scheduleDefaultCommand(autonomousCommand, TIME_OFFSET, (long) DT200HZ);
 	}
 
 	@Override
