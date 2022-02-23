@@ -19,7 +19,7 @@ public class Limelight extends SubsystemBase {
     private PhotonPipelineResult latestResult;
 
 	//TODO: This should probably be moved to a constant
-    private double shooterAngle = 9.981;
+    private double shooterAngle = 19;
 
 	// The current target if there is one
     private PhotonTrackedTarget target;
