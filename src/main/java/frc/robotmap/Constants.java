@@ -107,23 +107,15 @@ public final class Constants {
 	public static final Color BLUE_TARGET = new Color(new Color8Bit(100, 138, 216));
 	public static final Color RED_TARGET = new Color(new Color8Bit(224, 69, 56));
 
-	public static final double STORAGE_INDEX_SPEED = 1;
-	public static final double STORAGE_RUN_SPEED = 1;
-	public static final double STORAGE_REVERSE_SPEED = -1;
-	public static final double STORAGE_OUTTAKE_SPEED = .5;
-	public static final double STORAGE_SHOOT_SPEED = .75;
+	public static final double STORAGE_INDEX_SPEED = -1;
+	public static final double STORAGE_RUN_SPEED = -1;
+	public static final double STORAGE_REVERSE_SPEED = 1;
+	public static final double STORAGE_OUTTAKE_SPEED = -.5;
+	public static final double STORAGE_SHOOT_SPEED = -.75;
+	public static final double STORAGE_INTAKE_SPEED = -1;
 
 	// INTAKE
 	public static final double INTAKE_FORWARD_SPEED = 1;
-
-	public static final TrapezoidProfile.State INTAKE_EXTENDED_STATE = new TrapezoidProfile.State(27, 0);
-	public static final TrapezoidProfile.State INTAKE_RETRACTED_STATE = new TrapezoidProfile.State(0, 0);
-
-	public static final double INTAKE_KS = 1;
-	public static final double INTAKE_KV = 1;
-
-	public static final double INTAKE_MAX_VEL = 1;
-	public static final double INTAKE_MAX_ACCEL = 1;
 
 	// SHOOTER
 	public static final int SHOOTER_OUTTAKE_SPEED = 500;

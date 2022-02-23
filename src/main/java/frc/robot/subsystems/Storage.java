@@ -57,6 +57,8 @@ public class Storage extends SubsystemBase {
 	 */
 	private boolean lineBreakPrev = true;
 
+	private boolean intaking = false;
+
 	/**
 	 * Signals to the rest of the code that there is a cargo of the wrong color somewhere in the storage
 	 */
@@ -91,7 +93,7 @@ public class Storage extends SubsystemBase {
 				currentState.setSlot2(true);
 				currentState.resetSlot1();
 			}
-			// Rising Edge
+		// Rising Edge
 		} else if (!lineBreakPrev && lineBreak.get()) {
 			// Stop motor so we can read the color
 			motor.set(0);
@@ -117,6 +119,12 @@ public class Storage extends SubsystemBase {
 					// If the detected color is blue, and we're on the blue alliance, then the color is correct
 					currentState.setSlot1(true);
 				}
+			}
+		} else {
+			if (intaking) {
+				motor.set(STORAGE_INTAKE_SPEED);
+			} else {
+				motor.set(0);
 			}
 		}
 
@@ -158,6 +166,14 @@ public class Storage extends SubsystemBase {
 	 */
 	public void runStorage(double power) {
 		motor.set(power);
+	}
+
+	public boolean isIntaking() {
+		return intaking;
+	}
+
+	public void setIntaking(boolean intaking) {
+		this.intaking = intaking;
 	}
 }
 
