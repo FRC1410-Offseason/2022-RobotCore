@@ -47,7 +47,7 @@ public class Robot extends ScheduledRobot {
 		scheduler.scheduleDefaultCommand(new TankDrive(drivetrain, getDriverLeftYAxis(), getDriverRightYAxis())); // Elevator Default Command
 		scheduler.scheduleDefaultCommand(new RunElevator(elevator, getOperatorLeftYAxis())); // Elevator Default Command
 		scheduler.scheduleDefaultCommand(new RunWinch(winch, getOperatorRightYAxis())); // Winch Default Command
-		scheduler.scheduleDefaultCommand(new RunIntake(intake, getOperatorRightTrigger())); // Intake Default Command
+		scheduler.scheduleDefaultCommand(new RunIntake(intake, storage, getOperatorRightTrigger())); // Intake Default Command
 
 		scheduler.scheduleDefaultCommand(new RunIntakeFlipper(intakeFlipper));
 		scheduler.scheduleDefaultCommand(new RunShooterArm(shooterArm));
