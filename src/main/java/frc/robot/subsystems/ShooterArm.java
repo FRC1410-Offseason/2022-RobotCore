@@ -1,8 +1,9 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -31,11 +32,10 @@ public class ShooterArm extends SubsystemBase {
 	/**
 	 * Grabbing the encoder objects from the motors
 	 */
-	private final RelativeEncoder leftEncoder = leftMotor.getEncoder();
-	private final RelativeEncoder rightEncoder = rightMotor.getEncoder();
+	private final WPI_TalonSRX encoderMotor;
+	private double encoderOffset = 0;
 
-	private final PIDController leftPID = new PIDController(SA_LEFT_P, SA_LEFT_I, SA_LEFT_D);
-	private final PIDController rightPID = new PIDController(SA_RIGHT_P, SA_RIGHT_I, SA_RIGHT_D);
+	private final PIDController controller = new PIDController(SA_P, SA_I, SA_D); // I am also sad
 
 	private double target = 19;
 
@@ -43,6 +43,8 @@ public class ShooterArm extends SubsystemBase {
 	 * For the physical brake piston on the mechanism
 	 */
 	private final DoubleSolenoid brake = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, SHOOTER_ARM_LOCK_FWD, SHOOTER_ARM_LOCK_BCK);
+
+	//<editor-fold desc="Sim Stuff" defaultstate="collapsed">
 
 	/**
 	 * Used for simulating the mechanism
@@ -102,20 +104,24 @@ public class ShooterArm extends SubsystemBase {
 	 * Used for the simulation, because for some reason it's impossible to get the voltage that a motor is running at
 	 */
 	private double currentVoltage = 0;
+	//</editor-fold>
 
-	public ShooterArm() {
+	public ShooterArm(WPI_TalonSRX encoderMotor) {
 		// Reset the controllers
 		leftMotor.restoreFactoryDefaults();
 		rightMotor.restoreFactoryDefaults();
+
 		// Set them to use brake mode
 		leftMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
 		rightMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
 
-		// Set the internal conversions of the motors so that they report in radians
-		leftEncoder.setPositionConversionFactor(Math.PI * 2);
-		rightEncoder.setPositionConversionFactor(Math.PI * 2);
-		leftEncoder.setVelocityConversionFactor(Math.PI * 2);
-		rightEncoder.setVelocityConversionFactor(Math.PI * 2);
+		leftMotor.setInverted(true);
+		rightMotor.setInverted(false);
+
+		this.encoderMotor = encoderMotor;
+
+		// TODO: Find out if this needs to be relative or absolute for the encoder type
+		encoderMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
 
 		// Send the arm widget to Smart Dashboard
 		SmartDashboard.putData("Arm Sim", simMech);
@@ -129,7 +135,7 @@ public class ShooterArm extends SubsystemBase {
 	}
 
 	@Override
-	// Broken atm
+	// Broken atm, even more so now
 	public void simulationPeriodic() {
 		// Update the arm widget if the brake is extended
 		if (getBrakeState()) {
@@ -143,10 +149,6 @@ public class ShooterArm extends SubsystemBase {
 
 		// Update the sim (default time is 20 ms)
 		sim.update(DT50HZ);
-
-		// Update the position of the encoders from the sim
-		leftEncoder.setPosition(sim.getAngleRads());
-		rightEncoder.setPosition(sim.getAngleRads());
 	}
 
 	public void setTarget(double value) {
@@ -162,12 +164,13 @@ public class ShooterArm extends SubsystemBase {
 	 * @return average encoder position in radians
 	 */
 	public double getEncoderPosition() {
-		return (leftEncoder.getPosition() + rightEncoder.getPosition()) / 2;
+		return (encoderMotor.getSelectedSensorPosition() * 360 / 4096) - encoderOffset;
 	}
 
 	public void runPIDExecute() {
-		leftMotor.set(leftPID.calculate(leftEncoder.getPosition(), target));
-		rightMotor.set(rightPID.calculate(rightEncoder.getPosition(), target));
+		double output = controller.calculate(getEncoderPosition(), target);
+		leftMotor.set(output);
+		rightMotor.set(output);
 	}
 
 	/**

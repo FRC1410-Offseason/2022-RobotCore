@@ -66,13 +66,9 @@ public final class Tuning {
 	public static final double INTAKE_DOWN_POSITION = 12; // Rotations. From testing, real number will be different
 
 	// SHOOTER ARM
-	public static final double SA_LEFT_P = 0.023; // Probably needs to be slightly more aggressive, but that's for later
-	public static final double SA_LEFT_I = 0;
-	public static final double SA_LEFT_D = 0;
-
-	public static final double SA_RIGHT_P = 0.023; // Same as for left
-	public static final double SA_RIGHT_I = 0;
-	public static final double SA_RIGHT_D = 0;
+	public static final double SA_P = 0.023; // Probably needs to be slightly more aggressive, but that's for later
+	public static final double SA_I = 0;
+	public static final double SA_D = 0;
 
 	public static final double SHOOTER_ARM_IS_FINISHED = 1; // Degree
 }
