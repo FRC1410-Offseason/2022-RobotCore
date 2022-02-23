@@ -149,16 +149,6 @@ public class Drivetrain extends SubsystemBase {
 	}
 
 	/**
-	 * Tank drive with deadzoned inputs, expects inputs to be deadzoned before being passed in
-	 * @param deadzonedLeftAxis a double between -1 and 1
-	 * @param deadzonedRightAxis a double between -1 and 1
-	 */
-	public void tankDriveDeadzoned(double deadzonedLeftAxis, double deadzonedRightAxis) {
-		drive.tankDrive(deadzonedLeftAxis, deadzonedRightAxis, false);
-		drive.feed();
-	}
-
-	/**
 	 * Run the drivetrain in arcade mode
 	 * @param forward -1 to 1 representing the desired velocity
 	 * @param rotation -1 to 1 representing the desired angular velocity
@@ -172,7 +162,7 @@ public class Drivetrain extends SubsystemBase {
 	 * @param left -1 to 1 representing left velocity
 	 * @param right -1 to 1 representing right velocity
 	 */
-	public void tankDrive(double left, double right) {
+	public void tankDrive(double left, double right, boolean squareInputs) {
 		drive.tankDrive(left, right, false);
 		drive.feed();
 	}
