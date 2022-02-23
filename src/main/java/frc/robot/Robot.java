@@ -49,6 +49,9 @@ public class Robot extends ScheduledRobot {
 		scheduler.scheduleDefaultCommand(new RunWinch(winch, getOperatorRightYAxis())); // Winch Default Command
 		scheduler.scheduleDefaultCommand(new RunIntake(intake, getOperatorRightTrigger())); // Intake Default Command
 
+		scheduler.scheduleDefaultCommand(new RunIntakeFlipper(intakeFlipper));
+		scheduler.scheduleDefaultCommand(new RunShooterArm(shooterArm));
+
 		getDriverRightBumper().whileHeld(new LimelightShoot(drivetrain, limelight, shooter, storage, shooterArm));
 		getOperatorRightBumper().whileHeld(new ToggleIntake(intakeFlipper));
 
