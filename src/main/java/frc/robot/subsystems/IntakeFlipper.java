@@ -19,6 +19,9 @@ public class IntakeFlipper extends SubsystemBase {
 	private final SparkMaxPIDController leftPID = leftMotor.getPIDController();
 	private final SparkMaxPIDController rightPID = rightMotor.getPIDController();
 
+	// 0 will be the retracted state
+	private double desiredPosition = 0;
+
 	public IntakeFlipper() {
 		leftMotor.restoreFactoryDefaults();
 		rightMotor.restoreFactoryDefaults();
@@ -33,6 +36,34 @@ public class IntakeFlipper extends SubsystemBase {
 
 		leftPID.setOutputRange(INTAKE_DOWN_POWERCAP, INTAKE_UP_POWERCAP);
 		rightPID.setOutputRange(INTAKE_DOWN_POWERCAP, INTAKE_UP_POWERCAP);
+	}
+
+	public void setSpeed(double speed) {
+		leftMotor.set(speed);
+		rightMotor.set(speed);
+	}
+
+	public void resetEncoders() {
+		leftEncoder.setPosition(0);
+		rightEncoder.setPosition(0);
+	}
+
+	public void resetEncoders(double value) {
+		leftEncoder.setPosition(value);
+		rightEncoder.setPosition(value);
+	}
+
+	public void setDesiredPosition(double value) {
+		desiredPosition = value;
+	}
+
+	public double getDesiredPosition() {
+		return desiredPosition;
+	}
+
+	public void setPIDSpeed(double target) {
+		leftPID.setReference(target, CANSparkMax.ControlType.kPosition);
+		rightPID.setReference(target, CANSparkMax.ControlType.kPosition);
 	}
 }
 
