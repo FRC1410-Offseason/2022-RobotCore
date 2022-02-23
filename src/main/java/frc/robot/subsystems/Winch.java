@@ -1,9 +1,11 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
-import com.ctre.phoenix.motorcontrol.RemoteLimitSwitchSource;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
@@ -13,8 +15,15 @@ import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import static frc.robotmap.IDs.*;
+import static frc.robotmap.Constants.*;
 
 public class Winch extends SubsystemBase {
+
+	private final NetworkTableInstance instance = NetworkTableInstance.getDefault();
+	private final NetworkTable table = instance.getTable("Winches");
+
+	private final NetworkTableEntry leftLimit = table.getEntry("Left Limit Switch");
+	private final NetworkTableEntry rightLimit = table.getEntry("Right Limit Switch");
 
 	/**
 	 * Motors
@@ -26,6 +35,12 @@ public class Winch extends SubsystemBase {
 	 * Solenoid for brake pistons
 	 */
 	private final DoubleSolenoid lock = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, WINCH_FWD, WINCH_BCK);
+
+	/**
+	 * Limit switches to prevent demolition
+	 */
+	private final DigitalInput leftSwitch = new DigitalInput(WINCH_LEFT_LIMIT_SWITCH_ID);
+	private final DigitalInput rightSwitch = new DigitalInput(WINCH_RIGHT_LIMIT_SWITCH_ID);
 
 	/**
 	 * Keeps track of whether the brake pistons are extended or not
@@ -61,17 +76,24 @@ public class Winch extends SubsystemBase {
 		leftMotor.configFactoryDefault();
 		rightMotor.configFactoryDefault();
 
+		leftMotor.setInverted(true);
+
 		// Configure limit switch motor integration
 		// TODO: Make sure this actually works like we expect it does
-		leftMotor.configForwardLimitSwitchSource(RemoteLimitSwitchSource.RemoteCANifier, LimitSwitchNormal.NormallyOpen, WINCH_LEFT_LIMIT_SWITCH_ID);
-		leftMotor.configReverseLimitSwitchSource(RemoteLimitSwitchSource.RemoteCANifier, LimitSwitchNormal.NormallyOpen, WINCH_LEFT_LIMIT_SWITCH_ID);
-		rightMotor.configForwardLimitSwitchSource(RemoteLimitSwitchSource.RemoteCANifier, LimitSwitchNormal.NormallyOpen, WINCH_RIGHT_LIMIT_SWITCH_ID);
-		rightMotor.configReverseLimitSwitchSource(RemoteLimitSwitchSource.RemoteCANifier, LimitSwitchNormal.NormallyOpen, WINCH_RIGHT_LIMIT_SWITCH_ID);
-
+		//53.06 differnce in gearboxes?
 		// Lock on startup
-		lock();
+//		lock();
 
 		SmartDashboard.putData("Winch Piston", pistonSim);
+
+		leftLimit.setBoolean(getLeftSwitch());
+		rightLimit.setBoolean(getRightSwitch());
+	}
+
+	@Override
+	public void periodic() {
+		leftLimit.setBoolean(getLeftSwitch());
+		rightLimit.setBoolean(getRightSwitch());
 	}
 
 	@Override
@@ -85,24 +107,45 @@ public class Winch extends SubsystemBase {
 
 	/**
 	 * Sets motor speeds
-	 *
 	 * @param speed Speed from -1 to 1
 	 */
 	public void runWinch(double speed) {
-		leftMotor.set(ControlMode.PercentOutput, speed);
+		// TODO: Make limit switches work
+//		if (!getLeftSwitch() && !getRightSwitch()) {
+//			leftMotor.set(ControlMode.PercentOutput, speed * WINCH_LEFT_MOD);
+//			rightMotor.set(ControlMode.PercentOutput, speed);
+//		} else {
+//			leftMotor.set(ControlMode.PercentOutput, 0);
+//			rightMotor.set(ControlMode.PercentOutput, 0);
+//		}
+		leftMotor.set(ControlMode.PercentOutput, speed * WINCH_LEFT_MOD);
 		rightMotor.set(ControlMode.PercentOutput, speed);
 	}
 
 	/**
+	 * Return value of left limit switch
+	 * @return True / False -> Triggered / Not triggered
+	 */
+	public boolean getLeftSwitch() {
+		return leftSwitch.get();
+	}
+
+	/**
+	 * Return value of right limit switch
+	 * @return True / False -> Triggered / Not triggered
+	 */
+	public boolean getRightSwitch() {
+		return rightSwitch.get();
+	}
+
+	/**
 	 * Set the state of the locks
-	 *
 	 * @param state forward or backward
 	 */
 	public void setLock(Value state) {lock.set(state);}
 
 	/**
 	 * Return the state of the locks
-	 *
 	 * @return True / False -> Locked / Unlocked
 	 */
 	public boolean isLocked() {

@@ -42,37 +42,13 @@ public final class Constants {
 
 
 	// SHOOTER ARM
-	public static final double SHOOTER_ARM_RESTING_ANGLE = 10; // Degrees
-	public static final double SHOOTER_ARM_MAX_ANGLE = 54; // Degrees
-	public static final double SHOOTER_ARM_OUTTAKE_ANGLE = 20; // Degrees
+	public static final double SHOOTER_ARM_RESTING_ANGLE = 19; // Degrees
+	public static final double SHOOTER_ARM_MAX_ANGLE = 53.1; // Degrees
 	public static final double SHOOTER_ARM_ANGLE_OFFSET = 5;
-
-	public static final double SHOOTER_ARM_KV = 0;
-	public static final double SHOOTER_ARM_KA = 0;
 
 	public static final int SHOOTER_ARM_GEARING = 125;
 	public static final double SHOOTER_ARM_LENGTH = .8025; // Meters (nice)
 	public static final double SHOOTER_ARM_MASS = 8.61; // Kg
-
-	// These can probably be removed
-	public static final double SHOOTER_ARM_MIN_ROT = 0; // Deg
-	public static final double SHOOTER_ARM_MAX_ROT = 60; // Deg
-
-	public static final double SHOOTER_ARM_POS_CONFIDENCE = .0001;
-	public static final double SHOOTER_ARM_VEL_CONFIDENCE = .0001;
-	public static final double SHOOTER_ARM_ENC_CONFIDENCE = 1;
-
-	public static final double SHOOTER_ARM_IS_FINISHED_THRESHOLD = .5; // Deg
-
-	public static final double SHOOTER_ARM_POS_TOLERANCE = .1;
-	public static final double SHOOTER_ARM_VEL_TOLERANCE = .01;
-	public static final double SHOOTER_ARM_CTRL_TOLERANCE = 11;
-
-	public static final Matrix<N1, N1> SHOOTER_ARM_NOISE = VecBuilder.fill(0.01);
-
-	public static final double SHOOTER_ARM_MAX_VOLTAGE = 12.0;
-	public static final double SHOOTER_ARM_MAX_VELOCITY = 170; // Deg per Second
-	public static final double SHOOTER_ARM_MAX_ACCEL = 360; // Deg per Second squared
 
 	// DRIVETRAIN
 
@@ -131,27 +107,22 @@ public final class Constants {
 	public static final Color BLUE_TARGET = new Color(new Color8Bit(100, 138, 216));
 	public static final Color RED_TARGET = new Color(new Color8Bit(224, 69, 56));
 
-	public static final double STORAGE_INDEX_SPEED = 1;
-	public static final double STORAGE_RUN_SPEED = 1;
-	public static final double STORAGE_REVERSE_SPEED = -1;
-	public static final double STORAGE_OUTTAKE_SPEED = .5;
-	public static final double STORAGE_SHOOT_SPEED = .75;
+	public static final double STORAGE_INDEX_SPEED = -1;
+	public static final double STORAGE_RUN_SPEED = -1;
+	public static final double STORAGE_REVERSE_SPEED = 1;
+	public static final double STORAGE_OUTTAKE_SPEED = -.5;
+	public static final double STORAGE_SHOOT_SPEED = -.75;
+	public static final double STORAGE_INTAKE_SPEED = -1;
 
 	// INTAKE
 	public static final double INTAKE_FORWARD_SPEED = 1;
 
-	public static final TrapezoidProfile.State INTAKE_EXTENDED_STATE = new TrapezoidProfile.State(27, 0);
-	public static final TrapezoidProfile.State INTAKE_RETRACTED_STATE = new TrapezoidProfile.State(0, 0);
-
-	public static final double INTAKE_KS = 1;
-	public static final double INTAKE_KV = 1;
-
-	public static final double INTAKE_MAX_VEL = 1;
-	public static final double INTAKE_MAX_ACCEL = 1;
-
 	// SHOOTER
 	public static final int SHOOTER_OUTTAKE_SPEED = 500;
 	public static final int SHOOTER_RPM_TOLERANCE = 10;
+
+	// WINCH
+	public static final double WINCH_LEFT_MOD = 0.7;
 
 	// FEEDBACK
 	public static final int LED_CONTROLLER_PORT = 0;

@@ -31,9 +31,10 @@ public class Robot extends ScheduledRobot {
 	private final Drivetrain drivetrain = new Drivetrain();
 	private final Elevator elevator = new Elevator();
 	private final Intake intake = new Intake();
+	private final IntakeFlipper intakeFlipper = new IntakeFlipper();
 	private final Shooter shooter = new Shooter();
-	private final ShooterArm shooterArm = new ShooterArm();
 	private final Storage storage = new Storage(DriverStation.getAlliance());
+	private final ShooterArm shooterArm = new ShooterArm(storage.getShooterArmMotor());
 	private final Winch winch = new Winch();
 	private final Limelight limelight = new Limelight();
 	private final Trajectories auto = new Trajectories(drivetrain);
@@ -46,13 +47,16 @@ public class Robot extends ScheduledRobot {
 		scheduler.scheduleDefaultCommand(new TankDrive(drivetrain, getDriverLeftYAxis(), getDriverRightYAxis())); // Elevator Default Command
 		scheduler.scheduleDefaultCommand(new RunElevator(elevator, getOperatorLeftYAxis())); // Elevator Default Command
 		scheduler.scheduleDefaultCommand(new RunWinch(winch, getOperatorRightYAxis())); // Winch Default Command
-		scheduler.scheduleDefaultCommand(new RunIntake(intake, getOperatorRightTrigger())); // Intake Default Command
+		scheduler.scheduleDefaultCommand(new RunIntake(intake, storage, getOperatorRightTrigger())); // Intake Default Command
+
+		scheduler.scheduleDefaultCommand(new RunIntakeFlipper(intakeFlipper));
+		scheduler.scheduleDefaultCommand(new RunShooterArm(shooterArm));
 
 		getDriverRightBumper().whileHeld(new LimelightShoot(drivetrain, limelight, shooter, storage, shooterArm));
-		getOperatorRightBumper().whileHeld(new ToggleIntake(intake)); // To Do: Make this toggle when pressed
+		getOperatorRightBumper().whileHeld(new ToggleIntake(intakeFlipper));
 
-		getOperatorDPadUp().whenPressed(new IncrementShooterArmAngle(shooterArm));
-		getOperatorDPadDown().whenPressed(new DecrementShooterArmAngle(shooterArm));
+		getOperatorDPadUp().whenPressed(new SetShooterArmAngle(shooterArm, shooterArm.getTarget() + SHOOTER_ARM_ANGLE_OFFSET));
+		getOperatorDPadDown().whenPressed(new SetShooterArmAngle(shooterArm, shooterArm.getTarget() - SHOOTER_ARM_ANGLE_OFFSET));
 	}
 
 	@Override
@@ -71,23 +75,23 @@ public class Robot extends ScheduledRobot {
 
 		switch ((int)NetworkTables.getAutoChooser()) {
 			case 3:
-				autonomousCommand = new ThreeCargoAutoClose(auto, intake, shooter, shooterArm, storage);
+				autonomousCommand = new ThreeCargoAutoClose(auto, intake, intakeFlipper, shooter, shooterArm, storage);
 				break;
 
 			case 4:
-				autonomousCommand = new ThreeCargoTerminalAuto(auto, intake, shooter, shooterArm, storage);
+				autonomousCommand = new ThreeCargoTerminalAuto(auto, intake, intakeFlipper, shooter, shooterArm, storage);
 				break;
 
 			case 5:
-				autonomousCommand = new FourCargoAuto(auto, intake, shooter, shooterArm, storage);
+				autonomousCommand = new FourCargoAuto(auto, intake, intakeFlipper, shooter, shooterArm, storage);
 				break;
 
 			case 6:
-				autonomousCommand = new FiveCargoAuto(auto, intake, shooter, shooterArm, storage);
+				autonomousCommand = new FiveCargoAuto(auto, intake, intakeFlipper, shooter, shooterArm, storage);
 				break;
 
 			case 7:
-				autonomousCommand = new FiveCargoAutoCornerStart(auto, intake, shooter, shooterArm, storage);
+				autonomousCommand = new FiveCargoAutoCornerStart(auto, intake, intakeFlipper, shooter, shooterArm, storage);
 				break;
 
 			default:

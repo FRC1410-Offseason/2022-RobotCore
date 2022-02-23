@@ -48,72 +48,16 @@ public class Elevator extends SubsystemBase {
 	private boolean locked = false;
 
 	/**
-	 * A constraints object that represents the physical limits of the mechanism
-	 * Used in some implementations of state space control
-	 * Not used currently because we are not currently using state space control for the mechanism
-	 */
-	private final TrapezoidProfile.Constraints constraints =
-			new TrapezoidProfile.Constraints(
-					ELEVATOR_MAX_VEL,
-					ELEVATOR_MAX_ACCEL
-			);
-
-//	private final LinearSystem<N2, N1, N1> plant =
-//			LinearSystemId.identifyPositionSystem(
-//					ELEVATOR_KV,
-//					ELEVATOR_KA
-//			);
-
-	/**
-	 * The state space model of the mechanism, currently it is only used for the simulation
-	 * Used for the observer, controller, and loop
-	 */
-	private final LinearSystem<N2, N1, N1> plant =
-			LinearSystemId.createElevatorSystem(
-					DCMotor.getNEO(1),
-					ELEVATOR_MASS,
-					Units.inchesToMeters(1),
-					GEAR_RATIO
-			);
-
-	/**
-	 * The observer for the mechanism, not currently used
-	 * Given the last known position and the state space system,
-	 * it estimates the current position
-	 * We call the `correct()` method with the current encoder position periodically to correct the filter's position
-	 */
-	private final KalmanFilter<N2, N1, N1> observer =
-			new KalmanFilter<>(
-					Nat.N2(),
-					Nat.N1(),
-					plant,
-					VecBuilder.fill(ELEVATOR_POS_CONFIDENCE, ELEVATOR_VEL_CONFIDENCE),
-					VecBuilder.fill(ELEVATOR_ENC_CONFIDENCE),
-					DT50HZ
-			);
-
-	/**
-	 * The controller for the mechanism, not currently used
-	 */
-	private final LinearQuadraticRegulator<N2, N1, N1> controller =
-			new LinearQuadraticRegulator<>(
-					plant,
-					VecBuilder.fill(ELEVATOR_POS_TOLERANCE, ELEVATOR_VEL_TOLERANCE),
-					VecBuilder.fill(ELEVATOR_CTRL_TOLERANCE),
-					DT50HZ
-			);
-
-	/**
-	 * The loop pulls a plant, a controller, and observer into one object
-	 * It just makes using it a lot nicer overall
-	 */
-	private final LinearSystemLoop<N2, N1, N1> loop =
-			new LinearSystemLoop<>(plant, controller, observer, ELEVATOR_CTRL_TOLERANCE, DT50HZ);
-
-	/**
 	 * The simulation system
 	 */
-	private final LinearSystemSim<N2, N1, N1> sim = new LinearSystemSim<>(plant);
+	private final LinearSystemSim<N2, N1, N1> sim = new LinearSystemSim<>(
+				LinearSystemId.createElevatorSystem(
+				DCMotor.getNEO(1),
+				ELEVATOR_MASS,
+				Units.inchesToMeters(1),
+				GEAR_RATIO
+		)
+	);
 
 	/**
 	 * Used for the widget that shows the height of hte elevator in the simulator
@@ -142,6 +86,7 @@ public class Elevator extends SubsystemBase {
 							90
 					)
 			);
+
 	private final MechanismLigament2d pistonInnards =
 			pistonSimRoot.append(
 					new MechanismLigament2d(
@@ -161,6 +106,8 @@ public class Elevator extends SubsystemBase {
 		//The motors to brake mode
 		leftMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
 		rightMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
+
+		leftMotor.setInverted(true);
 
 		//Set the conversion factor for the encoders so that they report in meters instead of rev ticks
 		leftEncoder.setPositionConversionFactor(ELEVATOR_METERS_PER_REV);
@@ -187,22 +134,6 @@ public class Elevator extends SubsystemBase {
 		rightEncoder.setPosition(sim.getOutput(0));
 
 		elevatorSim.setLength(sim.getOutput(0) * 23);
-	}
-
-	/**
-	 * Get the control loop
-	 * @return a LinearSystemLoop object that contains the plant, observer, and controller for the mech
-	 */
-	public LinearSystemLoop<N2, N1, N1> getLoop() {
-		return loop;
-	}
-
-	/**
-	 * Get the physical constraints of the mechanism
-	 * @return has a max velocity and max acceleration of the mech
-	 */
-	public TrapezoidProfile.Constraints getConstraints() {
-		return constraints;
 	}
 
 	/**

@@ -47,9 +47,6 @@ public class OuttakeHandler extends CommandBase {
 					// Update the flag to say that we have started outtaking
 					internalOuttakeStarted = true;
 
-					// Set the shooter arm to the outtake position
-					shooterArm.setGoalPos(SHOOTER_ARM_OUTTAKE_ANGLE);
-
 					// Set the speed of the shooter flywheels
 					shooter.setSpeeds(SHOOTER_OUTTAKE_SPEED);
 				}
@@ -65,9 +62,6 @@ public class OuttakeHandler extends CommandBase {
 
 					// Reset the started flag for next time
 					internalOuttakeStarted = false;
-
-					// Have the shooter arm go back down to the resting position
-					shooterArm.setGoalPos(0);
 
 					// Spin down the shooter motors
 					shooter.setSpeeds(0);
