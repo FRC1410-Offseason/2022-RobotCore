@@ -57,4 +57,7 @@ public final class Tuning {
 	public static final double INTAKE_P = 1;
 	public static final double INTAKE_I = 0;
 	public static final double INTAKE_D = 0;
+
+	public static final double INTAKE_DOWN_POWERCAP = -0.5;
+	public static final double INTAKE_UP_POWERCAP = 0.5;
 }

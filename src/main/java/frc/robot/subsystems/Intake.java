@@ -22,15 +22,7 @@ public class Intake extends SubsystemBase {
 	// Motor that runs the intake
 	private final CANSparkMax intakeMotor = new CANSparkMax(INTAKE_MOTOR, CANSparkMaxLowLevel.MotorType.kBrushless);
 
-	// Feedforward for big math
-	private final SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(INTAKE_KS, INTAKE_KV);
-
-	// The physical limits of the mechanism
-	private final TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(INTAKE_MAX_VEL, INTAKE_MAX_ACCEL);
-
-	// Used for control
-	private TrapezoidProfile.State goal = null;
-	private TrapezoidProfile.State lpr = null;
+	private boolean extended = false;
 
 
 	public Intake() {
@@ -48,25 +40,10 @@ public class Intake extends SubsystemBase {
 		rightController.setP(INTAKE_P);
 		rightController.setI(INTAKE_I);
 		rightController.setD(INTAKE_D);
-
-		// Default state is retracted
-		goal = INTAKE_RETRACTED_STATE;
-		lpr = new TrapezoidProfile.State();
 	}
 
 	@Override
-	public void periodic() {
-		// Get the current profile
-		var profile = new TrapezoidProfile(constraints, goal, lpr);
-
-		// Calculate the desired state based the profile
-		lpr = profile.calculate(DT50HZ);
-
-		// Set the references of the PID controllers
-		leftController.setReference(lpr.position, CANSparkMax.ControlType.kPosition, 0, feedforward.calculate(lpr.velocity));
-		rightController.setReference(lpr.position, CANSparkMax.ControlType.kPosition, 0, feedforward.calculate(lpr.velocity));
-
-	}
+	public void periodic() {}
 
 	/**
 	 * Returns the speed of the intake
@@ -100,7 +77,7 @@ public class Intake extends SubsystemBase {
 	 * Toggle the position of the intake
 	 */
 	public void toggle() {
-		if (goal == INTAKE_EXTENDED_STATE) {
+		if (extended) {
 			retract();
 		} else {
 			extend();
@@ -111,8 +88,8 @@ public class Intake extends SubsystemBase {
 	 * Extend the intake
 	 */
 	public void extend() {
-		if (goal != INTAKE_EXTENDED_STATE) {
-			goal = INTAKE_EXTENDED_STATE;
+		if (!extended) {
+
 		}
 	}
 
@@ -120,8 +97,8 @@ public class Intake extends SubsystemBase {
 	 * Retract the intake
 	 */
 	public void retract() {
-		if (goal != INTAKE_RETRACTED_STATE) {
-			goal = INTAKE_RETRACTED_STATE;
-		};
+		if (extended) {
+			retract();
+		}
 	}
 }
