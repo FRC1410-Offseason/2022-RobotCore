@@ -52,8 +52,8 @@ public class Robot extends ScheduledRobot {
 		getDriverRightBumper().whileHeld(new LimelightShoot(drivetrain, limelight, shooter, storage, shooterArm));
 		getOperatorRightBumper().whileHeld(new ToggleIntake(intakeFlipper));
 
-		getOperatorDPadUp().whenPressed(new IncrementShooterArmAngle(shooterArm));
-		getOperatorDPadDown().whenPressed(new DecrementShooterArmAngle(shooterArm));
+		getOperatorDPadUp().whenPressed(new SetShooterArmAngle(shooterArm, shooterArm.getTarget() + SHOOTER_ARM_ANGLE_OFFSET));
+		getOperatorDPadDown().whenPressed(new SetShooterArmAngle(shooterArm, shooterArm.getTarget() - SHOOTER_ARM_ANGLE_OFFSET));
 	}
 
 	@Override

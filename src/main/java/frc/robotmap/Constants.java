@@ -42,37 +42,13 @@ public final class Constants {
 
 
 	// SHOOTER ARM
-	public static final double SHOOTER_ARM_RESTING_ANGLE = 10; // Degrees
-	public static final double SHOOTER_ARM_MAX_ANGLE = 54; // Degrees
-	public static final double SHOOTER_ARM_OUTTAKE_ANGLE = 20; // Degrees
+	public static final double SHOOTER_ARM_RESTING_ANGLE = 19; // Degrees
+	public static final double SHOOTER_ARM_MAX_ANGLE = 53.1; // Degrees
 	public static final double SHOOTER_ARM_ANGLE_OFFSET = 5;
-
-	public static final double SHOOTER_ARM_KV = 0;
-	public static final double SHOOTER_ARM_KA = 0;
 
 	public static final int SHOOTER_ARM_GEARING = 125;
 	public static final double SHOOTER_ARM_LENGTH = .8025; // Meters (nice)
 	public static final double SHOOTER_ARM_MASS = 8.61; // Kg
-
-	// These can probably be removed
-	public static final double SHOOTER_ARM_MIN_ROT = 0; // Deg
-	public static final double SHOOTER_ARM_MAX_ROT = 60; // Deg
-
-	public static final double SHOOTER_ARM_POS_CONFIDENCE = .0001;
-	public static final double SHOOTER_ARM_VEL_CONFIDENCE = .0001;
-	public static final double SHOOTER_ARM_ENC_CONFIDENCE = 1;
-
-	public static final double SHOOTER_ARM_IS_FINISHED_THRESHOLD = .5; // Deg
-
-	public static final double SHOOTER_ARM_POS_TOLERANCE = .1;
-	public static final double SHOOTER_ARM_VEL_TOLERANCE = .01;
-	public static final double SHOOTER_ARM_CTRL_TOLERANCE = 11;
-
-	public static final Matrix<N1, N1> SHOOTER_ARM_NOISE = VecBuilder.fill(0.01);
-
-	public static final double SHOOTER_ARM_MAX_VOLTAGE = 12.0;
-	public static final double SHOOTER_ARM_MAX_VELOCITY = 170; // Deg per Second
-	public static final double SHOOTER_ARM_MAX_ACCEL = 360; // Deg per Second squared
 
 	// DRIVETRAIN
 
