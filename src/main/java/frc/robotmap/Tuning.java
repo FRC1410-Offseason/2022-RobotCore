@@ -60,4 +60,8 @@ public final class Tuning {
 
 	public static final double INTAKE_DOWN_POWERCAP = -0.5;
 	public static final double INTAKE_UP_POWERCAP = 0.5;
+
+	public static final double INTAKE_IS_FINISHED = 0.5; // Rotations
+	public static final double INTAKE_UP_POSITION = 0; // Rotations
+	public static final double INTAKE_DOWN_POSITION = 12; // Rotations. From testing, real number will be different
 }
