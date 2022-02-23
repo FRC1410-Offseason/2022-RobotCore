@@ -20,7 +20,7 @@ public class RunWinch extends CommandBase {
 	public void execute() {
 		if (axis.getDeadzoned() != 0) {
 			winch.unlock();
-			winch.runWinch(axis.getDeadzoned());
+			winch.runWinch(-axis.getDeadzoned());
 		} else {
 			winch.runWinch(0);
 		}

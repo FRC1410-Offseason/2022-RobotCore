@@ -121,6 +121,9 @@ public final class Constants {
 	public static final int SHOOTER_OUTTAKE_SPEED = 500;
 	public static final int SHOOTER_RPM_TOLERANCE = 10;
 
+	// WINCH
+	public static final double WINCH_LEFT_MOD = 0.7;
+
 	// FEEDBACK
 	public static final int LED_CONTROLLER_PORT = 0;
 }
