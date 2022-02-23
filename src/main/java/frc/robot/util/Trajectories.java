@@ -19,23 +19,6 @@ import edu.wpi.first.wpilibj2.command.RamseteCommand;
 public class Trajectories {
 	private final Drivetrain drivetrain;
 
-	// private static final CentripetalAccelerationConstraint CentripetalAccelerationConstraint =
-	// 	new CentripetalAccelerationConstraint(DRIVETRAIN_MAX_CENTRIPETAL_ACCEL);
-
-	// private static final DifferentialDriveVoltageConstraint autoVoltageConstraint = new DifferentialDriveVoltageConstraint(
-	// 	new SimpleMotorFeedforward(KS, KV, KA), DRIVE_KINEMATICS, DRIVETRAIN_MAX_VOLTAGE);
-
-	// private static final TrajectoryConfig config = new TrajectoryConfig(DRIVETRAIN_MAX_SPEED, DRIVETRAIN_MAX_ACCEL)
-	// 	.setKinematics(DRIVE_KINEMATICS)
-	// 	.setReversed(false);
-	// 	// .addConstraint(CentripetalAccelerationConstraint)
-	// 	// .addConstraint(autoVoltageConstraint)
-	// private static final TrajectoryConfig reverseConfig = new TrajectoryConfig(DRIVETRAIN_MAX_SPEED, DRIVETRAIN_MAX_ACCEL)
-	// 	.setKinematics(DRIVE_KINEMATICS)
-	// 	.setReversed(true);
-	// 	// .addConstraint(CentripetalAccelerationConstraint)
-	// 	// .addConstraint(autoVoltageConstraint)
-
 	private static TrajectoryConfig config = new TrajectoryConfig(DRIVETRAIN_MAX_SPEED, DRIVETRAIN_MAX_ACCEL)
 		.setKinematics(DRIVE_KINEMATICS)
 		.setReversed(false);
