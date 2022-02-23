@@ -33,8 +33,8 @@ public class Robot extends ScheduledRobot {
 	private final Intake intake = new Intake();
 	private final IntakeFlipper intakeFlipper = new IntakeFlipper();
 	private final Shooter shooter = new Shooter();
-	private final ShooterArm shooterArm = new ShooterArm();
 	private final Storage storage = new Storage(DriverStation.getAlliance());
+	private final ShooterArm shooterArm = new ShooterArm(storage.getShooterArmMotor());
 	private final Winch winch = new Winch();
 	private final Limelight limelight = new Limelight();
 	private final Trajectories auto = new Trajectories(drivetrain);

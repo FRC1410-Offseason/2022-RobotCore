@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.revrobotics.ColorMatch;
 import com.revrobotics.ColorMatchResult;
@@ -27,7 +28,7 @@ public class Storage extends SubsystemBase {
 	/**
 	 * Motor that runs the storage (bag motor)
 	 */
-	private final WPI_VictorSPX motor = new WPI_VictorSPX(STORAGE_MOTOR_ID);
+	private final WPI_TalonSRX motor = new WPI_TalonSRX(STORAGE_MOTOR_ID);
 
 	/**
 	 * Color sensor for reading the color of the cargo and updating state
@@ -137,6 +138,10 @@ public class Storage extends SubsystemBase {
 	 */
 	public void setOuttakeFlag(boolean flag) {
 		outtakeFlag = flag;
+	}
+
+	public final WPI_TalonSRX getShooterArmMotor() {
+		return motor;
 	}
 
 	/**
