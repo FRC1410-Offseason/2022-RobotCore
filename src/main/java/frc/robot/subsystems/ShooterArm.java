@@ -180,6 +180,10 @@ public class ShooterArm extends SubsystemBase {
 		rightMotor.setVoltage(voltage);
 	}
 
+	public boolean isAtTarget() {
+		return Math.abs(getEncoderPosition() - target) < SHOOTER_ARM_IS_FINISHED;
+	}
+
 	/**
 	 * Get the state of the brake piston
 	 * @return false -> retracted / true -> extended

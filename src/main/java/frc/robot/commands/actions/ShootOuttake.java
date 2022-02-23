@@ -22,9 +22,6 @@ public class ShootOuttake extends CommandBase {
 
 	@Override
 	public void initialize() {
-		// Set the arm to the outtake angle
-		shooterArm.setGoalPos(SHOOTER_ARM_OUTTAKE_ANGLE);
-
 		// Spin up the shooter motors
 		shooter.setSpeeds(SHOOTER_OUTTAKE_SPEED);
 
@@ -50,7 +47,6 @@ public class ShootOuttake extends CommandBase {
 	@Override
 	public void end(boolean interrupted) {
 		// Reset everything
-		shooterArm.setGoalPos(SHOOTER_ARM_RESTING_ANGLE);
 		shooter.setSpeeds(0);
 		storage.runStorage(0);
 		shooter.resetShotCount();
