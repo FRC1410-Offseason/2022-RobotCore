@@ -9,10 +9,7 @@ import frc.robot.commands.actions.RunStorageForTime;
 import frc.robot.commands.actions.SetIntakeSpeed;
 import frc.robot.commands.actions.SetShooterArmAngle;
 import frc.robot.commands.actions.SetShooterRPM;
-import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.Shooter;
-import frc.robot.subsystems.ShooterArm;
-import frc.robot.subsystems.Storage;
+import frc.robot.subsystems.*;
 import frc.robot.util.Trajectories;
 
 public class FourCargoAuto extends ParallelCommandGroup {
@@ -39,7 +36,7 @@ public class FourCargoAuto extends ParallelCommandGroup {
     private final double upperCargoShotRPM = 3000;
     private final double terminalShotRPM = 4700; 
 
-    public FourCargoAuto(Trajectories trajectories, Intake intake, Shooter shooter, ShooterArm shooterArm, Storage storage) {        
+    public FourCargoAuto(Trajectories trajectories, Intake intake, IntakeFlipper intakeFlipper, Shooter shooter, ShooterArm shooterArm, Storage storage) {
         trajectories.generateAuto();
         trajectories.setStartingAutonomousPose(trajectories.upperTarmacToUpperCargoShot);
         trajectories.generateConfig(
@@ -61,7 +58,7 @@ public class FourCargoAuto extends ParallelCommandGroup {
         
         addCommands(
             // Intake Flipper - Works in theory
-            new ExtendIntake(intake),
+            new ExtendIntake(intakeFlipper),
             // Intake - Works in theory
             new ParallelCommandGroup(
                 new SequentialCommandGroup(
