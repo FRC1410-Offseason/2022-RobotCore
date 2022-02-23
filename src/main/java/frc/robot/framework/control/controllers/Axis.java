@@ -92,4 +92,13 @@ public class Axis {
 		else if (magnitude <= 0.9) return (magnitude * 0.9) + 0.185;
 		else return 1;
 	}
+
+	public double getDeadzoneCapped() {
+		double value = getRaw();
+		double magnitude = Math.abs(value);
+
+		if (magnitude <= deadzone) return 0;
+		else if (magnitude <= 0.9) return ((magnitude - deadzone) / (1 - deadzone)) * (value / magnitude);
+		else return 1;
+	}
 }

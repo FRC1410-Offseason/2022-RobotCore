@@ -18,7 +18,7 @@ public class TankDrive extends CommandBase {
 
 	@Override
 	public void execute() {
-		drivetrain.tankDrive(leftAxis.getTeleopAntifriction(), rightAxis.getTeleopAntifriction());
+		drivetrain.tankDrive(leftAxis.getDeadzoneCapped(), rightAxis.getDeadzoneCapped(), true);
 	}
 
 	@Override

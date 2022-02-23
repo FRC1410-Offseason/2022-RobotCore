@@ -59,6 +59,7 @@ public class PoseEstimation extends CommandBase {
         NetworkTables.setEncoderDistance(drivetrain.leftEncoderPosition, drivetrain.rightEncoderPosition);
 
         if (lastPitch != currentPitch && lastYaw != currentYaw && limelight.getTarget() != null) {
+            // We need to convert from dumb 180 wrap to whatever angular theta needs
             drivetrain.poseEstimator.addVisionMeasurement(limelight.getVisionRobotPose(drivetrain.gyro.getYaw(),
                 Units.radiansToDegrees(shooterArm.getEncoderPosition())), imageCaptureTime);
         }
