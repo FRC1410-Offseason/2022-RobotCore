@@ -107,6 +107,8 @@ public class Elevator extends SubsystemBase {
 		leftMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
 		rightMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
 
+		leftMotor.setInverted(true);
+
 		//Set the conversion factor for the encoders so that they report in meters instead of rev ticks
 		leftEncoder.setPositionConversionFactor(ELEVATOR_METERS_PER_REV);
 		rightEncoder.setPositionConversionFactor(ELEVATOR_METERS_PER_REV);
