@@ -84,52 +84,58 @@ public class Storage extends SubsystemBase {
 
 	@Override
 	public void periodic() {
-		// Falling edge
-		if (lineBreakPrev && !lineBreak.get()) {
-			motor.set(STORAGE_INDEX_SPEED);
-			// If there is a ball in the first position, then move it to the second
-			// and reset the first position to be ready for the next ball
-			if (currentState.getSlot1().getBallPresent()) {
-				currentState.setSlot2(true);
-				currentState.resetSlot1();
-			}
-		// Rising Edge
-		} else if (!lineBreakPrev && lineBreak.get()) {
-			// Stop motor so we can read the color
-			motor.set(0);
-			// Read the color from the color sensor
-			ColorMatchResult result = colorMatch.matchClosestColor(colorSensor.getColor());
-			if (result.color.equals(RED_TARGET)) {
-				if (currentAlliance == DriverStation.Alliance.Red) {
-					// If the detected color is red, and we're on the red alliance, then the color is correct
-					currentState.setSlot1(true);
-				} else {
-					// If the detected color is red, and we're on the blue alliance, then the color is incorrect
-					currentState.setSlot1(false);
-					// If the color is wrong then we need to set the outtake flag for the outtake handler
-					outtakeFlag = true;
-				}
-			} else {
-				if (currentAlliance == DriverStation.Alliance.Red) {
-					// If the detected color is blue, and we're on the red alliance, then the color is incorrect
-					currentState.setSlot1(false);
-					// If the color is wrong then we need to set the outtake flag for the outtake handler
-					outtakeFlag = true;
-				} else {
-					// If the detected color is blue, and we're on the blue alliance, then the color is correct
-					currentState.setSlot1(true);
-				}
-			}
-		} else {
-			if (intaking) {
-				motor.set(STORAGE_INTAKE_SPEED);
-			} else {
-				motor.set(0);
-			}
-		}
-
 		// Set lineBreakPrev to the current state of the line break in preparation for the next iteration
 		lineBreakPrev = lineBreak.get();
+	}
+
+	public void updateState() {
+		// Falling edge
+		if (lineBreakPrev && lineBreak.get()) {
+			// If a ball is entering the storage, we need to update the state to tell the storage
+//			if (currentState.getSlot1().getBallPresent()) {
+//				currentState.setSlot2(currentState.getSlot1().getColor() == ColorSensorStatus.ALLIANCE);
+//				currentState.resetSlot1();
+//			}
+		// Rising edge
+		} else if (!lineBreakPrev && lineBreak.get()) {
+			// Get the current color from the color sensor
+			var result = colorMatch.matchClosestColor(colorSensor.getColor());
+			if (result.color.equals(RED_TARGET)) {
+				// If the color is red, and we're on the red alliance, we have the right color
+				if (currentAlliance == DriverStation.Alliance.Red) {
+					if (currentState.getSlot2().getBallPresent()) {
+						currentState.setSlot1(true);
+					} else {
+						currentState.setSlot2(true);
+					}
+				// If the color is red, and we're on the blue alliance, we have the wrong color
+				} else {
+					if (currentState.getSlot2().getBallPresent()) {
+						currentState.setSlot1(false);
+					} else {
+						currentState.setSlot2(false);
+					}
+					outtakeFlag = true;
+				}
+			} else {
+				// If the color is blue, and we're on the red alliance, we have the wrong color
+				if (currentAlliance == DriverStation.Alliance.Red) {
+					if (currentState.getSlot2().getBallPresent()) {
+						currentState.setSlot1(false);
+					} else {
+						currentState.setSlot2(false);
+					}
+					outtakeFlag = true;
+				// If the color is blue, and we're on the blue alliance, we have the wrong color
+				} else {
+					if (currentState.getSlot2().getBallPresent()) {
+						currentState.setSlot1(true);
+					} else {
+						currentState.setSlot2(true);
+					}
+				}
+			}
+		}
 	}
 
 	/**

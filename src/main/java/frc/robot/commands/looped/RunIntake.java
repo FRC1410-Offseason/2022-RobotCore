@@ -6,6 +6,7 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Storage;
 
 import static frc.robotmap.Constants.INTAKE_FORWARD_SPEED;
+import static frc.robotmap.Constants.STORAGE_INTAKE_SPEED;
 
 
 public class RunIntake extends CommandBase {
@@ -25,7 +26,8 @@ public class RunIntake extends CommandBase {
 	@Override
 	public void execute() {
 		intake.setSpeed(axis.getDeadzoned());
-		storage.setIntaking(axis.getDeadzoned() != 0);
+		storage.runStorage(STORAGE_INTAKE_SPEED);
+		storage.updateState();
 	}
 
 	@Override
@@ -36,5 +38,6 @@ public class RunIntake extends CommandBase {
 	@Override
 	public void end(boolean interrupted) {
 		intake.setSpeed(0);
+		storage.runStorage(0);
 	}
 }

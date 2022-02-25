@@ -43,4 +43,8 @@ public class StorageSlot {
 	public boolean getBallPresent() {
 		return ballPresent;
 	}
+
+	public Storage.ColorSensorStatus getColor() {
+		return color;
+	}
 }
