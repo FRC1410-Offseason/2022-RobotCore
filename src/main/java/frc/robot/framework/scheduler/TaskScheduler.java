@@ -106,84 +106,86 @@ public class TaskScheduler {
 
         //Iterate until found observer
         EnqueuedObserver nextEnqueuedObserver;
-		while ((nextEnqueuedObserver = observerQueue.peek()) == null) {}
+		if (!observerQueue.isEmpty()) {
+            while ((nextEnqueuedObserver = observerQueue.peek()) == null) {}
 
-        //Verify matching system states
-		if (nextEnqueuedObserver != observerQueue.poll()) {
-			throw new IllegalStateException("Mismatch in next observer and next item in observerQueue");
-		}
+            //Verify matching system states
+            if (nextEnqueuedObserver != observerQueue.poll()) {
+                throw new IllegalStateException("Mismatch in next observer and next item in observerQueue");
+            }
 
-        Observer nextObserver = nextEnqueuedObserver.getObserver();
+            Observer nextObserver = nextEnqueuedObserver.getObserver();
 
-        //Check state and interrupt commands if necessary and possible
-        nextObserver.check();
+            //Check state and interrupt commands if necessary and possible
+            nextObserver.check();
 
-        //Bless this mess
-        if (nextObserver.isRequestingExecution()) {
-            if (nextObserver.getEnqueuedTask().getTask() instanceof CommandTask) {
-                Command requestedCommand = ((CommandTask) nextObserver.getEnqueuedTask().getTask()).getCommand();
+            //Bless this mess
+            if (nextObserver.isRequestingExecution()) {
+                if (nextObserver.getEnqueuedTask().getTask() instanceof CommandTask) {
+                    Command requestedCommand = ((CommandTask) nextObserver.getEnqueuedTask().getTask()).getCommand();
 
-                if (!requestedCommand.getRequirements().isEmpty()) {
-                    boolean isHighestPriority = true;
-                    for (Subsystem requirement : requestedCommand.getRequirements()) {
-                        if (!(SubsystemRegistry.getLockingTask(requirement) == null)) {
-                            if (nextObserver.getPriority().getValue() < SubsystemRegistry.getLockingTask(requirement).getPriority().getValue()) {
-                                isHighestPriority = false;
-                                break;
-                            } else {
-                                bindingSubsystemTasksToCancel.put(SubsystemRegistry.getLockingTask(requirement), requirement);
+                    if (!requestedCommand.getRequirements().isEmpty()) {
+                        boolean isHighestPriority = true;
+                        for (Subsystem requirement : requestedCommand.getRequirements()) {
+                            if (!(SubsystemRegistry.getLockingTask(requirement) == null)) {
+                                if (nextObserver.getPriority().getValue() < SubsystemRegistry.getLockingTask(requirement).getPriority().getValue()) {
+                                    isHighestPriority = false;
+                                    break;
+                                } else {
+                                    bindingSubsystemTasksToCancel.put(SubsystemRegistry.getLockingTask(requirement), requirement);
+                                }
                             }
                         }
-                    }
-                    if (isHighestPriority) {    //Passed check
-                        //Remove and interrupt currently running command
-                        for (EnqueuedTask taskToCancel : bindingSubsystemTasksToCancel.keySet()) {
-                            ((CommandTask) taskToCancel.getTask()).interrupt();
-                            ((CommandTask) taskToCancel.getTask()).end();
-                            taskToCancel.disable();
-                            SubsystemRegistry.releaseLock(bindingSubsystemTasksToCancel.get(taskToCancel), taskToCancel);
-                        }
-                        bindingSubsystemTasksToCancel.clear();
+                        if (isHighestPriority) {    //Passed check
+                            //Remove and interrupt currently running command
+                            for (EnqueuedTask taskToCancel : bindingSubsystemTasksToCancel.keySet()) {
+                                ((CommandTask) taskToCancel.getTask()).interrupt();
+                                ((CommandTask) taskToCancel.getTask()).end();
+                                taskToCancel.disable();
+                                SubsystemRegistry.releaseLock(bindingSubsystemTasksToCancel.get(taskToCancel), taskToCancel);
+                            }
+                            bindingSubsystemTasksToCancel.clear();
 
-                        //Add currently requested command
-                        for (Subsystem requirement : requestedCommand.getRequirements()) {
-                            SubsystemRegistry.applyLock(requirement, nextObserver.getEnqueuedTask());
-                        }
+                            //Add currently requested command
+                            for (Subsystem requirement : requestedCommand.getRequirements()) {
+                                SubsystemRegistry.applyLock(requirement, nextObserver.getEnqueuedTask());
+                            }
 
-                        if (dumpingDebugTelemetry) System.out.println("Succeeded interruption by " + ((CommandTask) nextObserver.getEnqueuedTask().getTask()).getCommand());
+                            if (dumpingDebugTelemetry) System.out.println("Succeeded interruption by " + ((CommandTask) nextObserver.getEnqueuedTask().getTask()).getCommand());
+                            nextObserver.getEnqueuedTask().enable();
+                            nextObserver.removeRequestExecution();
+                        } else {
+                            if (dumpingDebugTelemetry) System.out.println("Failed interruption by " + ((CommandTask) nextObserver.getEnqueuedTask().getTask()).getCommand());
+                            bindingSubsystemTasksToCancel.clear();
+                        }
+                    } else {
+                        if (dumpingDebugTelemetry) System.out.println("Succeeded interruption by " + nextObserver.getEnqueuedTask().getTask() + " due to lack of subsystem requirements");
                         nextObserver.getEnqueuedTask().enable();
                         nextObserver.removeRequestExecution();
-                    } else {
-                        if (dumpingDebugTelemetry) System.out.println("Failed interruption by " + ((CommandTask) nextObserver.getEnqueuedTask().getTask()).getCommand());
-                        bindingSubsystemTasksToCancel.clear();
                     }
                 } else {
-                    if (dumpingDebugTelemetry) System.out.println("Succeeded interruption by " + nextObserver.getEnqueuedTask().getTask() + " due to lack of subsystem requirements");
+                    if (dumpingDebugTelemetry) System.out.println("Succeeded interruption by " + nextObserver.getEnqueuedTask().getTask() + " due to not being a CommandTask");
                     nextObserver.getEnqueuedTask().enable();
                     nextObserver.removeRequestExecution();
                 }
-            } else {
-                if (dumpingDebugTelemetry) System.out.println("Succeeded interruption by " + nextObserver.getEnqueuedTask().getTask() + " due to not being a CommandTask");
-                nextObserver.getEnqueuedTask().enable();
-                nextObserver.removeRequestExecution();
             }
-        }
 
-        //Disable if requesting cancellation
-        if (nextObserver.isRequestingCancellation()) {
-            if (nextObserver.getEnqueuedTask().getTask() instanceof CommandTask) {
-                for (Subsystem requirement : ((CommandTask) nextObserver.getEnqueuedTask().getTask()).getCommand().getRequirements()) {
-                    SubsystemRegistry.releaseLock(requirement, nextObserver.getEnqueuedTask());
+            //Disable if requesting cancellation
+            if (nextObserver.isRequestingCancellation()) {
+                if (nextObserver.getEnqueuedTask().getTask() instanceof CommandTask) {
+                    for (Subsystem requirement : ((CommandTask) nextObserver.getEnqueuedTask().getTask()).getCommand().getRequirements()) {
+                        SubsystemRegistry.releaseLock(requirement, nextObserver.getEnqueuedTask());
+                    }
                 }
+                nextObserver.getEnqueuedTask().getTask().end();
+                nextObserver.getEnqueuedTask().disable();
+                nextObserver.removeRequestCancellation();
             }
-            nextObserver.getEnqueuedTask().getTask().end();
-            nextObserver.getEnqueuedTask().disable();
-            nextObserver.removeRequestCancellation();
-        }
 
-        //Tick target time and add them back to the queue
-        nextEnqueuedObserver.tickPeriod();
-        observerQueue.add(nextEnqueuedObserver);
+            //Tick target time and add them back to the queue
+            nextEnqueuedObserver.tickPeriod();
+            observerQueue.add(nextEnqueuedObserver);
+        }
         
         EnqueuedTask nextTask;
 		//noinspection StatementWithEmptyBody – no logic needed; block until a task is available
