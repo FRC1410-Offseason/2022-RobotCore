@@ -7,9 +7,9 @@ import edu.wpi.first.math.numbers.N7;
 
 public final class Tuning {
 
-	public static final double DRIVER_DEADZONE_VALUE = 0.05;
-	public static final double OPERATOR_DEADZONE_VALUE = 0.05;
-    public static final double TEST_DEADZONE_VALUE = 0.10;
+	public static final double DRIVER_DEADZONE_VALUE = 0.12;
+	public static final double OPERATOR_DEADZONE_VALUE = 0.12;
+  public static final double TEST_DEADZONE_VALUE = 0.12;
 
 	public static final double SHOOTER_LEFT_KP = 0.000135;
 	public static final double SHOOTER_LEFT_KI = 0;
@@ -58,4 +58,18 @@ public final class Tuning {
 	public static final double INTAKE_P = 1;
 	public static final double INTAKE_I = 0;
 	public static final double INTAKE_D = 0;
+
+	public static final double INTAKE_DOWN_POWERCAP = -0.5;
+	public static final double INTAKE_UP_POWERCAP = 0.5;
+
+	public static final double INTAKE_IS_FINISHED = 0.5; // Rotations
+	public static final double INTAKE_UP_POSITION = 0; // Rotations
+	public static final double INTAKE_DOWN_POSITION = 12; // Rotations. From testing, real number will be different
+
+	// SHOOTER ARM
+	public static final double SA_P = 0.023; // Probably needs to be slightly more aggressive, but that's for later
+	public static final double SA_I = 0;
+	public static final double SA_D = 0;
+
+	public static final double SHOOTER_ARM_IS_FINISHED = 1; // Degree
 }

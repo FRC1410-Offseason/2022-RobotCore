@@ -1,26 +1,35 @@
 package frc.robot.commands.actions;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.NetworkTables;
-import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.IntakeFlipper;
+
 
 public class ExtendIntake extends CommandBase {
 
-	private final Intake intake;
+	private final IntakeFlipper intakeFlipper;
 
-	public ExtendIntake(Intake intake) {
-		this.intake = intake;
-		// addRequirements(intake);
+	public ExtendIntake(IntakeFlipper intakeFlipper) {
+		this.intakeFlipper = intakeFlipper;
 	}
 
 	@Override
 	public void initialize() {
-		intake.extend();
-		NetworkTables.setIntakeDeployed(true);
+		intakeFlipper.setDesiredPosition(true);
+	}
+
+	@Override
+	public void execute() {
+
 	}
 
 	@Override
 	public boolean isFinished() {
-		return true;
+		// TODO: Make this return true when this Command no longer needs to run execute()
+		return false;
+	}
+
+	@Override
+	public void end(boolean interrupted) {
+
 	}
 }

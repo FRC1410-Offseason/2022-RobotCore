@@ -32,12 +32,9 @@ public class LimelightAnglePID extends CommandBase {
 		// Calculate an output from the controller using the current yaw angle from the target
 		double pidOutput = pid.calculate(limelight.getYaw());
 
-		// Square root it to get an anti-friction value
-        double antifrictionOutput = Math.sqrt(pidOutput);
-
 		// If the limelight has a target, then we can set the drivetrain to the outputs from the controller and actually spin the robot
         if (limelight.getTarget() != null) {
-			drivetrain.tankDriveVolts(antifrictionOutput, -antifrictionOutput);
+			drivetrain.tankDriveVolts(-pidOutput, pidOutput);
 		} else {
 			//If not then we don't actually want to move
 			drivetrain.tankDriveVolts(0, 0);

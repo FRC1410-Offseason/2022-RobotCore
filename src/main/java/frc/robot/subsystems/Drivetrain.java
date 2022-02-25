@@ -40,6 +40,7 @@ public class Drivetrain extends SubsystemBase {
 	/**
 	 * Motors
 	 */
+	// TODO: Add encoder conversion factor from calibration
 	public final WPI_TalonFX leftLeader = new WPI_TalonFX(DRIVETRAIN_LEFT_FRONT_MOTOR_ID);
 	public final WPI_TalonFX leftFollower = new WPI_TalonFX(DRIVETRAIN_LEFT_BACK_MOTOR_ID);
 	public final WPI_TalonFX rightLeader = new WPI_TalonFX(DRIVETRAIN_RIGHT_FRONT_MOTOR_ID);
@@ -153,8 +154,8 @@ public class Drivetrain extends SubsystemBase {
 	 * @param deadzonedLeftAxis a double between -1 and 1
 	 * @param deadzonedRightAxis a double between -1 and 1
 	 */
-	public void tankDriveDeadzoned(double deadzonedLeftAxis, double deadzonedRightAxis) {
-		drive.tankDrive(deadzonedLeftAxis, deadzonedRightAxis, false);
+	public void tankDriveDeadzoned(double deadzonedLeftAxis, double deadzonedRightAxis, boolean squared) {
+		drive.tankDrive(deadzonedLeftAxis, deadzonedRightAxis, squared);
 		drive.feed();
 	}
 
@@ -172,8 +173,8 @@ public class Drivetrain extends SubsystemBase {
 	 * @param left -1 to 1 representing left velocity
 	 * @param right -1 to 1 representing right velocity
 	 */
-	public void tankDrive(double left, double right) {
-		drive.tankDrive(left, right, false);
+	public void tankDrive(double left, double right, boolean squared) {
+		drive.tankDrive(left, right, squared);
 		drive.feed();
 	}
 

@@ -332,15 +332,15 @@ public class TaskScheduler {
         return observer.getEnqueuedTask();
 	}
 
-	public EnqueuedTask scheduleCommand(Command command) {
+	private EnqueuedTask scheduleCommand(Command command) {
 		return queuePeriodic(new CommandTask(command));
 	}
 
-	public EnqueuedTask scheduleCommand(Command command, long period) {
+	private EnqueuedTask scheduleCommand(Command command, long period) {
 		return queuePeriodic(new CommandTask(command), period);
 	}
 
-	public EnqueuedTask scheduleCommand(Command command, long initialDelay, long period) {
+	private EnqueuedTask scheduleCommand(Command command, long initialDelay, long period) {
 		return queuePeriodic(new CommandTask(command), initialDelay, period);
 	}
 
