@@ -91,26 +91,48 @@ public class Storage extends SubsystemBase {
 	public void updateState() {
 		// Falling edge
 		if (lineBreakPrev && lineBreak.get()) {
-			if (currentState.getSlot1().getBallPresent()) {
-				currentState.setSlot2(currentState.getSlot1().getColor() == ColorSensorStatus.ALLIANCE);
-				currentState.resetSlot1();
-			}
+			// If a ball is entering the storage, we need to update the state to tell the storage
+//			if (currentState.getSlot1().getBallPresent()) {
+//				currentState.setSlot2(currentState.getSlot1().getColor() == ColorSensorStatus.ALLIANCE);
+//				currentState.resetSlot1();
+//			}
 		// Rising edge
 		} else if (!lineBreakPrev && lineBreak.get()) {
+			// Get the current color from the color sensor
 			var result = colorMatch.matchClosestColor(colorSensor.getColor());
 			if (result.color.equals(RED_TARGET)) {
+				// If the color is red, and we're on the red alliance, we have the right color
 				if (currentAlliance == DriverStation.Alliance.Red) {
-					currentState.setSlot1(true);
+					if (currentState.getSlot2().getBallPresent()) {
+						currentState.setSlot1(true);
+					} else {
+						currentState.setSlot2(true);
+					}
+				// If the color is red, and we're on the blue alliance, we have the wrong color
 				} else {
-					currentState.setSlot1(false);
+					if (currentState.getSlot2().getBallPresent()) {
+						currentState.setSlot1(false);
+					} else {
+						currentState.setSlot2(false);
+					}
 					outtakeFlag = true;
 				}
 			} else {
+				// If the color is blue, and we're on the red alliance, we have the wrong color
 				if (currentAlliance == DriverStation.Alliance.Red) {
-					currentState.setSlot1(false);
+					if (currentState.getSlot2().getBallPresent()) {
+						currentState.setSlot1(false);
+					} else {
+						currentState.setSlot2(false);
+					}
 					outtakeFlag = true;
+				// If the color is blue, and we're on the blue alliance, we have the wrong color
 				} else {
-					currentState.setSlot1(true);
+					if (currentState.getSlot2().getBallPresent()) {
+						currentState.setSlot1(true);
+					} else {
+						currentState.setSlot2(true);
+					}
 				}
 			}
 		}
