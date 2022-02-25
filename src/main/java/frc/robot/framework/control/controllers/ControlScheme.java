@@ -14,6 +14,7 @@ public interface ControlScheme {
 
 	XboxController driverController = new XboxController(DRIVER_CONTROLLER_PORT);
 	XboxController operatorController = new XboxController(OPERATOR_CONTROLLER_PORT);
+    XboxController testController = new XboxController(TEST_CONTROLLER_PORT);
 
 	TaskScheduler getScheduler();
 
@@ -119,6 +120,56 @@ public interface ControlScheme {
 	}
 	// </editor-fold>
 
+    // <editor-fold desc="> Test Controller buttons">
+	default Button getTestAButton() {
+		return new Button(testController, getScheduler(), BUTTON_ID.A);
+	}
+
+	default Button getTestBButton() {
+		return new Button(testController, getScheduler(), BUTTON_ID.B);
+	}
+
+	default Button getTestXButton() {
+		return new Button(testController, getScheduler(), BUTTON_ID.X);
+	}
+
+	default Button getTestYButton() {
+		return new Button(testController, getScheduler(), BUTTON_ID.Y);
+	}
+
+	default Button getTestLeftBumper() {
+		return new Button(testController, getScheduler(), BUTTON_ID.LEFT_BUMPER);
+	}
+
+	default Button getTestRightBumper() {
+		return new Button(testController, getScheduler(), BUTTON_ID.RIGHT_BUMPER);
+	}
+
+	default Button getTestLeftStickButton() {
+		return new Button(testController, getScheduler(), BUTTON_ID.LEFT_STICK_BUTTON);
+	}
+
+	default Button getTestRightStickButton() {
+		return new Button(testController, getScheduler(), BUTTON_ID.RIGHT_STICK_BUTTON);
+	}
+
+	default Button getTestDPadUp() {
+		return new Button(testController, getScheduler(), BUTTON_ID.DPAD_UP);
+	}
+
+    default Button getTestDPadDown() {
+		return new Button(testController, getScheduler(), BUTTON_ID.DPAD_DOWN);
+	}
+
+    default Button getTestDPadLeft() {
+		return new Button(testController, getScheduler(), BUTTON_ID.DPAD_LEFT);
+	}
+
+    default Button getTestDPadRight() {
+		return new Button(testController, getScheduler(), BUTTON_ID.DPAD_RIGHT);
+	}
+	// </editor-fold>
+
 	// <editor-fold desc="> Driver axes">
 	default Axis getDriverLeftXAxis() {
 		return new Axis(driverController, AXIS_ID.LEFT_X, DRIVER_DEADZONE_VALUE);
@@ -168,6 +219,32 @@ public interface ControlScheme {
 
 	default Axis getOperatorRightTrigger() {
 		return new Axis(operatorController, AXIS_ID.RIGHT_TRIGGER, OPERATOR_DEADZONE_VALUE);
+	}
+	// </editor-fold>
+
+    // <editor-fold desc="> Test axes">
+	default Axis getTestLeftXAxis() {
+		return new Axis(testController, AXIS_ID.LEFT_X, TEST_DEADZONE_VALUE);
+	}
+
+	default Axis getTestRightXAxis() {
+		return new Axis(testController, AXIS_ID.RIGHT_X, TEST_DEADZONE_VALUE);
+	}
+
+	default Axis getTestLeftYAxis() {
+		return new Axis(testController, AXIS_ID.LEFT_Y, TEST_DEADZONE_VALUE);
+	}
+
+	default Axis getTestRightYAxis() {
+		return new Axis(testController, AXIS_ID.RIGHT_Y, TEST_DEADZONE_VALUE);
+	}
+
+	default Axis getTestLeftTrigger() {
+		return new Axis(testController, AXIS_ID.LEFT_TRIGGER, TEST_DEADZONE_VALUE);
+	}
+
+	default Axis getTestRightTrigger() {
+		return new Axis(testController, AXIS_ID.RIGHT_TRIGGER, TEST_DEADZONE_VALUE);
 	}
 	// </editor-fold>
 }
