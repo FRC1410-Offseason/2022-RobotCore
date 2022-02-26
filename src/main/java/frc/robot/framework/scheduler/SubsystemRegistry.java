@@ -3,11 +3,12 @@ package frc.robot.framework.scheduler;
 import java.util.*;
 
 import edu.wpi.first.wpilibj2.command.Subsystem;
+import frc.robot.framework.scheduler.task.CommandTask;
 
 public class SubsystemRegistry {
 
 	private static final Set<Subsystem> subsystems = new HashSet<>();
-	private static final Map<Subsystem, EnqueuedTask> requirementLocks = new HashMap<>();
+	private static final Map<Subsystem, CommandTask> requirementLocks = new HashMap<>();
 
 	public static void register(Subsystem subsystem) {
 		subsystems.add(subsystem);
@@ -17,19 +18,40 @@ public class SubsystemRegistry {
 		return subsystems;
 	}
 
-	public static void applyLock(Subsystem subsystem, EnqueuedTask task) {
+    public static boolean isHighestPriority(CommandTask task) {
+        boolean isHighestPriority = true;
+        for (Subsystem requirement : task.getCommand().getRequirements()) {
+            if (getLockingTask(requirement).getPriority().getValue() > task.getPriority().getValue()) {
+                isHighestPriority = false;
+            }
+        }
+        return isHighestPriority;
+    }
+
+    public static void interruptAllNecessaryLocks(CommandTask task) {
+        for (Subsystem requirement : task.getCommand().getRequirements()) {
+            if (!(getLockingTask(requirement) == null)) {
+                getLockingTask(requirement).requestCancellation();
+                releaseLock(requirement, getLockingTask(requirement));
+            }
+        }
+    }
+
+    public static void applyAllNecessaryLocks(CommandTask task) {
+        for (Subsystem requirement : task.getCommand().getRequirements()) {
+            applyLock(requirement, task);
+        }
+    }
+
+	public static void applyLock(Subsystem subsystem, CommandTask task) {
 		requirementLocks.put(subsystem, task);
 	}
 
-	public static boolean ownsLock(Subsystem subsystem, EnqueuedTask task) {
-		return !requirementLocks.containsKey(subsystem) || requirementLocks.get(subsystem) == task;
-	}
-
-	public static EnqueuedTask getLockingTask(Subsystem subsystem) {
+	public static CommandTask getLockingTask(Subsystem subsystem) {
 		return requirementLocks.get(subsystem);
 	}
 
-	public static void releaseLock(Subsystem subsystem, EnqueuedTask task) {
+	public static void releaseLock(Subsystem subsystem, CommandTask task) {
 		requirementLocks.remove(subsystem, task);
 	}
 }

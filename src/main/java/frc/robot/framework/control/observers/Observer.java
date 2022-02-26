@@ -4,29 +4,26 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 
-import frc.robot.framework.scheduler.EnqueuedTask;
 import frc.robot.framework.scheduler.RobotMode;
+import frc.robot.framework.scheduler.task.Task;
 import frc.robotmap.IDs.SCHEDULER_PRIORITY;
 
 public abstract class Observer {
 
-    protected List<EnqueuedTask> boundTaskList = null;
+    protected List<Task> boundTaskList = null;
     protected SCHEDULER_PRIORITY priority = SCHEDULER_PRIORITY.NULL;
 
-    private boolean requesting = false;
-    private boolean cancelling = false;
-
-    public void bind(EnqueuedTask task) {
+    public void bind(Task task) {
         boundTaskList.add(task);
         task.setPriority(priority);
     }
 
-    public void unbind(EnqueuedTask task) {
+    public void unbind(Task task) {
         boundTaskList.remove(task);
         task.setPriority(SCHEDULER_PRIORITY.NULL);
     }
 
-    public List<EnqueuedTask> getEnqueuedTasks() {
+    public List<Task> getEnqueuedTasks() {
         return boundTaskList;
     }
 
@@ -41,19 +38,19 @@ public abstract class Observer {
     public abstract void check();
 
     public void requestExecution() {
-        for (EnqueuedTask task : boundTaskList) task.requestExecution();
+        for (Task task : boundTaskList) task.requestExecution();
     }
 
     public void removeRequestExecution() {
-        for (EnqueuedTask task : boundTaskList) task.removeRequestExecution();
+        for (Task task : boundTaskList) task.removeRequestExecution();
     }
 
     public void requestCancellation() {
-        for (EnqueuedTask task : boundTaskList) task.requestCancellation();
+        for (Task task : boundTaskList) task.requestCancellation();
     }
 
     public void removeRequestCancellation() {
-        for (EnqueuedTask task : boundTaskList) task.removeRequestCancellation();
+        for (Task task : boundTaskList) task.removeRequestCancellation();
     }
 
     Set<RobotMode> getDisallowedModes() {

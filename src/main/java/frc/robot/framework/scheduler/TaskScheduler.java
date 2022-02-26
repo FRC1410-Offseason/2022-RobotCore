@@ -4,8 +4,6 @@ import edu.wpi.first.hal.NotifierJNI;
 import edu.wpi.first.wpilibj.DSControlWord;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.ScheduleCommand;
-import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.framework.control.observers.DefaultCommandObserver;
 import frc.robot.framework.control.observers.EnqueuedObserver;
 import frc.robot.framework.control.observers.Observer;
@@ -15,8 +13,6 @@ import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.PriorityQueue;
 
 import com.fasterxml.jackson.databind.ser.std.StdKeySerializers.Default;

@@ -1,8 +1,9 @@
 package frc.robot.framework.scheduler.task;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.framework.scheduler.SubsystemRegistry;
 
-public class CommandTask implements Task {
+public class CommandTask extends Task {
 
 	private final Command command;
 	private CommandState state = CommandState.PENDING;
@@ -13,6 +14,12 @@ public class CommandTask implements Task {
 
     public Command getCommand() {
         return command;
+    }
+
+    @Override
+    public void initialize() {
+        SubsystemRegistry.interruptAllNecessaryLocks(this);
+        SubsystemRegistry.applyAllNecessaryLocks(this);
     }
 
 	@Override
@@ -57,6 +64,11 @@ public class CommandTask implements Task {
         command.end(true);
 		state = CommandState.FINISHED;
 	}
+
+    @Override
+    public boolean isValidToExecute() {
+        return SubsystemRegistry.isHighestPriority(this);
+    }
 
 	private enum CommandState {
 		PENDING,
