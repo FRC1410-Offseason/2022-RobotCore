@@ -16,6 +16,10 @@ public interface Task {
 		return false;
 	}
 
+    default boolean isValidToExecute() {
+        return true;
+    }
+
 	default Set<RobotMode> getDisallowedModes() {
 		return EnumSet.of(RobotMode.DISABLED);
 	}

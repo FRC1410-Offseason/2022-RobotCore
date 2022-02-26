@@ -50,7 +50,7 @@ public class EnqueuedTask implements Comparable<EnqueuedTask> {
     public void disable() {
         enabled = false;
     }
-    
+
     public boolean isEnabled() {
         return enabled;
     }

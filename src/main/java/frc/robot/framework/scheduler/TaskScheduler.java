@@ -25,7 +25,6 @@ public class TaskScheduler {
     private final PriorityQueue<EnqueuedObserver> observerQueue = new PriorityQueue<>();
 
 	private final PriorityQueue<EnqueuedTask> taskQueue = new PriorityQueue<>();
-    private final Map<EnqueuedTask, Subsystem> bindingSubsystemTasksToCancel = new HashMap<>();
     
 	private final IntOpenHashSet pendingCancellation = new IntOpenHashSet();
 
@@ -135,6 +134,12 @@ public class TaskScheduler {
 			return;
 		}
 
+        //Check if pending initialization, and add it
+        if (nextTask.isRequestingExecution() && nextTask.getTask().isValidToExecute()) {
+            nextTask.enable();
+            nextTask.removeRequestExecution();
+        }
+
         //Update time state for tasks and re-queue them to lists 
 		if (nextTask.isPeriodic() && !nextTask.getTask().isFinished()) {
 			nextTask.tickPeriod();
@@ -146,12 +151,13 @@ public class TaskScheduler {
 			nextTask.getTask().execute();
 		}
 
-        if (nextTask.getTask().isFinished()) {
-            if (nextTask.getTask() instanceof CommandTask) {
-                for (Subsystem requirement : ((CommandTask) nextTask.getTask()).getCommand().getRequirements()) {
-                    SubsystemRegistry.releaseLock(requirement, nextTask);
-                }
-            }
+        if (nextTask.isRequestingCancellation() && nextTask.isEnabled()) {
+            nextTask.getTask().end();
+            nextTask.disable();
+            nextTask.removeRequestCancellation();
+        }
+
+        if (nextTask.getTask().isFinished() && nextTask.isEnabled()) {
             nextTask.getTask().end();
             nextTask.disable();
         }
@@ -205,66 +211,66 @@ public class TaskScheduler {
 	}
 
     @Contract(value = "_, _, _ -> new", mutates = "this")
-	public EnqueuedTask queObservedTask(@NotNull Task task, @NotNull Observer observer, long initialDelay, long period) {
+	public Observer queObservedTask(@NotNull Task task, @NotNull Observer observer, long initialDelay, long period) {
         observer.bind(queueTask(new EnqueuedTask(task, nextTaskId(), initialDelay, period)));
         queueObserver(new EnqueuedObserver(observer, nextObserverId(), initialDelay, period));
-		return observer.getEnqueuedTask();
+		return observer;
 	}
 
 	@Contract(value = "_, _ -> new", mutates = "this")
-	public EnqueuedTask queueObservedTask(@NotNull Task target, @NotNull Observer observer, long period) {
+	public Observer queueObservedTask(@NotNull Task target, @NotNull Observer observer, long period) {
 		observer.bind(queuePeriodic(target, period, period));
         queueObserver(new EnqueuedObserver(observer, nextObserverId(), period));
-        return observer.getEnqueuedTask();
+        return observer;
 	}
 
 	@Contract(value = "_ -> new", mutates = "this")
-	public EnqueuedTask queueObservedTask(@NotNull Task target, @NotNull Observer observer) {
+	public Observer queueObservedTask(@NotNull Task target, @NotNull Observer observer) {
 		observer.bind(queuePeriodic(target, defaultPeriod, defaultPeriod));
         queueObserver(new EnqueuedObserver(observer, nextObserverId()));
-        return observer.getEnqueuedTask();
+        return observer;
 	}
 
     @Contract(value = "_, _, _ -> new", mutates = "this")
-	public EnqueuedTask queueObservedCommand(@NotNull Command command, @NotNull Observer observer, long initialDelay, long period) {
+	public Observer queueObservedCommand(@NotNull Command command, @NotNull Observer observer, long initialDelay, long period) {
         observer.bind(scheduleCommand(command, initialDelay, period));
         queueObserver(new EnqueuedObserver(observer, nextObserverId(), initialDelay, period));
-		return observer.getEnqueuedTask();
+		return observer;
 	}
 
 	@Contract(value = "_, _ -> new", mutates = "this")
-	public EnqueuedTask queueObservedCommand(@NotNull Command command, @NotNull Observer observer, long period) {
+	public Observer queueObservedCommand(@NotNull Command command, @NotNull Observer observer, long period) {
 		observer.bind(scheduleCommand(command, period));
         queueObserver(new EnqueuedObserver(observer, nextObserverId(), period));
-		return observer.getEnqueuedTask();
+		return observer;
 	}
 
 	@Contract(value = "_ -> new", mutates = "this")
-	public EnqueuedTask queueObservedCommand(@NotNull Command command, @NotNull Observer observer) {
+	public Observer queueObservedCommand(@NotNull Command command, @NotNull Observer observer) {
 		observer.bind(scheduleCommand(command));
         queueObserver(new EnqueuedObserver(observer, nextObserverId()));
-		return observer.getEnqueuedTask();
+		return observer;
 	}
 
-    public EnqueuedTask scheduleDefaultCommand(Command command) {
+    public Observer scheduleDefaultCommand(Command command) {
 		final Observer observer = new DefaultCommandObserver();
         observer.bind(scheduleCommand(command));
         queueObserver(new EnqueuedObserver(observer, nextObserverId()));
-        return observer.getEnqueuedTask();
+        return observer;
 	}
 
-    public EnqueuedTask scheduleDefaultCommand(Command command, long period) {
+    public Observer scheduleDefaultCommand(Command command, long period) {
 		final Observer observer = new DefaultCommandObserver();
         observer.bind(scheduleCommand(command, period));
         queueObserver(new EnqueuedObserver(observer, nextObserverId(), period));
-        return observer.getEnqueuedTask();
+        return observer;
 	}
 
-    public EnqueuedTask scheduleDefaultCommand(Command command, long initialDelay, long period) {
+    public Observer scheduleDefaultCommand(Command command, long initialDelay, long period) {
 		final Observer observer = new DefaultCommandObserver();
         observer.bind(scheduleCommand(command, initialDelay, period));
         queueObserver(new EnqueuedObserver(observer, nextObserverId(), initialDelay, period));
-        return observer.getEnqueuedTask();
+        return observer;
 	}
 
 	private EnqueuedTask scheduleCommand(Command command) {
