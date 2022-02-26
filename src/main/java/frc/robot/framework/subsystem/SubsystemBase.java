@@ -1,7 +1,6 @@
 package frc.robot.framework.subsystem;
 
 import edu.wpi.first.wpilibj2.command.Subsystem;
-import frc.robot.framework.scheduler.SubsystemRegistry;
 
 public class SubsystemBase implements Subsystem {
 

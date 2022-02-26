@@ -1,7 +1,7 @@
 package frc.robot.framework.scheduler.task;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.framework.scheduler.SubsystemRegistry;
+import frc.robot.framework.subsystem.SubsystemRegistry;
 
 public class CommandTask extends Task {
 

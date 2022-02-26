@@ -1,7 +1,7 @@
 package frc.robot.framework.control.observers;
 
 import java.util.EnumSet;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Set;
 
 import frc.robot.framework.scheduler.RobotMode;
@@ -10,7 +10,7 @@ import frc.robotmap.IDs.SCHEDULER_PRIORITY;
 
 public abstract class Observer {
 
-    protected List<Task> boundTaskList = null;
+    protected Set<Task> boundTaskList = new HashSet<Task>();
     protected SCHEDULER_PRIORITY priority = SCHEDULER_PRIORITY.NULL;
 
     public void bind(Task task) {
@@ -23,7 +23,7 @@ public abstract class Observer {
         task.setPriority(SCHEDULER_PRIORITY.NULL);
     }
 
-    public List<Task> getEnqueuedTasks() {
+    public Set<Task> getEnqueuedTasks() {
         return boundTaskList;
     }
 
