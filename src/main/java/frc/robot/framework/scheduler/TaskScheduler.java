@@ -4,6 +4,7 @@ import edu.wpi.first.hal.NotifierJNI;
 import edu.wpi.first.wpilibj.DSControlWord;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.framework.control.observers.DefaultCommandObserver;
 import frc.robot.framework.control.observers.EnqueuedObserver;
@@ -17,6 +18,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.PriorityQueue;
+
+import com.fasterxml.jackson.databind.ser.std.StdKeySerializers.Default;
 
 public class TaskScheduler {
 
@@ -252,25 +255,28 @@ public class TaskScheduler {
 		return observer;
 	}
 
-    public Observer scheduleDefaultCommand(Command command) {
-		final Observer observer = new DefaultCommandObserver();
-        observer.bind(scheduleCommand(command));
-        queueObserver(new EnqueuedObserver(observer, nextObserverId()));
-        return observer;
+    public EnqueuedTask scheduleDefaultCommand(Command command) {
+		final EnqueuedTask task = scheduleCommand(command);
+        final DefaultCommandObserver observer = new DefaultCommandObserver();
+        observer.bind(task);
+        queueObserver(new EnqueuedObserver(new DefaultCommandObserver(), nextObserverId()));
+        return task;
 	}
 
-    public Observer scheduleDefaultCommand(Command command, long period) {
-		final Observer observer = new DefaultCommandObserver();
-        observer.bind(scheduleCommand(command, period));
-        queueObserver(new EnqueuedObserver(observer, nextObserverId(), period));
-        return observer;
+    public EnqueuedTask scheduleDefaultCommand(Command command, long period) {
+		final EnqueuedTask task = scheduleCommand(command, period);
+        final DefaultCommandObserver observer = new DefaultCommandObserver();
+        observer.bind(task);
+        queueObserver(new EnqueuedObserver(new DefaultCommandObserver(), nextObserverId()));
+        return task;
 	}
 
-    public Observer scheduleDefaultCommand(Command command, long initialDelay, long period) {
-		final Observer observer = new DefaultCommandObserver();
-        observer.bind(scheduleCommand(command, initialDelay, period));
-        queueObserver(new EnqueuedObserver(observer, nextObserverId(), initialDelay, period));
-        return observer;
+    public EnqueuedTask scheduleDefaultCommand(Command command, long initialDelay, long period) {
+		final EnqueuedTask task = scheduleCommand(command, initialDelay, period);
+        final DefaultCommandObserver observer = new DefaultCommandObserver();
+        observer.bind(task);
+        queueObserver(new EnqueuedObserver(new DefaultCommandObserver(), nextObserverId()));
+        return task;
 	}
 
 	private EnqueuedTask scheduleCommand(Command command) {

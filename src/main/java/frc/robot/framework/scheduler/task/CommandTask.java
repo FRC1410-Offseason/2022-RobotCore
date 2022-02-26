@@ -2,7 +2,7 @@ package frc.robot.framework.scheduler.task;
 
 import edu.wpi.first.wpilibj2.command.Command;
 
-public class CommandTask implements Task {
+public class CommandTask extends Task {
 
 	private final Command command;
 	private CommandState state = CommandState.PENDING;
