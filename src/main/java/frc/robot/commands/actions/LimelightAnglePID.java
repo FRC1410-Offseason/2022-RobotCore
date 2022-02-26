@@ -9,6 +9,7 @@ import frc.robot.subsystems.Limelight;
 public class LimelightAnglePID extends CommandBase {    
     private final Drivetrain drivetrain;
     private final Limelight limelight;
+    private double pidOutput = 0;
     private PIDController pid;
 
 	public LimelightAnglePID(Limelight limelight, Drivetrain drivetrain) {
@@ -30,11 +31,13 @@ public class LimelightAnglePID extends CommandBase {
     @Override
     public void execute() {
 		// Calculate an output from the controller using the current yaw angle from the target
-		double pidOutput = pid.calculate(limelight.getYaw());
 
 		// If the limelight has a target, then we can set the drivetrain to the outputs from the controller and actually spin the robot
+        // Make sure get target does not crash the command
         if (limelight.getTarget() != null) {
-			drivetrain.tankDriveVolts(-pidOutput, pidOutput);
+            // This might be opposite depending on how yaw is calculated
+            pidOutput = pid.calculate(limelight.getYaw());
+			drivetrain.tankDriveVolts(pidOutput, -pidOutput);
 		} else {
 			//If not then we don't actually want to move
 			drivetrain.tankDriveVolts(0, 0);

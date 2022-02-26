@@ -52,18 +52,19 @@ public final class Constants {
 
 	// DRIVETRAIN
 
-	public static final double KS = .676; // Position
-	public static final double KV = 2.67; // Velocity
-	public static final double KA = .34; // Acceleration
-	public static final double KV_ANGULAR = 2.84; // Angular Velocity
-	public static final double KA_ANGULAR = .216; // Angular Acceleration
+	public static final double KS = 0.6803; // Position
+	public static final double KV = 2.6629; // Velocity
+	public static final double KA = 0.41365; // Acceleration
+	// ONLY FOR SIMULATION:
+	public static final double KV_ANGULAR = 2.80; // Angular Velocity
+	public static final double KA_ANGULAR = .200; // Angular Acceleration
 
 	public static final double WHEEL_DIAMETER = .15; // meters
 	public static final double ENCODER_CPR = 2048;
 	public static final double ENCODER_EPR = 2048;
-	public static final double GEARING = 11.998;
+	public static final double GEARING = 11.7818;
 	public static final double METERS_PER_REVOLUTION = .4787787204061;
-	public static final double TRACKWIDTH = .615; // meters
+	public static final double TRACKWIDTH = .69; // meters
 	public static final double ENCODER_DISTANCE_PER_PULSE = (WHEEL_DIAMETER * Math.PI) / ENCODER_CPR;
 	public static final double ENCODER_CONSTANT = (1 / GEARING) * (1 / ENCODER_EPR) * METERS_PER_REVOLUTION;
 

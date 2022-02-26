@@ -19,14 +19,14 @@ public class Limelight extends SubsystemBase {
     private PhotonPipelineResult latestResult;
 
 	//TODO: This should probably be moved to a constant
-    private double shooterAngle = 19;
+    private double shooterAngle = 53.1;
 
 	// The current target if there is one
     private PhotonTrackedTarget target;
 
     public Limelight() {
-		limelight.setDriverMode(false);
-	}
+        limelight.setDriverMode(false);
+    }
 
     @Override
     public void periodic() {        

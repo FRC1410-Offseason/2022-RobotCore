@@ -12,16 +12,15 @@ import frc.robot.framework.scheduler.ScheduledRobot;
 import frc.robot.framework.scheduler.TaskScheduler;
 import frc.robot.subsystems.*;
 import frc.robot.util.Trajectories;
-
 import static frc.robotmap.Constants.*;
-
 import static frc.robotmap.IDs.PRESSURE_SENSOR;
 
 public class Robot extends ScheduledRobot {
 
-	private final String[] autoList = {"Taxi", "2Cargo", "3CargoTerminal", "3CargoUpRight", "4Cargo", "5Cargo"};
+	private final String[] autoList = {"Taxi", "2Cargo"};
 	private final AnalogInput pressure = new AnalogInput(PRESSURE_SENSOR);
 	private EnqueuedTask autoTask = null;
+	private Command autonomousCommand = null;
 
 	public static void main(String[] args) {RobotBase.startRobot(Robot::new);}
 	private Robot() {
@@ -52,7 +51,7 @@ public class Robot extends ScheduledRobot {
 		scheduler.scheduleDefaultCommand(new RunIntakeFlipper(intakeFlipper));
 		scheduler.scheduleDefaultCommand(new RunShooterArm(shooterArm));
 
-		getDriverRightBumper().whileHeld(new LimelightShoot(drivetrain, limelight, shooter, storage, shooterArm));
+		getDriverRightBumper().whileHeld(new LimelightShoot(drivetrain, limelight, shooter, storage));
 		getOperatorRightBumper().whileHeld(new ToggleIntake(intakeFlipper));
 
 		getOperatorDPadUp().whenPressed(new SetShooterArmAngle(shooterArm, shooterArm.getTarget() + SHOOTER_ARM_ANGLE_OFFSET));
@@ -64,43 +63,41 @@ public class Robot extends ScheduledRobot {
 		NetworkTables.setAutoList(autoList);
 		NetworkTables.setCorrectColor(DriverStation.getAlliance().toString());
 		NetworkTables.setPressure(pressure);
-		if (RobotBase.isReal()) scheduler.scheduleDefaultCommand(new PoseEstimation(drivetrain, limelight, shooterArm), TIME_OFFSET, (long) DT200HZ);
-		if (RobotBase.isSimulation()) scheduler.scheduleDefaultCommand(new DrivetrainSimulation(drivetrain), TIME_OFFSET, (long) DT200HZ);
 	}
 
 	@Override
 	public void autonomousInit() {
+		scheduler.scheduleDefaultCommand(new PoseEstimation(drivetrain), TIME_OFFSET, (long) 10);
 		drivetrain.setBrake(); // Test, maybe bad idea
-		Command autonomousCommand = null;
 
 		switch ((int)NetworkTables.getAutoChooser()) {
+
+			case 0:
+				autonomousCommand = new TaxiAuto(auto, drivetrain);
+
+			case 1:
+				autonomousCommand = new TwoCargoAutoDrive(auto, drivetrain);
+
+			case 2:
+				autonomousCommand = null;
+
 			case 3:
-				autonomousCommand = new ThreeCargoAutoClose(auto, intake, intakeFlipper, shooter, shooterArm, storage);
-				break;
-
-			case 4:
-				autonomousCommand = new ThreeCargoTerminalAuto(auto, intake, intakeFlipper, shooter, shooterArm, storage);
-				break;
-
-			case 5:
-				autonomousCommand = new FourCargoAuto(auto, intake, intakeFlipper, shooter, shooterArm, storage);
-				break;
-
-			case 6:
-				autonomousCommand = new FiveCargoAuto(auto, intake, intakeFlipper, shooter, shooterArm, storage);
-				break;
-
-			case 7:
-				autonomousCommand = new FiveCargoAutoCornerStart(auto, intake, intakeFlipper, shooter, shooterArm, storage);
-				break;
+				autonomousCommand = null;
 
 			default:
 				break;
 		}
 
-		if (autonomousCommand != null) this.autoTask = scheduler.scheduleDefaultCommand(autonomousCommand, TIME_OFFSET, (long) DT200HZ);
+		if (autonomousCommand != null) this.autoTask = scheduler.scheduleDefaultCommand(autonomousCommand, TIME_OFFSET, (long) 10);
 	}
 
 	@Override
-	public void disabledInit(){}
+	public void teleopInit() {
+		autonomousCommand.cancel();
+	}
+
+	@Override
+	public void testInit() {
+		drivetrain.setCoast();
+	}
 }

@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public class LimelightShoot extends SequentialCommandGroup {
 
-    public LimelightShoot(Drivetrain drivetrain, Limelight limelight, Shooter shooter, Storage storage, ShooterArm shooterArm) {
+    public LimelightShoot(Drivetrain drivetrain, Limelight limelight, Shooter shooter, Storage storage) {
 		// TODO: Add calculation for desired exit velocity of cargo instead of just 1
         int RPM = (int) shooter.targetRPM(1);
 
@@ -18,10 +18,10 @@ public class LimelightShoot extends SequentialCommandGroup {
 		toRun.add(new LimelightAnglePID(limelight, drivetrain));
 
 		if (shooter.isOuttakeQueued()) {
-			toRun.add(new Shoot(shooter, shooterArm, storage, RPM, 1));
-			toRun.add(new ShootOuttake(shooter, shooterArm, storage));
+			toRun.add(new Shoot(shooter, storage, RPM));
+			toRun.add(new ShootOuttake(shooter, storage));
 		} else {
-			toRun.add(new Shoot(shooter, shooterArm, storage, RPM, storage.getCurrentState().getNumCargo()));
+			toRun.add(new Shoot(shooter, storage, RPM));
 		}
 
 		addCommands(toRun.toArray(Command[]::new));

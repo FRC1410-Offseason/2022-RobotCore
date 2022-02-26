@@ -10,14 +10,12 @@ import static frc.robotmap.Constants.*;
 public class ShootOuttake extends CommandBase {
 
 	private final Shooter shooter;
-	private final ShooterArm shooterArm;
 	private final Storage storage;
 
-	public ShootOuttake(Shooter shooter, ShooterArm shooterArm, Storage storage) {
+	public ShootOuttake(Shooter shooter, Storage storage) {
 		this.shooter = shooter;
-		this.shooterArm = shooterArm;
 		this.storage = storage;
-		addRequirements(shooter, shooterArm, storage);
+		addRequirements(shooter, storage);
 	}
 
 	@Override
@@ -32,7 +30,7 @@ public class ShootOuttake extends CommandBase {
 	@Override
 	public void execute() {
 		// If everything is ready then we can start outtaking
-		if (shooterArm.isAtTarget() && shooter.isAtTarget()) {
+		if (shooter.isAtTarget()) {
 			storage.runStorage(STORAGE_RUN_SPEED);
 		}
 	}
