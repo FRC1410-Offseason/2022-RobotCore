@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.PriorityQueue;
 
-public class TaskScheduler {
+public class ReserveTaskScheduler {
 
 	private final DSControlWord controlWord = new DSControlWord();
 
@@ -38,11 +38,11 @@ public class TaskScheduler {
 
     private boolean dumpingDebugTelemetry = false;
 
-	public TaskScheduler(long defaultPeriod) {
+	public ReserveTaskScheduler(long defaultPeriod) {
 		this.defaultPeriod = defaultPeriod;
 	}
 
-	public TaskScheduler() {
+	public ReserveTaskScheduler() {
 		this(20);
 	}
 
@@ -118,6 +118,73 @@ public class TaskScheduler {
 
             //Check state and interrupt commands if necessary and possible
             nextObserver.check();
+
+            //Bless this mess
+            if (nextObserver.isRequestingExecution()) {
+                if (nextObserver.getEnqueuedTask().getTask() instanceof CommandTask) {
+                    Command requestedCommand = ((CommandTask) nextObserver.getEnqueuedTask().getTask()).getCommand();
+
+                    if (!requestedCommand.getRequirements().isEmpty()) {
+                        boolean isHighestPriority = true;
+                        for (Subsystem requirement : requestedCommand.getRequirements()) {
+                            if (!(SubsystemRegistry.getLockingTask(requirement) == null)) {
+                                if (nextObserver.getPriority().getValue() < SubsystemRegistry.getLockingTask(requirement).getPriority().getValue()) {
+                                    isHighestPriority = false;
+                                    break;
+                                } else {
+                                    bindingSubsystemTasksToCancel.put(SubsystemRegistry.getLockingTask(requirement), requirement);
+                                }
+                            }
+                        }
+                        if (isHighestPriority) {    //Passed check
+                            //Remove and interrupt currently running command
+                            for (EnqueuedTask taskToCancel : bindingSubsystemTasksToCancel.keySet()) {
+                                ((CommandTask) taskToCancel.getTask()).interrupt();
+                                ((CommandTask) taskToCancel.getTask()).end();
+                                taskToCancel.disable();
+                                SubsystemRegistry.releaseLock(bindingSubsystemTasksToCancel.get(taskToCancel), taskToCancel);
+                            }
+                            bindingSubsystemTasksToCancel.clear();
+
+                            //Add currently requested command
+                            for (Subsystem requirement : requestedCommand.getRequirements()) {
+                                SubsystemRegistry.applyLock(requirement, nextObserver.getEnqueuedTask());
+                            }
+
+                            if (dumpingDebugTelemetry) System.out.println("Succeeded interruption by " + ((CommandTask) nextObserver.getEnqueuedTask().getTask()).getCommand());
+                            nextObserver.getEnqueuedTask().enable();
+                            nextObserver.removeRequestExecution();
+                        } else {
+                            if (dumpingDebugTelemetry) System.out.println("Failed interruption by " + ((CommandTask) nextObserver.getEnqueuedTask().getTask()).getCommand());
+                            bindingSubsystemTasksToCancel.clear();
+                        }
+                    } else {
+                        if (dumpingDebugTelemetry) System.out.println("Succeeded interruption by " + nextObserver.getEnqueuedTask().getTask() + " due to lack of subsystem requirements");
+                        nextObserver.getEnqueuedTask().enable();
+                        nextObserver.removeRequestExecution();
+                    }
+                } else {
+                    if (dumpingDebugTelemetry) System.out.println("Succeeded interruption by " + nextObserver.getEnqueuedTask().getTask() + " due to not being a CommandTask");
+                    nextObserver.getEnqueuedTask().enable();
+                    nextObserver.removeRequestExecution();
+                }
+            }
+
+            //Disable if requesting cancellation
+            if (nextObserver.isRequestingCancellation()) {
+                if (nextObserver.getEnqueuedTask().getTask() instanceof CommandTask) {
+                    for (Subsystem requirement : ((CommandTask) nextObserver.getEnqueuedTask().getTask()).getCommand().getRequirements()) {
+                        SubsystemRegistry.releaseLock(requirement, nextObserver.getEnqueuedTask());
+                    }
+                }
+                nextObserver.getEnqueuedTask().getTask().end();
+                nextObserver.getEnqueuedTask().disable();
+                nextObserver.removeRequestCancellation();
+            }
+
+            //Tick target time and add them back to the queue
+            nextEnqueuedObserver.tickPeriod();
+            observerQueue.add(nextEnqueuedObserver);
         }
         
         EnqueuedTask nextTask;

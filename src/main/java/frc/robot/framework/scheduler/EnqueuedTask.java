@@ -6,11 +6,16 @@ import frc.robotmap.IDs.SCHEDULER_PRIORITY;
 public class EnqueuedTask implements Comparable<EnqueuedTask> {
 
 	private final Task task;
+    
 	private final int id;
 	private final long period;
 	boolean isPendingCancellation = false;
 	private long targetTime;
+
     private SCHEDULER_PRIORITY priority = SCHEDULER_PRIORITY.NULL;
+
+    private boolean requesting = false;
+    private boolean cancelling = false;
 
     private boolean enabled;
 
@@ -45,9 +50,33 @@ public class EnqueuedTask implements Comparable<EnqueuedTask> {
     public void disable() {
         enabled = false;
     }
-
+    
     public boolean isEnabled() {
         return enabled;
+    }
+
+    public void requestExecution() {
+        requesting = true;
+    }
+
+    public void removeRequestExecution() {
+        requesting = false;
+    }
+
+    public boolean isRequestingExecution() {
+        return requesting;
+    }
+
+    public void requestCancellation() {
+        cancelling = true;
+    }
+
+    public void removeRequestCancellation() {
+        cancelling = false;
+    }
+
+    public boolean isRequestingCancellation() {
+        return cancelling;
     }
 
 	public Task getTask() {

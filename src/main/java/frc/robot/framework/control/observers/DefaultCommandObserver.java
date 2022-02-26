@@ -9,8 +9,6 @@ public class DefaultCommandObserver extends Observer {
     }
     
     public void check() {
-        if (!task.isEnabled()) {
-            requestExecution();
-        }
+        requestExecution();
     }
 }
