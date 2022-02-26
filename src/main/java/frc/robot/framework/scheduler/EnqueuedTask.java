@@ -44,15 +44,15 @@ public class EnqueuedTask implements Comparable<EnqueuedTask> {
     }
 
     public void enable() {
-        task.enable();
+        enabled = true;
     }
 
     public void disable() {
-        task.disable();
+        enabled = false;
     }
 
     public boolean isEnabled() {
-        return task.isEnabled();
+        return enabled;
     }
 
     public void requestExecution() {

@@ -7,7 +7,7 @@ import frc.robot.framework.scheduler.SubsystemRegistry;
 
 import java.util.Set;
 
-public class SubsystemPeriodicTask extends Task {
+public class SubsystemPeriodicTask implements Task {
 
 	@Override
 	public void execute() {

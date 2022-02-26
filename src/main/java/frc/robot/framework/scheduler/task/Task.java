@@ -5,35 +5,22 @@ import frc.robot.framework.scheduler.RobotMode;
 import java.util.EnumSet;
 import java.util.Set;
 
-public abstract class Task {
+@FunctionalInterface
+public interface Task {
 
-    private boolean enabled;
+	void execute();
 
-    public void enable() {
-        enabled = true;
-    }
+    default void end() {}
 
-    public void disable() {
-        enabled = false;
-    }
-
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-	public abstract void execute();
-
-    public void end() {}
-
-	public boolean isFinished() {
+	default boolean isFinished() {
 		return false;
 	}
 
-    public boolean isValidToExecute() {
+    default boolean isValidToExecute() {
         return true;
     }
 
-	public Set<RobotMode> getDisallowedModes() {
+	default Set<RobotMode> getDisallowedModes() {
 		return EnumSet.of(RobotMode.DISABLED);
 	}
 }

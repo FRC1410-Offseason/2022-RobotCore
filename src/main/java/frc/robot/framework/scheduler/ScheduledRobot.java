@@ -109,7 +109,7 @@ public abstract class ScheduledRobot extends RobotBase implements ControlScheme 
 
 	}
 
-	public final class GameModeObserverTask extends Task {
+	public final class GameModeObserverTask implements Task {
 
 		private RobotMode currentMode = null;
 
