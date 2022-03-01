@@ -1,6 +1,7 @@
 package frc.robot.framework.control.observers;
 
 import edu.wpi.first.wpilibj.XboxController;
+import frc.robot.framework.scheduler.task.Task;
 
 import static frc.robotmap.IDs.*;
 
@@ -46,10 +47,16 @@ public class ButtonStateObserver extends Observer {
                         requestExecution();
                         running = true;
                     } else {
-                        //TODO: Add check from task to set running to false if task finishes independently
                         requestCancellation();
                         running = false;
                     }
+
+                    //Cancel toggle cycle if all tasks are disabled
+                    boolean isEnabled = false;
+                    for (Task task : boundTaskList) {
+                        if (task.isEnabled() || task.isRequestingExecution()) isEnabled = true;
+                    }
+                    if (!isEnabled) running = false;
                 }
                 break;
 

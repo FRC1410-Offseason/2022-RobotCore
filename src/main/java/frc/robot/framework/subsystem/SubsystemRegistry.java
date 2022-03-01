@@ -29,7 +29,6 @@ public class SubsystemRegistry {
     }
 
     public static void interruptAllNecessaryLocks(CommandTask task) {
-        System.out.println("Interrupting all necessary locks for " + task.getCommand());
         for (Subsystem requirement : task.getCommand().getRequirements()) {
             if (!(getLockingTask(requirement) == null)) {
                 CommandTask interruptedTask = getLockingTask(requirement);

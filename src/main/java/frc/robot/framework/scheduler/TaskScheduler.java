@@ -105,7 +105,6 @@ public class TaskScheduler {
         //Iterate until found observer
         EnqueuedObserver nextEnqueuedObserver;
 		if (!observerQueue.isEmpty()) {
-            System.out.println(observerQueue);
             while ((nextEnqueuedObserver = observerQueue.peek()) == null) {}
 
             //Verify matching system states
@@ -138,7 +137,6 @@ public class TaskScheduler {
             nextTask.enable();
             nextTask.removeRequestExecution();
 
-            System.out.println("Currently initializing " + ((CommandTask)nextTask).getCommand());
             nextTask.initialize();
         }
 
@@ -149,7 +147,7 @@ public class TaskScheduler {
 		}
 
         if (nextTask.isRequestingCancellation() && nextTask.isEnabled()) {
-            nextTask.end();
+            nextTask.interrupt();
             nextTask.disable();
             nextTask.removeRequestCancellation();
         }

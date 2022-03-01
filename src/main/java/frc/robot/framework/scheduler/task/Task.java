@@ -65,6 +65,8 @@ public abstract class Task {
 
     public void end() {}
 
+    public void interrupt() {}
+
 	public boolean isFinished() {
         return false;
     }

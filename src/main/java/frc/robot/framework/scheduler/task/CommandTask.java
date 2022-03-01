@@ -62,6 +62,7 @@ public class CommandTask extends Task {
         SubsystemRegistry.releaseAllNecessaryLocks(this);
 	}
 
+    @Override
 	public void interrupt() {
         command.end(true);
 		state = CommandState.PENDING;
@@ -71,7 +72,6 @@ public class CommandTask extends Task {
 
     @Override
     public boolean isValidToExecute() {
-        System.out.println("Check for if " + this.getCommand() + " is the highest priority: " + SubsystemRegistry.isHighestPriority(this));
         return SubsystemRegistry.isHighestPriority(this);
     }
 
