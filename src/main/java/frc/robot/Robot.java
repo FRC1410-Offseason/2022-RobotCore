@@ -61,8 +61,9 @@ public class Robot extends ScheduledRobot {
 		// getOperatorDPadUp().whenPressed(new SetShooterArmAngle(shooterArm, shooterArm.getTarget() + SHOOTER_ARM_ANGLE_OFFSET));
 		// getOperatorDPadDown().whenPressed(new SetShooterArmAngle(shooterArm, shooterArm.getTarget() - SHOOTER_ARM_ANGLE_OFFSET));
 
-        scheduler.scheduleDefaultCommand(new TestLoopedCommand(testSubsystem));
-        getDriverAButton().whenPressed(new TestActionCommand(testSubsystem));
+        scheduler.scheduleDefaultCommand(new TestLoopedCommand(testSubsystem, "DEFAULT"));
+        getDriverAButton().toggleWhenPressed(new TestLoopedCommand(testSubsystem, "TOGGLED"));
+        getDriverBButton().whenPressed(new TestActionCommand(testSubsystem));
 
         scheduler.debugDumpList();
         scheduler.enableDebugTelemetry();

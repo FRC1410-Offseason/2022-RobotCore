@@ -35,7 +35,7 @@ public class CommandTask extends Task {
 				command.execute();
 
 				if (command.isFinished()) {
-					state = CommandState.FINISHED;
+					state = CommandState.FINISHED;  //Intentional lack of case aside from isFinished check, isFinished will prompt scheduler to call end block and reset Command
 				}
 
 				break;

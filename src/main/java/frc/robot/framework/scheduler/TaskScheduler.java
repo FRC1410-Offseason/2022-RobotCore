@@ -105,6 +105,7 @@ public class TaskScheduler {
         //Iterate until found observer
         EnqueuedObserver nextEnqueuedObserver;
 		if (!observerQueue.isEmpty()) {
+            System.out.println(observerQueue);
             while ((nextEnqueuedObserver = observerQueue.peek()) == null) {}
 
             //Verify matching system states
@@ -116,7 +117,8 @@ public class TaskScheduler {
 
             //Check state and interrupt commands if necessary and possible
             nextObserver.check();
-
+            
+            nextEnqueuedObserver.tickPeriod();
             observerQueue.add(nextEnqueuedObserver);
         }
         
