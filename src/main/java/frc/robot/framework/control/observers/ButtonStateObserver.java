@@ -42,6 +42,13 @@ public class ButtonStateObserver extends Observer {
                 if (buttonState == ButtonState.RELEASED) requestCancellation();
                 break;
             case TOGGLE_WHEN_PRESSED:
+                //Cancel toggle cycle if all tasks are disabled
+                boolean isEnabled = false;
+                for (Task task : boundTaskList) {
+                    if (task.isEnabled() || task.isRequestingExecution()) isEnabled = true;
+                }
+                if (!isEnabled) running = false;
+            
                 if (buttonState == ButtonState.PRESSED) {
                     if (!running) {
                         requestExecution();
@@ -50,13 +57,6 @@ public class ButtonStateObserver extends Observer {
                         requestCancellation();
                         running = false;
                     }
-
-                    //Cancel toggle cycle if all tasks are disabled
-                    boolean isEnabled = false;
-                    for (Task task : boundTaskList) {
-                        if (task.isEnabled() || task.isRequestingExecution()) isEnabled = true;
-                    }
-                    if (!isEnabled) running = false;
                 }
                 break;
 

@@ -26,7 +26,7 @@ public class Robot extends ScheduledRobot {
 
 	public static void main(String[] args) {RobotBase.startRobot(Robot::new);}
 	private Robot() {
-		super((long) 1000);
+		super((long) DT50HZ);
 	}
 
 	// private final Drivetrain drivetrain = new Drivetrain();
@@ -62,8 +62,10 @@ public class Robot extends ScheduledRobot {
 		// getOperatorDPadDown().whenPressed(new SetShooterArmAngle(shooterArm, shooterArm.getTarget() - SHOOTER_ARM_ANGLE_OFFSET));
 
         scheduler.scheduleDefaultCommand(new TestLoopedCommand(testSubsystem, "DEFAULT"));
-        getDriverAButton().toggleWhenPressed(new TestLoopedCommand(testSubsystem, "TOGGLED"));
-        getDriverBButton().whenPressed(new TestActionCommand(testSubsystem));
+        getDriverAButton().whenPressed(new TestActionCommand(testSubsystem));
+        getDriverBButton().whenReleased(new TestActionCommand(testSubsystem));
+        getDriverXButton().whileHeld(new TestLoopedCommand(testSubsystem, "WHILE HELD"));
+        getDriverYButton().toggleWhenPressed(new TestLoopedCommand(testSubsystem, "TOGGLE"));
 
         scheduler.debugDumpList();
         scheduler.enableDebugTelemetry();
