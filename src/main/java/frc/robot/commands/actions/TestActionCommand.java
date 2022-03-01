@@ -9,6 +9,8 @@ public class TestActionCommand extends CommandBase {
 
     public TestActionCommand(TestSubsystem subsystem) {
         this.subsystem = subsystem;
+
+        addRequirements(subsystem);
     }
     
     @Override
@@ -24,5 +26,10 @@ public class TestActionCommand extends CommandBase {
     @Override
     public void end(boolean interrupted) {
         System.out.println("ENDING ACTION COMMAND, Interrupted: " + interrupted);
+    }
+
+    @Override
+    public boolean isFinished() {
+        return true;
     }
 }

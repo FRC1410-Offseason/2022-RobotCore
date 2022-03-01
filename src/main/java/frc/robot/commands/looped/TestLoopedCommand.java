@@ -9,6 +9,8 @@ public class TestLoopedCommand extends CommandBase {
 
     public TestLoopedCommand(TestSubsystem subsystem) {
         this.subsystem = subsystem;
+
+        addRequirements(subsystem);
     }
     
     @Override

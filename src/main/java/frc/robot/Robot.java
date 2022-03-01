@@ -26,10 +26,10 @@ public class Robot extends ScheduledRobot {
 
 	public static void main(String[] args) {RobotBase.startRobot(Robot::new);}
 	private Robot() {
-		super((long) DT50HZ);
+		super((long) 1000);
 	}
 
-	private final Drivetrain drivetrain = new Drivetrain();
+	// private final Drivetrain drivetrain = new Drivetrain();
 	private final Elevator elevator = new Elevator();
 	private final Intake intake = new Intake();
 	private final IntakeFlipper intakeFlipper = new IntakeFlipper();
@@ -38,7 +38,7 @@ public class Robot extends ScheduledRobot {
 	private final ShooterArm shooterArm = new ShooterArm(storage.getShooterArmMotor());
 	private final Winch winch = new Winch();
 	private final Limelight limelight = new Limelight();
-	private final Trajectories auto = new Trajectories(drivetrain);
+	// private final Trajectories auto = new Trajectories(drivetrain);
 
     private final TestSubsystem testSubsystem = new TestSubsystem();
 
@@ -64,6 +64,7 @@ public class Robot extends ScheduledRobot {
         scheduler.scheduleDefaultCommand(new TestLoopedCommand(testSubsystem));
         getDriverAButton().whenPressed(new TestActionCommand(testSubsystem));
 
+        scheduler.debugDumpList();
         scheduler.enableDebugTelemetry();
 	}
 
@@ -72,41 +73,41 @@ public class Robot extends ScheduledRobot {
 		NetworkTables.setAutoList(autoList);
 		NetworkTables.setCorrectColor(DriverStation.getAlliance().toString());
 		NetworkTables.setPressure(pressure);
-		if (RobotBase.isReal()) scheduler.scheduleDefaultCommand(new PoseEstimation(drivetrain, limelight, shooterArm), TIME_OFFSET, (long) DT200HZ);
-		if (RobotBase.isSimulation()) scheduler.scheduleDefaultCommand(new DrivetrainSimulation(drivetrain), TIME_OFFSET, (long) DT200HZ);
+		// if (RobotBase.isReal()) scheduler.scheduleDefaultCommand(new PoseEstimation(drivetrain, limelight, shooterArm), TIME_OFFSET, (long) DT200HZ);
+		// if (RobotBase.isSimulation()) scheduler.scheduleDefaultCommand(new DrivetrainSimulation(drivetrain), TIME_OFFSET, (long) DT200HZ);
 	}
 
 	@Override
 	public void autonomousInit() {
-		drivetrain.setBrake(); // Test, maybe bad idea
-		Command autonomousCommand = null;
+		// drivetrain.setBrake(); // Test, maybe bad idea
+		// Command autonomousCommand = null;
 
-		switch ((int)NetworkTables.getAutoChooser()) {
-			case 3:
-				autonomousCommand = new ThreeCargoAutoClose(auto, intake, intakeFlipper, shooter, shooterArm, storage);
-				break;
+		// switch ((int)NetworkTables.getAutoChooser()) {
+		// 	case 3:
+		// 		autonomousCommand = new ThreeCargoAutoClose(auto, intake, intakeFlipper, shooter, shooterArm, storage);
+		// 		break;
 
-			case 4:
-				autonomousCommand = new ThreeCargoTerminalAuto(auto, intake, intakeFlipper, shooter, shooterArm, storage);
-				break;
+		// 	case 4:
+		// 		autonomousCommand = new ThreeCargoTerminalAuto(auto, intake, intakeFlipper, shooter, shooterArm, storage);
+		// 		break;
 
-			case 5:
-				autonomousCommand = new FourCargoAuto(auto, intake, intakeFlipper, shooter, shooterArm, storage);
-				break;
+		// 	case 5:
+		// 		autonomousCommand = new FourCargoAuto(auto, intake, intakeFlipper, shooter, shooterArm, storage);
+		// 		break;
 
-			case 6:
-				autonomousCommand = new FiveCargoAuto(auto, intake, intakeFlipper, shooter, shooterArm, storage);
-				break;
+		// 	case 6:
+		// 		autonomousCommand = new FiveCargoAuto(auto, intake, intakeFlipper, shooter, shooterArm, storage);
+		// 		break;
 
-			case 7:
-				autonomousCommand = new FiveCargoAutoCornerStart(auto, intake, intakeFlipper, shooter, shooterArm, storage);
-				break;
+		// 	case 7:
+		// 		autonomousCommand = new FiveCargoAutoCornerStart(auto, intake, intakeFlipper, shooter, shooterArm, storage);
+		// 		break;
 
-			default:
-				break;
-		}
+		// 	default:
+		// 		break;
+		// }
 
-		if (autonomousCommand != null) this.autoTask = scheduler.scheduleDefaultCommand(autonomousCommand, TIME_OFFSET, (long) DT200HZ);
+		// if (autonomousCommand != null) this.autoTask = scheduler.scheduleDefaultCommand(autonomousCommand, TIME_OFFSET, (long) DT200HZ);
 	}
 
 	@Override

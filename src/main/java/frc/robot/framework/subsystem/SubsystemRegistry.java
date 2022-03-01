@@ -21,18 +21,20 @@ public class SubsystemRegistry {
     public static boolean isHighestPriority(CommandTask task) {
         boolean isHighestPriority = true;
         for (Subsystem requirement : task.getCommand().getRequirements()) {
-            if (getLockingTask(requirement).getPriority().getValue() > task.getPriority().getValue()) {
-                isHighestPriority = false;
+            if (!(getLockingTask(requirement) == null)) {
+                if (getLockingTask(requirement).getPriority().getValue() > task.getPriority().getValue()) isHighestPriority = false;
             }
         }
         return isHighestPriority;
     }
 
     public static void interruptAllNecessaryLocks(CommandTask task) {
+        System.out.println("Interrupting all necessary locks for " + task.getCommand());
         for (Subsystem requirement : task.getCommand().getRequirements()) {
             if (!(getLockingTask(requirement) == null)) {
-                getLockingTask(requirement).requestCancellation();
-                releaseLock(requirement, getLockingTask(requirement));
+                CommandTask interruptedTask = getLockingTask(requirement);
+                interruptedTask.interrupt();
+                interruptedTask.disable();
             }
         }
     }
@@ -43,8 +45,16 @@ public class SubsystemRegistry {
         }
     }
 
+    public static void releaseAllNecessaryLocks(CommandTask task) {
+        System.out.println("Releasing all necessary locks from " + task.getCommand());
+        for (Subsystem requirement : task.getCommand().getRequirements()) {
+            releaseLock(requirement, task);
+        }
+    }
+
 	public static void applyLock(Subsystem subsystem, CommandTask task) {
-		requirementLocks.put(subsystem, task);
+		System.out.println("Applying lock on " + subsystem + " by " + task.getCommand());
+        requirementLocks.put(subsystem, task);
 	}
 
 	public static CommandTask getLockingTask(Subsystem subsystem) {
@@ -52,6 +62,7 @@ public class SubsystemRegistry {
 	}
 
 	public static void releaseLock(Subsystem subsystem, CommandTask task) {
-		requirementLocks.remove(subsystem, task);
+		System.out.println("Removing lock on " + subsystem + " by " + task.getCommand());
+        requirementLocks.remove(subsystem, task);
 	}
 }

@@ -116,6 +116,8 @@ public class TaskScheduler {
 
             //Check state and interrupt commands if necessary and possible
             nextObserver.check();
+
+            observerQueue.add(nextEnqueuedObserver);
         }
         
         EnqueuedTask nextEnqueuedTask;
@@ -130,9 +132,12 @@ public class TaskScheduler {
         Task nextTask = nextEnqueuedTask.getTask();
 
         //Check if pending initialization, and add it
-        if (nextTask.isRequestingExecution() && nextTask.isValidToExecute()) {
+        if (nextTask.isRequestingExecution() && !nextTask.isEnabled() && nextTask.isValidToExecute()) {
             nextTask.enable();
             nextTask.removeRequestExecution();
+
+            System.out.println("Currently initializing " + ((CommandTask)nextTask).getCommand());
+            nextTask.initialize();
         }
 
         //Update time state for tasks and re-queue them to lists 
@@ -141,16 +146,16 @@ public class TaskScheduler {
 			taskQueue.add(nextEnqueuedTask);
 		}
 
-		// Run task if it subscribes to the current mode
-		if (nextTask.isEnabled() && !nextTask.getDisallowedModes().contains(getCurrentMode())) {
-			nextTask.execute();
-		}
-
         if (nextTask.isRequestingCancellation() && nextTask.isEnabled()) {
             nextTask.end();
             nextTask.disable();
             nextTask.removeRequestCancellation();
         }
+
+		// Run task if it subscribes to the current mode
+		if (nextTask.isEnabled() && !nextTask.getDisallowedModes().contains(getCurrentMode())) {
+			nextTask.execute();
+		}
 
         if (nextTask.isFinished() && nextTask.isEnabled()) {
             nextTask.end();
@@ -257,7 +262,7 @@ public class TaskScheduler {
 		final CommandTask task = scheduleCommand(command);
         final DefaultCommandObserver observer = new DefaultCommandObserver();
         observer.bind(task);
-        queueObserver(new EnqueuedObserver(new DefaultCommandObserver(), nextObserverId()));
+        queueObserver(new EnqueuedObserver(observer, nextObserverId()));
         return task;
 	}
 
@@ -265,7 +270,7 @@ public class TaskScheduler {
 		final CommandTask task = scheduleCommand(command, period);
         final DefaultCommandObserver observer = new DefaultCommandObserver();
         observer.bind(task);
-        queueObserver(new EnqueuedObserver(new DefaultCommandObserver(), nextObserverId()));
+        queueObserver(new EnqueuedObserver(observer, nextObserverId()));
         return task;
 	}
 
@@ -273,7 +278,7 @@ public class TaskScheduler {
 		final CommandTask task = scheduleCommand(command, initialDelay, period);
         final DefaultCommandObserver observer = new DefaultCommandObserver();
         observer.bind(task);
-        queueObserver(new EnqueuedObserver(new DefaultCommandObserver(), nextObserverId()));
+        queueObserver(new EnqueuedObserver(observer, nextObserverId()));
         return task;
 	}
 

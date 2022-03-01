@@ -36,7 +36,6 @@ public class CommandTask extends Task {
 
 				if (command.isFinished()) {
 					state = CommandState.FINISHED;
-					command.end(false);
 				}
 
 				break;
@@ -57,16 +56,22 @@ public class CommandTask extends Task {
 
     @Override
 	public void end() {
+        command.end(false);
         state = CommandState.PENDING;
+
+        SubsystemRegistry.releaseAllNecessaryLocks(this);
 	}
 
 	public void interrupt() {
         command.end(true);
-		state = CommandState.FINISHED;
+		state = CommandState.PENDING;
+
+        SubsystemRegistry.releaseAllNecessaryLocks(this);
 	}
 
     @Override
     public boolean isValidToExecute() {
+        System.out.println("Check for if " + this.getCommand() + " is the highest priority: " + SubsystemRegistry.isHighestPriority(this));
         return SubsystemRegistry.isHighestPriority(this);
     }
 
