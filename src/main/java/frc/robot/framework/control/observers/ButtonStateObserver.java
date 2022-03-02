@@ -1,13 +1,14 @@
 package frc.robot.framework.control.observers;
 
 import edu.wpi.first.wpilibj.XboxController;
+import frc.robot.framework.scheduler.task.Task;
 
 import static frc.robotmap.IDs.*;
 
 public class ButtonStateObserver extends Observer {
 
     private final XboxController controller;
-	private final BUTTON_ID id;
+	private final ButtonID id;
 
     private boolean pressed = false;
     private boolean wasPressed = false;
@@ -17,17 +18,24 @@ public class ButtonStateObserver extends Observer {
     private ButtonState buttonState = ButtonState.UNCHANGED;
     private ButtonStateCondition stateToCheck = null;
 
-	public ButtonStateObserver(ButtonStateCondition stateToCheck, XboxController controller, BUTTON_ID id) {
+	public ButtonStateObserver(ButtonStateCondition stateToCheck, XboxController controller, ButtonID id) {
 		this.stateToCheck = stateToCheck;
         this.controller = controller;
 		this.id = id;
 
-        configurePriority(SCHEDULER_PRIORITY.HIGH);
+        configurePriority(SchedulerPriority.HIGH);
 	}
 
     @Override
     public void check() {
         updateButtonPressedState();
+
+        //Cancel toggle cycle if all tasks are disabled
+        boolean isEnabled = false;
+        for (Task task : boundTaskList) {
+            if (task.isEnabled() || task.isRequestingExecution()) isEnabled = true;
+        }
+        if (!isEnabled) running = false;
 
         switch (stateToCheck) {
             case WHEN_PRESSED: 
@@ -37,8 +45,14 @@ public class ButtonStateObserver extends Observer {
                 if (buttonState == ButtonState.RELEASED) requestExecution();
                 break;
             case WHILE_HELD:
-                if (buttonState == ButtonState.PRESSED) requestExecution(); 
-                if (buttonState == ButtonState.RELEASED) requestCancellation();
+                if (buttonState == ButtonState.PRESSED) {
+                    requestExecution();
+                    running = true;
+                }
+
+                if (buttonState == ButtonState.RELEASED && running) {
+                    requestCancellation();
+                }
                 break;
             case TOGGLE_WHEN_PRESSED:
                 if (buttonState == ButtonState.PRESSED) {
@@ -46,7 +60,6 @@ public class ButtonStateObserver extends Observer {
                         requestExecution();
                         running = true;
                     } else {
-                        //TODO: Add check from task to set running to false if task finishes independently
                         requestCancellation();
                         running = false;
                     }

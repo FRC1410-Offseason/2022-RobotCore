@@ -1,8 +1,9 @@
 package frc.robot.framework.scheduler.task;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.framework.subsystem.SubsystemRegistry;
 
-public class CommandTask implements Task {
+public class CommandTask extends Task {
 
 	private final Command command;
 	private CommandState state = CommandState.PENDING;
@@ -13,6 +14,12 @@ public class CommandTask implements Task {
 
     public Command getCommand() {
         return command;
+    }
+
+    @Override
+    public void initialize() {
+        SubsystemRegistry.interruptAllNecessaryLocks(this);
+        SubsystemRegistry.applyAllNecessaryLocks(this);
     }
 
 	@Override
@@ -28,8 +35,7 @@ public class CommandTask implements Task {
 				command.execute();
 
 				if (command.isFinished()) {
-					state = CommandState.FINISHED;
-					command.end(false);
+					state = CommandState.FINISHED;  //Intentional lack of case aside from isFinished check, isFinished will prompt scheduler to call end block and reset Command
 				}
 
 				break;
@@ -50,13 +56,24 @@ public class CommandTask implements Task {
 
     @Override
 	public void end() {
+        command.end(false);
         state = CommandState.PENDING;
+
+        SubsystemRegistry.releaseAllNecessaryLocks(this);
 	}
 
+    @Override
 	public void interrupt() {
         command.end(true);
-		state = CommandState.FINISHED;
+		state = CommandState.PENDING;
+
+        SubsystemRegistry.releaseAllNecessaryLocks(this);
 	}
+
+    @Override
+    public boolean isValidToExecute() {
+        return SubsystemRegistry.isHighestPriority(this);
+    }
 
 	private enum CommandState {
 		PENDING,

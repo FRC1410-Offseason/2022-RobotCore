@@ -48,7 +48,7 @@ public class IDs {
 	public static final int OPERATOR_CONTROLLER_PORT = 1;
     public static final int TEST_CONTROLLER_PORT = 2;
 
-	public enum AXIS_ID {
+	public enum AxisID {
 		LEFT_X,
 		RIGHT_X,
 		LEFT_Y,
@@ -57,7 +57,7 @@ public class IDs {
 		RIGHT_TRIGGER
 	}
 
-	public enum BUTTON_ID {
+	public enum ButtonID {
 		A(1),
 		B(2),
 		X(3),
@@ -73,7 +73,7 @@ public class IDs {
 
 		private final int id;
 
-		BUTTON_ID(int id) {
+		ButtonID(int id) {
 			this.id = id;
 		}
 
@@ -82,14 +82,14 @@ public class IDs {
 		}
 	}
 
-    public enum BUTTON_CONDITION {
+    public enum ButtonCondition {
 		WHEN_PRESSED,
         WHEN_UNPRESSED,
         WHILE_HELD,
         TOGGLE_WHEN_PRESSED
 	}
 
-    public enum SCHEDULER_PRIORITY {
+    public enum SchedulerPriority {
 		NULL(0),
         LOW(1),
         MEDIUM(2),
@@ -97,7 +97,7 @@ public class IDs {
 
 		private final int id;
 
-		SCHEDULER_PRIORITY(int id) {
+		SchedulerPriority(int id) {
 			this.id = id;
 		}
 

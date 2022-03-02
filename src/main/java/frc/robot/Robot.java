@@ -10,6 +10,7 @@ import frc.robot.commands.grouped.*;
 import frc.robot.framework.scheduler.EnqueuedTask;
 import frc.robot.framework.scheduler.ScheduledRobot;
 import frc.robot.framework.scheduler.TaskScheduler;
+import frc.robot.framework.scheduler.task.CommandTask;
 import frc.robot.subsystems.*;
 import frc.robot.util.Trajectories;
 
@@ -21,7 +22,7 @@ public class Robot extends ScheduledRobot {
 
 	private final String[] autoList = {"Taxi", "2Cargo", "3CargoTerminal", "3CargoUpRight", "4Cargo", "5Cargo"};
 	private final AnalogInput pressure = new AnalogInput(PRESSURE_SENSOR);
-	private EnqueuedTask autoTask = null;
+	private CommandTask autoTask = null;
 
 	public static void main(String[] args) {RobotBase.startRobot(Robot::new);}
 	private Robot() {
@@ -38,6 +39,8 @@ public class Robot extends ScheduledRobot {
 	private final Winch winch = new Winch();
 	private final Limelight limelight = new Limelight();
 	private final Trajectories auto = new Trajectories(drivetrain);
+
+    private final TestSubsystem testSubsystem = new TestSubsystem();
 
 	@Override
 	public TaskScheduler getScheduler() {return scheduler;}

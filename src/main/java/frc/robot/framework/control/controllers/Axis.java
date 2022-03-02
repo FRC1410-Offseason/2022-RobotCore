@@ -2,15 +2,15 @@ package frc.robot.framework.control.controllers;
 
 import edu.wpi.first.wpilibj.XboxController;
 
-import static frc.robotmap.IDs.AXIS_ID;
+import static frc.robotmap.IDs.AxisID;
 
 public class Axis {
 
 	private final XboxController controller;
-	private final AXIS_ID id;
+	private final AxisID id;
 	private final double deadzone;
 
-	public Axis(XboxController controller, AXIS_ID id, double deadzone) {
+	public Axis(XboxController controller, AxisID id, double deadzone) {
 
 		this.controller = controller;
 		this.id = id;

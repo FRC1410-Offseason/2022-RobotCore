@@ -1,69 +1,59 @@
 package frc.robot.framework.control.observers;
 
 import java.util.EnumSet;
+import java.util.HashSet;
 import java.util.Set;
 
-import frc.robot.framework.scheduler.EnqueuedTask;
 import frc.robot.framework.scheduler.RobotMode;
-import frc.robotmap.IDs.SCHEDULER_PRIORITY;
+import frc.robot.framework.scheduler.task.Task;
+import frc.robotmap.IDs.SchedulerPriority;
 
-public abstract class Observer implements Comparable<Observer> {
+public abstract class Observer {
 
-    protected EnqueuedTask task = null;
-    protected SCHEDULER_PRIORITY priority = SCHEDULER_PRIORITY.NULL;
+    protected Set<Task> boundTaskList = new HashSet<Task>();
+    protected SchedulerPriority priority = SchedulerPriority.NULL;
 
-    private boolean requesting = false;
-    private boolean cancelling = false;
-
-    public void bind(EnqueuedTask task) {
-        this.task = task;
+    public void bind(Task task) {
+        boundTaskList.add(task);
         task.setPriority(priority);
     }
 
-    public EnqueuedTask getEnqueuedTask() {
-        return task;
+    public void unbind(Task task) {
+        boundTaskList.remove(task);
+        task.setPriority(SchedulerPriority.NULL);
     }
 
-    public void configurePriority(SCHEDULER_PRIORITY priority) {
+    public Set<Task> getEnqueuedTasks() {
+        return boundTaskList;
+    }
+
+    public void configurePriority(SchedulerPriority priority) {
         this.priority = priority;
     }
 
-    public SCHEDULER_PRIORITY getPriority() {
+    public SchedulerPriority getPriority() {
         return priority;
-    }
-
-    public void requestExecution() {
-        if (!task.isEnabled()) requesting = true;
-    }
-
-    public void removeRequestExecution() {
-        requesting = false;
-    }
-
-    public boolean isRequestingExecution() {
-        return requesting;
-    }
-
-    public void requestCancellation() {
-        cancelling = true;
-    }
-
-    public void removeRequestCancellation() {
-        cancelling = false;
-    }
-
-    public boolean isRequestingCancellation() {
-        return cancelling;
     }
 
     public abstract void check();
 
+    public void requestExecution() {
+        for (Task task : boundTaskList) task.requestExecution();
+    }
+
+    public void removeRequestExecution() {
+        for (Task task : boundTaskList) task.removeRequestExecution();
+    }
+
+    public void requestCancellation() {
+        for (Task task : boundTaskList) task.requestCancellation();
+    }
+
+    public void removeRequestCancellation() {
+        for (Task task : boundTaskList) task.removeRequestCancellation();
+    }
+
     Set<RobotMode> getDisallowedModes() {
 		return EnumSet.of(RobotMode.DISABLED);
-	}
-
-    @Override
-	public int compareTo(Observer comparedObserver) {
-		return Double.compare(comparedObserver.getPriority().getValue(), priority.getValue());
 	}
 }
