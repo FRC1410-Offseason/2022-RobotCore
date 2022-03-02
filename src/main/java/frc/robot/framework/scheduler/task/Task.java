@@ -1,25 +1,25 @@
 package frc.robot.framework.scheduler.task;
 
 import frc.robot.framework.scheduler.RobotMode;
-import frc.robotmap.IDs.SCHEDULER_PRIORITY;
+import frc.robotmap.IDs.SchedulerPriority;
 
 import java.util.EnumSet;
 import java.util.Set;
 
 public abstract class Task {
     
-	private SCHEDULER_PRIORITY priority = SCHEDULER_PRIORITY.NULL;
+	private SchedulerPriority priority = SchedulerPriority.NULL;
 
     private boolean requesting = false;
     private boolean cancelling = false;
 
     private boolean enabled = false;
 
-    public void setPriority(SCHEDULER_PRIORITY priority) {
+    public void setPriority(SchedulerPriority priority) {
         this.priority = priority;
     }
 
-    public SCHEDULER_PRIORITY getPriority() {
+    public SchedulerPriority getPriority() {
         return priority;
     }
 

@@ -6,12 +6,12 @@ import java.util.Set;
 
 import frc.robot.framework.scheduler.RobotMode;
 import frc.robot.framework.scheduler.task.Task;
-import frc.robotmap.IDs.SCHEDULER_PRIORITY;
+import frc.robotmap.IDs.SchedulerPriority;
 
 public abstract class Observer {
 
     protected Set<Task> boundTaskList = new HashSet<Task>();
-    protected SCHEDULER_PRIORITY priority = SCHEDULER_PRIORITY.NULL;
+    protected SchedulerPriority priority = SchedulerPriority.NULL;
 
     public void bind(Task task) {
         boundTaskList.add(task);
@@ -20,18 +20,18 @@ public abstract class Observer {
 
     public void unbind(Task task) {
         boundTaskList.remove(task);
-        task.setPriority(SCHEDULER_PRIORITY.NULL);
+        task.setPriority(SchedulerPriority.NULL);
     }
 
     public Set<Task> getEnqueuedTasks() {
         return boundTaskList;
     }
 
-    public void configurePriority(SCHEDULER_PRIORITY priority) {
+    public void configurePriority(SchedulerPriority priority) {
         this.priority = priority;
     }
 
-    public SCHEDULER_PRIORITY getPriority() {
+    public SchedulerPriority getPriority() {
         return priority;
     }
 
