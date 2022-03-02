@@ -45,14 +45,12 @@ public class SubsystemRegistry {
     }
 
     public static void releaseAllNecessaryLocks(CommandTask task) {
-        System.out.println("Releasing all necessary locks from " + task.getCommand());
         for (Subsystem requirement : task.getCommand().getRequirements()) {
             releaseLock(requirement, task);
         }
     }
 
 	public static void applyLock(Subsystem subsystem, CommandTask task) {
-		System.out.println("Applying lock on " + subsystem + " by " + task.getCommand());
         requirementLocks.put(subsystem, task);
 	}
 
@@ -61,7 +59,6 @@ public class SubsystemRegistry {
 	}
 
 	public static void releaseLock(Subsystem subsystem, CommandTask task) {
-		System.out.println("Removing lock on " + subsystem + " by " + task.getCommand());
         requirementLocks.remove(subsystem, task);
 	}
 }
