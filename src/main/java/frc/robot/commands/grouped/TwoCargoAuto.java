@@ -30,6 +30,8 @@ public class TwoCargoAuto extends ParallelCommandGroup {
             new SequentialCommandGroup(
                 trajectories.twoBallCommand,
                 trajectories.driveToShootCommand,
+                new WaitCommand(trajectories.twoBall.getTotalTimeSeconds()),
+                new LimelightShoot(drivetrain, limelight, shooter, storage, RPM),
                 new RunCommand(()-> drivetrain.tankDriveVolts(0, 0))
             ),
             // Intake Deploy

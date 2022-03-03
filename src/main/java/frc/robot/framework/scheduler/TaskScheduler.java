@@ -47,8 +47,12 @@ public class TaskScheduler {
 	}
 
 	void interruptAll() {
+		for (var entry : observerQueue.toArray(EnqueuedObserver[]::new)) {
+			entry.getObserver().requestCancellation();
+		}
+
 		observerQueue.clear();
-		taskQueue.clear();
+		taskQueue.removeIf(entry -> entry.getTask() instanceof CommandTask);
 	}
 
     public void enableDebugTelemetry() {

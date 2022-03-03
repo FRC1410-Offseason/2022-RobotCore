@@ -33,7 +33,7 @@ public abstract class ScheduledRobot extends RobotBase implements ControlScheme 
 		if (!RobotBase.isReal()) {
 			simulationInit();
 		}
-		
+
 		HAL.observeUserProgramStarting();
 
 		scheduler.start();
@@ -115,11 +115,8 @@ public abstract class ScheduledRobot extends RobotBase implements ControlScheme 
 			DSControlWord controlWord = scheduler.getControlWord();
 			controlWord.update();
 
-			if (controlWord.isDisabled() || controlWord.isEStopped()) {
-				scheduler.interruptAll();
-			}
-
 			if (controlWord.isEStopped()) {
+				scheduler.interruptAll();
 				scheduler.halt();
 
 				throw new IllegalStateException("Emergency stopped! All functionality has been halted.");

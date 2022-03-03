@@ -6,6 +6,7 @@ public enum RobotMode {
 	DISABLED {
 		@Override
 		public void enter(ScheduledRobot robot) {
+			robot.scheduler.interruptAll();
 			robot.disabledInit();
 		}
 
