@@ -11,7 +11,7 @@ public class RunIntakeFlipper extends CommandBase {
 
 	public RunIntakeFlipper(IntakeFlipper intakeFlipper) {
 		this.intakeFlipper = intakeFlipper;
-		addRequirements(this.intakeFlipper);
+		addRequirements(intakeFlipper);
 	}
 
 	@Override

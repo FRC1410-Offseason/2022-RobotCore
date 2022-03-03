@@ -61,7 +61,7 @@ public class Robot extends ScheduledRobot {
 		scheduler.scheduleDefaultCommand(new RunIntake(intake, storage, getOperatorRightTrigger()));
 
 		// Run the intake flipper
-		scheduler.scheduleDefaultCommand(new RunIntakeFlipper(intakeFlipper));
+//		scheduler.scheduleDefaultCommand(new RunIntakeFlipper(intakeFlipper)); //TODO: Reenable after intake flipper is ready
 
 		// Run the shooter arm
 		scheduler.scheduleDefaultCommand(new RunShooterArm(shooterArm));
@@ -71,7 +71,7 @@ public class Robot extends ScheduledRobot {
 		//</editor-fold>
 
 		// Toggle intake position
-		getOperatorRightBumper().whenPressed(new ToggleIntake(intakeFlipper));
+//		getOperatorRightBumper().whenPressed(new ToggleIntake(intakeFlipper)); //TODO: Reenable after intake flipper is ready
 
 		// Toggle shooter arm position
 		getOperatorLeftBumper().whenPressed(new ToggleShooterArmPosition(shooterArm));
@@ -105,7 +105,7 @@ public class Robot extends ScheduledRobot {
 	@Override
 	public void autonomousInit() {
 		scheduler.scheduleDefaultCommand(new PoseEstimation(drivetrain), TIME_OFFSET, 10);
-		drivetrain.setBrake(); // Test, maybe bad idea
+		drivetrain.setBrake();
 		shooterArm.resetEncoder(SHOOTER_ARM_MAX_ANGLE);
 
 		switch ((int) NetworkTables.getAutoChooser()) {
@@ -135,7 +135,9 @@ public class Robot extends ScheduledRobot {
 	}
 
 	@Override
-	public void disabledInit(){}
+	public void disabledInit(){
+		autonomousCommand.cancel();
+	}
 
 	@Override
 	public void teleopInit() {
@@ -145,7 +147,7 @@ public class Robot extends ScheduledRobot {
 
 	@Override
 	public void testInit() {
-		drivetrain.setCoast();
 		autonomousCommand.cancel();
+		drivetrain.setCoast();
 	}
 }

@@ -11,7 +11,7 @@ public class RunShooterArm extends CommandBase {
 
 	public RunShooterArm(ShooterArm shooterArm) {
 		this.shooterArm = shooterArm;
-		addRequirements(this.shooterArm);
+		addRequirements(shooterArm);
 	}
 
 	@Override
