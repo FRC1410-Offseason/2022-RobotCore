@@ -12,7 +12,6 @@ public class Shoot extends CommandBase {
 
 	private final Shooter shooter;
 	private final Storage storage;
-
 	private final Timer timer = new Timer();
 
 	/**
@@ -24,7 +23,7 @@ public class Shoot extends CommandBase {
 		this.shooter = shooter;
 		this.storage = storage;
 
-		addRequirements(shooter, storage);
+		// addRequirements(shooter, storage);
 	}
 
 	@Override
@@ -32,12 +31,12 @@ public class Shoot extends CommandBase {
 		timer.reset();
 		storage.runStorage(STORAGE_SHOOT_SPEED);
 		timer.start();
+		System.out.println("storage ran");
 	}
 
 	@Override
 	public boolean isFinished() {
-		// The shooter automatically keeps track of when a ball passes through the flywheels,
-		// so we just have to compare that to the number of cargo that we want to shoot
+		// Runs for 2 seconds once storage starts running
 		return timer.get() > SHOOT_STORAGE_DURATION;
 	}
 
@@ -46,7 +45,7 @@ public class Shoot extends CommandBase {
 		//Reset everything and put the mechanisms back into their resting states
 		shooter.setSpeeds(0);
 		storage.runStorage(0);
-
+		System.out.println("shoot (storage) ended");
 		//Reset the state of the storage
 		storage.getCurrentState().resetSlot1();
 		storage.getCurrentState().resetSlot2();

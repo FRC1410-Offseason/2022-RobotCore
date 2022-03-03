@@ -24,6 +24,9 @@ public class ShooterSpinup extends CommandBase {
 
 	@Override
 	public boolean isFinished() {
+		if (shooter.isAtTarget()) {
+			System.out.println("READY TO SHOOT");
+		}
 		return shooter.isAtTarget();
 	}
 }
