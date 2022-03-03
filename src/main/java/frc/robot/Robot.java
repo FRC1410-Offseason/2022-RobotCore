@@ -39,8 +39,6 @@ public class Robot extends ScheduledRobot {
 	private final Limelight limelight = new Limelight();
 	private final Trajectories auto = new Trajectories(drivetrain);
 
-    private final TestSubsystem testSubsystem = new TestSubsystem();
-
 	@Override
 	public TaskScheduler getScheduler() {return scheduler;}
 
