@@ -26,7 +26,8 @@ public final class Constants {
 
 	// SHOOTER ARM
 	public static final double SHOOTER_ARM_RESTING_ANGLE = 19; // Degrees
-	public static final double SHOOTER_ARM_MAX_ANGLE = 53.1; // Degrees
+	public static final double SHOOTER_ARM_INTAKE_ANGLE = 35; // Degrees
+	public static final double SHOOTER_ARM_MAX_ANGLE = 51; // Degrees
 
 	public static final int SHOOTER_ARM_GEARING = 125;
 	public static final double SHOOTER_ARM_LENGTH = .8025; // Meters (nice)

@@ -1,5 +1,6 @@
 package frc.robot.commands.grouped;
 
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.Drivetrain;
@@ -14,7 +15,7 @@ public class TaxiAuto extends SequentialCommandGroup {
 
 		addCommands(
 				trajectories.straightlineCommand,
-				new RunCommand(()-> drivetrain.tankDriveVolts(0, 0))
+				new InstantCommand(()-> drivetrain.tankDriveVolts(0, 0))
 		);
 	}
 }

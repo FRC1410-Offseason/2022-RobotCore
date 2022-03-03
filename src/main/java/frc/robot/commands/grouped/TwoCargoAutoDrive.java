@@ -15,7 +15,6 @@ public class TwoCargoAutoDrive extends ParallelCommandGroup {
 		drivetrain.gyro.reset();
 		trajectories.generateAuto();
 		trajectories.setStartingAutonomousPose(trajectories.twoBall);
-		System.out.println("AUTO RAN AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
 
 		addCommands(
 				// Drivetrain
