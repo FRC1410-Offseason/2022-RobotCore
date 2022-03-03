@@ -2,7 +2,6 @@ package frc.robot.commands.actions;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Shooter;
-import frc.robot.subsystems.ShooterArm;
 import frc.robot.subsystems.Storage;
 
 import static frc.robotmap.Constants.*;

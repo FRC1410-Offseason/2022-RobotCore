@@ -21,12 +21,13 @@ public final class Tuning {
 	public static final double SHOOTER_RIGHT_KFF = 0.000165;
 
 	// LIMELIGHT
-	public static final double LIMELIGHT_ANGLE_KP = 0;
+	public static final double LIMELIGHT_ANGLE_KP = 0.12; // 3.24V at 27deg
 	public static final double LIMELIGHT_ANGLE_KI = 0;
-	public static final double LIMELIGHT_ANGLE_KD = 0;
+	public static final double LIMELIGHT_ANGLE_KD = 0.012;
+	// ^ Last tested was 0.024, so this is 1.5x higher. If you can crank D enough, maybe increase P
 
 	// Ramsete controller constants
-	public static final double KB = 2.0; // Might want to decrease KB
+	public static final double KB = 2.0;
 	public static final double KZ = 0.7;
 
 	public static final double KP_VEL = 4.071;
@@ -74,5 +75,6 @@ public final class Tuning {
 	public static final double SHOOTER_ARM_IS_FINISHED = 1; // Degree
 
 	// SHOOTER
-	public static final double SHOOT_STORAGE_DURATION = 3.0;
+	public static final double SHOOT_STORAGE_DURATION = 2.0;
+	public static final double AUTONOMOUS_SHOOTING_RPM = 1855;
 }

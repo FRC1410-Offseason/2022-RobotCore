@@ -12,7 +12,7 @@ public class NetworkTables {
 	static final NetworkTable table = instance.getTable("Dashboard Data");
 	static final NetworkTable robotState = instance.getTable("Robot State");
 	static final NetworkTable limelight = instance.getTable("photonvision/Limelight 2");
-	static final NetworkTableEntry autoList, autoChooser; // Auto
+	static final NetworkTableEntry autoList, autoChooser, autoRPM; // Auto
 	static final NetworkTableEntry maxVelocity, maxAcceleration, maxCentripetalAcceleration;
 	static final NetworkTableEntry x, y, theta, wheelLeft, wheelRight, navxMagDisturbance, navxMagCalibrated, leftEncoderDistanceAverage, rightEncoderDistanceAverage; // Drivetrain
 	static final NetworkTableEntry pitch, yaw, visionDistance, limelightAngleKP, limelightAngleKI, limelightAngleKD; // Limelight
@@ -31,6 +31,7 @@ public class NetworkTables {
 		// Autonomous
 		autoList = table.getEntry("Auto List");
 		autoChooser = table.getEntry("Auto Chooser");
+		autoRPM = table.getEntry("Autonomous Shot RPM");
 		// Trajectories
 		maxVelocity = table.getEntry("Maximum Velocity Constraint");
 		maxAcceleration = table.getEntry("Maximum Acceleration Constraint");
@@ -94,6 +95,7 @@ public class NetworkTables {
 		// Initializing
 		// Autonomous
 		autoChooser.setDouble(0);
+		autoRPM.setDouble(AUTONOMOUS_SHOOTING_RPM);
 		// Trajectories
 		maxVelocity.setDouble(0);
 		maxAcceleration.setDouble(0);
@@ -160,6 +162,10 @@ public class NetworkTables {
 
 	public static double getAutoChooser() {
 		return autoChooser.getDouble(0);
+	}
+
+	public static double getAutoRPM() {
+		return autoRPM.getDouble(0);
 	}
 
 	// Trajectories

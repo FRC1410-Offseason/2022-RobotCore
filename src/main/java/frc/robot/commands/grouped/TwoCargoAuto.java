@@ -20,16 +20,16 @@ import frc.robot.util.Trajectories;
 
 public class TwoCargoAuto extends ParallelCommandGroup {
 
-    public TwoCargoAuto(Trajectories trajectories, Drivetrain drivetrain, Intake intake, Storage storage, ShooterArm shooterArm, Shooter shooter, IntakeFlipper intakeFlipper, Limelight limelight) {
+    public TwoCargoAuto(Trajectories trajectories, Drivetrain drivetrain, Intake intake, Storage storage, ShooterArm shooterArm, Shooter shooter, IntakeFlipper intakeFlipper, Limelight limelight, double RPM) {
         drivetrain.gyro.reset();
         trajectories.generateAuto();
         trajectories.setStartingAutonomousPose(trajectories.twoBall);
-        double driveDuration = trajectories.twoBall.getTotalTimeSeconds();
         
         addCommands(
             // Drivetrain
             new SequentialCommandGroup(
                 trajectories.twoBallCommand,
+                trajectories.driveToShootCommand,
                 new RunCommand(()-> drivetrain.tankDriveVolts(0, 0))
             ),
             // Intake Deploy
@@ -43,19 +43,24 @@ public class TwoCargoAuto extends ParallelCommandGroup {
             new SequentialCommandGroup(
                 new WaitCommand(0.5),
                 new RunStorageForTime(storage, 3, -1),
+                new WaitCommand(0.5),
+                new RunStorageForTime(storage, 0.2, 1),
+                new WaitCommand(0.3),
                 new RunStorageForTime(storage, 1, -1)
             ),
-            // Limelight Shoot
+            // Shooter
             new SequentialCommandGroup(
                 new SetShooterRPM(shooter, -1000),
                 new WaitCommand(3.5),
-                new LimelightShoot(drivetrain, limelight, shooter, storage)
+                new SetShooterRPM(shooter, 0),
+                new WaitCommand(1),
+                new LimelightShoot(drivetrain, limelight, shooter, storage, RPM)
             ),
             // Shooter Arm
             new SequentialCommandGroup(
                 new SetShooterArmAngle(shooterArm, 39),
                 new WaitCommand(3.5),
-                new SetShooterArmAngle(shooterArm, 53.1)
+                new SetShooterArmAngle(shooterArm, 51.0)
             )
         );
     }

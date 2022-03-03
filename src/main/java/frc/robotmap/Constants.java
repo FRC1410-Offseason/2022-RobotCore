@@ -1,15 +1,11 @@
 package frc.robotmap;
 
-import edu.wpi.first.math.Matrix;
-import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.numbers.N2;
 import edu.wpi.first.math.system.LinearSystem;
 import edu.wpi.first.math.system.plant.LinearSystemId;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
-import edu.wpi.first.math.numbers.N1;
 
 public final class Constants {
 
@@ -38,12 +34,11 @@ public final class Constants {
 	public static final double ELEVATOR_MAX_ACCEL = 1; // Meters per second^2
 	public static final double ELEVATOR_MAX_POS = 2; // Meters
 	public static final double ELEVATOR_MIN_POS = 0; // Meters
-	//End of state space stuff
-
 
 	// SHOOTER ARM
 	public static final double SHOOTER_ARM_RESTING_ANGLE = 19; // Degrees
-	public static final double SHOOTER_ARM_MAX_ANGLE = 53.1; // Degrees
+	public static final double SHOOTER_ARM_MAX_ANGLE = 51.0; // Degrees
+	public static final double SHOOTER_ARM_INITIAL_ANGLE = 51.0;
 	public static final double SHOOTER_ARM_ANGLE_OFFSET = 5;
 
 	public static final int SHOOTER_ARM_GEARING = 125;
@@ -63,8 +58,8 @@ public final class Constants {
 	public static final double ENCODER_CPR = 2048;
 	public static final double ENCODER_EPR = 2048;
 	public static final double GEARING = 11.7818;
-	public static final double METERS_PER_REVOLUTION = .4787787204061;
-	public static final double TRACKWIDTH = .69; // meters
+	public static final double METERS_PER_REVOLUTION = .478778;
+	public static final double TRACKWIDTH = .6907; // meters
 	public static final double ENCODER_DISTANCE_PER_PULSE = (WHEEL_DIAMETER * Math.PI) / ENCODER_CPR;
 	public static final double ENCODER_CONSTANT = (1 / GEARING) * (1 / ENCODER_EPR) * METERS_PER_REVOLUTION;
 
@@ -77,7 +72,7 @@ public final class Constants {
 			KV_ANGULAR,
 			KA_ANGULAR);
 	// LIMELIGHT
-	public static final double UPPER_HUB_HEIGHT = 104;
+	public static final double UPPER_HUB_HEIGHT = 103; // Top of vision targets is 104, bottom is 102
 
 	// SHOOTER MATH
 	public static final double SIGNIFICANT_DROP_DETECTION_THRESHOLD = .1;
@@ -112,7 +107,7 @@ public final class Constants {
 	public static final double STORAGE_RUN_SPEED = -1;
 	public static final double STORAGE_REVERSE_SPEED = 1;
 	public static final double STORAGE_OUTTAKE_SPEED = -.5;
-	public static final double STORAGE_SHOOT_SPEED = -.75;
+	public static final double STORAGE_SHOOT_SPEED = -1;
 	public static final double STORAGE_INTAKE_SPEED = -1;
 
 	// INTAKE
@@ -120,7 +115,8 @@ public final class Constants {
 
 	// SHOOTER
 	public static final int SHOOTER_OUTTAKE_SPEED = 500;
-	public static final int SHOOTER_RPM_TOLERANCE = 10;
+	public static final int SHOOTER_RPM_TOLERANCE = 100;
+	// TODO: GET A REAL VALUE
 
 	// WINCH
 	public static final double WINCH_LEFT_MOD = 0.7;

@@ -2,7 +2,7 @@ package frc.robot.subsystems;
 
 import com.revrobotics.*;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import frc.robot.NetworkTables;
+// import frc.robot.NetworkTables;
 import frc.robot.framework.subsystem.SubsystemBase;
 import frc.robot.util.GradientDescentOptimized;
 import frc.robot.util.PolynomialRegression;
@@ -255,7 +255,8 @@ public class Shooter extends SubsystemBase {
 				}
 				normalization_divisor=maximum;
 				// Sync to networktables
-				NetworkTables.setLowestRPM(lowestRPM);
+				// NetworkTables.setLowestRPM(lowestRPM);
+				// TODO: Add network tables or figure out another way to log the lowest RPM
 				// Change lowestRPM stuff to reset the state
 				lowestRPM = -1;
 				lowestTime = 0;

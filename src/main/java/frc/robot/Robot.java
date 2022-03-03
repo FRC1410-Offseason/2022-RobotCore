@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.commands.looped.*;
 import frc.robot.commands.actions.*;
 import frc.robot.commands.grouped.*;
@@ -17,7 +18,7 @@ import static frc.robotmap.IDs.PRESSURE_SENSOR;
 
 public class Robot extends ScheduledRobot {
 
-	private final String[] autoList = {"Taxi", "2Cargo"};
+	private final String[] autoList = {"0 - Taxi", "1 - 2CargoDrive", "2 - 2CargoNoSA", "3 - 2CargoAuto"};
 	private final AnalogInput pressure = new AnalogInput(PRESSURE_SENSOR);
 	private EnqueuedTask autoTask = null;
 	private Command autonomousCommand = null;
@@ -28,7 +29,7 @@ public class Robot extends ScheduledRobot {
 	}
 
 	private final Drivetrain drivetrain = new Drivetrain();
-	private final Elevator elevator = new Elevator();
+	// private final Elevator elevator = new Elevator();
 	private final Intake intake = new Intake();
 	private final IntakeFlipper intakeFlipper = new IntakeFlipper();
 	private final Shooter shooter = new Shooter();
@@ -43,19 +44,20 @@ public class Robot extends ScheduledRobot {
 
 	@Override
 	public void registerControls() {
-		scheduler.scheduleDefaultCommand(new TankDrive(drivetrain, getDriverLeftYAxis(), getDriverRightYAxis())); // Elevator Default Command
-		scheduler.scheduleDefaultCommand(new RunElevator(elevator, getOperatorLeftYAxis())); // Elevator Default Command
-		scheduler.scheduleDefaultCommand(new RunWinch(winch, getOperatorRightYAxis())); // Winch Default Command
-		scheduler.scheduleDefaultCommand(new RunIntake(intake, storage, getOperatorRightTrigger())); // Intake Default Command
+		// All teleop
+		// scheduler.scheduleDefaultCommand(new TankDrive(drivetrain, getDriverLeftYAxis(), getDriverRightYAxis())); // Elevator Default Command
+		// scheduler.scheduleDefaultCommand(new RunElevator(elevator, getOperatorLeftYAxis())); // Elevator Default Command
+		// scheduler.scheduleDefaultCommand(new RunWinch(winch, getOperatorRightYAxis())); // Winch Default Command
+		// scheduler.scheduleDefaultCommand(new RunIntake(intake, storage, getOperatorRightTrigger())); // Intake Default Command
+		// scheduler.scheduleDefaultCommand(new RunIntakeFlipper(intakeFlipper));
+		// scheduler.scheduleDefaultCommand(new RunShooterArm(shooterArm));
 
-		scheduler.scheduleDefaultCommand(new RunIntakeFlipper(intakeFlipper));
-		scheduler.scheduleDefaultCommand(new RunShooterArm(shooterArm));
-
-		getDriverRightBumper().whileHeld(new LimelightShoot(drivetrain, limelight, shooter, storage));
+		getDriverRightBumper().whenPressed(new LimelightShoot(drivetrain, limelight, shooter, storage, 2055));
+		getDriverLeftBumper().whenPressed(new LimelightAnglePID(limelight, drivetrain));
 		getOperatorRightBumper().whileHeld(new ToggleIntake(intakeFlipper));
 
-		getOperatorDPadUp().whenPressed(new SetShooterArmAngle(shooterArm, shooterArm.getTarget() + SHOOTER_ARM_ANGLE_OFFSET));
-		getOperatorDPadDown().whenPressed(new SetShooterArmAngle(shooterArm, shooterArm.getTarget() - SHOOTER_ARM_ANGLE_OFFSET));
+		getDriverAButton().whenPressed(new RunCommand(() -> winch.lock(), winch));
+		getDriverXButton().whenPressed(new RunCommand(() -> winch.unlock(), winch));
 	}
 
 	@Override
@@ -63,12 +65,13 @@ public class Robot extends ScheduledRobot {
 		NetworkTables.setAutoList(autoList);
 		NetworkTables.setCorrectColor(DriverStation.getAlliance().toString());
 		NetworkTables.setPressure(pressure);
+		drivetrain.setCoast();
 	}
 
 	@Override
 	public void autonomousInit() {
 		scheduler.scheduleDefaultCommand(new PoseEstimation(drivetrain), TIME_OFFSET, (long) 10);
-		drivetrain.setBrake(); // Test, maybe bad idea
+		drivetrain.setBrake();
 
 		switch ((int)NetworkTables.getAutoChooser()) {
 
@@ -76,13 +79,13 @@ public class Robot extends ScheduledRobot {
 				autonomousCommand = new TaxiAuto(auto, drivetrain);
 
 			case 1:
-				autonomousCommand = new TwoCargoAutoDrive(auto, drivetrain);
+				autonomousCommand = new TwoCargoAutoDrive(auto, drivetrain, limelight);
 
 			case 2:
-				autonomousCommand = null;
+				autonomousCommand = new TwoCargoAutoNoSA(auto, drivetrain, intake, storage, shooter, intakeFlipper, limelight, NetworkTables.getAutoRPM());
 
 			case 3:
-				autonomousCommand = null;
+				autonomousCommand = new TwoCargoAuto(auto, drivetrain, intake, storage, shooterArm, shooter, intakeFlipper, limelight, NetworkTables.getAutoRPM());
 
 			default:
 				break;
@@ -93,7 +96,8 @@ public class Robot extends ScheduledRobot {
 
 	@Override
 	public void teleopInit() {
-		autonomousCommand.cancel();
+		// autonomousCommand.cancel();
+		drivetrain.setBrake();
 	}
 
 	@Override

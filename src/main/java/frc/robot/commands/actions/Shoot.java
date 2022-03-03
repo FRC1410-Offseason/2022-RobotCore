@@ -13,9 +13,6 @@ public class Shoot extends CommandBase {
 	private final Shooter shooter;
 	private final Storage storage;
 	private final Timer timer = new Timer();
-	private boolean storageIsRunning = false;
-
-	private final int rpm;
 
 	/**
 	 * Shoot the cargo!
@@ -25,38 +22,24 @@ public class Shoot extends CommandBase {
 	 * @param rpm the rpm that we want to shoot at
 	 * @param num the number of cargo that we want to shoot
 	 */
-	public Shoot(Shooter shooter, Storage storage, int rpm) {
+	public Shoot(Shooter shooter, Storage storage) {
 		this.shooter = shooter;
 		this.storage = storage;
-
-		this.rpm = rpm;
 
 		addRequirements(shooter, storage);
 	}
 
 	@Override
 	public void initialize() {
-		//Get the NEOs on the shooter spinning up to our desired RPM
-		shooter.setSpeeds(rpm);
-	}
-
-	@Override
-	public void execute() {
-		// If the shooter is up to speed and the arm is at the correct position, we are good to shoot
-		if (shooter.isAtTarget()) {
-			storage.runStorage(STORAGE_SHOOT_SPEED);
-			if (!storageIsRunning) {
-				timer.start();
-				timer.reset();
-				storageIsRunning = true;
-			}
-		}
+		timer.reset();
+		storage.runStorage(STORAGE_SHOOT_SPEED);
+		timer.start();
+		System.out.println("storage ran");
 	}
 
 	@Override
 	public boolean isFinished() {
-		// The shooter automatically keeps track of when a ball passes through the flywheels,
-		// so we just have to compare that to the number of cargo that we want to shoot
+		// Runs for 2 seconds once storage starts running
 		return timer.get() > SHOOT_STORAGE_DURATION;
 	}
 
@@ -64,7 +47,8 @@ public class Shoot extends CommandBase {
 	public void end(boolean interrupted) {
 		//Reset everything and put the mechanisms back into their resting states
 		shooter.setSpeeds(0);
-
+		storage.runStorage(0);
+		System.out.println("shoot (storage) ended");
 		//Reset the state of the storage
 		storage.getCurrentState().resetSlot1();
 		storage.getCurrentState().resetSlot2();

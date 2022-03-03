@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.smartdashboard.*;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.framework.subsystem.SubsystemBase;
 
 import static frc.robotmap.IDs.*;
 import static frc.robotmap.Constants.*;
@@ -34,7 +34,8 @@ public class Winch extends SubsystemBase {
 	/**
 	 * Solenoid for brake pistons
 	 */
-	private final DoubleSolenoid lock = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, WINCH_FWD, WINCH_BCK);
+	// private final DoubleSolenoid lock = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, WINCH_FWD, WINCH_BCK);
+	private final DoubleSolenoid lock = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 3, 4);
 
 	/**
 	 * Limit switches to prevent demolition

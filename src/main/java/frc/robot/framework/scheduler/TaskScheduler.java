@@ -46,6 +46,17 @@ public class TaskScheduler {
 		this(20);
 	}
 
+	void interruptAll() {
+		System.err.println("Interrupting all commands!");
+		taskQueue.removeIf(entry -> {
+			if (entry.getTask() instanceof CommandTask) {
+				((CommandTask) entry.getTask()).interrupt();
+				return true;
+			}
+			return false;
+		});
+	}
+
     public void enableDebugTelemetry() {
         dumpingDebugTelemetry = true;
     }

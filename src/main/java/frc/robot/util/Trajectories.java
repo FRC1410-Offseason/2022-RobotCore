@@ -24,13 +24,17 @@ public class Trajectories {
 
 	public final Trajectory straightline = TrajectoryGenerator.generateTrajectory(List.of(
 		new Pose2d(0, 0, new Rotation2d(Units.degreesToRadians(0))),
-		new Pose2d(1, 0, new Rotation2d(Units.degreesToRadians(0)))), config);
+		new Pose2d(1.3, 0, new Rotation2d(Units.degreesToRadians(0)))), config);
 	
 	public final Trajectory twoBall = TrajectoryGenerator.generateTrajectory(List.of(
-		new Pose2d(0, 0, new Rotation2d(Units.degreesToRadians(90))),
-		new Pose2d(0, 1, new Rotation2d(Units.degreesToRadians(90)))), config);
+		new Pose2d(0, 0, new Rotation2d(Units.degreesToRadians(0))),
+		new Pose2d(0.5, 0, new Rotation2d(Units.degreesToRadians(0)))), config);
+
+	public final Trajectory driveToShoot = TrajectoryGenerator.generateTrajectory(List.of(
+		new Pose2d(0.5, 0, new Rotation2d(Units.degreesToRadians(0))),
+		new Pose2d(1.7, 0, new Rotation2d(Units.degreesToRadians(0)))), config);
 		
-	public RamseteCommand straightlineCommand, twoBallCommand;
+	public RamseteCommand straightlineCommand, twoBallCommand, driveToShootCommand;
 
 	public Trajectories(Drivetrain drivetrain) {this.drivetrain = drivetrain;}
 
@@ -56,5 +60,6 @@ public class Trajectories {
 	public void generateAuto() {
 		straightlineCommand = generateRamsete(straightline);
 		twoBallCommand = generateRamsete(twoBall);
+		driveToShootCommand = generateRamsete(driveToShoot);
 	}
 }

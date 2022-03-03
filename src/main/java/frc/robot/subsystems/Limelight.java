@@ -3,8 +3,9 @@ package frc.robot.subsystems;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.framework.subsystem.SubsystemBase;
 import org.photonvision.PhotonCamera;
+import org.photonvision.PhotonUtils;
 import org.photonvision.common.hardware.VisionLEDMode;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
@@ -18,25 +19,41 @@ public class Limelight extends SubsystemBase {
 	// Stores the current values reported by the camera
     private PhotonPipelineResult latestResult;
 
-	//TODO: This should probably be moved to a constant
-    private double shooterAngle = 53.1;
-
 	// The current target if there is one
     private PhotonTrackedTarget target;
 
+    private double distanceToTargetMeters = 0;
+
     public Limelight() {
+        limelight.setDriverMode(true);
         limelight.setDriverMode(false);
+        System.out.println("limelight constructed");
     }
 
     @Override
-    public void periodic() {        
+    public void periodic() {
         latestResult = limelight.getLatestResult();
         target = latestResult.getBestTarget();
     }
 
+    public boolean hasTarget() {
+        return latestResult.hasTargets();
+    }
+
     public double getDistanceToTarget() {
-        return (UPPER_HUB_HEIGHT - getLimelightHeight(shooterAngle)) / 
-            Math.tan(Units.degreesToRadians(getLimelightAngle(shooterAngle) + getPitch()));
+        if (hasTarget()) {
+            distanceToTargetMeters = PhotonUtils.calculateDistanceToTargetMeters(
+                getLimelightHeight(SHOOTER_ARM_INITIAL_ANGLE), UPPER_HUB_HEIGHT, getLimelightAngle(SHOOTER_ARM_INITIAL_ANGLE), getPitch());
+            return Units.metersToInches(distanceToTargetMeters);
+        } else return -1;
+    }
+
+    public double getDistanceToTarget(double shooterAngle) {
+        if (hasTarget()) {
+            distanceToTargetMeters = PhotonUtils.calculateDistanceToTargetMeters(
+                getLimelightHeight(shooterAngle), UPPER_HUB_HEIGHT, getLimelightAngle(shooterAngle), getPitch());
+            return Units.metersToInches(distanceToTargetMeters);
+        } else return -1;
     }
 
 	public PhotonPipelineResult getLatestResult() {
@@ -47,11 +64,16 @@ public class Limelight extends SubsystemBase {
 		return target;
 	}
 
+    public double getLatencySeconds() {
+        return latestResult.getLatencyMillis() / 1000.0;
+    }
+
 	// TODO: Lots of things here that probably need to be constants
 	public double getLimelightHeight(double shooterAngle) {
         return (24.08 * Math.sin(shooterAngle)) + 4.7;
     }
 
+    // Distance from limelight camera to center of robot
     public double getDistanceToRobot(double shooterAngle) {
         return (24.08 * Math.cos(shooterAngle)) - 2.527;
     }
@@ -68,6 +90,7 @@ public class Limelight extends SubsystemBase {
         limelight.setLED(VisionLEDMode.kOn);
     }
 
+    // Return degrees
     public double getPitch() {
         return target.getPitch();
     }
@@ -77,14 +100,15 @@ public class Limelight extends SubsystemBase {
     }
 
 	// TODO – docs & move to constant
+    // Distnace to vision target from camera
     public boolean isYawAcceptable(double distance, double yaw) {
-        double acceptableYaw = 5.94 - (0.161 * distance);
+        double acceptableYaw = 4 - (0.165 * distance / 12);
         if (Math.abs(yaw) < acceptableYaw) return true;
         else return false;
     }
 
     public double getAcceptableYaw(double distance) {
-        return 5.94 - (0.161 * distance);
+        return 4 - (0.165 * distance / 12);
     }
 
 	// TODO – move to javadoc

@@ -118,6 +118,10 @@ public abstract class ScheduledRobot extends RobotBase implements ControlScheme 
 			DSControlWord controlWord = scheduler.getControlWord();
 			controlWord.update();
 
+			if (controlWord.isDisabled() || controlWord.isEStopped()) {
+				scheduler.interruptAll();
+			}
+
 			if (controlWord.isEStopped()) {
 				scheduler.halt();
 

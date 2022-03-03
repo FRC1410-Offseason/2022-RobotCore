@@ -5,9 +5,6 @@ import frc.robot.framework.control.controllers.Axis;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Storage;
 
-import static frc.robotmap.Constants.INTAKE_FORWARD_SPEED;
-
-
 public class RunIntake extends CommandBase {
 
 	private final Intake intake;

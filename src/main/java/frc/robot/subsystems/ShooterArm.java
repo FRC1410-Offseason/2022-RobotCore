@@ -8,9 +8,6 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import edu.wpi.first.wpilibj.smartdashboard.*;
 import edu.wpi.first.wpilibj.util.Color;
@@ -42,7 +39,7 @@ public class ShooterArm extends SubsystemBase {
 	/**
 	 * For the physical brake piston on the mechanism
 	 */
-	private final DoubleSolenoid brake = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, SHOOTER_ARM_LOCK_FWD, SHOOTER_ARM_LOCK_BCK);
+	// private final DoubleSolenoid brake = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, SHOOTER_ARM_LOCK_FWD, SHOOTER_ARM_LOCK_BCK);
 
 	//<editor-fold desc="Sim Stuff" defaultstate="collapsed">
 
@@ -76,30 +73,6 @@ public class ShooterArm extends SubsystemBase {
 					new Color8Bit(Color.kYellow)
 			)
 	);
-
-	/**
-	 * Used for the piston widget in the simulation gui
-	 */
-	private final Mechanism2d pistonSim = new Mechanism2d(60, 60);
-	private final MechanismRoot2d pistonSimRoot = pistonSim.getRoot("Piston", 30, 10);
-	private final MechanismLigament2d piston =
-			pistonSimRoot.append(
-					new MechanismLigament2d(
-							"Piston Casing",
-							20,
-							90
-					)
-			);
-	private final MechanismLigament2d pistonInnards =
-			pistonSimRoot.append(
-					new MechanismLigament2d(
-							"Piston",
-							20,
-							90,
-							4,
-							new Color8Bit(Color.kRed)
-					)
-			);
 	/**
 	 * Used for the simulation, because for some reason it's impossible to get the voltage that a motor is running at
 	 */
@@ -126,30 +99,18 @@ public class ShooterArm extends SubsystemBase {
 		// Send the arm widget to Smart Dashboard
 		SmartDashboard.putData("Arm Sim", simMech);
 		tower.setColor(new Color8Bit(Color.kBlue));
-
-		// Send the piston widget to Smart Dashboard
-		SmartDashboard.putData("Shooter Arm Piston", pistonSim);
-
-		// Default state for the brake piston is extended
-		setBrake();
 	}
 
-	@Override
-	// Broken atm, even more so now
-	public void simulationPeriodic() {
-		// Update the arm widget if the brake is extended
-		if (getBrakeState()) {
-			pistonInnards.setLength(40);
-		} else {
-			pistonInnards.setLength(0);
-		}
+	// @Override
+	// // Broken atm, even more so now
+	// public void simulationPeriodic() {
 
-		// Set inputs to the simulator
-		sim.setInputVoltage(currentVoltage);
+	// 	// Set inputs to the simulator
+	// 	sim.setInputVoltage(currentVoltage);
 
-		// Update the sim (default time is 20 ms)
-		sim.update(DT50HZ);
-	}
+	// 	// Update the sim (default time is 20 ms)
+	// 	sim.update(DT50HZ);
+	// }
 
 	public void setTarget(double value) {
 		target = MathUtil.clamp(value, SHOOTER_ARM_RESTING_ANGLE, SHOOTER_ARM_MAX_ANGLE);
@@ -185,28 +146,6 @@ public class ShooterArm extends SubsystemBase {
 
 	public boolean isAtTarget() {
 		return Math.abs(getEncoderPosition() - target) < SHOOTER_ARM_IS_FINISHED;
-	}
-
-	/**
-	 * Get the state of the brake piston
-	 * @return false -> retracted / true -> extended
-	 */
-	public boolean getBrakeState() {
-		return brake.get() == Value.kForward;
-	}
-
-	/**
-	 * Set the state of the brake piston to extended
-	 */
-	public void setBrake() {
-		brake.set(Value.kForward);
-	}
-
-	/**
-	 * Set the state of the brake piston to retracted
-	 */
-	public void releaseBrake() {
-		brake.set(Value.kReverse);
 	}
 }
 
