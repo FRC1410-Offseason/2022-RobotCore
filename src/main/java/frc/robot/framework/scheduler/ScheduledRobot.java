@@ -34,13 +34,8 @@ public abstract class ScheduledRobot extends RobotBase implements ControlScheme 
 			simulationInit();
 		}
 
-<<<<<<< HEAD
-=======
-		if (this instanceof ControlScheme) {
-			((ControlScheme) this).registerControls();
-		}
->>>>>>> parent of ae6983a (more stuff)
 		HAL.observeUserProgramStarting();
+		registerControls();
 
 		scheduler.start();
 	}

@@ -50,14 +50,14 @@ public class TwoCargoAuto extends ParallelCommandGroup {
                 new WaitCommand(0.3),
                 new RunStorageForTime(storage, 1, -1)
             ),
-            // Shooter
-            new SequentialCommandGroup(
-                new SetShooterRPM(shooter, -1000),
-                new WaitCommand(3.5),
-                new SetShooterRPM(shooter, 0),
-                new WaitCommand(1),
-                new LimelightShoot(drivetrain, limelight, shooter, storage, RPM)
-            ),
+            // // Shooter
+            // new SequentialCommandGroup(
+            //     new SetShooterRPM(shooter, -1000),
+            //     new WaitCommand(3.5),
+            //     new SetShooterRPM(shooter, 0),
+            //     new WaitCommand(1),
+            //     new LimelightShoot(drivetrain, limelight, shooter, storage, RPM)
+            // ),
             // Shooter Arm
             new SequentialCommandGroup(
                 new SetShooterArmAngle(shooterArm, 39),
