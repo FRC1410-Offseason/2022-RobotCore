@@ -44,13 +44,13 @@ public enum RobotMode {
 		@Override
 		public void enter(ScheduledRobot robot) {
 			robot.teleopInit();
+			robot.registerControls();
 		}
 
 		@Override
 		public void periodic(ScheduledRobot robot) {
 			HAL.observeUserProgramTeleop();
 			robot.teleopPeriodic();
-			robot.registerControls();
 		}
 
 		@Override
