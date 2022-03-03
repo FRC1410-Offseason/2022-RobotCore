@@ -138,8 +138,8 @@ public class ShooterArm extends SubsystemBase {
 
 	public void runPIDExecute() {
 		double output = PID.calculate(getEncoderPosition(), goal);
-		leftMotor.set(-output);
-		rightMotor.set(-output);
+		leftMotor.set(output);
+		rightMotor.set(output);
 	}
 
 	/**
@@ -157,7 +157,7 @@ public class ShooterArm extends SubsystemBase {
 	}
 
 	public void resetEncoder(double value) {
-		encoderMotor.setSelectedSensorPosition(-value / 360 * 4096);
+		encoderMotor.setSelectedSensorPosition(value / 360 * 4096);
 	}
 
 	public void resetEncoder() {
