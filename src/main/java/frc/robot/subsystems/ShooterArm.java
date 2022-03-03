@@ -99,9 +99,6 @@ public class ShooterArm extends SubsystemBase {
 
 		this.encoderMotor = encoderMotor;
 
-		// TODO: Find out if this needs to be relative or absolute for the encoder type
-		encoderMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute);
-
 		// Send the arm widget to Smart Dashboard
 		SmartDashboard.putData("Arm Sim", simMech);
 		tower.setColor(new Color8Bit(Color.kBlue));

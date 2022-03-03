@@ -63,16 +63,14 @@ public final class Constants {
 	public static final Color BLUE_TARGET = new Color(new Color8Bit(100, 138, 216));
 	public static final Color RED_TARGET = new Color(new Color8Bit(224, 69, 56));
 
-	public static final double STORAGE_RUN_SPEED = -1;
-	public static final double STORAGE_OUTTAKE_SPEED = -.5;
-	public static final double STORAGE_SHOOT_SPEED = -1;
-	public static final double STORAGE_INTAKE_SPEED = -1;
+	public static final double STORAGE_RUN_SPEED = 1;
+	public static final double STORAGE_SHOOT_SPEED = 1;
+	public static final double STORAGE_INTAKE_SPEED = 1;
 
 	// INTAKE
 	public static final double INTAKE_FORWARD_SPEED = 1;
 
 	// SHOOTER
-	public static final int SHOOTER_OUTTAKE_SPEED = 1000;
 	public static final int SHOOTER_RPM_TOLERANCE = 100;
 
 	// WINCH

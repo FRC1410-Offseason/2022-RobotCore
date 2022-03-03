@@ -15,7 +15,6 @@ import frc.robot.commands.actions.ExtendIntake;
 import frc.robot.commands.actions.RunStorageForTime;
 import frc.robot.commands.actions.SetIntakeSpeed;
 import frc.robot.commands.actions.SetShooterArmAngle;
-import frc.robot.commands.actions.SetShooterRPM;
 import frc.robot.util.Trajectories;
 
 public class TwoCargoAuto extends ParallelCommandGroup {
@@ -44,11 +43,11 @@ public class TwoCargoAuto extends ParallelCommandGroup {
 				// Storage
 				new SequentialCommandGroup(
 						new WaitCommand(0.5),
-						new RunStorageForTime(storage, 3, -1),
+						new RunStorageForTime(storage, 3, 1),
 						new WaitCommand(0.5),
-						new RunStorageForTime(storage, 0.2, 1),
+						new RunStorageForTime(storage, 0.2, -1),
 						new WaitCommand(0.3),
-						new RunStorageForTime(storage, 1, -1)
+						new RunStorageForTime(storage, 1, 1)
 				),
 				// // Shooter
 				// new SequentialCommandGroup(

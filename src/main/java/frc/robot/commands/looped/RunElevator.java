@@ -24,7 +24,6 @@ public class RunElevator extends CommandBase {
 
 	@Override
 	public void execute() {
-		// TODO: This can be simplified
 		boolean shouldRun = !(Math.abs(axis.getDeadzoned()) < 0.1);
 		if (shouldRun) {
 			elevator.unlock();

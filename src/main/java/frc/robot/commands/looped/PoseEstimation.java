@@ -14,8 +14,6 @@ public class PoseEstimation extends CommandBase {
 
 	private final Drivetrain drivetrain;
 
-	//TODO: Same here as with the drivetrain simulation command, we can probably condense a lot of this into function calls
-
 	public PoseEstimation(Drivetrain drivetrain) {
 		drivetrain.gyro.reset();
 

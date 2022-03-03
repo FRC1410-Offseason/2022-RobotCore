@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.revrobotics.ColorMatch;
@@ -97,6 +98,8 @@ public class Storage extends SubsystemBase {
 
 		// Configure the motor
 		motor.configFactoryDefault();
+		motor.setInverted(true);
+		motor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute);
 
 		// Add the two color targets to the color matcher
 		colorMatch.addColorMatch(RED_TARGET);
@@ -141,7 +144,7 @@ public class Storage extends SubsystemBase {
 		if (!manualControl) {
 			// Falling edge
 			if (lineBreakPrev && !lineBreak.get()) {
-				motor.set(-1);
+				motor.set(1);
 				// If there is a ball in the first position, then move it to the second
 				// and reset the first position to be ready for the next ball
 				if (currentState.getSlot1().getBallPresent()) {
