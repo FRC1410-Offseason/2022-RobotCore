@@ -34,6 +34,10 @@ public class Limelight extends SubsystemBase {
         target = latestResult.getBestTarget();
     }
 
+	public boolean hasTarget() {
+		return latestResult.hasTargets();
+	}
+
     public double getDistanceToTarget() {
         return (UPPER_HUB_HEIGHT - getLimelightHeight(shooterAngle)) / 
             Math.tan(Units.degreesToRadians(getLimelightAngle(shooterAngle) + getPitch()));
