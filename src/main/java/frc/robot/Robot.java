@@ -66,6 +66,9 @@ public class Robot extends ScheduledRobot {
 		// Run the shooter arm
 		scheduler.scheduleDefaultCommand(new RunShooterArm(shooterArm));
 
+		// Run the storage
+		scheduler.scheduleDefaultCommand(new RunStorage(storage));
+
 		// Run the winches on the operator controller
 		scheduler.scheduleDefaultCommand(new RunWinch(winch, getOperatorRightYAxis()));
 		//</editor-fold>
@@ -77,7 +80,7 @@ public class Robot extends ScheduledRobot {
 		getOperatorLeftBumper().whenPressed(new ToggleShooterArmPosition(shooterArm));
 
 		// Set storage speed
-		getOperatorYButton().whileHeld(new RunStorage(storage, STORAGE_RUN_SPEED));
+		getOperatorYButton().whileHeld(new RunStorageConstant(storage, STORAGE_RUN_SPEED));
 
 		// Set shooter rpm
 		getOperatorXButton().whenPressed(new SetShooterRPM(shooter, NetworkTables.getShooterTargetRPM()));
