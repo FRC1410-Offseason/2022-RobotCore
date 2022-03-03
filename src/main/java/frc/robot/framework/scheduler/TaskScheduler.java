@@ -47,12 +47,23 @@ public class TaskScheduler {
 	}
 
 	void interruptAll() {
+<<<<<<< HEAD
 		for (var entry : observerQueue.toArray(EnqueuedObserver[]::new)) {
 			entry.getObserver().requestCancellation();
 		}
 
 		observerQueue.clear();
 		taskQueue.removeIf(entry -> entry.getTask() instanceof CommandTask);
+=======
+		System.err.println("Interrupting all commands!");
+		taskQueue.removeIf(entry -> {
+			if (entry.getTask() instanceof CommandTask) {
+				((CommandTask) entry.getTask()).interrupt();
+				return true;
+			}
+			return false;
+		});
+>>>>>>> parent of ae6983a (more stuff)
 	}
 
     public void enableDebugTelemetry() {

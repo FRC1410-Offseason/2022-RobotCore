@@ -52,7 +52,7 @@ public class TwoCargoAutoNoSA extends ParallelCommandGroup {
                 // new WaitCommand(3.5),
                 // new SetShooterRPM(shooter, 0),
                 // new WaitCommand(1),
-                new WaitCommand(trajectories.twoBall.getTotalTimeSeconds()),
+                new WaitCommand(4),
                 new LimelightShoot(drivetrain, limelight, shooter, storage, RPM),
                 new RunCommand(()-> drivetrain.tankDriveVolts(0, 0))
             )

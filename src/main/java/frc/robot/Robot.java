@@ -104,6 +104,5 @@ public class Robot extends ScheduledRobot {
 	public void testInit() {
 		drivetrain.setCoast();
 		autonomousCommand.cancel();
-		autonomousCommand = null;
 	}
 }
