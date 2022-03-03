@@ -22,6 +22,7 @@ public class Robot extends ScheduledRobot {
 	private final String[] autoList = {"Taxi", "2Cargo", "3CargoTerminal", "3CargoUpRight", "4Cargo", "5Cargo"};
 	private final AnalogInput pressure = new AnalogInput(PRESSURE_SENSOR);
 	private CommandTask autoTask = null;
+	private Command autonomousCommand = null;
 
 	public static void main(String[] args) {RobotBase.startRobot(Robot::new);}
 	private Robot() {
@@ -68,7 +69,6 @@ public class Robot extends ScheduledRobot {
 	public void autonomousInit() {
 		scheduler.scheduleDefaultCommand(new PoseEstimation(drivetrain), TIME_OFFSET, 10);
 		drivetrain.setBrake(); // Test, maybe bad idea
-		Command autonomousCommand = null;
 
 		switch ((int) NetworkTables.getAutoChooser()) {
 			case 0:
@@ -98,4 +98,16 @@ public class Robot extends ScheduledRobot {
 
 	@Override
 	public void disabledInit(){}
+
+	@Override
+	public void teleopInit() {
+		autonomousCommand.cancel();
+		drivetrain.setBrake();
+	}
+
+	@Override
+	public void testInit() {
+		drivetrain.setCoast();
+		autonomousCommand.cancel();
+	}
 }
