@@ -34,7 +34,7 @@ public class ShooterArm extends SubsystemBase {
 
 	private final PIDController controller = new PIDController(SA_P, SA_I, SA_D); // I am also sad
 
-	private double target = 19;
+	private double target = 0;
 
 	/**
 	 * For the physical brake piston on the mechanism
@@ -130,8 +130,12 @@ public class ShooterArm extends SubsystemBase {
 
 	public void runPIDExecute() {
 		double output = controller.calculate(getEncoderPosition(), target);
-		leftMotor.set(output);
-		rightMotor.set(output);
+		leftMotor.set(-output);
+		rightMotor.set(-output);
+	}
+
+	public void resetEncoders(double value) {
+		encoderMotor.setSelectedSensorPosition(-value / 360 * 4096);
 	}
 
 	/**

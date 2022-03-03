@@ -70,19 +70,21 @@ public class Robot extends ScheduledRobot {
 
 	@Override
 	public void autonomousInit() {
+		shooterArm.resetEncoders(0);
+		scheduler.scheduleDefaultCommand(new RunShooterArm(shooterArm));
 		scheduler.scheduleDefaultCommand(new PoseEstimation(drivetrain), TIME_OFFSET, (long) 10);
 		drivetrain.setBrake();
 
 		switch ((int)NetworkTables.getAutoChooser()) {
 
 			case 0:
-				autonomousCommand = new TaxiAuto(auto, drivetrain);
+				// autonomousCommand = new TaxiAuto(auto, drivetrain);
 
 			case 1:
-				autonomousCommand = new TwoCargoAutoDrive(auto, drivetrain, limelight);
+				// autonomousCommand = new TwoCargoAutoDrive(auto, drivetrain, limelight);
 
 			case 2:
-				autonomousCommand = new TwoCargoAutoNoSA(auto, drivetrain, intake, storage, shooter, intakeFlipper, limelight, 2050);
+				// autonomousCommand = new TwoCargoAutoNoSA(auto, drivetrain, intake, storage, shooter, intakeFlipper, limelight, 2050);
 
 			case 3:
 				autonomousCommand = new TwoCargoAuto(auto, drivetrain, intake, storage, shooterArm, shooter, intakeFlipper, limelight, NetworkTables.getAutoRPM());

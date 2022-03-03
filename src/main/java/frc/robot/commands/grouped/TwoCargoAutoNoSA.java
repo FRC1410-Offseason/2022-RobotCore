@@ -28,7 +28,7 @@ public class TwoCargoAutoNoSA extends ParallelCommandGroup {
             // Drivetrain
             new SequentialCommandGroup(
                 trajectories.twoBallCommand,
-                new InstantCommand(()-> drivetrain.tankDriveVolts(0, 0))
+                new RunCommand(()-> drivetrain.tankDriveVolts(0, 0))
             ),
             // // Intake Deploy
             // new ExtendIntake(intakeFlipper),
