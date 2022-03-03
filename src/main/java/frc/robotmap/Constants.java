@@ -23,6 +23,9 @@ public final class Constants {
 	public static final double ELEVATOR_MASS = 2.7; // kg, placeholder
 	public static final double ELEVATOR_METERS_PER_REV = .0151;
 
+	public static final double ELEVATOR_UP_SPEED = .5;
+	public static final double ELEVATOR_DOWN_SPEED = -.5;
+
 
 	// SHOOTER ARM
 	public static final double SHOOTER_ARM_RESTING_ANGLE = 19; // Degrees
@@ -76,6 +79,9 @@ public final class Constants {
 
 	// WINCH
 	public static final double WINCH_LEFT_MOD = 0.7;
+	public static final double WINCH_IN_SPEED = 1;
+
+	public static final double WINCH_OUT_SPEED = -1;
 
 	// FEEDBACK
 	public static final int LED_CONTROLLER_PORT = 0;

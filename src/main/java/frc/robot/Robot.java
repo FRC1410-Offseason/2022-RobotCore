@@ -48,18 +48,43 @@ public class Robot extends ScheduledRobot {
 
 	@Override
 	public void registerControls() {
-		scheduler.scheduleDefaultCommand(new TankDrive(drivetrain, getDriverLeftYAxis(), getDriverRightYAxis())); // Elevator Default Command
-		scheduler.scheduleDefaultCommand(new RunElevator(elevator, getOperatorLeftYAxis())); // Elevator Default Command
-		scheduler.scheduleDefaultCommand(new RunWinch(winch, getOperatorRightYAxis())); // Winch Default Command
-		scheduler.scheduleDefaultCommand(new RunIntake(intake, storage, getOperatorRightTrigger())); // Intake Default Command
+		//<editor-fold desc="Defaults">
+		// Tank drive on the drivetrain
+		scheduler.scheduleDefaultCommand(new TankDrive(drivetrain, getDriverLeftYAxis(), getDriverRightYAxis()));
 
+		// Telescoping arms on the operator controller
+		scheduler.scheduleDefaultCommand(new RunElevator(elevator, getOperatorLeftYAxis()));
+
+		// Run the intake (and storage) on the operator right trigger
+		scheduler.scheduleDefaultCommand(new RunIntake(intake, storage, getOperatorRightTrigger()));
+
+		// Run the intake flipper
 		scheduler.scheduleDefaultCommand(new RunIntakeFlipper(intakeFlipper));
+
+		// Run the shooter arm
 		scheduler.scheduleDefaultCommand(new RunShooterArm(shooterArm));
 
+		// Run the winches on the operator controller
+		scheduler.scheduleDefaultCommand(new RunWinch(winch, getOperatorRightYAxis()));
+		//</editor-fold>
+
+		// Toggle intake position
+		getOperatorRightBumper().whenPressed(new ToggleIntake(intakeFlipper));
+
+		// Toggle shooter arm position
+		getOperatorLeftBumper().whenPressed(new ToggleShooterArmPosition(shooterArm));
+
+		// Set shooter rpm
+		getOperatorXButton().whenPressed(new SetShooterRPM(shooter, NetworkTables.getShooterTargetRPM()));
+
+		// Limelight align to target and shoot
 		getDriverRightBumper().whileHeld(new LimelightShoot(drivetrain, limelight, shooter, storage, 2055));
-		getOperatorRightBumper().whileHeld(new ToggleIntake(intakeFlipper));
 
-
+		// Climb cycle dpad control
+		getOperatorDPadUp().whileHeld(new RunElevatorConstant(elevator, ELEVATOR_UP_SPEED));
+		getOperatorDPadRight().whileHeld(new RunWinchConstant(winch, WINCH_OUT_SPEED));
+		getOperatorDPadDown().whileHeld(new RunElevatorConstant(elevator, ELEVATOR_DOWN_SPEED));
+		getOperatorDPadLeft().whileHeld(new RunWinchConstant(winch, WINCH_IN_SPEED));
 	}
 
 	@Override
