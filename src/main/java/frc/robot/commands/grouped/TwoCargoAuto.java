@@ -22,36 +22,40 @@ public class TwoCargoAuto extends ParallelCommandGroup {
 		drivetrain.gyro.reset();
 		trajectories.generateAuto();
 		trajectories.setStartingAutonomousPose(trajectories.twoBall);
+		shooterArm.resetEncoder(SHOOTER_ARM_MAX_ANGLE);
 
 		addCommands(
-				// Drivetrain
+				// Drivetrain - Trajectories
 				new SequentialCommandGroup(
 						trajectories.twoBallCommand,
-						trajectories.driveToShootCommand,
-						new WaitCommand(trajectories.twoBall.getTotalTimeSeconds()),
+						new RunCommand(()-> drivetrain.tankDriveVolts(0, 0))
+				),
+				// Limelight Shoot
+				new SequentialCommandGroup(
+						new WaitCommand(trajectories.twoBall.getTotalTimeSeconds() + 1),
 						new LimelightShoot(drivetrain, limelight, shooter, storage, RPM),
-						new InstantCommand(()-> drivetrain.tankDriveVolts(0, 0))
+						new RunCommand(()-> drivetrain.tankDriveVolts(0, 0))
 				),
 				// Intake Deploy
 				new ExtendIntake(intakeFlipper),
 				// Intake
 				new SequentialCommandGroup(
 						new WaitCommand(0.5),
-						new SetIntakeSpeed(intake, 1, 3)
+						new SetIntakeSpeed(intake, INTAKE_FORWARD_SPEED, 3)
 				),
 				// Storage
 				new SequentialCommandGroup(
-						new WaitCommand(0.5),
-						new RunStorageForTime(storage, 3, STORAGE_INTAKE_SPEED),
-						new WaitCommand(0.5),
 						new RunStorageForTime(storage, 0.2, -STORAGE_RUN_SPEED),
 						new WaitCommand(0.3),
 						new RunStorageForTime(storage, 1, STORAGE_RUN_SPEED)
 				),
 				// Shooter Arm
 				new SequentialCommandGroup(
-						new SetShooterArmAngle(shooterArm, SHOOTER_ARM_INTAKE_ANGLE),
-						new WaitCommand(3.5),
+						new SetShooterArmAngle(shooterArm, SHOOTER_ARM_INTAKE_ANGLE)
+				),
+				// Second Shooter Arm
+				new SequentialCommandGroup(
+						new WaitCommand(trajectories.twoBall.getTotalTimeSeconds()),
 						new SetShooterArmAngle(shooterArm, SHOOTER_ARM_MAX_ANGLE)
 				)
 		);
