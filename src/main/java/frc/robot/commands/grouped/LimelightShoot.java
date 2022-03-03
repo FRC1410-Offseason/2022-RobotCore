@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 public class LimelightShoot extends SequentialCommandGroup {
 
-    public LimelightShoot(Drivetrain drivetrain, Limelight limelight, Shooter shooter, Storage storage, ShooterArm shooterArm, double RPM) {
+    public LimelightShoot(Drivetrain drivetrain, Limelight limelight, Shooter shooter, Storage storage, double RPM) {
 
 		ArrayList<Command> toRun = new ArrayList<>();
 

@@ -12,7 +12,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
-import edu.wpi.first.math.trajectory.constraint.CentripetalAccelerationConstraint;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 
@@ -20,57 +19,37 @@ public class Trajectories {
 	private final Drivetrain drivetrain;
 
 	private static TrajectoryConfig config = new TrajectoryConfig(DRIVETRAIN_MAX_SPEED, DRIVETRAIN_MAX_ACCEL)
-		.setKinematics(DRIVE_KINEMATICS)
-		.setReversed(false);
-	private static TrajectoryConfig reverseConfig = new TrajectoryConfig(DRIVETRAIN_MAX_SPEED, DRIVETRAIN_MAX_ACCEL)
-		.setKinematics(DRIVE_KINEMATICS)
-		.setReversed(true);
+			.setKinematics(DRIVE_KINEMATICS)
+			.setReversed(false);
 
-	public final Trajectory taxi = TrajectoryGenerator.generateTrajectory(List.of(
-		new Pose2d(8.70, 6.50, new Rotation2d(Units.degreesToRadians(90))),
-		new Pose2d(8.70, 7.60, new Rotation2d(Units.degreesToRadians(90)))), config);
+	public final Trajectory straightline = TrajectoryGenerator.generateTrajectory(List.of(
+			new Pose2d(0, 0, new Rotation2d(Units.degreesToRadians(0))),
+			new Pose2d(1.3, 0, new Rotation2d(Units.degreesToRadians(0)))), config);
 
-	public final Trajectory upRightTarmacToUpperCargoShot = TrajectoryGenerator.generateTrajectory(List.of(
-		new Pose2d(8.95, 6.53, new Rotation2d(Units.degreesToRadians(91.3))),
-		new Pose2d(8.85, 7.50, new Rotation2d(Units.degreesToRadians(80.56)))), config);
+	public final Trajectory twoBall = TrajectoryGenerator.generateTrajectory(List.of(
+			new Pose2d(0, 0, new Rotation2d(Units.degreesToRadians(0))),
+			new Pose2d(2.3, 0, new Rotation2d(Units.degreesToRadians(0)))), config);
 
-	public final Trajectory upperTarmacToUpperCargoShot = TrajectoryGenerator.generateTrajectory(List.of(
-		new Pose2d(8.75, 6.51, new Rotation2d(Units.degreesToRadians(91.3))),
-		new Pose2d(8.85, 7.50, new Rotation2d(Units.degreesToRadians(80.56)))), config);
+	public final Trajectory driveToShoot = TrajectoryGenerator.generateTrajectory(List.of(
+			new Pose2d(1.2, 0, new Rotation2d(Units.degreesToRadians(0))),
+			new Pose2d(2.0, 0, new Rotation2d(Units.degreesToRadians(0)))), config);
 
-	public final Trajectory upperCargoToUpperField = TrajectoryGenerator.generateTrajectory(List.of(
-		new Pose2d(8.85, 7.50, new Rotation2d(Units.degreesToRadians(80.56))),
-		new Pose2d(8.30, 6.90, new Rotation2d(Units.degreesToRadians(-15)))), reverseConfig);
-
-	public final Trajectory upperFieldToUpRightCargo = TrajectoryGenerator.generateTrajectory(List.of(
-		new Pose2d(8.30, 6.90, new Rotation2d(Units.degreesToRadians(-15))),
-		new Pose2d(10.97, 6.38, new Rotation2d(Units.degreesToRadians(0)))), config);
-
-	public final Trajectory upRightCargoToTerminalShot = TrajectoryGenerator.generateTrajectory(List.of(
-		new Pose2d(10.97, 6.36, new Rotation2d(Units.degreesToRadians(0))),
-		new Pose2d(15.02, 6.955, new Rotation2d(Units.degreesToRadians(22.96)))), config);
-
-	public final Trajectory upperFieldToTerminalShot = TrajectoryGenerator.generateTrajectory(List.of(
-		new Pose2d(8.30, 6.30, new Rotation2d(Units.degreesToRadians(-15))),
-		new Pose2d(15.10, 7.00, new Rotation2d(Units.degreesToRadians(22.9)))), config);
-
-	public RamseteCommand taxiCommand, upperTarmacToUpperCargoShotCommand, upRightTarmacToUpperCargoShotCommand, upperCargoToUpperFieldCommand;
-	public RamseteCommand upperFieldToTerminalShotCommand, upperFieldToUpRightCargoCommand, upRightCargoToTerminalShotCommand;
+	public RamseteCommand straightlineCommand, twoBallCommand, driveToShootCommand;
 
 	public Trajectories(Drivetrain drivetrain) {this.drivetrain = drivetrain;}
 
 	public RamseteCommand generateRamsete(Trajectory trajectory) {
 		return new RamseteCommand(
-			trajectory,
-			drivetrain::getPoseEstimation,
-			new RamseteController(KB, KZ),
-			new SimpleMotorFeedforward(KS, KV, KA),
-			DRIVE_KINEMATICS,
-			drivetrain::getWheelSpeeds,
-			new PIDController(KP_VEL, 0, 0, DT200HZ / 1000),
-			new PIDController(KP_VEL, 0, 0, DT200HZ / 1000),
-			drivetrain::tankDriveVolts,
-			drivetrain
+				trajectory,
+				drivetrain::getPoseEstimation,
+				new RamseteController(KB, KZ),
+				new SimpleMotorFeedforward(KS, KV, KA),
+				DRIVE_KINEMATICS,
+				drivetrain::getWheelSpeeds,
+				new PIDController(KP_VEL, 0, 0, 10.0 / 1000),
+				new PIDController(KP_VEL, 0, 0, 10.0 / 1000),
+				drivetrain::tankDriveVolts
+				// drivetrain
 		);
 	}
 
@@ -78,26 +57,9 @@ public class Trajectories {
 		drivetrain.resetPoseEstimation(trajectory.getInitialPose());
 	}
 
-	public void generateConfig(double maxVelocity, double maxAcceleration, double maxCentripetalAcceleration) {
-		CentripetalAccelerationConstraint centripetalAccelerationConstraint =
-			new CentripetalAccelerationConstraint(maxCentripetalAcceleration);
-		config = new TrajectoryConfig(maxVelocity, maxAcceleration)
-			.setKinematics(DRIVE_KINEMATICS)
-			.addConstraint(centripetalAccelerationConstraint)
-			.setReversed(false);
-		reverseConfig = new TrajectoryConfig(maxVelocity, maxAcceleration)
-			.setKinematics(DRIVE_KINEMATICS)
-			.addConstraint(centripetalAccelerationConstraint)
-			.setReversed(true);
-	}
-
 	public void generateAuto() {
-		taxiCommand = generateRamsete(taxi);
-		upperTarmacToUpperCargoShotCommand = generateRamsete(upperTarmacToUpperCargoShot);
-		upRightTarmacToUpperCargoShotCommand = generateRamsete(upRightTarmacToUpperCargoShot);
-		upperCargoToUpperFieldCommand = generateRamsete(upperCargoToUpperField);
-		upperFieldToUpRightCargoCommand = generateRamsete(upperFieldToUpRightCargo);
-		upperFieldToTerminalShotCommand = generateRamsete(upperFieldToTerminalShot);
-		upRightCargoToTerminalShotCommand = generateRamsete(upRightCargoToTerminalShot);
+		straightlineCommand = generateRamsete(straightline);
+		twoBallCommand = generateRamsete(twoBall);
+		driveToShootCommand = generateRamsete(driveToShoot);
 	}
 }

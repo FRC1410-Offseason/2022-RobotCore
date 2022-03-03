@@ -11,22 +11,27 @@ public class RunStorageForTime extends CommandBase {
     private final Storage storage;
     private final Timer timer = new Timer();
     private final double seconds;
+	private final double speed;
 
-    public RunStorageForTime(Storage storage, double seconds) {
+    public RunStorageForTime(Storage storage, double seconds, double speed) {
         this.storage = storage;
         this.seconds = seconds;
+		this.speed = speed;
+
         // addRequirements(storage);
     }
 
     @Override
     public void initialize() {
         timer.start();
-        storage.runStorage(STORAGE_RUN_SPEED);
-        NetworkTables.setStorageSpeed(STORAGE_RUN_SPEED);
+        storage.runStorage(speed);
+        NetworkTables.setStorageSpeed(speed);
     }
 
     @Override
-    public boolean isFinished() {return timer.get() >= seconds;}
+    public boolean isFinished() {
+		return timer.get() >= seconds;
+	}
 
     @Override
     public void end(boolean interrupted) {

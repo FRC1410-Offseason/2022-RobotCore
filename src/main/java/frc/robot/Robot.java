@@ -52,11 +52,8 @@ public class Robot extends ScheduledRobot {
 		scheduler.scheduleDefaultCommand(new RunIntakeFlipper(intakeFlipper));
 		scheduler.scheduleDefaultCommand(new RunShooterArm(shooterArm));
 
-		getDriverRightBumper().whileHeld(new LimelightShoot(drivetrain, limelight, shooter, storage, shooterArm));
+		getDriverRightBumper().whileHeld(new LimelightShoot(drivetrain, limelight, shooter, storage, 2055));
 		getOperatorRightBumper().whileHeld(new ToggleIntake(intakeFlipper));
-
-		getOperatorDPadUp().whenPressed(new SetShooterArmAngle(shooterArm, shooterArm.getGoal() + SHOOTER_ARM_ANGLE_OFFSET));
-		getOperatorDPadDown().whenPressed(new SetShooterArmAngle(shooterArm, shooterArm.getGoal() - SHOOTER_ARM_ANGLE_OFFSET));
 	}
 
 	@Override
@@ -64,41 +61,39 @@ public class Robot extends ScheduledRobot {
 		NetworkTables.setAutoList(autoList);
 		NetworkTables.setCorrectColor(DriverStation.getAlliance().toString());
 		NetworkTables.setPressure(pressure);
-		if (RobotBase.isReal()) scheduler.scheduleDefaultCommand(new PoseEstimation(drivetrain, limelight, shooterArm), TIME_OFFSET, (long) DT200HZ);
-		if (RobotBase.isSimulation()) scheduler.scheduleDefaultCommand(new DrivetrainSimulation(drivetrain), TIME_OFFSET, (long) DT200HZ);
+		drivetrain.setCoast();
 	}
 
 	@Override
 	public void autonomousInit() {
+		scheduler.scheduleDefaultCommand(new PoseEstimation(drivetrain), TIME_OFFSET, 10);
 		drivetrain.setBrake(); // Test, maybe bad idea
 		Command autonomousCommand = null;
 
-		switch ((int)NetworkTables.getAutoChooser()) {
+		switch ((int) NetworkTables.getAutoChooser()) {
+			case 0:
+				autonomousCommand = new TaxiAuto(auto, drivetrain);
+				break;
+
+			case 1:
+				autonomousCommand = new TwoCargoAutoDrive(auto, drivetrain, limelight);
+				break;
+
+			case 2:
+				autonomousCommand = new TwoCargoAutoNoSA(auto, drivetrain, intake, storage, shooter, intakeFlipper, limelight, 2050);
+				break;
+
 			case 3:
-				autonomousCommand = new ThreeCargoAutoClose(auto, intake, intakeFlipper, shooter, shooterArm, storage);
-				break;
-
-			case 4:
-				autonomousCommand = new ThreeCargoTerminalAuto(auto, intake, intakeFlipper, shooter, shooterArm, storage);
-				break;
-
-			case 5:
-				autonomousCommand = new FourCargoAuto(auto, intake, intakeFlipper, shooter, shooterArm, storage);
-				break;
-
-			case 6:
-				autonomousCommand = new FiveCargoAuto(auto, intake, intakeFlipper, shooter, shooterArm, storage);
-				break;
-
-			case 7:
-				autonomousCommand = new FiveCargoAutoCornerStart(auto, intake, intakeFlipper, shooter, shooterArm, storage);
+				autonomousCommand = new TwoCargoAuto(auto, drivetrain, intake, storage, shooterArm, shooter, intakeFlipper, limelight, 2050);
 				break;
 
 			default:
 				break;
 		}
 
-		if (autonomousCommand != null) this.autoTask = scheduler.scheduleDefaultCommand(autonomousCommand, TIME_OFFSET, (long) DT200HZ);
+		if (autonomousCommand != null) {
+			this.autoTask = scheduler.scheduleDefaultCommand(autonomousCommand, TIME_OFFSET, 10);
+		}
 	}
 
 	@Override
