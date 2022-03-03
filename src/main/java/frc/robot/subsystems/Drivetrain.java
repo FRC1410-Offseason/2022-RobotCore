@@ -231,7 +231,10 @@ public class Drivetrain extends SubsystemBase {
 	 * Set the motors to brake mode
 	 */
 	public void setBrake() {
-		leftLeader.setNeutralMode(NeutralMode.Brake); rightLeader.setNeutralMode(NeutralMode.Brake);
+		leftLeader.setNeutralMode(NeutralMode.Brake);
+		rightLeader.setNeutralMode(NeutralMode.Brake);
+		leftFollower.setNeutralMode(NeutralMode.Brake);
+		rightFollower.setNeutralMode(NeutralMode.Brake);
 	}
 
 	/**
