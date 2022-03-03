@@ -4,9 +4,7 @@ import edu.wpi.first.hal.NotifierJNI;
 import edu.wpi.first.wpilibj.DSControlWord;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.framework.control.observers.DefaultCommandObserver;
-import frc.robot.framework.control.observers.EnqueuedObserver;
-import frc.robot.framework.control.observers.Observer;
+import frc.robot.framework.control.observers.*;
 import frc.robot.framework.scheduler.task.CommandTask;
 import frc.robot.framework.scheduler.task.Task;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
@@ -14,8 +12,6 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.PriorityQueue;
-
-import com.fasterxml.jackson.databind.ser.std.StdKeySerializers.Default;
 
 public class TaskScheduler {
 
@@ -98,6 +94,14 @@ public class TaskScheduler {
 	public void halt() {
 		taskQueue.clear();
 		stopped = true;
+	}
+
+	void clearButtonObservers() {
+		for (var entry : observerQueue) {
+			if (entry.getObserver() instanceof ButtonStateObserver) entry.getObserver().requestCancellation();
+		}
+
+		observerQueue.removeIf(entry -> entry.getObserver() instanceof ButtonStateObserver);
 	}
 
 	public void tick() {

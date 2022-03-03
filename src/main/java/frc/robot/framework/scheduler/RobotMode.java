@@ -6,6 +6,7 @@ public enum RobotMode {
 	DISABLED {
 		@Override
 		public void enter(ScheduledRobot robot) {
+			robot.scheduler.clearButtonObservers();
 			robot.disabledInit();
 		}
 
@@ -49,6 +50,7 @@ public enum RobotMode {
 		public void periodic(ScheduledRobot robot) {
 			HAL.observeUserProgramTeleop();
 			robot.teleopPeriodic();
+			robot.registerControls();
 		}
 
 		@Override
