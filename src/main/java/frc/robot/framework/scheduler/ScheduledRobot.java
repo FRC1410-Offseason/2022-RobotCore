@@ -11,6 +11,8 @@ import frc.robot.framework.control.controllers.ControlScheme;
 import frc.robot.framework.scheduler.task.SubsystemPeriodicTask;
 import frc.robot.framework.scheduler.task.Task;
 
+import java.util.Set;
+
 public abstract class ScheduledRobot extends RobotBase implements ControlScheme {
 
 	protected final TaskScheduler scheduler;
@@ -149,6 +151,9 @@ public abstract class ScheduledRobot extends RobotBase implements ControlScheme 
 			}
 		}
 
-
+		@Override
+		public Set<RobotMode> getDisallowedModes() {
+			return Set.of();
+		}
 	}
 }
