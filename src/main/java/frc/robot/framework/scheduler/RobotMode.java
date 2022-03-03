@@ -43,6 +43,7 @@ public enum RobotMode {
 		@Override
 		public void enter(ScheduledRobot robot) {
 			robot.teleopInit();
+			robot.registerControls();
 		}
 
 		@Override

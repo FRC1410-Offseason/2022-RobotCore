@@ -47,14 +47,8 @@ public class TaskScheduler {
 	}
 
 	void interruptAll() {
-		System.err.println("Interrupting all commands!");
-		taskQueue.removeIf(entry -> {
-			if (entry.getTask() instanceof CommandTask) {
-				((CommandTask) entry.getTask()).interrupt();
-				return true;
-			}
-			return false;
-		});
+		observerQueue.clear();
+		taskQueue.clear();
 	}
 
     public void enableDebugTelemetry() {
