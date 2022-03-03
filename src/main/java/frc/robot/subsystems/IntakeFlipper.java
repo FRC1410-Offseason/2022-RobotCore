@@ -19,7 +19,7 @@ public class IntakeFlipper extends SubsystemBase {
 	private final SparkMaxPIDController leftPID = leftMotor.getPIDController();
 	private final SparkMaxPIDController rightPID = rightMotor.getPIDController();
 
-	// 0 will be the retracted state
+	// False will be the retracted state
 	private boolean desiredPosition = false;
 
 	public IntakeFlipper() {

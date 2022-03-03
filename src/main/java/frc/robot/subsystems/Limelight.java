@@ -3,7 +3,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.framework.subsystem.SubsystemBase;
 import org.photonvision.PhotonCamera;
 import org.photonvision.common.hardware.VisionLEDMode;
 import org.photonvision.targeting.PhotonPipelineResult;
@@ -33,6 +33,10 @@ public class Limelight extends SubsystemBase {
         latestResult = limelight.getLatestResult();
         target = latestResult.getBestTarget();
     }
+
+	public boolean hasTarget() {
+		return latestResult.hasTargets();
+	}
 
     public double getDistanceToTarget() {
         return (UPPER_HUB_HEIGHT - getLimelightHeight(shooterAngle)) / 

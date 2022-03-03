@@ -23,22 +23,20 @@ public class IDs {
 	public static final int INTAKE_MOTOR = 31; // Spark Max / NEO 550
 
 	// ELEVATOR
-	public static final int ELEVATOR_FWD = 0;
-	public static final int ELEVATOR_BCK = 1;
+	public static final int ELEVATOR_FWD = 2;
+	public static final int ELEVATOR_BCK = 5;
 	public static final int ELEVATOR_LEFT_MOTOR_ID = 51; // Spark Max / NEO 550
 	public final static int ELEVATOR_RIGHT_MOTOR_ID = 52; // Spark Max / NEO 550
 
 	// WINCH
-	public static final int WINCH_FWD = 2;
-	public static final int WINCH_BCK = 3;
+	public static final int WINCH_FWD = 3;
+	public static final int WINCH_BCK = 4;
 	public static final int WINCH_LEFT_MOTOR_ID = 61; // Victor SPX / Bag?
 	public static final int WINCH_RIGHT_MOTOR_ID = 62; // Victor SPX / Bag?
 	public static final int WINCH_LEFT_LIMIT_SWITCH_ID = 1;
 	public static final int WINCH_RIGHT_LIMIT_SWITCH_ID = 2;
 
 	// SHOOTER ARM
-	public static final int SHOOTER_ARM_LOCK_FWD = 4;
-	public static final int SHOOTER_ARM_LOCK_BCK = 5;
 	public static final int SHOOTER_ARM_L_MOTOR = 21; // Spark Max / NEO
 	public static final int SHOOTER_ARM_R_MOTOR = 22; // Spark Max / NEO
 	public static final int PRESSURE_SENSOR = 0;

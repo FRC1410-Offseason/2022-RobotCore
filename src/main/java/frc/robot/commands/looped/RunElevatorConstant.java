@@ -1,18 +1,17 @@
 package frc.robot.commands.looped;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.framework.control.controllers.Axis;
 import frc.robot.subsystems.Elevator;
 
 
-public class RunElevator extends CommandBase {
+public class RunElevatorConstant extends CommandBase {
 
 	private final Elevator elevator;
-	private final Axis axis;
+	private final double speed;
 
-	public RunElevator(Elevator elevator, Axis axis) {
+	public RunElevatorConstant(Elevator elevator, double speed) {
 		this.elevator = elevator;
-		this.axis = axis;
+		this.speed = speed;
 		addRequirements(this.elevator);
 	}
 
@@ -24,14 +23,8 @@ public class RunElevator extends CommandBase {
 
 	@Override
 	public void execute() {
-		boolean shouldRun = !(Math.abs(axis.getDeadzoned()) < 0.1);
-		if (shouldRun) {
-			elevator.unlock();
-			elevator.set(axis.getDeadzoned());
-		} else {
-			elevator.set(0);
-			elevator.lock();
-		}
+		elevator.unlock();
+		elevator.set(speed);
 	}
 
 	@Override

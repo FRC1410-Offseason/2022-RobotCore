@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.simulation.EncoderSim;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.framework.subsystem.SubsystemBase;
 import frc.robot.NetworkTables;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
@@ -145,27 +145,7 @@ public class Drivetrain extends SubsystemBase {
 	public void initializeTalonFX(WPI_TalonFX motor) {
 		motor.configFactoryDefault();
 		motor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 10);
-		motor.setNeutralMode(NeutralMode.Brake);
 		motor.configNeutralDeadband(0.001);
-	}
-
-	/**
-	 * Tank drive with deadzoned inputs, expects inputs to be deadzoned before being passed in
-	 * @param deadzonedLeftAxis a double between -1 and 1
-	 * @param deadzonedRightAxis a double between -1 and 1
-	 */
-	public void tankDriveDeadzoned(double deadzonedLeftAxis, double deadzonedRightAxis, boolean squared) {
-		drive.tankDrive(deadzonedLeftAxis, deadzonedRightAxis, squared);
-		drive.feed();
-	}
-
-	/**
-	 * Run the drivetrain in arcade mode
-	 * @param forward -1 to 1 representing the desired velocity
-	 * @param rotation -1 to 1 representing the desired angular velocity
-	 */
-	public void arcadeDrive(double forward, double rotation) {
-		drive.arcadeDrive(forward, rotation);
 	}
 
 	/**
@@ -191,8 +171,11 @@ public class Drivetrain extends SubsystemBase {
 	 * @return a DifferentialDriveWheelSpeeds object that contains the wheels speeds in m/s
 	 */
 	public DifferentialDriveWheelSpeeds getWheelSpeeds() {
-		if (RobotBase.isSimulation()) {return new DifferentialDriveWheelSpeeds(leftEncoder.getRate(), rightEncoder.getRate());}
-		else {return new DifferentialDriveWheelSpeeds(leftEncoderVelocity, rightEncoderVelocity);}
+		if (RobotBase.isSimulation()) {
+			return new DifferentialDriveWheelSpeeds(leftEncoder.getRate(), rightEncoder.getRate());
+		} else {
+			return new DifferentialDriveWheelSpeeds(leftEncoderVelocity, rightEncoderVelocity);
+		}
 	}
 
 	/**
@@ -203,7 +186,9 @@ public class Drivetrain extends SubsystemBase {
 		if (RobotBase.isSimulation()) {
 			drivetrainSimulator.setPose(pose);
 			poseEstimator.resetPosition(pose, pose.getRotation());
-		} else poseEstimator.resetPosition(pose, gyro.getRotation2d());
+		} else {
+			poseEstimator.resetPosition(pose, gyro.getRotation2d());
+		}
 		resetEncoders();
 	}
 
@@ -223,7 +208,8 @@ public class Drivetrain extends SubsystemBase {
 	 */
 	public void resetEncoders() {
 		if (RobotBase.isSimulation()) {
-			leftEncoder.reset(); rightEncoder.reset();
+			leftEncoder.reset();
+			rightEncoder.reset();
 		}
 		leftLeader.setSelectedSensorPosition(0);
 		leftFollower.setSelectedSensorPosition(0);
@@ -235,14 +221,20 @@ public class Drivetrain extends SubsystemBase {
 	 * Set the motors to coast mode
 	 */
 	public void setCoast() {
-		leftLeader.setNeutralMode(NeutralMode.Coast); rightLeader.setNeutralMode(NeutralMode.Coast);
+		leftLeader.setNeutralMode(NeutralMode.Coast);
+		rightLeader.setNeutralMode(NeutralMode.Coast);
+		leftFollower.setNeutralMode(NeutralMode.Coast);
+		rightFollower.setNeutralMode(NeutralMode.Coast);
 	}
 
 	/**
 	 * Set the motors to brake mode
 	 */
 	public void setBrake() {
-		leftLeader.setNeutralMode(NeutralMode.Brake); rightLeader.setNeutralMode(NeutralMode.Brake);
+		leftLeader.setNeutralMode(NeutralMode.Brake);
+		rightLeader.setNeutralMode(NeutralMode.Brake);
+		leftFollower.setNeutralMode(NeutralMode.Brake);
+		rightFollower.setNeutralMode(NeutralMode.Brake);
 	}
 
 	/**

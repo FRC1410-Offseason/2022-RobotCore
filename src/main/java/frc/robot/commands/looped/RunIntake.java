@@ -26,8 +26,11 @@ public class RunIntake extends CommandBase {
 	@Override
 	public void execute() {
 		intake.setSpeed(axis.getDeadzoned());
-		storage.runStorage(STORAGE_INTAKE_SPEED);
-		storage.updateState();
+		if (axis.getDeadzoned() != 0) {
+			storage.setIntaking(true);
+		} else {
+			storage.setIntaking(false);
+		}
 	}
 
 	@Override

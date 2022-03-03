@@ -137,22 +137,6 @@ public class Elevator extends SubsystemBase {
 	}
 
 	/**
-	 * Get the current position of the mechanism in meters
-	 * @return the pose of the mech in meters from 0
-	 */
-	public double getEncoderPosition() {
-		return (leftEncoder.getPosition() + rightEncoder.getPosition()) / 2;
-	}
-
-	/**
-	 * Get the current velocity of the mechanism in meters per second
-	 * @return the velocity of the mech in meters per second
-	 */
-	public double getEncoderVelocity() {
-		return (leftEncoder.getVelocity() + rightEncoder.getVelocity()) / 2;
-	}
-
-	/**
 	 * Set the voltage of the motors
 	 * @param voltage -12 to 12 volts
 	 */
@@ -203,26 +187,6 @@ public class Elevator extends SubsystemBase {
 	 */
 	public void runRightElevator(double speed) {
 		rightMotor.set(speed);
-	}
-
-	/**
-	 * Gets height of left elevator
-	 *
-	 * @return Height of left elevator
-	 */
-	public double getHeightLeft() {
-		leftMotor.getEncoder();
-		return leftMotor.get() * GEAR_RATIO;
-	}
-
-	/**
-	 * Gets height of right elevator
-	 *
-	 * @return Height of right elevator
-	 */
-	public double getHeightRight() {
-		rightMotor.getEncoder();
-		return rightMotor.get() * GEAR_RATIO;
 	}
 
 	/**

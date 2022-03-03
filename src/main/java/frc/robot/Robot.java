@@ -7,7 +7,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.commands.looped.*;
 import frc.robot.commands.actions.*;
 import frc.robot.commands.grouped.*;
-import frc.robot.framework.scheduler.EnqueuedTask;
 import frc.robot.framework.scheduler.ScheduledRobot;
 import frc.robot.framework.scheduler.TaskScheduler;
 import frc.robot.framework.scheduler.task.CommandTask;
@@ -23,8 +22,11 @@ public class Robot extends ScheduledRobot {
 	private final String[] autoList = {"Taxi", "2Cargo", "3CargoTerminal", "3CargoUpRight", "4Cargo", "5Cargo"};
 	private final AnalogInput pressure = new AnalogInput(PRESSURE_SENSOR);
 	private CommandTask autoTask = null;
+	private Command autonomousCommand = null;
 
-	public static void main(String[] args) {RobotBase.startRobot(Robot::new);}
+	public static void main(String[] args) {
+		RobotBase.startRobot(Robot::new);
+	}
 	private Robot() {
 		super((long) DT50HZ);
 	}
@@ -40,26 +42,57 @@ public class Robot extends ScheduledRobot {
 	private final Limelight limelight = new Limelight();
 	private final Trajectories auto = new Trajectories(drivetrain);
 
-    private final TestSubsystem testSubsystem = new TestSubsystem();
-
 	@Override
-	public TaskScheduler getScheduler() {return scheduler;}
+	public TaskScheduler getScheduler() {
+		return scheduler;
+	}
 
 	@Override
 	public void registerControls() {
-		scheduler.scheduleDefaultCommand(new TankDrive(drivetrain, getDriverLeftYAxis(), getDriverRightYAxis())); // Elevator Default Command
-		scheduler.scheduleDefaultCommand(new RunElevator(elevator, getOperatorLeftYAxis())); // Elevator Default Command
-		scheduler.scheduleDefaultCommand(new RunWinch(winch, getOperatorRightYAxis())); // Winch Default Command
-		scheduler.scheduleDefaultCommand(new RunIntake(intake, storage, getOperatorRightTrigger())); // Intake Default Command
 
-		scheduler.scheduleDefaultCommand(new RunIntakeFlipper(intakeFlipper));
+		//<editor-fold desc="Defaults">
+		// Tank drive on the drivetrain
+		scheduler.scheduleDefaultCommand(new TankDrive(drivetrain, getDriverLeftYAxis(), getDriverRightYAxis()));
+
+		// Telescoping arms on the operator controller
+		scheduler.scheduleDefaultCommand(new RunElevator(elevator, getOperatorLeftYAxis()));
+
+		// Run the intake (and storage) on the operator right trigger
+		scheduler.scheduleDefaultCommand(new RunIntake(intake, storage, getOperatorRightTrigger()));
+
+		// Run the intake flipper
+//		scheduler.scheduleDefaultCommand(new RunIntakeFlipper(intakeFlipper)); //TODO: Reenable after intake flipper is ready
+
+		// Run the shooter arm
 		scheduler.scheduleDefaultCommand(new RunShooterArm(shooterArm));
 
-		getDriverRightBumper().whileHeld(new LimelightShoot(drivetrain, limelight, shooter, storage, shooterArm));
-		getOperatorRightBumper().whileHeld(new ToggleIntake(intakeFlipper));
+		// Run the storage
+		scheduler.scheduleDefaultCommand(new RunStorage(storage));
 
-		getOperatorDPadUp().whenPressed(new SetShooterArmAngle(shooterArm, shooterArm.getTarget() + SHOOTER_ARM_ANGLE_OFFSET));
-		getOperatorDPadDown().whenPressed(new SetShooterArmAngle(shooterArm, shooterArm.getTarget() - SHOOTER_ARM_ANGLE_OFFSET));
+		// Run the winches on the operator controller
+		scheduler.scheduleDefaultCommand(new RunWinch(winch, getOperatorRightYAxis()));
+		//</editor-fold>
+
+		// Toggle intake position
+//		getOperatorRightBumper().whenPressed(new ToggleIntake(intakeFlipper)); //TODO: Reenable after intake flipper is ready
+
+		// Toggle shooter arm position
+		getOperatorLeftBumper().whenPressed(new ToggleShooterArmPosition(shooterArm));
+
+		// Set storage speed
+		getOperatorYButton().whileHeld(new RunStorageConstant(storage, STORAGE_RUN_SPEED));
+
+		// Set shooter rpm
+		getOperatorXButton().whenPressed(new SetShooterRPM(shooter, NetworkTables.getShooterTargetRPM()));
+
+		// Limelight align to target and shoot
+		getDriverRightBumper().whileHeld(new LimelightShoot(drivetrain, limelight, shooter, storage, 2055));
+
+		// Climb cycle dpad control
+		getOperatorDPadUp().whileHeld(new RunElevatorConstant(elevator, ELEVATOR_UP_SPEED));
+		getOperatorDPadRight().whileHeld(new RunWinchConstant(winch, WINCH_OUT_SPEED));
+		getOperatorDPadDown().whileHeld(new RunElevatorConstant(elevator, ELEVATOR_DOWN_SPEED));
+		getOperatorDPadLeft().whileHeld(new RunWinchConstant(winch, WINCH_IN_SPEED));
 	}
 
 	@Override
@@ -67,43 +100,57 @@ public class Robot extends ScheduledRobot {
 		NetworkTables.setAutoList(autoList);
 		NetworkTables.setCorrectColor(DriverStation.getAlliance().toString());
 		NetworkTables.setPressure(pressure);
-		if (RobotBase.isReal()) scheduler.scheduleDefaultCommand(new PoseEstimation(drivetrain, limelight, shooterArm), TIME_OFFSET, (long) DT200HZ);
-		if (RobotBase.isSimulation()) scheduler.scheduleDefaultCommand(new DrivetrainSimulation(drivetrain), TIME_OFFSET, (long) DT200HZ);
+		drivetrain.setCoast();
+
+		shooterArm.resetEncoder(SHOOTER_ARM_MAX_ANGLE);
 	}
 
 	@Override
 	public void autonomousInit() {
-		drivetrain.setBrake(); // Test, maybe bad idea
-		Command autonomousCommand = null;
+		scheduler.scheduleDefaultCommand(new PoseEstimation(drivetrain), TIME_OFFSET, 10);
+		drivetrain.setBrake();
+		shooterArm.resetEncoder(SHOOTER_ARM_MAX_ANGLE);
 
-		switch ((int)NetworkTables.getAutoChooser()) {
+		switch ((int) NetworkTables.getAutoChooser()) {
+			case 0:
+				autonomousCommand = new TaxiAuto(auto, drivetrain);
+				break;
+
+			case 1:
+				autonomousCommand = new TwoCargoAutoDrive(auto, drivetrain, limelight);
+				break;
+
+			case 2:
+				autonomousCommand = new TwoCargoAutoNoSA(auto, drivetrain, intake, storage, shooter, intakeFlipper, limelight, NetworkTables.getAutoRPM());
+				break;
+
 			case 3:
-				autonomousCommand = new ThreeCargoAutoClose(auto, intake, intakeFlipper, shooter, shooterArm, storage);
-				break;
-
-			case 4:
-				autonomousCommand = new ThreeCargoTerminalAuto(auto, intake, intakeFlipper, shooter, shooterArm, storage);
-				break;
-
-			case 5:
-				autonomousCommand = new FourCargoAuto(auto, intake, intakeFlipper, shooter, shooterArm, storage);
-				break;
-
-			case 6:
-				autonomousCommand = new FiveCargoAuto(auto, intake, intakeFlipper, shooter, shooterArm, storage);
-				break;
-
-			case 7:
-				autonomousCommand = new FiveCargoAutoCornerStart(auto, intake, intakeFlipper, shooter, shooterArm, storage);
+				autonomousCommand = new TwoCargoAuto(auto, drivetrain, intake, storage, shooterArm, shooter, intakeFlipper, limelight, NetworkTables.getAutoRPM());
 				break;
 
 			default:
 				break;
 		}
 
-		if (autonomousCommand != null) this.autoTask = scheduler.scheduleDefaultCommand(autonomousCommand, TIME_OFFSET, (long) DT200HZ);
+		if (autonomousCommand != null) {
+			this.autoTask = scheduler.scheduleDefaultCommand(autonomousCommand, TIME_OFFSET, 10);
+		}
 	}
 
 	@Override
-	public void disabledInit(){}
+	public void disabledInit(){
+		autonomousCommand.cancel();
+	}
+
+	@Override
+	public void teleopInit() {
+		autonomousCommand.cancel();
+		drivetrain.setBrake();
+	}
+
+	@Override
+	public void testInit() {
+		autonomousCommand.cancel();
+		drivetrain.setCoast();
+	}
 }

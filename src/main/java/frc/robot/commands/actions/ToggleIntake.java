@@ -14,11 +14,7 @@ public class ToggleIntake extends CommandBase {
 
 	@Override
 	public void initialize() {
-		if (intakeFlipper.getDesiredPosition()) {
-			intakeFlipper.setDesiredPosition(false);
-		} else {
-			intakeFlipper.setDesiredPosition(true);
-		}
+		intakeFlipper.setDesiredPosition(!intakeFlipper.getDesiredPosition());
 	}
 
 	@Override

@@ -15,9 +15,6 @@ public class Intake extends SubsystemBase {
 		intakeMotor.restoreFactoryDefaults();
 	}
 
-	@Override
-	public void periodic() {}
-
 	/**
 	 * Returns the speed of the intake
 	 *
