@@ -47,44 +47,12 @@ public class Winch extends SubsystemBase {
 	 */
 	private boolean lockEngaged = false;
 
-	/**
-	 * Used for the simulation widgets, not currently functional
-	 */
-	private final Mechanism2d pistonSim = new Mechanism2d(60, 60);
-	private final MechanismRoot2d pistonSimRoot = pistonSim.getRoot("Piston", 30, 10);
-	private final MechanismLigament2d piston =
-			pistonSimRoot.append(
-					new MechanismLigament2d(
-							"Piston Casing",
-							20,
-							90
-					)
-			);
-	private final MechanismLigament2d pistonInnards =
-			pistonSimRoot.append(
-					new MechanismLigament2d(
-							"Piston",
-							20,
-							90,
-							4,
-							new Color8Bit(Color.kRed)
-					)
-			);
-
 	public Winch() {
 		// Configure motors
 		leftMotor.configFactoryDefault();
 		rightMotor.configFactoryDefault();
 
 		leftMotor.setInverted(true);
-
-		// Configure limit switch motor integration
-		// TODO: Make sure this actually works like we expect it does
-		//53.06 differnce in gearboxes?
-		// Lock on startup
-//		lock();
-
-		SmartDashboard.putData("Winch Piston", pistonSim);
 
 		leftLimit.setBoolean(getLeftSwitch());
 		rightLimit.setBoolean(getRightSwitch());
@@ -96,28 +64,11 @@ public class Winch extends SubsystemBase {
 		rightLimit.setBoolean(getRightSwitch());
 	}
 
-	@Override
-	public void simulationPeriodic() {
-		if (lock.get() == Value.kForward) {
-			pistonInnards.setLength(40);
-		} else {
-			pistonInnards.setLength(0);
-		}
-	}
-
 	/**
 	 * Sets motor speeds
 	 * @param speed Speed from -1 to 1
 	 */
 	public void runWinch(double speed) {
-		// TODO: Make limit switches work
-//		if (!getLeftSwitch() && !getRightSwitch()) {
-//			leftMotor.set(ControlMode.PercentOutput, speed * WINCH_LEFT_MOD);
-//			rightMotor.set(ControlMode.PercentOutput, speed);
-//		} else {
-//			leftMotor.set(ControlMode.PercentOutput, 0);
-//			rightMotor.set(ControlMode.PercentOutput, 0);
-//		}
 		leftMotor.set(ControlMode.PercentOutput, speed * WINCH_LEFT_MOD);
 		rightMotor.set(ControlMode.PercentOutput, speed);
 	}
