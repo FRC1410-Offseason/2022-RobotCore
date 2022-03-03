@@ -122,6 +122,11 @@ public class ShooterArm extends SubsystemBase {
 
 	public void setGoal(double value) {
 		goal = MathUtil.clamp(value, SHOOTER_ARM_RESTING_ANGLE, SHOOTER_ARM_MAX_ANGLE);
+		if (goal < getEncoderPosition()) {
+			PID.setPID(SA_P_UP, SA_I_UP, SA_D_UP);
+		} else {
+			PID.setPID(SA_P, SA_I, SA_D);
+		}
 	}
 
 	public double getGoal() {

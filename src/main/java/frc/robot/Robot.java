@@ -41,7 +41,9 @@ public class Robot extends ScheduledRobot {
 	private final Trajectories auto = new Trajectories(drivetrain);
 
 	@Override
-	public TaskScheduler getScheduler() {return scheduler;}
+	public TaskScheduler getScheduler() {
+		return scheduler;
+	}
 
 	@Override
 	public void registerControls() {
@@ -63,12 +65,15 @@ public class Robot extends ScheduledRobot {
 		NetworkTables.setCorrectColor(DriverStation.getAlliance().toString());
 		NetworkTables.setPressure(pressure);
 		drivetrain.setCoast();
+
+		shooterArm.resetEncoder(SHOOTER_ARM_MAX_ANGLE);
 	}
 
 	@Override
 	public void autonomousInit() {
 		scheduler.scheduleDefaultCommand(new PoseEstimation(drivetrain), TIME_OFFSET, 10);
 		drivetrain.setBrake(); // Test, maybe bad idea
+		shooterArm.resetEncoder(SHOOTER_ARM_MAX_ANGLE);
 
 		switch ((int) NetworkTables.getAutoChooser()) {
 			case 0:

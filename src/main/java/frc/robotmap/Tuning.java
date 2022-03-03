@@ -72,5 +72,9 @@ public final class Tuning {
 	public static final double SA_I = 0;
 	public static final double SA_D = 0;
 
+	public static final double SA_P_UP = 0.045;
+	public static final double SA_I_UP = 0;
+	public static final double SA_D_UP = 0;
+
 	public static final double SHOOTER_ARM_IS_FINISHED = 1; // Degree
 }
