@@ -84,7 +84,7 @@ public class Drivetrain extends SubsystemBase {
 	public void initializeTalonFX(WPI_TalonFX motor) {
 		motor.configFactoryDefault();
 		motor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 10);
-		motor.setNeutralMode(NeutralMode.Brake);
+		//motor.setNeutralMode(NeutralMode.Brake);
 		motor.configNeutralDeadband(0.001);
 	}
 
@@ -167,7 +167,10 @@ public class Drivetrain extends SubsystemBase {
 	 * Set the motors to coast mode
 	 */
 	public void setCoast() {
-		leftLeader.setNeutralMode(NeutralMode.Coast); rightLeader.setNeutralMode(NeutralMode.Coast);
+		leftLeader.setNeutralMode(NeutralMode.Coast);
+		rightLeader.setNeutralMode(NeutralMode.Coast);
+		leftFollower.setNeutralMode(NeutralMode.Coast);
+		rightFollower.setNeutralMode(NeutralMode.Coast);
 	}
 
 	/**

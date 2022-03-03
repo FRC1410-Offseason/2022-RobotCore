@@ -82,10 +82,10 @@ public class Robot extends ScheduledRobot {
 				autonomousCommand = new TwoCargoAutoDrive(auto, drivetrain, limelight);
 
 			case 2:
-				autonomousCommand = new TwoCargoAutoNoSA(auto, drivetrain, intake, storage, shooter, intakeFlipper, limelight, NetworkTables.getAutoRPM());
+				autonomousCommand = new TwoCargoAutoNoSA(auto, drivetrain, intake, storage, shooter, intakeFlipper, limelight, 2050);
 
 			case 3:
-				autonomousCommand = new TwoCargoAuto(auto, drivetrain, intake, storage, shooterArm, shooter, intakeFlipper, limelight, NetworkTables.getAutoRPM());
+				// autonomousCommand = new TwoCargoAuto(auto, drivetrain, intake, storage, shooterArm, shooter, intakeFlipper, limelight, NetworkTables.getAutoRPM());
 
 			default:
 				break;
@@ -96,12 +96,13 @@ public class Robot extends ScheduledRobot {
 
 	@Override
 	public void teleopInit() {
-		// autonomousCommand.cancel();
+		autonomousCommand.cancel();
 		drivetrain.setBrake();
 	}
 
 	@Override
 	public void testInit() {
 		drivetrain.setCoast();
+		autonomousCommand.cancel();
 	}
 }

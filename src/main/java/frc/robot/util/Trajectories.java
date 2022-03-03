@@ -28,11 +28,11 @@ public class Trajectories {
 	
 	public final Trajectory twoBall = TrajectoryGenerator.generateTrajectory(List.of(
 		new Pose2d(0, 0, new Rotation2d(Units.degreesToRadians(0))),
-		new Pose2d(0.5, 0, new Rotation2d(Units.degreesToRadians(0)))), config);
+		new Pose2d(2.3, 0, new Rotation2d(Units.degreesToRadians(0)))), config);
 
 	public final Trajectory driveToShoot = TrajectoryGenerator.generateTrajectory(List.of(
-		new Pose2d(0.5, 0, new Rotation2d(Units.degreesToRadians(0))),
-		new Pose2d(1.7, 0, new Rotation2d(Units.degreesToRadians(0)))), config);
+		new Pose2d(1.2, 0, new Rotation2d(Units.degreesToRadians(0))),
+		new Pose2d(2.0, 0, new Rotation2d(Units.degreesToRadians(0)))), config);
 		
 	public RamseteCommand straightlineCommand, twoBallCommand, driveToShootCommand;
 
@@ -48,8 +48,8 @@ public class Trajectories {
 			drivetrain::getWheelSpeeds,
 			new PIDController(KP_VEL, 0, 0, 10.0 / 1000),
 			new PIDController(KP_VEL, 0, 0, 10.0 / 1000),
-			drivetrain::tankDriveVolts,
-			drivetrain
+			drivetrain::tankDriveVolts
+			// drivetrain
 		);
 	}
 
