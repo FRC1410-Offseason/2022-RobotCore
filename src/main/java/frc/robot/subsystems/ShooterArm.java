@@ -8,9 +8,9 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import edu.wpi.first.wpilibj.smartdashboard.*;
 import edu.wpi.first.wpilibj.util.Color;
@@ -23,6 +23,12 @@ import static frc.robotmap.Tuning.*;
 
 public class ShooterArm extends SubsystemBase {
 
+	private final NetworkTableInstance instance = NetworkTableInstance.getDefault();
+	private final NetworkTable table = instance.getTable("Shooter Arm");
+
+	private final NetworkTableEntry encoderPos = table.getEntry("Encoder Pos");
+	private final NetworkTableEntry goalNT = table.getEntry("Goal");
+
 	/**
 	 * Motors
 	 */
@@ -33,16 +39,12 @@ public class ShooterArm extends SubsystemBase {
 	 * Grabbing the encoder objects from the motors
 	 */
 	private final WPI_TalonSRX encoderMotor;
-	private double encoderOffset = 0;
 
-	private final PIDController controller = new PIDController(SA_P, SA_I, SA_D); // I am also sad
+	private boolean manualControl = true;
 
-	private double target = 19;
+	private final PIDController PID = new PIDController(SA_P, SA_I, SA_D); // I am also sad
 
-	/**
-	 * For the physical brake piston on the mechanism
-	 */
-	private final DoubleSolenoid brake = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, SHOOTER_ARM_LOCK_FWD, SHOOTER_ARM_LOCK_BCK);
+	private double goal = 19;
 
 	//<editor-fold desc="Sim Stuff" defaultstate="collapsed">
 
@@ -78,29 +80,6 @@ public class ShooterArm extends SubsystemBase {
 	);
 
 	/**
-	 * Used for the piston widget in the simulation gui
-	 */
-	private final Mechanism2d pistonSim = new Mechanism2d(60, 60);
-	private final MechanismRoot2d pistonSimRoot = pistonSim.getRoot("Piston", 30, 10);
-	private final MechanismLigament2d piston =
-			pistonSimRoot.append(
-					new MechanismLigament2d(
-							"Piston Casing",
-							20,
-							90
-					)
-			);
-	private final MechanismLigament2d pistonInnards =
-			pistonSimRoot.append(
-					new MechanismLigament2d(
-							"Piston",
-							20,
-							90,
-							4,
-							new Color8Bit(Color.kRed)
-					)
-			);
-	/**
 	 * Used for the simulation, because for some reason it's impossible to get the voltage that a motor is running at
 	 */
 	private double currentVoltage = 0;
@@ -121,29 +100,22 @@ public class ShooterArm extends SubsystemBase {
 		this.encoderMotor = encoderMotor;
 
 		// TODO: Find out if this needs to be relative or absolute for the encoder type
-		encoderMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
+		encoderMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute);
 
 		// Send the arm widget to Smart Dashboard
 		SmartDashboard.putData("Arm Sim", simMech);
 		tower.setColor(new Color8Bit(Color.kBlue));
+	}
 
-		// Send the piston widget to Smart Dashboard
-		SmartDashboard.putData("Shooter Arm Piston", pistonSim);
-
-		// Default state for the brake piston is extended
-		setBrake();
+	@Override
+	public void periodic() {
+		encoderPos.setDouble(getEncoderPosition());
+		goalNT.setDouble(goal);
 	}
 
 	@Override
 	// Broken atm, even more so now
 	public void simulationPeriodic() {
-		// Update the arm widget if the brake is extended
-		if (getBrakeState()) {
-			pistonInnards.setLength(40);
-		} else {
-			pistonInnards.setLength(0);
-		}
-
 		// Set inputs to the simulator
 		sim.setInputVoltage(currentVoltage);
 
@@ -151,12 +123,12 @@ public class ShooterArm extends SubsystemBase {
 		sim.update(DT50HZ);
 	}
 
-	public void setTarget(double value) {
-		target = MathUtil.clamp(value, SHOOTER_ARM_RESTING_ANGLE, SHOOTER_ARM_MAX_ANGLE);
+	public void setGoal(double value) {
+		goal = MathUtil.clamp(value, SHOOTER_ARM_RESTING_ANGLE, SHOOTER_ARM_MAX_ANGLE);
 	}
 
-	public double getTarget() {
-		return target;
+	public double getGoal() {
+		return goal;
 	}
 
 	/**
@@ -164,13 +136,13 @@ public class ShooterArm extends SubsystemBase {
 	 * @return average encoder position in radians
 	 */
 	public double getEncoderPosition() {
-		return (encoderMotor.getSelectedSensorPosition() * 360 / 4096) - encoderOffset;
+		return -encoderMotor.getSelectedSensorPosition() * 360 / 4096;
 	}
 
 	public void runPIDExecute() {
-		double output = controller.calculate(getEncoderPosition(), target);
-		leftMotor.set(output);
-		rightMotor.set(output);
+		double output = PID.calculate(getEncoderPosition(), goal);
+		leftMotor.set(-output);
+		rightMotor.set(-output);
 	}
 
 	/**
@@ -184,29 +156,23 @@ public class ShooterArm extends SubsystemBase {
 	}
 
 	public boolean isAtTarget() {
-		return Math.abs(getEncoderPosition() - target) < SHOOTER_ARM_IS_FINISHED;
+		return Math.abs(getEncoderPosition() - goal) < SHOOTER_ARM_IS_FINISHED;
 	}
 
-	/**
-	 * Get the state of the brake piston
-	 * @return false -> retracted / true -> extended
-	 */
-	public boolean getBrakeState() {
-		return brake.get() == Value.kForward;
+	public void resetEncoder(double value) {
+		encoderMotor.setSelectedSensorPosition(-value / 360 * 4096);
 	}
 
-	/**
-	 * Set the state of the brake piston to extended
-	 */
-	public void setBrake() {
-		brake.set(Value.kForward);
+	public void resetEncoder() {
+		encoderMotor.setSelectedSensorPosition(0);
 	}
 
-	/**
-	 * Set the state of the brake piston to retracted
-	 */
-	public void releaseBrake() {
-		brake.set(Value.kReverse);
+	public boolean isManualControl() {
+		return manualControl;
+	}
+
+	public void setManualControl(boolean manualControl) {
+		this.manualControl = manualControl;
 	}
 }
 

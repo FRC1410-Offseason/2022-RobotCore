@@ -7,7 +7,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.commands.looped.*;
 import frc.robot.commands.actions.*;
 import frc.robot.commands.grouped.*;
-import frc.robot.framework.scheduler.EnqueuedTask;
 import frc.robot.framework.scheduler.ScheduledRobot;
 import frc.robot.framework.scheduler.TaskScheduler;
 import frc.robot.framework.scheduler.task.CommandTask;
@@ -58,8 +57,8 @@ public class Robot extends ScheduledRobot {
 		getDriverRightBumper().whileHeld(new LimelightShoot(drivetrain, limelight, shooter, storage, shooterArm));
 		getOperatorRightBumper().whileHeld(new ToggleIntake(intakeFlipper));
 
-		getOperatorDPadUp().whenPressed(new SetShooterArmAngle(shooterArm, shooterArm.getTarget() + SHOOTER_ARM_ANGLE_OFFSET));
-		getOperatorDPadDown().whenPressed(new SetShooterArmAngle(shooterArm, shooterArm.getTarget() - SHOOTER_ARM_ANGLE_OFFSET));
+		getOperatorDPadUp().whenPressed(new SetShooterArmAngle(shooterArm, shooterArm.getGoal() + SHOOTER_ARM_ANGLE_OFFSET));
+		getOperatorDPadDown().whenPressed(new SetShooterArmAngle(shooterArm, shooterArm.getGoal() - SHOOTER_ARM_ANGLE_OFFSET));
 	}
 
 	@Override

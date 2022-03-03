@@ -16,7 +16,7 @@ public class SetShooterArmAngle extends CommandBase {
 
 	@Override
 	public void initialize() {
-		shooterArm.setTarget(angle);
+		shooterArm.setGoal(angle);
 	}
 
 	@Override

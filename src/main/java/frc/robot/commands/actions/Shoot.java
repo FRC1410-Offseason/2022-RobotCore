@@ -41,7 +41,7 @@ public class Shoot extends CommandBase {
 		shooter.resetShotCount();
 
 		//Set the position of the shooter arm to the shooting angle
-		shooterArm.setTarget(SHOOTER_ARM_MAX_ANGLE);
+		shooterArm.setGoal(SHOOTER_ARM_MAX_ANGLE);
 
 		//Get the NEOs on the shooter spinning up to our desired RPM
 		shooter.setSpeeds(rpm);
@@ -66,7 +66,7 @@ public class Shoot extends CommandBase {
 	public void end(boolean interrupted) {
 		//Reset everything and put the mechanisms back into their resting states
 		shooter.setSpeeds(0);
-		shooterArm.setTarget(SHOOTER_ARM_RESTING_ANGLE);
+		shooterArm.setGoal(SHOOTER_ARM_RESTING_ANGLE);
 		shooter.resetShotCount();
 
 		//Reset the state of the storage

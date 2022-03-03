@@ -16,7 +16,7 @@ public class RunShooterArm extends CommandBase {
 
 	@Override
 	public void execute() {
-		if (Math.abs(shooterArm.getEncoderPosition() - shooterArm.getTarget()) > SHOOTER_ARM_IS_FINISHED) {
+		if (Math.abs(shooterArm.getEncoderPosition() - shooterArm.getGoal()) > SHOOTER_ARM_IS_FINISHED) {
 			// If we are not within our is finished tolerance
 			shooterArm.runPIDExecute();
 		} else {
