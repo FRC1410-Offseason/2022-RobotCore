@@ -28,9 +28,15 @@ public class TwoCargoAuto extends ParallelCommandGroup {
         
         
         addCommands(
-            // Drivetrain
+            // Drivetrain - Trajectories
             new SequentialCommandGroup(
                 trajectories.twoBallCommand,
+                new RunCommand(()-> drivetrain.tankDriveVolts(0, 0))
+            ),
+            // Limelight Shoot
+            new SequentialCommandGroup(
+                new WaitCommand(trajectories.twoBall.getTotalTimeSeconds() + 1),
+                new LimelightShoot(drivetrain, limelight, shooter, storage, RPM),
                 new RunCommand(()-> drivetrain.tankDriveVolts(0, 0))
             ),
             // // Intake Deploy
@@ -40,28 +46,20 @@ public class TwoCargoAuto extends ParallelCommandGroup {
             //     new WaitCommand(0.5),
             //     new SetIntakeSpeed(intake, 1, 3)
             // ),
-            // // Storage
-            // new SequentialCommandGroup(
-            //     new WaitCommand(0.5),
-            //     new RunStorageForTime(storage, 3, -1),
-            //     new WaitCommand(0.5),
-            //     new RunStorageForTime(storage, 0.2, 1),
-            //     new WaitCommand(0.3),
-            //     new RunStorageForTime(storage, 1, -1)
-            // ),
+            // Storage
             new SequentialCommandGroup(
-                new WaitCommand(trajectories.twoBall.getTotalTimeSeconds() + 1),
-                new LimelightShoot(drivetrain, limelight, shooter, storage, RPM),
-                new RunCommand(()-> drivetrain.tankDriveVolts(0, 0))
+                new RunStorageForTime(storage, 0.2, 1),
+                new WaitCommand(0.3),
+                new RunStorageForTime(storage, 1, -1)
             ),
             // Shooter Arm
             new SequentialCommandGroup(
-                new SetShooterArmAngle(shooterArm, -16)
+                new SetShooterArmAngle(shooterArm, 16)
             ),
-            // Other shooter arm
+            // Second Shooter Arm
             new SequentialCommandGroup(
                 new WaitCommand(trajectories.twoBall.getTotalTimeSeconds()),
-                new SetShooterArmAngle(shooterArm, -16)
+                new SetShooterArmAngle(shooterArm, -1)
             )
         );
     }
