@@ -6,14 +6,14 @@ import frc.robot.subsystems.ShooterArm;
 import static frc.robotmap.Constants.SHOOTER_ARM_INTAKE_ANGLE;
 import static frc.robotmap.Constants.SHOOTER_ARM_MAX_ANGLE;
 
-import static frc.robotmap.Constants.*;
 
 public class ToggleShooterArmPosition extends CommandBase {
+
 	private final ShooterArm shooterArm;
 
 	public ToggleShooterArmPosition(ShooterArm shooterArm) {
 		this.shooterArm = shooterArm;
-		addRequirements(shooterArm);
+		addRequirements(this.shooterArm);
 	}
 
 	@Override

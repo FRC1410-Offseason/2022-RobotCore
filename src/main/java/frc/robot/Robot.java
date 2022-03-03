@@ -24,7 +24,9 @@ public class Robot extends ScheduledRobot {
 	private CommandTask autoTask = null;
 	private Command autonomousCommand = null;
 
-	public static void main(String[] args) {RobotBase.startRobot(Robot::new);}
+	public static void main(String[] args) {
+		RobotBase.startRobot(Robot::new);
+	}
 	private Robot() {
 		super((long) DT50HZ);
 	}
@@ -47,6 +49,7 @@ public class Robot extends ScheduledRobot {
 
 	@Override
 	public void registerControls() {
+
 		//<editor-fold desc="Defaults">
 		// Tank drive on the drivetrain
 		scheduler.scheduleDefaultCommand(new TankDrive(drivetrain, getDriverLeftYAxis(), getDriverRightYAxis()));
@@ -73,13 +76,14 @@ public class Robot extends ScheduledRobot {
 		// Toggle shooter arm position
 		getOperatorLeftBumper().whenPressed(new ToggleShooterArmPosition(shooterArm));
 
+		// Set storage speed
+		getOperatorYButton().whileHeld(new RunStorage(storage, STORAGE_RUN_SPEED));
+
 		// Set shooter rpm
 		getOperatorXButton().whenPressed(new SetShooterRPM(shooter, NetworkTables.getShooterTargetRPM()));
 
 		// Limelight align to target and shoot
 		getDriverRightBumper().whileHeld(new LimelightShoot(drivetrain, limelight, shooter, storage, 2055));
-
-		getOperatorLeftBumper().whenPressed(new InstantCommand());
 
 		// Climb cycle dpad control
 		getOperatorDPadUp().whileHeld(new RunElevatorConstant(elevator, ELEVATOR_UP_SPEED));
