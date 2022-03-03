@@ -80,6 +80,8 @@ public class Robot extends ScheduledRobot {
 		// Limelight align to target and shoot
 		getDriverRightBumper().whileHeld(new LimelightShoot(drivetrain, limelight, shooter, storage, 2055));
 
+		getOperatorLeftBumper().whenPressed(new InstantCommand());
+
 		// Climb cycle dpad control
 		getOperatorDPadUp().whileHeld(new RunElevatorConstant(elevator, ELEVATOR_UP_SPEED));
 		getOperatorDPadRight().whileHeld(new RunWinchConstant(winch, WINCH_OUT_SPEED));
