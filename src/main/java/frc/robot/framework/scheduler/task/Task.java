@@ -3,11 +3,13 @@ package frc.robot.framework.scheduler.task;
 import frc.robot.framework.scheduler.RobotMode;
 import frc.robotmap.IDs.SchedulerPriority;
 
-import java.util.EnumSet;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 public abstract class Task {
-    
+
+	private final Set<RobotMode> disallowedModes = new HashSet<>();
 	private SchedulerPriority priority = SchedulerPriority.NULL;
 
     private boolean requesting = false;
@@ -15,7 +17,11 @@ public abstract class Task {
 
     private boolean enabled = false;
 
-    public void setPriority(SchedulerPriority priority) {
+	public Task() {
+		disallowedModes.add(RobotMode.DISABLED);
+	}
+
+	public void setPriority(SchedulerPriority priority) {
         this.priority = priority;
     }
 
@@ -75,7 +81,19 @@ public abstract class Task {
         return true;
     }
 
+	public Task disallowModes(RobotMode... modes) {
+		Collections.addAll(disallowedModes, modes);
+		return this;
+	}
+
+	public Task removedDisallowedModes(RobotMode... modes) {
+		for (var mode : modes) {
+			disallowedModes.remove(mode);
+		}
+		return this;
+	}
+
 	public Set<RobotMode> getDisallowedModes() {
-		return EnumSet.of(RobotMode.DISABLED);
+		return disallowedModes;
 	}
 }

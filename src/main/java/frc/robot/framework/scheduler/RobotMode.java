@@ -25,6 +25,7 @@ public enum RobotMode {
 	AUTONOMOUS {
 		@Override
 		public void enter(ScheduledRobot robot) {
+			robot.scheduler.clearButtonObservers();
 			robot.autonomousInit();
 		}
 

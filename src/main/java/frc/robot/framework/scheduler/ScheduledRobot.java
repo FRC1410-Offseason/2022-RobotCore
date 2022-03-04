@@ -11,8 +11,6 @@ import frc.robot.framework.control.controllers.ControlScheme;
 import frc.robot.framework.scheduler.task.SubsystemPeriodicTask;
 import frc.robot.framework.scheduler.task.Task;
 
-import java.util.Set;
-
 public abstract class ScheduledRobot extends RobotBase implements ControlScheme {
 
 	protected final TaskScheduler scheduler;
@@ -28,7 +26,7 @@ public abstract class ScheduledRobot extends RobotBase implements ControlScheme 
 
 	@Override
 	public final void startCompetition() {
-		scheduler.queuePeriodic(new GameModeObserverTask()).enable();
+		scheduler.queuePeriodic(new GameModeObserverTask().removedDisallowedModes(RobotMode.DISABLED)).enable();
 		scheduler.queuePeriodic(new SubsystemPeriodicTask()).enable();
 
 		robotInit();
@@ -151,11 +149,6 @@ public abstract class ScheduledRobot extends RobotBase implements ControlScheme 
 			if (RobotBase.isSimulation()) {
 				ScheduledRobot.this.simulationPeriodic();
 			}
-		}
-
-		@Override
-		public Set<RobotMode> getDisallowedModes() {
-			return Set.of();
 		}
 	}
 }
