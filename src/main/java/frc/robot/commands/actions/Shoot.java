@@ -24,6 +24,7 @@ public class Shoot extends CommandBase {
 		this.storage = storage;
 
 //		 addRequirements(shooter, storage);
+		addRequirements(storage);
 	}
 
 	@Override

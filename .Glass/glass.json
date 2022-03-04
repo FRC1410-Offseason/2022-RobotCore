@@ -9,6 +9,12 @@
     "Robot State": {
       "open": true
     },
+    "photonvision": {
+      "Limelight 2": {
+        "open": true
+      },
+      "open": true
+    },
     "types": {
       "/FMSInfo": "FMSInfo",
       "/SmartDashboard/Arm Sim": "Mechanism2d",
@@ -45,7 +51,7 @@
     "Plot <1>": {
       "plots": [
         {
-          "height": -9,
+          "height": 365,
           "series": [
             {
               "color": [

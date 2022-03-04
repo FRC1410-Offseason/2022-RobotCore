@@ -1,5 +1,6 @@
 package frc.robot.commands.grouped;
 
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -33,14 +34,15 @@ public class TwoCargoAuto extends ParallelCommandGroup {
             // Drivetrain - Trajectories
             new SequentialCommandGroup(
                 trajectories.twoBallCommand,
-                new RunCommand(()-> drivetrain.tankDriveVolts(0, 0))
-            ),
-            // Limelight Shoot
-            new SequentialCommandGroup(
-                new WaitCommand(trajectories.twoBall.getTotalTimeSeconds() + 1),
+                new InstantCommand(()-> drivetrain.tankDriveVolts(0, 0)),
+                new WaitCommand(1),
                 new LimelightShoot(drivetrain, limelight, shooter, storage, RPM),
                 new RunCommand(()-> drivetrain.tankDriveVolts(0, 0))
             ),
+            // Limelight Shoot
+            // new SequentialCommandGroup(
+
+            // ),
             // // Intake Deploy
             // new ExtendIntake(intakeFlipper),
             // // Intake

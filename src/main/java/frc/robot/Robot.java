@@ -27,6 +27,7 @@ public class Robot extends ScheduledRobot {
 
 	private final String[] autoList = {"0 - Taxi", "1 - 2CargoDrive", "2 - 2CargoNoSA", "3 - 2CargoAuto"};
 	private final AnalogInput pressure = new AnalogInput(PRESSURE_SENSOR);
+	CommandGroupBase autonomousCommand = null;
 
 	public static void main(String[] args) {RobotBase.startRobot(Robot::new);}
 	private Robot() {
@@ -86,10 +87,12 @@ public class Robot extends ScheduledRobot {
 	@Override
 	public void autonomousInit() {
 		scheduler.scheduleDefaultCommand(new PoseEstimation(drivetrain), TIME_OFFSET, 10);
-		drivetrain.setBrake();
 		shooterArm.resetEncoder(SHOOTER_ARM_MAX_ANGLE);
+		scheduler.scheduleDefaultCommand(new RunShooterArm(shooterArm));
+		// scheduler.scheduleDefaultCommand(new RunStorage(storage));
+		drivetrain.setBrake();
+		
 
-		CommandGroupBase autonomousCommand = null;
 		switch ((int) NetworkTables.getAutoChooser()) {
 			case 0:
 				// autonomousCommand = new TaxiAuto(auto, drivetrain);
@@ -111,6 +114,7 @@ public class Robot extends ScheduledRobot {
 
 	@Override
 	public void teleopInit() {
+		autonomousCommand.cancel();
 		drivetrain.setBrake();
 
 		// Tank drive on the drivetrain
@@ -138,6 +142,7 @@ public class Robot extends ScheduledRobot {
 
 	@Override
 	public void testInit() {
+		autonomousCommand.cancel();
 		drivetrain.setCoast();
 	}
 }
