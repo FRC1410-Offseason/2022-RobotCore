@@ -9,15 +9,11 @@
     "Robot State": {
       "open": true
     },
-    "photonvision": {
-      "Limelight 2": {
-        "open": true
-      },
-      "open": true
-    },
     "types": {
       "/FMSInfo": "FMSInfo",
       "/SmartDashboard/Arm Sim": "Mechanism2d",
+      "/SmartDashboard/Elevator Piston": "Mechanism2d",
+      "/SmartDashboard/Elevator Sim": "Mechanism2d",
       "/SmartDashboard/Field": "Field2d",
       "/SmartDashboard/Shooter Arm Piston": "Mechanism2d",
       "/SmartDashboard/Winch Piston": "Mechanism2d"
@@ -31,7 +27,7 @@
     "Plot <0>": {
       "plots": [
         {
-          "height": 332,
+          "height": -9,
           "series": [
             {
               "color": [
@@ -49,7 +45,7 @@
     "Plot <1>": {
       "plots": [
         {
-          "height": 332,
+          "height": -9,
           "series": [
             {
               "color": [

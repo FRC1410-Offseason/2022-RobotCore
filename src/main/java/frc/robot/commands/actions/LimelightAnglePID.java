@@ -57,7 +57,8 @@ public class LimelightAnglePID extends CommandBase {
     @Override
     public boolean isFinished() {
 		// If the current error from the target is within out acceptable margin, then we are done aligning and can shoot
-        if (limelight.hasTarget()) return limelight.isYawAcceptable(144, limelight.getYaw());
+        // if (limelight.hasTarget()) return limelight.isYawAcceptable(144, limelight.getYaw());
+        if (limelight.hasTarget()) return Math.abs(limelight.getYaw()) < 2;
         else return true;
     }
 }

@@ -89,16 +89,16 @@ public class Robot extends ScheduledRobot {
 		drivetrain.setBrake();
 		shooterArm.resetEncoder(SHOOTER_ARM_MAX_ANGLE);
 
-		CommandGroupBase autonomousCommand;
+		CommandGroupBase autonomousCommand = null;
 		switch ((int) NetworkTables.getAutoChooser()) {
 			case 0:
-				autonomousCommand = new TaxiAuto(auto, drivetrain);
+				// autonomousCommand = new TaxiAuto(auto, drivetrain);
 				break;
 			case 1:
-				autonomousCommand = new TwoCargoAutoDrive(auto, drivetrain, limelight);
+				// autonomousCommand = new TwoCargoAutoDrive(auto, drivetrain, limelight);
 				break;
 			case 2:
-				autonomousCommand = new TwoCargoAutoNoSA(auto, drivetrain, intake, storage, shooter, intakeFlipper, limelight, NetworkTables.getAutoRPM());
+				// autonomousCommand = new TwoCargoAutoNoSA(auto, drivetrain, intake, storage, shooter, intakeFlipper, limelight, NetworkTables.getAutoRPM());
 				break;
 			case 3:
 				autonomousCommand = new TwoCargoAuto(auto, drivetrain, intake, storage, shooterArm, shooter, intakeFlipper, limelight, NetworkTables.getAutoRPM());
@@ -114,7 +114,7 @@ public class Robot extends ScheduledRobot {
 		drivetrain.setBrake();
 
 		// Tank drive on the drivetrain
-		scheduler.scheduleDefaultCommand(new TankDrive(drivetrain, getDriverLeftYAxis(), getDriverRightYAxis()));
+		// scheduler.scheduleDefaultCommand(new TankDrive(drivetrain, getDriverLeftYAxis(), getDriverRightYAxis()));
 
 		// Telescoping arms on the operator controller
 		scheduler.scheduleDefaultCommand(new RunElevator(elevator, getOperatorLeftYAxis()));
