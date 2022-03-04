@@ -9,14 +9,7 @@ import frc.robot.commands.actions.ToggleShooterArmPosition;
 import frc.robot.commands.grouped.*;
 import frc.robot.commands.looped.*;
 import frc.robot.framework.scheduler.RobotMode;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.RunCommand;
-import frc.robot.commands.looped.*;
-import frc.robot.commands.actions.*;
-import frc.robot.commands.grouped.*;
-import frc.robot.framework.scheduler.EnqueuedTask;
 import frc.robot.framework.scheduler.ScheduledRobot;
-import frc.robot.framework.scheduler.TaskScheduler;
 import frc.robot.subsystems.*;
 import frc.robot.util.Trajectories;
 
@@ -62,16 +55,13 @@ public class Robot extends ScheduledRobot {
 		getOperatorXButton().whenPressed(new SetShooterRPM(shooter, NetworkTables.getShooterTargetRPM()));
 
 		// Limelight align to target and shoot
-		getDriverRightBumper().whileHeld(new LimelightShoot(drivetrain, limelight, shooter, storage, 2055));
+		getDriverRightBumper().whenPressed(new LimelightShoot(drivetrain, limelight, shooter, shooterArm, storage, 2055));
 
 		// Climb cycle dpad control
 		getOperatorDPadUp().whileHeld(new RunElevatorConstant(elevator, ELEVATOR_UP_SPEED));
 		getOperatorDPadRight().whileHeld(new RunWinchConstant(winch, WINCH_OUT_SPEED));
 		getOperatorDPadDown().whileHeld(new RunElevatorConstant(elevator, ELEVATOR_DOWN_SPEED));
 		getOperatorDPadLeft().whileHeld(new RunWinchConstant(winch, WINCH_IN_SPEED));
-    
-		// All teleop
-		getDriverLeftBumper().whenPressed(new LimelightAnglePID(limelight, drivetrain));
 	}
 
 	@Override
@@ -89,20 +79,16 @@ public class Robot extends ScheduledRobot {
 		scheduler.scheduleDefaultCommand(new PoseEstimation(drivetrain), TIME_OFFSET, 10);
 		shooterArm.resetEncoder(SHOOTER_ARM_MAX_ANGLE);
 		scheduler.scheduleDefaultCommand(new RunShooterArm(shooterArm));
-		// scheduler.scheduleDefaultCommand(new RunStorage(storage));
 		drivetrain.setBrake();
 	
 		
 
 		switch ((int) NetworkTables.getAutoChooser()) {
 			case 0:
-				// autonomousCommand = new TaxiAuto(auto, drivetrain);
 				break;
 			case 1:
-				// autonomousCommand = new TwoCargoAutoDrive(auto, drivetrain, limelight);
 				break;
 			case 2:
-				// autonomousCommand = new TwoCargoAutoNoSA(auto, drivetrain, intake, storage, shooter, intakeFlipper, limelight, NetworkTables.getAutoRPM());
 				break;
 			case 3:
 				autonomousCommand = new TwoCargoAuto(auto, drivetrain, intake, storage, shooterArm, shooter, intakeFlipper, limelight, NetworkTables.getAutoRPM());

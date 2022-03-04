@@ -33,38 +33,34 @@ public class TwoCargoAuto extends ParallelCommandGroup {
         addCommands(
             // Drivetrain - Trajectories
             new SequentialCommandGroup(
+                new WaitCommand(1),
                 trajectories.twoBallCommand,
                 new InstantCommand(()-> drivetrain.tankDriveVolts(0, 0)),
                 new WaitCommand(1),
-                new LimelightShoot(drivetrain, limelight, shooter, storage, RPM),
+                new LimelightShoot(drivetrain, limelight, shooter, shooterArm, storage, RPM),
                 new RunCommand(()-> drivetrain.tankDriveVolts(0, 0))
             ),
-            // Limelight Shoot
-            // new SequentialCommandGroup(
-
-            // ),
-            // // Intake Deploy
-            // new ExtendIntake(intakeFlipper),
-            // // Intake
-            // new SequentialCommandGroup(
-            //     new WaitCommand(0.5),
-            //     new SetIntakeSpeed(intake, 1, 3)
-            // ),
-            // Storage
-//            new SequentialCommandGroup(
-//                new RunStorageForTime(storage, 0.2, 1),
-//                new WaitCommand(0.3),
-//                new RunStorageForTime(storage, 1, -1)
-//            ),
-            // Shooter Arm
+            // Intake Deploy
+            new ExtendIntake(intakeFlipper),
+            // Intake
             new SequentialCommandGroup(
-                new SetShooterArmAngle(shooterArm, SHOOTER_ARM_INTAKE_ANGLE)
+                new WaitCommand(1.5),
+                new SetIntakeSpeed(intake, 1, 2)
             ),
-            // Second Shooter Arm
+            // Storage
             new SequentialCommandGroup(
-                new WaitCommand(trajectories.twoBall.getTotalTimeSeconds()),
-                new SetShooterArmAngle(shooterArm, SHOOTER_ARM_MAX_ANGLE)
-            )
+                new WaitCommand(1.75),
+                new RunStorageForTime(storage, 2, 1)
+            ),
+            // Shooter
+            new SequentialCommandGroup(
+                new WaitCommand(1),
+                new SetShooterRPM(shooter, -1000),
+                new WaitCommand(2.75),
+                new SetShooterRPM(shooter, 0)
+            ),
+            // Shooter Arm
+            new SetShooterArmAngle(shooterArm, SHOOTER_ARM_INTAKE_ANGLE)            
         );
     }
 }

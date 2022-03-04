@@ -9,11 +9,13 @@
     "Robot State": {
       "open": true
     },
+    "Shooter": {
+      "open": true
+    },
     "photonvision": {
       "Limelight 2": {
         "open": true
-      },
-      "open": true
+      }
     },
     "types": {
       "/FMSInfo": "FMSInfo",
@@ -28,6 +30,9 @@
   "NetworkTables Settings": {
     "mode": "Client",
     "serverTeam": "1410"
+  },
+  "NetworkTables View": {
+    "visible": false
   },
   "Plots": {
     "Plot <0>": {
