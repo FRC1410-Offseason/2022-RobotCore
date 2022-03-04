@@ -19,12 +19,14 @@ public enum RobotMode {
 		@Override
 		public void exit(ScheduledRobot robot) {
 			robot.disabledExit();
+			robot.scheduler.carefullyNuke();
 		}
 	},
 
 	AUTONOMOUS {
 		@Override
 		public void enter(ScheduledRobot robot) {
+			robot.scheduler.clearButtonObservers();
 			robot.autonomousInit();
 		}
 
@@ -37,6 +39,7 @@ public enum RobotMode {
 		@Override
 		public void exit(ScheduledRobot robot) {
 			robot.autonomousExit();
+			robot.scheduler.carefullyNuke();
 		}
 	},
 
@@ -56,6 +59,7 @@ public enum RobotMode {
 		@Override
 		public void exit(ScheduledRobot robot) {
 			robot.teleopExit();
+			robot.scheduler.carefullyNuke();
 		}
 	},
 
@@ -74,6 +78,7 @@ public enum RobotMode {
 		@Override
 		public void exit(ScheduledRobot robot) {
 			robot.testExit();
+			robot.scheduler.carefullyNuke();
 		}
 	};
 

@@ -94,7 +94,7 @@ public class NetworkTables {
 
 		// Initializing
 		// Autonomous
-		autoChooser.setDouble(0);
+		autoChooser.setDouble(3);
 		autoRPM.setDouble(AUTONOMOUS_SHOOTING_RPM);
 		// Trajectories
 		maxVelocity.setDouble(0);
@@ -161,7 +161,7 @@ public class NetworkTables {
 	}
 
 	public static double getAutoChooser() {
-		return autoChooser.getDouble(0);
+		return autoChooser.getDouble(3);
 	}
 
 	public static double getAutoRPM() {

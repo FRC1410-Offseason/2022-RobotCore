@@ -105,7 +105,16 @@ public class TaskScheduler {
 		}
 
 		observerQueue.removeIf(entry -> entry.getObserver() instanceof ButtonStateObserver);
-		debugDumpList();
+	}
+
+	void nuke() {
+		observerQueue.clear();
+		taskQueue.clear();
+	}
+
+	void carefullyNuke() {
+		observerQueue.clear();
+		taskQueue.removeIf(entry -> entry.getTask() instanceof CommandTask);
 	}
 
 	public void tick() {
@@ -282,8 +291,8 @@ public class TaskScheduler {
         return task;
 	}
 
-    public CommandTask scheduleDefaultCommand(Command command, long initialDelay, long period) {
-		final CommandTask task = scheduleCommand(command, initialDelay, period);
+    public CommandTask scheduleDefaultCommand(Command command, long initialDelay, long period, RobotMode... disallowedModes) {
+		final CommandTask task = scheduleCommand(command, initialDelay, period, disallowedModes);
         final DefaultCommandObserver observer = new DefaultCommandObserver();
         observer.bind(task);
         queueObserver(new EnqueuedObserver(observer, nextObserverId()));
@@ -302,8 +311,9 @@ public class TaskScheduler {
         return localTask;
 	}
 
-	private CommandTask scheduleCommand(Command command, long initialDelay, long period) {
+	private CommandTask scheduleCommand(Command command, long initialDelay, long period, RobotMode... disallowedModes) {
 		CommandTask localTask = new CommandTask(command);
+		localTask.disallowModes(disallowedModes);
         queuePeriodic(localTask, initialDelay, period);
         return localTask;
 	}

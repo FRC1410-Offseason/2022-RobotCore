@@ -58,7 +58,7 @@ public final class Tuning {
 	public static final Matrix<N7, N1> NOISE = VecBuilder.fill(0.001, 0.001, 0.001, 0.1, 0.1, 0.005, 0.005);
 
 	// INTAKE
-	public static final double INTAKE_P = 1;
+	public static final double INTAKE_P = 0.005;
 	public static final double INTAKE_I = 0;
 	public static final double INTAKE_D = 0;
 
@@ -74,7 +74,7 @@ public final class Tuning {
 	public static final double SA_I = 0;
 	public static final double SA_D = 0;
 
-	public static final double SA_P_UP = 0.045;
+	public static final double SA_P_UP = 0.029;
 	public static final double SA_I_UP = 0;
 	public static final double SA_D_UP = 0;
 
@@ -82,5 +82,5 @@ public final class Tuning {
 
 	// SHOOTER
 	public static final double SHOOT_STORAGE_DURATION = 2.0;
-	public static final double AUTONOMOUS_SHOOTING_RPM = 1855;
+	public static final double AUTONOMOUS_SHOOTING_RPM = 2320;
 }
