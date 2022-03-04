@@ -5,6 +5,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import frc.robot.framework.subsystem.SubsystemBase;
 import org.photonvision.PhotonCamera;
+import org.photonvision.PhotonUtils;
 import org.photonvision.common.hardware.VisionLEDMode;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
@@ -18,7 +19,7 @@ public class Limelight extends SubsystemBase {
 	// Stores the current values reported by the camera
     private PhotonPipelineResult latestResult;
 
-	//TODO: This should probably be moved to a constant
+	// TODO: This should probably be moved to a constant
     private double shooterAngle = 19;
 
 	// The current target if there is one
@@ -39,9 +40,24 @@ public class Limelight extends SubsystemBase {
 	}
 
     public double getDistanceToTarget() {
-        return (UPPER_HUB_HEIGHT - getLimelightHeight(shooterAngle)) / 
-            Math.tan(Units.degreesToRadians(getLimelightAngle(shooterAngle) + getPitch()));
-    }
+		if (hasTarget()) {
+			double distanceToTargetMeters = PhotonUtils.calculateDistanceToTargetMeters(
+					getLimelightHeight(SHOOTER_ARM_MAX_ANGLE), UPPER_HUB_HEIGHT, getLimelightAngle(SHOOTER_ARM_MAX_ANGLE), getPitch());
+			return Units.metersToInches(distanceToTargetMeters);
+		} else {
+			return -1;
+		}
+	}
+
+	public double getDistanceToTarget(double shooterAngle) {
+		if (hasTarget()) {
+			double distanceToTargetMeters = PhotonUtils.calculateDistanceToTargetMeters(
+					getLimelightHeight(shooterAngle), UPPER_HUB_HEIGHT, getLimelightAngle(shooterAngle), getPitch());
+			return Units.metersToInches(distanceToTargetMeters);
+		} else {
+			return -1;
+		}
+	}
 
 	public PhotonPipelineResult getLatestResult() {
 		return latestResult;
