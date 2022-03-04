@@ -3,7 +3,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandGroupBase;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.commands.actions.SetShooterRPM;
 import frc.robot.commands.actions.ToggleShooterArmPosition;
@@ -12,7 +12,6 @@ import frc.robot.commands.looped.*;
 import frc.robot.framework.scheduler.RobotMode;
 import frc.robot.framework.scheduler.ScheduledRobot;
 import frc.robot.framework.scheduler.TaskScheduler;
-import frc.robot.framework.scheduler.task.CommandTask;
 import frc.robot.subsystems.*;
 import frc.robot.util.Trajectories;
 
@@ -23,8 +22,6 @@ public class Robot extends ScheduledRobot {
 
 	private final String[] autoList = {"Taxi", "2Cargo", "3CargoTerminal", "3CargoUpRight", "4Cargo", "5Cargo"};
 	private final AnalogInput pressure = new AnalogInput(PRESSURE_SENSOR);
-	private CommandTask autoTask = null;
-	private Command autonomousCommand = null;
 
 	public static void main(String[] args) {
 		RobotBase.startRobot(Robot::new);
@@ -117,30 +114,24 @@ public class Robot extends ScheduledRobot {
 		drivetrain.setBrake();
 		shooterArm.resetEncoder(SHOOTER_ARM_MAX_ANGLE);
 
+		CommandGroupBase autonomousCommand;
 		switch ((int) NetworkTables.getAutoChooser()) {
 			case 0:
 				autonomousCommand = new TaxiAuto(auto, drivetrain);
 				break;
-
 			case 1:
 				autonomousCommand = new TwoCargoAutoDrive(auto, drivetrain, limelight);
 				break;
-
 			case 2:
 				autonomousCommand = new TwoCargoAutoNoSA(auto, drivetrain, intake, storage, shooter, intakeFlipper, limelight, NetworkTables.getAutoRPM());
 				break;
-
 			case 3:
 				autonomousCommand = new TwoCargoAuto(auto, drivetrain, intake, storage, shooterArm, shooter, intakeFlipper, limelight, NetworkTables.getAutoRPM());
 				break;
-
-			default:
-				break;
+			default: throw new IllegalStateException("Unknown auto profile " + auto);
 		}
 
-		if (autonomousCommand != null) {
-			this.autoTask = scheduler.scheduleDefaultCommand(autonomousCommand, TIME_OFFSET, 10, RobotMode.TELEOP, RobotMode.TEST);
-		}
+		scheduler.scheduleDefaultCommand(autonomousCommand, TIME_OFFSET, 10, RobotMode.TELEOP, RobotMode.TEST);
 	}
 
 	@Override
