@@ -44,7 +44,7 @@ public class ShooterArm extends SubsystemBase {
 
 	private final PIDController PID = new PIDController(SA_P, SA_I, SA_D); // I am also sad
 
-	private double goal = 19;
+	private double goal = SHOOTER_ARM_MAX_ANGLE;
 
 	//<editor-fold desc="Sim Stuff" defaultstate="collapsed">
 

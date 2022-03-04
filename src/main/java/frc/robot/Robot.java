@@ -45,6 +45,9 @@ public class Robot extends ScheduledRobot {
 		getDriverLeftBumper().whenPressed(new LimelightAnglePID(limelight, drivetrain));
 		getOperatorRightBumper().whileHeld(new ToggleIntake(intakeFlipper));
 
+		getOperatorXButton().whenPressed(new RunCommand(() -> shooterArm.setGoal(SHOOTER_ARM_INTAKE_ANGLE), shooterArm));
+		getOperatorAButton().whenPressed(new RunCommand(() -> shooterArm.setGoal(SHOOTER_ARM_MAX_ANGLE), shooterArm));
+
 //		getDriverAButton().whenPressed(new RunCommand(() -> winch.lock(), winch));
 //		getDriverXButton().whenPressed(new RunCommand(() -> winch.unlock(), winch));
 	}
@@ -87,11 +90,14 @@ public class Robot extends ScheduledRobot {
 
 	@Override
 	public void teleopInit() {
+		shooterArm.resetEncoder(SHOOTER_ARM_MAX_ANGLE);
 		drivetrain.setBrake();
 
 		scheduler.scheduleDefaultCommand(new TankDrive(drivetrain, getDriverLeftYAxis(), getDriverRightYAxis()));
 //		scheduler.scheduleDefaultCommand(new RunElevator(elevator, getOperatorLeftYAxis()));
 //		scheduler.scheduleDefaultCommand(new RunWinch(winch, getOperatorRightYAxis()));
+
+		scheduler.scheduleDefaultCommand(new RunShooterArm(shooterArm));
 
 		scheduler.scheduleDefaultCommand(new RunIntake(intake, storage, getOperatorRightTrigger()));
 //		scheduler.scheduleDefaultCommand(new RunIntakeFlipper(intakeFlipper));
