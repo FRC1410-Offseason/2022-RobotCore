@@ -9,12 +9,13 @@ public class RunStorageForTime extends CommandBase {
     private final Storage storage;
     private final Timer timer = new Timer();
     private final double seconds;
-	private final double speed;
+    private final double speed;
 
     public RunStorageForTime(Storage storage, double seconds, double speed) {
         this.storage = storage;
         this.seconds = seconds;
-		this.speed = speed;
+        this.speed = speed;
+        // addRequirements(storage);
     }
 
     @Override

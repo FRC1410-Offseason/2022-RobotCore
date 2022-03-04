@@ -35,6 +35,7 @@ public abstract class ScheduledRobot extends RobotBase implements ControlScheme 
 		}
 
 		HAL.observeUserProgramStarting();
+		registerControls();
 
 		scheduler.start();
 	}
@@ -116,6 +117,7 @@ public abstract class ScheduledRobot extends RobotBase implements ControlScheme 
 			controlWord.update();
 
 			if (controlWord.isEStopped()) {
+				scheduler.interruptAll();
 				scheduler.halt();
 
 				throw new IllegalStateException("Emergency stopped! All functionality has been halted.");

@@ -31,7 +31,7 @@ public class NetworkTables {
 		// Autonomous
 		autoList = table.getEntry("Auto List");
 		autoChooser = table.getEntry("Auto Chooser");
-		autoRPM = table.getEntry("Auto RPM");
+		autoRPM = table.getEntry("Autonomous Shot RPM");
 		// Trajectories
 		maxVelocity = table.getEntry("Maximum Velocity Constraint");
 		maxAcceleration = table.getEntry("Maximum Acceleration Constraint");
@@ -95,7 +95,7 @@ public class NetworkTables {
 		// Initializing
 		// Autonomous
 		autoChooser.setDouble(0);
-		autoRPM.setDouble(2050);
+		autoRPM.setDouble(AUTONOMOUS_SHOOTING_RPM);
 		// Trajectories
 		maxVelocity.setDouble(0);
 		maxAcceleration.setDouble(0);

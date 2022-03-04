@@ -9,6 +9,12 @@ import frc.robot.commands.actions.ToggleShooterArmPosition;
 import frc.robot.commands.grouped.*;
 import frc.robot.commands.looped.*;
 import frc.robot.framework.scheduler.RobotMode;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.RunCommand;
+import frc.robot.commands.looped.*;
+import frc.robot.commands.actions.*;
+import frc.robot.commands.grouped.*;
+import frc.robot.framework.scheduler.EnqueuedTask;
 import frc.robot.framework.scheduler.ScheduledRobot;
 import frc.robot.framework.scheduler.TaskScheduler;
 import frc.robot.subsystems.*;
@@ -19,12 +25,10 @@ import static frc.robotmap.IDs.PRESSURE_SENSOR;
 
 public class Robot extends ScheduledRobot {
 
-	private final String[] autoList = {"Taxi", "2Cargo", "3CargoTerminal", "3CargoUpRight", "4Cargo", "5Cargo"};
+	private final String[] autoList = {"0 - Taxi", "1 - 2CargoDrive", "2 - 2CargoNoSA", "3 - 2CargoAuto"};
 	private final AnalogInput pressure = new AnalogInput(PRESSURE_SENSOR);
 
-	public static void main(String[] args) {
-		RobotBase.startRobot(Robot::new);
-	}
+	public static void main(String[] args) {RobotBase.startRobot(Robot::new);}
 	private Robot() {
 		super((long) DT50HZ);
 	}
@@ -39,11 +43,6 @@ public class Robot extends ScheduledRobot {
 	private final Winch winch = new Winch();
 	private final Limelight limelight = new Limelight();
 	private final Trajectories auto = new Trajectories(drivetrain);
-
-	@Override
-	public TaskScheduler getScheduler() {
-		return scheduler;
-	}
 
 
 
@@ -69,6 +68,9 @@ public class Robot extends ScheduledRobot {
 		getOperatorDPadRight().whileHeld(new RunWinchConstant(winch, WINCH_OUT_SPEED));
 		getOperatorDPadDown().whileHeld(new RunElevatorConstant(elevator, ELEVATOR_DOWN_SPEED));
 		getOperatorDPadLeft().whileHeld(new RunWinchConstant(winch, WINCH_IN_SPEED));
+    
+		// All teleop
+		getDriverLeftBumper().whenPressed(new LimelightAnglePID(limelight, drivetrain));
 	}
 
 	@Override
@@ -108,10 +110,6 @@ public class Robot extends ScheduledRobot {
 	}
 
 	@Override
-	public void disabledInit() {
-	}
-
-	@Override
 	public void teleopInit() {
 		drivetrain.setBrake();
 
@@ -135,6 +133,7 @@ public class Robot extends ScheduledRobot {
 
 		// Run the winches on the operator controller
 		scheduler.scheduleDefaultCommand(new RunWinch(winch, getOperatorRightYAxis()));
+		drivetrain.setBrake();
 	}
 
 	@Override

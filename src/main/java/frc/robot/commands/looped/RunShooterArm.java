@@ -19,6 +19,7 @@ public class RunShooterArm extends CommandBase {
 		if (Math.abs(shooterArm.getEncoderPosition() - shooterArm.getGoal()) > SHOOTER_ARM_IS_FINISHED) {
 			// If we are not within our is finished tolerance
 			shooterArm.runPIDExecute();
+			System.out.println("running shooter arm");
 		} else {
 			// If we are within our tolerance
 			shooterArm.setVoltage(0);

@@ -1,0 +1,68 @@
+{
+  "NetworkTables": {
+    "Dashboard Data": {
+      "open": true
+    },
+    "Pose Estimation": {
+      "open": true
+    },
+    "Robot State": {
+      "open": true
+    },
+    "photonvision": {
+      "Limelight 2": {
+        "open": true
+      },
+      "open": true
+    },
+    "types": {
+      "/FMSInfo": "FMSInfo",
+      "/SmartDashboard/Arm Sim": "Mechanism2d",
+      "/SmartDashboard/Field": "Field2d",
+      "/SmartDashboard/Shooter Arm Piston": "Mechanism2d",
+      "/SmartDashboard/Winch Piston": "Mechanism2d"
+    }
+  },
+  "NetworkTables Settings": {
+    "mode": "Client",
+    "serverTeam": "1410"
+  },
+  "Plots": {
+    "Plot <0>": {
+      "plots": [
+        {
+          "height": 332,
+          "series": [
+            {
+              "color": [
+                0.2980392277240753,
+                0.44705885648727417,
+                0.6901960968971252,
+                1.0
+              ],
+              "id": "NT:/Pose Estimation/X"
+            }
+          ]
+        }
+      ]
+    },
+    "Plot <1>": {
+      "plots": [
+        {
+          "height": 332,
+          "series": [
+            {
+              "color": [
+                0.2980392277240753,
+                0.44705885648727417,
+                0.6901960968971252,
+                1.0
+              ],
+              "id": "NT:/photonvision/Limelight 2/targetYaw"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
