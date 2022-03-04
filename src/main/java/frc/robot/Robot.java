@@ -91,6 +91,7 @@ public class Robot extends ScheduledRobot {
 		scheduler.scheduleDefaultCommand(new RunShooterArm(shooterArm));
 		// scheduler.scheduleDefaultCommand(new RunStorage(storage));
 		drivetrain.setBrake();
+	
 		
 
 		switch ((int) NetworkTables.getAutoChooser()) {
@@ -109,7 +110,9 @@ public class Robot extends ScheduledRobot {
 			default: throw new IllegalStateException("Unknown auto profile " + auto);
 		}
 
+
 		scheduler.scheduleDefaultCommand(autonomousCommand, TIME_OFFSET, 10, RobotMode.TELEOP, RobotMode.TEST);
+		scheduler.debugDumpList();
 	}
 
 	@Override
