@@ -29,7 +29,7 @@ public class Robot extends ScheduledRobot {
 	}
 
 	private final Drivetrain drivetrain = new Drivetrain();
-	// private final Elevator elevator = new Elevator();
+	 private final Elevator elevator = new Elevator();
 	private final Intake intake = new Intake();
 	private final IntakeFlipper intakeFlipper = new IntakeFlipper();
 	private final Shooter shooter = new Shooter();
@@ -40,18 +40,7 @@ public class Robot extends ScheduledRobot {
 	private final Trajectories auto = new Trajectories(drivetrain);
 
 	@Override
-	public TaskScheduler getScheduler() {return scheduler;}
-
-	@Override
 	public void registerControls() {
-		// All teleop
-		// scheduler.scheduleDefaultCommand(new TankDrive(drivetrain, getDriverLeftYAxis(), getDriverRightYAxis())); // Elevator Default Command
-		// scheduler.scheduleDefaultCommand(new RunElevator(elevator, getOperatorLeftYAxis())); // Elevator Default Command
-		// scheduler.scheduleDefaultCommand(new RunWinch(winch, getOperatorRightYAxis())); // Winch Default Command
-		// scheduler.scheduleDefaultCommand(new RunIntake(intake, storage, getOperatorRightTrigger())); // Intake Default Command
-		// scheduler.scheduleDefaultCommand(new RunIntakeFlipper(intakeFlipper));
-		// scheduler.scheduleDefaultCommand(new RunShooterArm(shooterArm));
-
 		getDriverRightBumper().whenPressed(new LimelightShoot(drivetrain, limelight, shooter, storage, 2055));
 		getDriverLeftBumper().whenPressed(new LimelightAnglePID(limelight, drivetrain));
 		getOperatorRightBumper().whileHeld(new ToggleIntake(intakeFlipper));
@@ -98,8 +87,18 @@ public class Robot extends ScheduledRobot {
 
 	@Override
 	public void teleopInit() {
-		autonomousCommand.cancel();
 		drivetrain.setBrake();
+
+		scheduler.scheduleDefaultCommand(new TankDrive(drivetrain, getDriverLeftYAxis(), getDriverRightYAxis()));
+//		scheduler.scheduleDefaultCommand(new RunElevator(elevator, getOperatorLeftYAxis()));
+//		scheduler.scheduleDefaultCommand(new RunWinch(winch, getOperatorRightYAxis()));
+
+		scheduler.scheduleDefaultCommand(new RunIntake(intake, storage, getOperatorRightTrigger()));
+//		scheduler.scheduleDefaultCommand(new RunIntakeFlipper(intakeFlipper));
+		scheduler.scheduleDefaultCommand(new RunIntakeFlipperWithAxis(intakeFlipper, getOperatorLeftYAxis()));
+
+
+
 	}
 
 	@Override

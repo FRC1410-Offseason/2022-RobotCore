@@ -26,8 +26,10 @@ public class IntakeFlipper extends SubsystemBase {
 		leftMotor.restoreFactoryDefaults();
 		rightMotor.restoreFactoryDefaults();
 
-		leftMotor.setIdleMode(CANSparkMax.IdleMode.kCoast);
-		rightMotor.setIdleMode(CANSparkMax.IdleMode.kCoast);
+		rightMotor.setInverted(true);
+
+		leftMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
+		rightMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
 
 		leftPID.setP(INTAKE_P);
 		leftPID.setI(INTAKE_I);
