@@ -5,24 +5,14 @@ import static frc.robotmap.Tuning.*;
 import static frc.robotmap.Constants.*;
 
 import com.ctre.phoenix.motorcontrol.InvertType;
-import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
-import edu.wpi.first.wpilibj.simulation.EncoderSim;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.framework.subsystem.SubsystemBase;
-import frc.robot.NetworkTables;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.MatBuilder;
 import edu.wpi.first.math.Nat;
-import edu.wpi.first.hal.simulation.SimDeviceDataJNI;
-import edu.wpi.first.hal.SimDouble;
 import edu.wpi.first.wpilibj.SPI;
 
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
@@ -40,7 +30,6 @@ public class Drivetrain extends SubsystemBase {
 	/**
 	 * Motors
 	 */
-	// TODO: Add encoder conversion factor from calibration
 	public final WPI_TalonFX leftLeader = new WPI_TalonFX(DRIVETRAIN_LEFT_FRONT_MOTOR_ID);
 	public final WPI_TalonFX leftFollower = new WPI_TalonFX(DRIVETRAIN_LEFT_BACK_MOTOR_ID);
 	public final WPI_TalonFX rightLeader = new WPI_TalonFX(DRIVETRAIN_RIGHT_FRONT_MOTOR_ID);
@@ -60,32 +49,9 @@ public class Drivetrain extends SubsystemBase {
 			new MatBuilder<>(Nat.N3(), Nat.N1()).fill(VISION_X, VISION_Y, VISION_THETA), DT200HZ / 1000);
 
 	/**
-	 * Used for simulating the drivetrain (duh)
-	 */
-	public DifferentialDrivetrainSim drivetrainSimulator;
-
-	/**
-	 * Used for sim, we send it to networktables to display the robot pose on a field
-	 */
-	public Field2d fieldSim;
-
-	/**
-	 * Only used for simulation, again not best practice, but it works
-	 */
-	public final Encoder rightEncoder = new Encoder(RIGHT_ENCODER_PORTS[0], RIGHT_ENCODER_PORTS[1], false);
-	public final Encoder leftEncoder = new Encoder(LEFT_ENCODER_PORTS[0], LEFT_ENCODER_PORTS[1], false);
-
-	/**
-	 * Simulation stuff, do not do this, it's very bad practice
-	 */
-	public EncoderSim leftEncoderSim;
-	public EncoderSim rightEncoderSim;
-
-	/**
 	 * Gyro and sim handle for the gyro
 	 */
 	public final AHRS gyro = new AHRS(SPI.Port.kMXP);
-	public SimDouble yaw;
 
 	public Drivetrain() {
 		//Config motors
@@ -102,36 +68,9 @@ public class Drivetrain extends SubsystemBase {
 
 		drive = new DifferentialDrive(leftLeader, rightLeader);
 
-		//If we are in a simulation, we have to set a couple of things up
-		if (RobotBase.isSimulation()) {
-			simulationInit();
-		}
-
 		//Reset everything to make sure it's good to go
 		resetEncoders();
 		zeroHeading();
-
-		//Send som DATA to networktables
-		NetworkTables.setNavXMagCalibration(gyro.isMagnetometerCalibrated());
-	}
-
-	/**
-	 * Sets up the simulation environment for this subsystem
-	 * Creates the actual simulation instance
-	 * Sets up the encoders for use later
-	 */
-	public void simulationInit() {
-		drivetrainSimulator = new DifferentialDrivetrainSim(
-			DRIVETRAIN_PLANT, DCMotor.getFalcon500(2), GEARING, TRACKWIDTH, WHEEL_DIAMETER, NOISE);
-
-		leftLeader.setInverted(false);
-		leftEncoder.setDistancePerPulse(ENCODER_DISTANCE_PER_PULSE);
-		rightEncoder.setDistancePerPulse(ENCODER_DISTANCE_PER_PULSE);
-		leftEncoderSim = new EncoderSim(leftEncoder);
-		rightEncoderSim = new EncoderSim(rightEncoder);
-		yaw = new SimDouble(SimDeviceDataJNI.getSimValueHandle(SimDeviceDataJNI.getSimDeviceHandle("navX-Sensor[0]"), "Yaw"));
-		fieldSim = new Field2d();
-		SmartDashboard.putData("Field", fieldSim);
 	}
 
 	/**
@@ -145,7 +84,27 @@ public class Drivetrain extends SubsystemBase {
 	public void initializeTalonFX(WPI_TalonFX motor) {
 		motor.configFactoryDefault();
 		motor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 10);
+		//motor.setNeutralMode(NeutralMode.Brake);
 		motor.configNeutralDeadband(0.001);
+	}
+
+	/**
+	 * Tank drive with deadzoned inputs, expects inputs to be deadzoned before being passed in
+	 * @param deadzonedLeftAxis a double between -1 and 1
+	 * @param deadzonedRightAxis a double between -1 and 1
+	 */
+	public void tankDriveDeadzoned(double deadzonedLeftAxis, double deadzonedRightAxis, boolean squared) {
+		drive.tankDrive(deadzonedLeftAxis, deadzonedRightAxis, squared);
+		drive.feed();
+	}
+
+	/**
+	 * Run the drivetrain in arcade mode
+	 * @param forward -1 to 1 representing the desired velocity
+	 * @param rotation -1 to 1 representing the desired angular velocity
+	 */
+	public void arcadeDrive(double forward, double rotation) {
+		drive.arcadeDrive(forward, rotation);
 	}
 
 	/**
@@ -171,11 +130,7 @@ public class Drivetrain extends SubsystemBase {
 	 * @return a DifferentialDriveWheelSpeeds object that contains the wheels speeds in m/s
 	 */
 	public DifferentialDriveWheelSpeeds getWheelSpeeds() {
-		if (RobotBase.isSimulation()) {
-			return new DifferentialDriveWheelSpeeds(leftEncoder.getRate(), rightEncoder.getRate());
-		} else {
-			return new DifferentialDriveWheelSpeeds(leftEncoderVelocity, rightEncoderVelocity);
-		}
+		return new DifferentialDriveWheelSpeeds(leftEncoderVelocity, rightEncoderVelocity);
 	}
 
 	/**
@@ -183,12 +138,7 @@ public class Drivetrain extends SubsystemBase {
 	 * @param pose a starting pose
 	 */
 	public void resetPoseEstimation(Pose2d pose) {
-		if (RobotBase.isSimulation()) {
-			drivetrainSimulator.setPose(pose);
-			poseEstimator.resetPosition(pose, pose.getRotation());
-		} else {
-			poseEstimator.resetPosition(pose, gyro.getRotation2d());
-		}
+		poseEstimator.resetPosition(pose, gyro.getRotation2d());
 		resetEncoders();
 	}
 
@@ -207,10 +157,6 @@ public class Drivetrain extends SubsystemBase {
 	 * Reset the encoders
 	 */
 	public void resetEncoders() {
-		if (RobotBase.isSimulation()) {
-			leftEncoder.reset();
-			rightEncoder.reset();
-		}
 		leftLeader.setSelectedSensorPosition(0);
 		leftFollower.setSelectedSensorPosition(0);
 		rightLeader.setSelectedSensorPosition(0);
@@ -231,10 +177,7 @@ public class Drivetrain extends SubsystemBase {
 	 * Set the motors to brake mode
 	 */
 	public void setBrake() {
-		leftLeader.setNeutralMode(NeutralMode.Brake);
-		rightLeader.setNeutralMode(NeutralMode.Brake);
-		leftFollower.setNeutralMode(NeutralMode.Brake);
-		rightFollower.setNeutralMode(NeutralMode.Brake);
+		leftLeader.setNeutralMode(NeutralMode.Brake); rightLeader.setNeutralMode(NeutralMode.Brake);
 	}
 
 	/**

@@ -19,45 +19,42 @@ public class Limelight extends SubsystemBase {
 	// Stores the current values reported by the camera
     private PhotonPipelineResult latestResult;
 
-	// TODO: This should probably be moved to a constant
-    private double shooterAngle = 19;
-
 	// The current target if there is one
     private PhotonTrackedTarget target;
 
+    private double distanceToTargetMeters = 0;
+
     public Limelight() {
-		limelight.setDriverMode(false);
-	}
+        limelight.setDriverMode(true);
+        limelight.setDriverMode(false);
+        System.out.println("limelight constructed");
+    }
 
     @Override
-    public void periodic() {        
+    public void periodic() {
         latestResult = limelight.getLatestResult();
         target = latestResult.getBestTarget();
     }
 
-	public boolean hasTarget() {
-		return latestResult.hasTargets();
-	}
+    public boolean hasTarget() {
+        return latestResult.hasTargets();
+    }
 
     public double getDistanceToTarget() {
-		if (hasTarget()) {
-			double distanceToTargetMeters = PhotonUtils.calculateDistanceToTargetMeters(
-					getLimelightHeight(SHOOTER_ARM_MAX_ANGLE), UPPER_HUB_HEIGHT, getLimelightAngle(SHOOTER_ARM_MAX_ANGLE), getPitch());
-			return Units.metersToInches(distanceToTargetMeters);
-		} else {
-			return -1;
-		}
-	}
+        if (hasTarget()) {
+            distanceToTargetMeters = PhotonUtils.calculateDistanceToTargetMeters(
+                getLimelightHeight(SHOOTER_ARM_INITIAL_ANGLE), UPPER_HUB_HEIGHT, getLimelightAngle(SHOOTER_ARM_INITIAL_ANGLE), getPitch());
+            return Units.metersToInches(distanceToTargetMeters);
+        } else return -1;
+    }
 
-	public double getDistanceToTarget(double shooterAngle) {
-		if (hasTarget()) {
-			double distanceToTargetMeters = PhotonUtils.calculateDistanceToTargetMeters(
-					getLimelightHeight(shooterAngle), UPPER_HUB_HEIGHT, getLimelightAngle(shooterAngle), getPitch());
-			return Units.metersToInches(distanceToTargetMeters);
-		} else {
-			return -1;
-		}
-	}
+    public double getDistanceToTarget(double shooterAngle) {
+        if (hasTarget()) {
+            distanceToTargetMeters = PhotonUtils.calculateDistanceToTargetMeters(
+                getLimelightHeight(shooterAngle), UPPER_HUB_HEIGHT, getLimelightAngle(shooterAngle), getPitch());
+            return Units.metersToInches(distanceToTargetMeters);
+        } else return -1;
+    }
 
 	public PhotonPipelineResult getLatestResult() {
 		return latestResult;
@@ -67,11 +64,16 @@ public class Limelight extends SubsystemBase {
 		return target;
 	}
 
+    public double getLatencySeconds() {
+        return latestResult.getLatencyMillis() / 1000.0;
+    }
+
 	// TODO: Lots of things here that probably need to be constants
 	public double getLimelightHeight(double shooterAngle) {
         return (24.08 * Math.sin(shooterAngle)) + 4.7;
     }
 
+    // Distance from limelight camera to center of robot
     public double getDistanceToRobot(double shooterAngle) {
         return (24.08 * Math.cos(shooterAngle)) - 2.527;
     }
@@ -88,6 +90,7 @@ public class Limelight extends SubsystemBase {
         limelight.setLED(VisionLEDMode.kOn);
     }
 
+    // Return degrees
     public double getPitch() {
         return target.getPitch();
     }
@@ -97,14 +100,15 @@ public class Limelight extends SubsystemBase {
     }
 
 	// TODO – docs & move to constant
+    // Distnace to vision target from camera
     public boolean isYawAcceptable(double distance, double yaw) {
-        double acceptableYaw = 5.94 - (0.161 * distance);
+        double acceptableYaw = 4 - (0.165 * distance / 12);
         if (Math.abs(yaw) < acceptableYaw) return true;
         else return false;
     }
 
     public double getAcceptableYaw(double distance) {
-        return 5.94 - (0.161 * distance);
+        return 4 - (0.165 * distance / 12);
     }
 
 	// TODO – move to javadoc

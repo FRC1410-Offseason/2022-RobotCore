@@ -11,20 +11,21 @@ import frc.robot.util.Trajectories;
 
 public class TwoCargoAutoDrive extends ParallelCommandGroup {
 
-	public TwoCargoAutoDrive(Trajectories trajectories, Drivetrain drivetrain, Limelight limelight) {
-		drivetrain.gyro.reset();
-		trajectories.generateAuto();
-		trajectories.setStartingAutonomousPose(trajectories.twoBall);
-
-		addCommands(
-				// Drivetrain
-				new SequentialCommandGroup(
-						trajectories.twoBallCommand,
-						trajectories.driveToShootCommand,
-						new InstantCommand(()-> drivetrain.tankDriveVolts(0, 0)),
-						new LimelightAnglePID(limelight, drivetrain),
-						new RunCommand(()-> drivetrain.tankDriveVolts(0, 0))
-				)
-		);
-	}
+    public TwoCargoAutoDrive(Trajectories trajectories, Drivetrain drivetrain, Limelight limelight) {
+        drivetrain.gyro.reset();
+        trajectories.generateAuto();
+        trajectories.setStartingAutonomousPose(trajectories.twoBall);
+        System.out.println("AUTO RAN AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+        
+        addCommands(
+            // Drivetrain
+            new SequentialCommandGroup(
+                trajectories.twoBallCommand,
+                trajectories.driveToShootCommand,
+                new InstantCommand(()-> drivetrain.tankDriveVolts(0, 0)),
+                new LimelightAnglePID(limelight, drivetrain),
+                new RunCommand(()-> drivetrain.tankDriveVolts(0, 0))
+            )
+        );
+    }
 }

@@ -40,6 +40,9 @@ public class TaskScheduler {
 		this(20);
 	}
 
+	void interruptAll() {
+	}
+
     public void enableDebugTelemetry() {
         dumpingDebugTelemetry = true;
     }

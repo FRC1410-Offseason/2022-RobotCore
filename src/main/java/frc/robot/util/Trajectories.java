@@ -19,37 +19,37 @@ public class Trajectories {
 	private final Drivetrain drivetrain;
 
 	private static TrajectoryConfig config = new TrajectoryConfig(DRIVETRAIN_MAX_SPEED, DRIVETRAIN_MAX_ACCEL)
-			.setKinematics(DRIVE_KINEMATICS)
-			.setReversed(false);
+		.setKinematics(DRIVE_KINEMATICS)
+		.setReversed(false);
 
 	public final Trajectory straightline = TrajectoryGenerator.generateTrajectory(List.of(
-			new Pose2d(0, 0, new Rotation2d(Units.degreesToRadians(0))),
-			new Pose2d(1.3, 0, new Rotation2d(Units.degreesToRadians(0)))), config);
-
+		new Pose2d(0, 0, new Rotation2d(Units.degreesToRadians(0))),
+		new Pose2d(1.3, 0, new Rotation2d(Units.degreesToRadians(0)))), config);
+	
 	public final Trajectory twoBall = TrajectoryGenerator.generateTrajectory(List.of(
-			new Pose2d(0, 0, new Rotation2d(Units.degreesToRadians(0))),
-			new Pose2d(2.3, 0, new Rotation2d(Units.degreesToRadians(0)))), config);
+		new Pose2d(0, 0, new Rotation2d(Units.degreesToRadians(0))),
+		new Pose2d(2.3, 0, new Rotation2d(Units.degreesToRadians(0)))), config);
 
 	public final Trajectory driveToShoot = TrajectoryGenerator.generateTrajectory(List.of(
-			new Pose2d(1.2, 0, new Rotation2d(Units.degreesToRadians(0))),
-			new Pose2d(2.0, 0, new Rotation2d(Units.degreesToRadians(0)))), config);
-
+		new Pose2d(1.2, 0, new Rotation2d(Units.degreesToRadians(0))),
+		new Pose2d(2.0, 0, new Rotation2d(Units.degreesToRadians(0)))), config);
+		
 	public RamseteCommand straightlineCommand, twoBallCommand, driveToShootCommand;
 
 	public Trajectories(Drivetrain drivetrain) {this.drivetrain = drivetrain;}
 
 	public RamseteCommand generateRamsete(Trajectory trajectory) {
 		return new RamseteCommand(
-				trajectory,
-				drivetrain::getPoseEstimation,
-				new RamseteController(KB, KZ),
-				new SimpleMotorFeedforward(KS, KV, KA),
-				DRIVE_KINEMATICS,
-				drivetrain::getWheelSpeeds,
-				new PIDController(KP_VEL, 0, 0, 10.0 / 1000),
-				new PIDController(KP_VEL, 0, 0, 10.0 / 1000),
-				drivetrain::tankDriveVolts
-				// drivetrain
+			trajectory,
+			drivetrain::getPoseEstimation,
+			new RamseteController(KB, KZ),
+			new SimpleMotorFeedforward(KS, KV, KA),
+			DRIVE_KINEMATICS,
+			drivetrain::getWheelSpeeds,
+			new PIDController(KP_VEL, 0, 0, 10.0 / 1000),
+			new PIDController(KP_VEL, 0, 0, 10.0 / 1000),
+			drivetrain::tankDriveVolts
+			// drivetrain
 		);
 	}
 
