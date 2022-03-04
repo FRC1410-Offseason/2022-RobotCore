@@ -43,7 +43,7 @@ public class Limelight extends SubsystemBase {
     public double getDistanceToTarget() {
         if (hasTarget()) {
             distanceToTargetMeters = PhotonUtils.calculateDistanceToTargetMeters(
-                getLimelightHeight(SHOOTER_ARM_INITIAL_ANGLE), UPPER_HUB_HEIGHT, getLimelightAngle(SHOOTER_ARM_INITIAL_ANGLE), getPitch());
+                getLimelightHeight(SHOOTER_ARM_MAX_ANGLE), UPPER_HUB_HEIGHT, getLimelightAngle(SHOOTER_ARM_MAX_ANGLE), getPitch());
             return Units.metersToInches(distanceToTargetMeters);
         } else return -1;
     }

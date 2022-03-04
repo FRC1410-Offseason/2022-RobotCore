@@ -18,13 +18,15 @@ import frc.robot.commands.actions.SetShooterArmAngle;
 import frc.robot.commands.actions.SetShooterRPM;
 import frc.robot.util.Trajectories;
 
+import static frc.robotmap.Constants.*;
+
 public class TwoCargoAuto extends ParallelCommandGroup {
 
     public TwoCargoAuto(Trajectories trajectories, Drivetrain drivetrain, Intake intake, Storage storage, ShooterArm shooterArm, Shooter shooter, IntakeFlipper intakeFlipper, Limelight limelight, double RPM) {
         drivetrain.gyro.reset();
         trajectories.generateAuto();
         trajectories.setStartingAutonomousPose(trajectories.twoBall);
-        shooterArm.resetEncoders(0);
+        shooterArm.resetEncoder(SHOOTER_ARM_MAX_ANGLE);
         
         
         addCommands(
@@ -47,19 +49,19 @@ public class TwoCargoAuto extends ParallelCommandGroup {
             //     new SetIntakeSpeed(intake, 1, 3)
             // ),
             // Storage
-            new SequentialCommandGroup(
-                new RunStorageForTime(storage, 0.2, 1),
-                new WaitCommand(0.3),
-                new RunStorageForTime(storage, 1, -1)
-            ),
+//            new SequentialCommandGroup(
+//                new RunStorageForTime(storage, 0.2, 1),
+//                new WaitCommand(0.3),
+//                new RunStorageForTime(storage, 1, -1)
+//            ),
             // Shooter Arm
             new SequentialCommandGroup(
-                new SetShooterArmAngle(shooterArm, 16)
+                new SetShooterArmAngle(shooterArm, SHOOTER_ARM_INTAKE_ANGLE)
             ),
             // Second Shooter Arm
             new SequentialCommandGroup(
                 new WaitCommand(trajectories.twoBall.getTotalTimeSeconds()),
-                new SetShooterArmAngle(shooterArm, -1)
+                new SetShooterArmAngle(shooterArm, SHOOTER_ARM_MAX_ANGLE)
             )
         );
     }

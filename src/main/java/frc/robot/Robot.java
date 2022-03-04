@@ -56,8 +56,8 @@ public class Robot extends ScheduledRobot {
 		getDriverLeftBumper().whenPressed(new LimelightAnglePID(limelight, drivetrain));
 		getOperatorRightBumper().whileHeld(new ToggleIntake(intakeFlipper));
 
-		getDriverAButton().whenPressed(new RunCommand(() -> winch.lock(), winch));
-		getDriverXButton().whenPressed(new RunCommand(() -> winch.unlock(), winch));
+//		getDriverAButton().whenPressed(new RunCommand(() -> winch.lock(), winch));
+//		getDriverXButton().whenPressed(new RunCommand(() -> winch.unlock(), winch));
 	}
 
 	@Override
@@ -70,7 +70,7 @@ public class Robot extends ScheduledRobot {
 
 	@Override
 	public void autonomousInit() {
-		shooterArm.resetEncoders(0);
+		shooterArm.resetEncoder(SHOOTER_ARM_MAX_ANGLE);
 		scheduler.scheduleDefaultCommand(new RunShooterArm(shooterArm));
 		scheduler.scheduleDefaultCommand(new PoseEstimation(drivetrain), TIME_OFFSET, (long) 10);
 		drivetrain.setBrake();
@@ -93,7 +93,7 @@ public class Robot extends ScheduledRobot {
 				break;
 		}
 
-		if (autonomousCommand != null) this.autoTask = scheduler.scheduleDefaultCommand(autonomousCommand, TIME_OFFSET, (long) 10);
+//		if (autonomousCommand != null) this.autoTask = scheduler.scheduleDefaultCommand(autonomousCommand, TIME_OFFSET, (long) 10);
 	}
 
 	@Override

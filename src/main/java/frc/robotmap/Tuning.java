@@ -22,8 +22,6 @@ public final class Tuning {
 	public static final double SHOOTER_RIGHT_KD = 0;
 	public static final double SHOOTER_RIGHT_KFF = 0.000170;
 
-	public static final double SHOOT_STORAGE_DURATION = 3.0;
-
 	// LIMELIGHT
 	public static final double LIMELIGHT_ANGLE_KP = 0.12; // 3.24V at 27deg
 	public static final double LIMELIGHT_ANGLE_KI = 0;
@@ -80,7 +78,7 @@ public final class Tuning {
 	public static final double SA_I_UP = 0;
 	public static final double SA_D_UP = 0;
 
-	public static final double SHOOTER_ARM_IS_FINISHED = 1; // Degree
+	public static final double SHOOTER_ARM_IS_FINISHED = 3; // Degree
 
 	// SHOOTER
 	public static final double SHOOT_STORAGE_DURATION = 2.0;
