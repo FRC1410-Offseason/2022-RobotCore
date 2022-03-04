@@ -4,7 +4,6 @@ import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.CommandGroupBase;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.commands.actions.SetShooterRPM;
 import frc.robot.commands.actions.ToggleShooterArmPosition;
 import frc.robot.commands.grouped.*;
@@ -46,36 +45,10 @@ public class Robot extends ScheduledRobot {
 		return scheduler;
 	}
 
+
+
 	@Override
 	public void registerControls() {
-		System.out.println("Registering controls");
-		getDriverXButton().whenPressed(new InstantCommand(() -> {
-			System.out.println("Running poger");
-		}));
-
-		//<editor-fold desc="Defaults">
-		// Tank drive on the drivetrain
-		scheduler.scheduleDefaultCommand(new TankDrive(drivetrain, getDriverLeftYAxis(), getDriverRightYAxis()));
-
-		// Telescoping arms on the operator controller
-		scheduler.scheduleDefaultCommand(new RunElevator(elevator, getOperatorLeftYAxis()));
-
-		// Run the intake (and storage) on the operator right trigger
-		scheduler.scheduleDefaultCommand(new RunIntake(intake, storage, getOperatorRightTrigger()));
-
-		// Run the intake flipper
-//		scheduler.scheduleDefaultCommand(new RunIntakeFlipper(intakeFlipper)); //TODO: Reenable after intake flipper is ready
-
-		// Run the shooter arm
-		scheduler.scheduleDefaultCommand(new RunShooterArm(shooterArm));
-
-		// Run the storage
-		scheduler.scheduleDefaultCommand(new RunStorage(storage));
-
-		// Run the winches on the operator controller
-		scheduler.scheduleDefaultCommand(new RunWinch(winch, getOperatorRightYAxis()));
-		//</editor-fold>
-
 		// Toggle intake position
 //		getOperatorRightBumper().whenPressed(new ToggleIntake(intakeFlipper)); //TODO: Reenable after intake flipper is ready
 
@@ -141,6 +114,27 @@ public class Robot extends ScheduledRobot {
 	@Override
 	public void teleopInit() {
 		drivetrain.setBrake();
+
+		// Tank drive on the drivetrain
+		scheduler.scheduleDefaultCommand(new TankDrive(drivetrain, getDriverLeftYAxis(), getDriverRightYAxis()));
+
+		// Telescoping arms on the operator controller
+		scheduler.scheduleDefaultCommand(new RunElevator(elevator, getOperatorLeftYAxis()));
+
+		// Run the intake (and storage) on the operator right trigger
+		scheduler.scheduleDefaultCommand(new RunIntake(intake, storage, getOperatorRightTrigger()));
+
+		// Run the intake flipper
+//		scheduler.scheduleDefaultCommand(new RunIntakeFlipper(intakeFlipper)); //TODO: Reenable after intake flipper is ready
+
+		// Run the shooter arm
+		scheduler.scheduleDefaultCommand(new RunShooterArm(shooterArm));
+
+		// Run the storage
+		scheduler.scheduleDefaultCommand(new RunStorage(storage));
+
+		// Run the winches on the operator controller
+		scheduler.scheduleDefaultCommand(new RunWinch(winch, getOperatorRightYAxis()));
 	}
 
 	@Override

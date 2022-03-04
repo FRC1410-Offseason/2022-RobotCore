@@ -102,7 +102,6 @@ public class TaskScheduler {
 		}
 
 		observerQueue.removeIf(entry -> entry.getObserver() instanceof ButtonStateObserver);
-		debugDumpList();
 	}
 
 	public void tick() {
