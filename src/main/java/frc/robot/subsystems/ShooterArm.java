@@ -44,7 +44,7 @@ public class ShooterArm extends SubsystemBase {
 
 	private final PIDController PID = new PIDController(SA_P, SA_I, SA_D); // I am also sad
 
-	private double goal = 19;
+	private double goal = SHOOTER_ARM_MAX_ANGLE;
 
 	//<editor-fold desc="Sim Stuff" defaultstate="collapsed">
 
@@ -124,6 +124,7 @@ public class ShooterArm extends SubsystemBase {
 		goal = MathUtil.clamp(value, SHOOTER_ARM_RESTING_ANGLE, SHOOTER_ARM_MAX_ANGLE);
 		if (goal > getEncoderPosition()) {
 			PID.setPID(SA_P_UP, SA_I_UP, SA_D_UP);
+			System.out.println("upgoalset");
 		} else {
 			PID.setPID(SA_P, SA_I, SA_D);
 		}
@@ -138,7 +139,7 @@ public class ShooterArm extends SubsystemBase {
 	 * @return average encoder position in radians
 	 */
 	public double getEncoderPosition() {
-		return -encoderMotor.getSelectedSensorPosition() * 360 / 4096;
+		return encoderMotor.getSelectedSensorPosition() * 360 / 4096;
 	}
 
 	public void runPIDExecute() {

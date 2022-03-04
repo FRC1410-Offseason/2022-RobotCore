@@ -74,7 +74,7 @@ public final class Constants {
 
 	// SHOOTER
 	public static final int SHOOTER_OUTTAKE_SPEED = 500;
-	public static final int SHOOTER_RPM_TOLERANCE = 20;
+	public static final int SHOOTER_RPM_TOLERANCE = 40;
 	// TODO: GET A REAL VALUE
 
 	// WINCH

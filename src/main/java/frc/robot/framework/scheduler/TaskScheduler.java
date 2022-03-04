@@ -107,6 +107,16 @@ public class TaskScheduler {
 		observerQueue.removeIf(entry -> entry.getObserver() instanceof ButtonStateObserver);
 	}
 
+	void nuke() {
+		observerQueue.clear();
+		taskQueue.clear();
+	}
+
+	void carefullyNuke() {
+		observerQueue.clear();
+		taskQueue.removeIf(entry -> entry.getTask() instanceof CommandTask);
+	}
+
 	public void tick() {
 
         //Iterate until found observer

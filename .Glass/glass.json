@@ -9,6 +9,14 @@
     "Robot State": {
       "open": true
     },
+    "Shooter": {
+      "open": true
+    },
+    "photonvision": {
+      "Limelight 2": {
+        "open": true
+      }
+    },
     "types": {
       "/FMSInfo": "FMSInfo",
       "/SmartDashboard/Arm Sim": "Mechanism2d",
@@ -22,6 +30,9 @@
   "NetworkTables Settings": {
     "mode": "Client",
     "serverTeam": "1410"
+  },
+  "NetworkTables View": {
+    "visible": false
   },
   "Plots": {
     "Plot <0>": {
@@ -45,7 +56,7 @@
     "Plot <1>": {
       "plots": [
         {
-          "height": -9,
+          "height": 365,
           "series": [
             {
               "color": [

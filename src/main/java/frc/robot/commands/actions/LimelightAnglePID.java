@@ -34,6 +34,7 @@ public class LimelightAnglePID extends CommandBase {
 
 		// Set the target of the controller to 0, as that is the middle of the limelight's view
         pid.setSetpoint(0);
+        
     }
 
     @Override
@@ -43,6 +44,7 @@ public class LimelightAnglePID extends CommandBase {
         
         if (limelight.hasTarget()) {
             pidOutput = pid.calculate(limelight.getYaw());
+            System.out.println(pidOutput + "PID OUTPUT");
 			drivetrain.tankDriveVolts(-pidOutput, pidOutput);
 		} else drivetrain.tankDriveVolts(0, 0);
     }
@@ -57,8 +59,8 @@ public class LimelightAnglePID extends CommandBase {
     @Override
     public boolean isFinished() {
 		// If the current error from the target is within out acceptable margin, then we are done aligning and can shoot
-        // if (limelight.hasTarget()) return limelight.isYawAcceptable(144, limelight.getYaw());
-        if (limelight.hasTarget()) return Math.abs(limelight.getYaw()) < 2;
+        if (limelight.hasTarget()) return limelight.isYawAcceptable(144, limelight.getYaw());
+        // if (limelight.hasTarget()) return Math.abs(limelight.getYaw()) < 2;
         else return true;
     }
 }
