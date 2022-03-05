@@ -157,9 +157,7 @@ public class ShooterArm extends SubsystemBase {
 		double output = PID.calculate(getEncoderPosition(), goal);
 		controllerOutput.setDouble(output);
 		if (!(Math.abs(PID.getPositionError()) > 16)) {
-			double cappedOutput = MathUtil.clamp(output, -0.3, 0.3);
-			leftMotor.set(cappedOutput);
-			rightMotor.set(cappedOutput);
+			set(output);
 		}
 	}
 
@@ -174,8 +172,9 @@ public class ShooterArm extends SubsystemBase {
 	}
 
 	public void set(double value) {
-		leftMotor.set(value);
-		rightMotor.set(value);
+		double cappedValue = MathUtil.clamp(value, -0.3, 0.3);
+		leftMotor.set(cappedValue);
+		rightMotor.set(cappedValue);
 	}
 
 	public boolean isAtTarget() {
