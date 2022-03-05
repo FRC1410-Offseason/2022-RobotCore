@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.commands.actions.*;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Storage;
@@ -12,11 +13,6 @@ import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.ShooterArm;
 import frc.robot.subsystems.IntakeFlipper;
 import frc.robot.subsystems.Limelight;
-import frc.robot.commands.actions.ExtendIntake;
-import frc.robot.commands.actions.RunStorageForTime;
-import frc.robot.commands.actions.SetIntakeSpeed;
-import frc.robot.commands.actions.SetShooterArmAngle;
-import frc.robot.commands.actions.SetShooterRPM;
 import frc.robot.util.Trajectories;
 
 import static frc.robotmap.Constants.*;
@@ -41,7 +37,7 @@ public class TwoCargoAuto extends ParallelCommandGroup {
                 new RunCommand(()-> drivetrain.tankDriveVolts(0, 0))
             ),
             // Intake Deploy
-//            new ExtendIntake(intakeFlipper),
+            new ExtendIntake(intakeFlipper),
             // Intake
             new SequentialCommandGroup(
                 new WaitCommand(1.5),
@@ -61,6 +57,7 @@ public class TwoCargoAuto extends ParallelCommandGroup {
             ),
             // Shooter Arm
             new SetShooterArmAngle(shooterArm, SHOOTER_ARM_INTAKE_ANGLE)
+//			new LowerShooterArm(shooterArm)
         );
     }
 }

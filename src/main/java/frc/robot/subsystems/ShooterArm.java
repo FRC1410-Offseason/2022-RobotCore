@@ -51,6 +51,9 @@ public class ShooterArm extends SubsystemBase {
 
 	private boolean manualControl = true;
 
+	private boolean shouldRunUp = true;
+	private boolean shouldRunDown = true;
+
 	private final PIDController PID = new PIDController(SA_P, SA_I, SA_D); // I am also sad
 
 	private double goal = SHOOTER_ARM_MAX_ANGLE;
@@ -131,9 +134,33 @@ public class ShooterArm extends SubsystemBase {
 
 		upperLimitNT.setBoolean(upperLimit.get());
 		lowerLimitNT.setBoolean(lowerLimit.get());
+
+		if ((leftMotor.get() < 0 && lowerLimit.get())) {
+			shouldRunDown = false;
+			leftMotor.set(0);
+			rightMotor.set(0);
+		} else {
+			shouldRunDown = true;
+		}
+
+		if ((leftMotor.get() > 0 && upperLimit.get())) {
+			shouldRunUp = false;
+			leftMotor.set(0);
+			rightMotor.set(0);
+		} else {
+			shouldRunUp = true;
+		}
 	}
 
-//	@Override
+	public boolean shouldRunUp() {
+		return shouldRunUp;
+	}
+
+	public boolean shouldRunDown() {
+		return shouldRunDown;
+	}
+
+	//	@Override
 //	// Broken atm, even more so now
 //	public void simulationPeriodic() {
 //		// Set inputs to the simulator
@@ -174,13 +201,17 @@ public class ShooterArm extends SubsystemBase {
 	}
 
 	public void runPIDExecute() {
-//		double output = PID.calculate(getEncoderPosition(), goal);
-//		controllerOutput.setDouble(output);
-//		if (!(Math.abs(PID.getPositionError()) > 16)) {
-//			double cappedOutput = MathUtil.clamp(output, -0.3, 0.3);
-//			leftMotor.set(cappedOutput);
-//			rightMotor.set(cappedOutput);
-//		}
+		double output = PID.calculate(getEncoderPosition(), goal);
+		controllerOutput.setDouble(output);
+		double cappedOutput = MathUtil.clamp(output, SHOOTER_ARM_DOWN_SPEED, SHOOTER_ARM_UP_SPEED);
+
+		if (cappedOutput < 0 && !lowerLimit.get()) {
+			set(cappedOutput);
+		}
+
+		if (cappedOutput > 0 && !upperLimit.get()) {
+			set(cappedOutput);
+		}
 	}
 
 	/**

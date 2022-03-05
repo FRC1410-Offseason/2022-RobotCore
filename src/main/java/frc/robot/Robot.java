@@ -50,7 +50,7 @@ public class Robot extends ScheduledRobot {
 
 	@Override
 	public void registerControls() {
-		getOperatorRightBumper().whileHeld(new ToggleIntake(intakeFlipper));
+//		getOperatorRightBumper().whileHeld(new ToggleIntake(intakeFlipper));
 		// Toggle intake position
 //		getOperatorRightBumper().whenPressed(new ToggleIntake(intakeFlipper)); //TODO: Reenable after intake flipper is ready
 
@@ -82,14 +82,17 @@ public class Robot extends ScheduledRobot {
 
 		resetAngle.setDouble(SHOOTER_ARM_MAX_ANGLE);
 
-		shooterArm.resetEncoder(SHOOTER_ARM_MAX_ANGLE);
+//		shooterArm.resetEncoder(SHOOTER_ARM_MAX_ANGLE);
 	}
 
 	@Override
 	public void autonomousInit() {
 		scheduler.scheduleDefaultCommand(new PoseEstimation(drivetrain), TIME_OFFSET, 10);
+		scheduler.scheduleDefaultCommand(new RunIntakeFlipper(intakeFlipper));
+		scheduler.scheduleDefaultCommand(new RunShooterArm(shooterArm));
 		shooterArm.resetEncoder(SHOOTER_ARM_MAX_ANGLE);
 		drivetrain.setBrake();
+		intakeFlipper.resetEncoders(0);
 
 		switch ((int) NetworkTables.getAutoChooser()) {
 			case 0:
@@ -112,7 +115,12 @@ public class Robot extends ScheduledRobot {
 	@Override
 	public void teleopInit() {
 		shooterArm.resetEncoder(SHOOTER_ARM_MAX_ANGLE);
+		scheduler.scheduleDefaultCommand(new RunShooterArm(shooterArm));
 		drivetrain.setBrake();
+
+		getOperatorRightBumper().whenPressed(new InstantCommand(() -> shooterArm.setGoal(SHOOTER_ARM_MAX_ANGLE)));
+		getOperatorLeftBumper().whenPressed(new InstantCommand(() -> shooterArm.setGoal(SHOOTER_ARM_INTAKE_ANGLE)));
+
 
 		// Tank drive on the drivetrain
 		// Yes, the right left is swapped, it's supposed to be that way trust me
@@ -140,20 +148,25 @@ public class Robot extends ScheduledRobot {
 	@Override
 	public void testInit() {
 		intakeFlipper.resetEncoders(0);
+		shooterArm.resetEncoder(SHOOTER_ARM_INTAKE_ANGLE);
 		scheduler.scheduleDefaultCommand(new RunArmWithAxis(shooterArm, getOperatorLeftYAxis()));
-//		scheduler.scheduleDefaultCommand(new RunIntakeFlipperWithAxis(intakeFlipper, getOperatorRightYAxis()));
-		scheduler.scheduleDefaultCommand(new RunIntakeFlipper(intakeFlipper));
+		scheduler.scheduleDefaultCommand(new RunIntakeFlipperWithAxis(intakeFlipper, getOperatorRightYAxis()));
+//		scheduler.scheduleDefaultCommand(new RunShooterArm(shooterArm));
+//		scheduler.scheduleDefaultCommand(new RunIntakeFlipper(intakeFlipper));
 //		getOperatorXButton().whenPressed(new ResetShooterArmEncoderWithEntry(shooterArm, resetAngle));
 //
 //		getOperatorAButton().whenPressed(new LockElevator(elevator));
-
 //		getOperatorRightBumper().whenPressed(new RaiseShooterArm(shooterArm));
 //		getOperatorLeftBumper().whenPressed(new LowerShooterArm(shooterArm));
 		getOperatorXButton().whenPressed(new InstantCommand(() -> intakeFlipper.resetEncoders(INTAKE_DOWN_POSITION)));
 
-		getOperatorLeftBumper().whenPressed(new RetractIntake(intakeFlipper));
 
-		getOperatorRightBumper().whenPressed(new ExtendIntake(intakeFlipper));
+//		getOperatorLeftBumper().whenPressed(new InstantCommand(() -> shooterArm.setGoal(SHOOTER_ARM_INTAKE_ANGLE)));
+//		getOperatorRightBumper().whenPressed(new InstantCommand(() -> shooterArm.setGoal(SHOOTER_ARM_MAX_ANGLE)));
+
+//		getOperatorLeftBumper().whenPressed(new RetractIntake(intakeFlipper));
+
+//		getOperatorRightBumper().whenPressed(new ExtendIntake(intakeFlipper));
 
 		getOperatorDPadUp().whenPressed(new SetShooterRPM(shooter, NetworkTables.getShooterHighRPM()));
 		getOperatorDPadDown().whenPressed(new SetShooterRPM(shooter, 0));

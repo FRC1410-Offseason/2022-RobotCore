@@ -12,15 +12,15 @@ public final class Tuning {
   	public static final double TEST_DEADZONE_VALUE = 0.12;
 
   	// SHOOTER
-	public static final double SHOOTER_LEFT_KP = 0.000170; // 0.000140
-	public static final double SHOOTER_LEFT_KI = 5e-8;
+	public static final double SHOOTER_LEFT_KP = 0.000180; // 0.000140
+	public static final double SHOOTER_LEFT_KI = 0;
 	public static final double SHOOTER_LEFT_KD = 0;
-	public static final double SHOOTER_LEFT_KFF = 0.000160; // 0.000170
+	public static final double SHOOTER_LEFT_KFF = 0.000170; // 0.000170
 
 	public static final double SHOOTER_RIGHT_KP = 0.000135; // 0.000140
-	public static final double SHOOTER_RIGHT_KI = 5e-8;
+	public static final double SHOOTER_RIGHT_KI = 0;
 	public static final double SHOOTER_RIGHT_KD = 0;
-	public static final double SHOOTER_RIGHT_KFF = 0.000150; // 0.000170
+	public static final double SHOOTER_RIGHT_KFF = 0.000170; // 0.000170
 
 	// LIMELIGHT
 	public static final double LIMELIGHT_ANGLE_KP = 0.12; // 3.24V at 27deg
