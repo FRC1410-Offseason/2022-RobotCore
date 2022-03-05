@@ -17,9 +17,9 @@ public class LowHubShoot extends SequentialCommandGroup {
 		ArrayList<Command> toRun = new ArrayList<>();
 
 		toRun.add(new ParallelCommandGroup(
-				new ShooterSpinup(shooter, RPM),
-				new SetShooterArmAngle(shooterArm, SHOOTER_ARM_MAX_ANGLE),
-				new RunStorageForTime(storage, 0.1, -0.5)));
+			new ShooterSpinup(shooter, RPM),
+			new SetShooterArmAngle(shooterArm, SHOOTER_ARM_MAX_ANGLE),
+			new RunStorageForTime(storage, 0.1, -0.5)));
 		toRun.add(new Shoot(shooter, storage));
 
 		addCommands(toRun.toArray(Command[]::new));

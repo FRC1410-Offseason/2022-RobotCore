@@ -83,7 +83,7 @@ public class Robot extends ScheduledRobot {
 		NetworkTables.setPressure(pressure);
 		drivetrain.setCoast();
 
-		resetAngle.setDouble(0);
+		resetAngle.setDouble(SHOOTER_ARM_MAX_ANGLE);
 
 		shooterArm.resetEncoder(SHOOTER_ARM_MAX_ANGLE);
 	}
@@ -131,17 +131,17 @@ public class Robot extends ScheduledRobot {
 		scheduler.scheduleDefaultCommand(new RunIntakeFlipperWithAxis(intakeFlipper, getOperatorLeftYAxis()));
 
 		// Run the intake flipper
-//		scheduler.scheduleDefaultCommand(new RunIntakeFlipper(intakeFlipper)); //TODO: Reenable after intake flipper is ready
+//		scheduler.scheduleDefaultCommand(new RunIntakeFlipper(intakeFlipper));
 
 		// Run the shooter arm
-//		scheduler.scheduleDefaultCommand(new RunShooterArm(shooterArm));
-//		scheduler.scheduleDefaultCommand(new RunArmWithAxis(shooterArm, getOperatorLeftYAxis()));
+		scheduler.scheduleDefaultCommand(new RunShooterArm(shooterArm));
 
 		// Run the storage
 		scheduler.scheduleDefaultCommand(new RunStorage(storage));
 
 		// Run the winches on the operator controller
-//		scheduler.scheduleDefaultCommand(new RunWinch(winch, getOperatorRightYAxis()));
+		scheduler.scheduleDefaultCommand(new RunWinch(winch, getOperatorRightYAxis()));
+
 		drivetrain.setBrake();
 	}
 

@@ -12,7 +12,7 @@ public class RunWinchConstant extends CommandBase {
 	public RunWinchConstant(Winch winch, double speed) {
 		this.winch = winch;
 		this.speed = speed;
-		addRequirements(this.winch);
+		addRequirements(winch);
 	}
 
 	@Override
