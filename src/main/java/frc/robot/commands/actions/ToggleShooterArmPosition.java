@@ -3,8 +3,7 @@ package frc.robot.commands.actions;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ShooterArm;
 
-import static frc.robotmap.Constants.SHOOTER_ARM_INTAKE_ANGLE;
-import static frc.robotmap.Constants.SHOOTER_ARM_MAX_ANGLE;
+import static frc.robotmap.Constants.*;
 
 
 public class ToggleShooterArmPosition extends CommandBase {
@@ -13,18 +12,21 @@ public class ToggleShooterArmPosition extends CommandBase {
 
 	public ToggleShooterArmPosition(ShooterArm shooterArm) {
 		this.shooterArm = shooterArm;
-		addRequirements(this.shooterArm);
+		addRequirements(shooterArm);
 	}
 
 	@Override
 	public void initialize() {
-		if (shooterArm.isAtTarget()) {
-			if (shooterArm.getGoal() == SHOOTER_ARM_INTAKE_ANGLE) {
-				shooterArm.setGoal(SHOOTER_ARM_MAX_ANGLE);
-			} else {
-				shooterArm.setGoal(SHOOTER_ARM_INTAKE_ANGLE);
-			}
+		if (shooterArm.getLowerLimit()) {
+			shooterArm.set(SHOOTER_ARM_UP_SPEED);
+		} else {
+			shooterArm.set(SHOOTER_ARM_DOWN_SPEED);
 		}
+	}
+
+	@Override
+	public void execute() {
+
 	}
 
 	@Override

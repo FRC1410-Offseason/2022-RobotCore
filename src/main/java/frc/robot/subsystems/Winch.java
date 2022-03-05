@@ -19,8 +19,8 @@ public class Winch extends SubsystemBase {
 	private final NetworkTableInstance instance = NetworkTableInstance.getDefault();
 	private final NetworkTable table = instance.getTable("Winches");
 
-	private final NetworkTableEntry leftLimit = table.getEntry("Left Limit Switch");
-	private final NetworkTableEntry rightLimit = table.getEntry("Right Limit Switch");
+//	private final NetworkTableEntry leftLimit = table.getEntry("Left Limit Switch");
+//	private final NetworkTableEntry rightLimit = table.getEntry("Right Limit Switch");
 
 	/**
 	 * Motors
@@ -36,8 +36,8 @@ public class Winch extends SubsystemBase {
 	/**
 	 * Limit switches to prevent demolition
 	 */
-	private final DigitalInput leftSwitch = new DigitalInput(WINCH_LEFT_LIMIT_SWITCH_ID);
-	private final DigitalInput rightSwitch = new DigitalInput(WINCH_RIGHT_LIMIT_SWITCH_ID);
+//	private final DigitalInput leftSwitch = new DigitalInput(WINCH_LEFT_LIMIT_SWITCH_ID);
+//	private final DigitalInput rightSwitch = new DigitalInput(WINCH_RIGHT_LIMIT_SWITCH_ID);
 
 	/**
 	 * Keeps track of whether the brake pistons are extended or not
@@ -51,14 +51,14 @@ public class Winch extends SubsystemBase {
 
 		leftMotor.setInverted(true);
 
-		leftLimit.setBoolean(getLeftSwitch());
-		rightLimit.setBoolean(getRightSwitch());
+//		leftLimit.setBoolean(getLeftSwitch());
+//		rightLimit.setBoolean(getRightSwitch());
 	}
 
 	@Override
 	public void periodic() {
-		leftLimit.setBoolean(getLeftSwitch());
-		rightLimit.setBoolean(getRightSwitch());
+//		leftLimit.setBoolean(getLeftSwitch());
+//		rightLimit.setBoolean(getRightSwitch());
 	}
 
 	/**
@@ -66,27 +66,27 @@ public class Winch extends SubsystemBase {
 	 * @param speed Speed from -1 to 1
 	 */
 	public void runWinch(double speed) {
-		if (!getRightSwitch() && !getLeftSwitch()) {
+//		if (!getRightSwitch() && !getLeftSwitch()) {
 			leftMotor.set(ControlMode.PercentOutput, speed * WINCH_LEFT_MOD);
 			rightMotor.set(ControlMode.PercentOutput, speed);
-		}
+//		}
 	}
 
 	/**
 	 * Return value of left limit switch
 	 * @return True / False -> Triggered / Not triggered
 	 */
-	public boolean getLeftSwitch() {
-		return leftSwitch.get();
-	}
+//	public boolean getLeftSwitch() {
+//		return leftSwitch.get();
+//	}
 
 	/**
 	 * Return value of right limit switch
 	 * @return True / False -> Triggered / Not triggered
 	 */
-	public boolean getRightSwitch() {
-		return rightSwitch.get();
-	}
+//	public boolean getRightSwitch() {
+//		return rightSwitch.get();
+//	}
 
 	/**
 	 * Set the state of the locks

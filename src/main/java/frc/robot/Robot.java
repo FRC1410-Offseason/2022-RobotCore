@@ -146,8 +146,10 @@ public class Robot extends ScheduledRobot {
 //
 //		getOperatorAButton().whenPressed(new LockElevator(elevator));
 
-		getOperatorDPadUp().whenPressed(new SetShooterRPM(shooter, SHOOTER_HIGH_HUB_RPM));
-		getOperatorDPadUp().whenPressed(new SetShooterRPM(shooter, 0));
+//		getOperatorRightBumper().whenPressed(new RaiseShooterArm(shooterArm));
+
+		getOperatorDPadUp().whenPressed(new SetShooterRPM(shooter, NetworkTables.getShooterHighRPM()));
+		getOperatorDPadDown().whenPressed(new SetShooterRPM(shooter, 0));
 
 		getOperatorAButton().whileHeld(new RunStorageConstant(storage, STORAGE_RUN_SPEED));
 

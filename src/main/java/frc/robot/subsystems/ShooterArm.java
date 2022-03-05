@@ -225,4 +225,3 @@ public class ShooterArm extends SubsystemBase {
 		this.manualControl = manualControl;
 	}
 }
-
