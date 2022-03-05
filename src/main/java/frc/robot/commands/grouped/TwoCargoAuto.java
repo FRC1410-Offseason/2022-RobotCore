@@ -32,8 +32,8 @@ public class TwoCargoAuto extends ParallelCommandGroup {
                 new WaitCommand(1),
                 trajectories.twoBallCommand,
                 new InstantCommand(()-> drivetrain.tankDriveVolts(0, 0)),
-                new WaitCommand(1),
-                new LimelightShoot(drivetrain, limelight, shooter, shooterArm, storage, RPM),
+                new WaitCommand(2),
+                new LimelightShoot(drivetrain, intakeFlipper, limelight, shooter, shooterArm, storage, RPM),
                 new RunCommand(()-> drivetrain.tankDriveVolts(0, 0))
             ),
             // Intake Deploy
@@ -41,23 +41,21 @@ public class TwoCargoAuto extends ParallelCommandGroup {
             // Intake
             new SequentialCommandGroup(
                 new WaitCommand(1.5),
-                new SetIntakeSpeed(intake, 1, 2)
+                new SetIntakeSpeed(intake, 1, 3)
             ),
             // Storage
             new SequentialCommandGroup(
                 new WaitCommand(1.75),
-                new RunStorageForTime(storage, 2, 1)
+                new RunStorageForTime(storage, 2, 3)
             ),
             // Shooter
             new SequentialCommandGroup(
-                new WaitCommand(1),
-                new SetShooterRPM(shooter, -1000),
-                new WaitCommand(2.75),
+                new SetShooterRPM(shooter, -2000),
+                new WaitCommand(4.75),
                 new SetShooterRPM(shooter, 0)
             ),
             // Shooter Arm
             new SetShooterArmAngle(shooterArm, SHOOTER_ARM_INTAKE_ANGLE)
-//			new LowerShooterArm(shooterArm)
         );
     }
 }

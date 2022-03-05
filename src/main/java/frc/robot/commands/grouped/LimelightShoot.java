@@ -11,16 +11,17 @@ import java.util.ArrayList;
 
 public class LimelightShoot extends SequentialCommandGroup {
 
-    public LimelightShoot(Drivetrain drivetrain, Limelight limelight, Shooter shooter, ShooterArm shooterArm, Storage storage, double RPM) {
+    public LimelightShoot(Drivetrain drivetrain, IntakeFlipper intakeFlipper, Limelight limelight, Shooter shooter, ShooterArm shooterArm, Storage storage, double RPM) {
 		// TODO: Add calculation for desired exit velocity of cargo
 
 		ArrayList<Command> toRun = new ArrayList<>();
 
 		toRun.add(new ParallelCommandGroup(
+			new RetractIntake(intakeFlipper),
 			new ShooterSpinup(shooter, RPM),
 			new LimelightAnglePID(limelight, drivetrain),
 			new SetShooterArmAngle(shooterArm, SHOOTER_ARM_MAX_ANGLE),
-			new RunStorageForTime(storage, 0.1, -0.5)));
+			new RunStorageForTime(storage, 0.3, -1)));
 		toRun.add(new Shoot(shooter, storage));
 
 		addCommands(toRun.toArray(Command[]::new));

@@ -32,7 +32,7 @@ public final class Constants {
 	public static final double SHOOTER_ARM_LENGTH = .8025; // Meters (nice)
 	public static final double SHOOTER_ARM_MASS = 8.61; // Kg
 
-	public static final double SHOOTER_ARM_UP_SPEED = 0.12;
+	public static final double SHOOTER_ARM_UP_SPEED = 0.14;
 	public static final double SHOOTER_ARM_DOWN_SPEED = -0.1;
 
 	// DRIVETRAIN
