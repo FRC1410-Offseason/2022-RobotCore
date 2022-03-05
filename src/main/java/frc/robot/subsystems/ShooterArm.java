@@ -158,6 +158,11 @@ public class ShooterArm extends SubsystemBase {
 		rightMotor.setVoltage(voltage);
 	}
 
+	public void set(double value) {
+		leftMotor.set(value);
+		rightMotor.set(value);
+	}
+
 	public boolean isAtTarget() {
 		return Math.abs(getEncoderPosition() - goal) < SHOOTER_ARM_IS_FINISHED;
 	}

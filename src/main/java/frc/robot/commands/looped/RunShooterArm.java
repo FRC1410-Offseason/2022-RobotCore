@@ -16,13 +16,15 @@ public class RunShooterArm extends CommandBase {
 
 	@Override
 	public void execute() {
-		if (Math.abs(shooterArm.getEncoderPosition() - shooterArm.getGoal()) > SHOOTER_ARM_IS_FINISHED) {
-			// If we are not within our is finished tolerance
-			shooterArm.runPIDExecute();
-			System.out.println("running shooter arm");
-		} else {
-			// If we are within our tolerance
-			shooterArm.setVoltage(0);
+		if (!shooterArm.isManualControl()) {
+			if (Math.abs(shooterArm.getEncoderPosition() - shooterArm.getGoal()) > SHOOTER_ARM_IS_FINISHED) {
+				// If we are not within our is finished tolerance
+				shooterArm.runPIDExecute();
+				System.out.println("running shooter arm");
+			} else {
+				// If we are within our tolerance
+				shooterArm.setVoltage(0);
+			}
 		}
 	}
 

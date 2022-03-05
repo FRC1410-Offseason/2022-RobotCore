@@ -4,10 +4,12 @@ import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.CommandGroupBase;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.commands.actions.SetShooterRPM;
 import frc.robot.commands.actions.ToggleShooterArmPosition;
 import frc.robot.commands.grouped.*;
 import frc.robot.commands.looped.*;
+import frc.robot.commands.actions.*;
 import frc.robot.framework.scheduler.RobotMode;
 import frc.robot.framework.scheduler.ScheduledRobot;
 import frc.robot.subsystems.*;
@@ -42,7 +44,7 @@ public class Robot extends ScheduledRobot {
 
 	@Override
 	public void registerControls() {
-		getDriverRightBumper().whenPressed(new LimelightShoot(drivetrain, limelight, shooter, storage, 2055));
+		getDriverRightBumper().whenPressed(new LimelightShoot(drivetrain, limelight, shooter, shooterArm, storage, 2055));
 		getDriverLeftBumper().whenPressed(new LimelightAnglePID(limelight, drivetrain));
 		getOperatorRightBumper().whileHeld(new ToggleIntake(intakeFlipper));
 		// Toggle intake position
@@ -56,11 +58,12 @@ public class Robot extends ScheduledRobot {
 
 		getOperatorXButton().whenPressed(new RunCommand(() -> shooterArm.setGoal(SHOOTER_ARM_INTAKE_ANGLE), shooterArm));
 		getOperatorAButton().whenPressed(new RunCommand(() -> shooterArm.setGoal(SHOOTER_ARM_MAX_ANGLE), shooterArm));
+//		getOperatorBButton().whenPressed(new RunCommand(() -> shooterArm.resetEncoder(20)));
 
 //		getDriverAButton().whenPressed(new RunCommand(() -> winch.lock(), winch));
 //		getDriverXButton().whenPressed(new RunCommand(() -> winch.unlock(), winch));
 		// Set shooter rpm
-		getOperatorXButton().whenPressed(new SetShooterRPM(shooter, NetworkTables.getShooterTargetRPM()));
+//		getOperatorXButton().whenPressed(new SetShooterRPM(shooter, NetworkTables.getShooterTargetRPM()));
 
 		// Limelight align to target and shoot
 		getDriverRightBumper().whenPressed(new LimelightShoot(drivetrain, limelight, shooter, shooterArm, storage, 2055));
@@ -118,7 +121,7 @@ public class Robot extends ScheduledRobot {
 		// scheduler.scheduleDefaultCommand(new TankDrive(drivetrain, getDriverLeftYAxis(), getDriverRightYAxis()));
 
 		// Telescoping arms on the operator controller
-		scheduler.scheduleDefaultCommand(new RunElevator(elevator, getOperatorLeftYAxis()));
+//		scheduler.scheduleDefaultCommand(new RunElevator(elevator, getOperatorLeftYAxis()));
 
 		// Run the intake (and storage) on the operator right trigger
 		scheduler.scheduleDefaultCommand(new RunIntake(intake, storage, getOperatorRightTrigger()));
@@ -127,7 +130,8 @@ public class Robot extends ScheduledRobot {
 //		scheduler.scheduleDefaultCommand(new RunIntakeFlipper(intakeFlipper)); //TODO: Reenable after intake flipper is ready
 
 		// Run the shooter arm
-		scheduler.scheduleDefaultCommand(new RunShooterArm(shooterArm));
+//		scheduler.scheduleDefaultCommand(new RunShooterArm(shooterArm));
+//		scheduler.scheduleDefaultCommand(new RunArmWithAxis(shooterArm, getOperatorLeftYAxis()));
 
 		// Run the storage
 		scheduler.scheduleDefaultCommand(new RunStorage(storage));
