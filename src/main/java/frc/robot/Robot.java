@@ -7,6 +7,8 @@ import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.CommandGroupBase;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.commands.actions.SetShooterRPM;
 import frc.robot.commands.grouped.*;
 import frc.robot.commands.looped.*;
@@ -89,8 +91,6 @@ public class Robot extends ScheduledRobot {
 		shooterArm.resetEncoder(SHOOTER_ARM_MAX_ANGLE);
 		drivetrain.setBrake();
 
-
-
 		switch ((int) NetworkTables.getAutoChooser()) {
 			case 0:
 				break;
@@ -99,7 +99,7 @@ public class Robot extends ScheduledRobot {
 			case 2:
 				break;
 			case 3:
-//				autonomousCommand = new TwoCargoAuto(auto, drivetrain, intake, storage, shooterArm, shooter, intakeFlipper, limelight, NetworkTables.getAutoRPM());
+				autonomousCommand = new TwoCargoAuto(auto, drivetrain, intake, storage, shooterArm, shooter, intakeFlipper, limelight, NetworkTables.getAutoRPM());
 				break;
 			default: throw new IllegalStateException("Unknown auto profile " + auto);
 		}
@@ -139,14 +139,21 @@ public class Robot extends ScheduledRobot {
 
 	@Override
 	public void testInit() {
+		intakeFlipper.resetEncoders(0);
 		scheduler.scheduleDefaultCommand(new RunArmWithAxis(shooterArm, getOperatorLeftYAxis()));
-		scheduler.scheduleDefaultCommand(new RunIntakeFlipperWithAxis(intakeFlipper, getOperatorRightYAxis()));
-
+//		scheduler.scheduleDefaultCommand(new RunIntakeFlipperWithAxis(intakeFlipper, getOperatorRightYAxis()));
+		scheduler.scheduleDefaultCommand(new RunIntakeFlipper(intakeFlipper));
 //		getOperatorXButton().whenPressed(new ResetShooterArmEncoderWithEntry(shooterArm, resetAngle));
 //
 //		getOperatorAButton().whenPressed(new LockElevator(elevator));
 
 //		getOperatorRightBumper().whenPressed(new RaiseShooterArm(shooterArm));
+//		getOperatorLeftBumper().whenPressed(new LowerShooterArm(shooterArm));
+		getOperatorXButton().whenPressed(new InstantCommand(() -> intakeFlipper.resetEncoders(INTAKE_DOWN_POSITION)));
+
+		getOperatorLeftBumper().whenPressed(new RetractIntake(intakeFlipper));
+
+		getOperatorRightBumper().whenPressed(new ExtendIntake(intakeFlipper));
 
 		getOperatorDPadUp().whenPressed(new SetShooterRPM(shooter, NetworkTables.getShooterHighRPM()));
 		getOperatorDPadDown().whenPressed(new SetShooterRPM(shooter, 0));
@@ -155,6 +162,11 @@ public class Robot extends ScheduledRobot {
 
 //		getOperatorYButton().whenPressed(new LockWinches(winch));
 
-//		drivetrain.setCoast();
+		drivetrain.setCoast();
+	}
+
+	@Override
+	public void testPeriodic() {
+		System.out.println(intakeFlipper.getEncoderPosition());
 	}
 }

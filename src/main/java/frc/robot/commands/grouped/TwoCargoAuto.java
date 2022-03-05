@@ -41,7 +41,7 @@ public class TwoCargoAuto extends ParallelCommandGroup {
                 new RunCommand(()-> drivetrain.tankDriveVolts(0, 0))
             ),
             // Intake Deploy
-            new ExtendIntake(intakeFlipper),
+//            new ExtendIntake(intakeFlipper),
             // Intake
             new SequentialCommandGroup(
                 new WaitCommand(1.5),
@@ -60,7 +60,7 @@ public class TwoCargoAuto extends ParallelCommandGroup {
                 new SetShooterRPM(shooter, 0)
             ),
             // Shooter Arm
-            new SetShooterArmAngle(shooterArm, SHOOTER_ARM_INTAKE_ANGLE)            
+            new SetShooterArmAngle(shooterArm, SHOOTER_ARM_INTAKE_ANGLE)
         );
     }
 }

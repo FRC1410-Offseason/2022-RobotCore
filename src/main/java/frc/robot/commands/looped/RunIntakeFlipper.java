@@ -17,6 +17,7 @@ public class RunIntakeFlipper extends CommandBase {
 	@Override
 	public void execute() {
 		if (intakeFlipper.getDesiredPosition()) {
+
 			// If we want to be extended
 			if (Math.abs(intakeFlipper.getEncoderPosition() - INTAKE_DOWN_POSITION) > INTAKE_IS_FINISHED) {
 				// If we are not within our tolerance for being extended

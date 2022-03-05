@@ -58,16 +58,16 @@ public final class Tuning {
 	public static final Matrix<N7, N1> NOISE = VecBuilder.fill(0.001, 0.001, 0.001, 0.1, 0.1, 0.005, 0.005);
 
 	// INTAKE
-	public static final double INTAKE_P = 0.005;
-	public static final double INTAKE_I = 0;
-	public static final double INTAKE_D = 0;
+	public static final double INTAKE_KP = 0.015;
+	public static final double INTAKE_KI = 0;
+	public static final double INTAKE_KD = 0;
 
 	public static final double INTAKE_DOWN_POWERCAP = -0.5;
 	public static final double INTAKE_UP_POWERCAP = 0.5;
 
 	public static final double INTAKE_IS_FINISHED = 0.5; // Rotations
 	public static final double INTAKE_UP_POSITION = 0; // Rotations
-	public static final double INTAKE_DOWN_POSITION = 12; // Rotations. From testing, real number will be different
+	public static final double INTAKE_DOWN_POSITION = -38.6; // Rotations. From testing, real number will be different
 
 	// SHOOTER ARM
 	public static final double SA_P = 0.027; // Probably needs to be slightly more aggressive, but that's for later
