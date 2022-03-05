@@ -16,7 +16,7 @@ public class NetworkTables {
 	static final NetworkTableEntry maxVelocity, maxAcceleration, maxCentripetalAcceleration;
 	static final NetworkTableEntry x, y, theta, wheelLeft, wheelRight, navxMagDisturbance, navxMagCalibrated, leftEncoderDistanceAverage, rightEncoderDistanceAverage; // Drivetrain
 	static final NetworkTableEntry pitch, yaw, visionDistance, limelightAngleKP, limelightAngleKI, limelightAngleKD; // Limelight
-	static final NetworkTableEntry shooterTargetRPM, leftShooterRPM, leftShooterP, leftShooterI, leftShooterD, leftShooterFF,
+	static final NetworkTableEntry shooterLowRPM, shooterHighRPM, leftShooterRPM, leftShooterP, leftShooterI, leftShooterD, leftShooterFF,
 		rightShooterP, rightShooterI, rightShooterD, rightShooterFF, rightShooterRPM, lowestRPM; // Shooter
 	static final NetworkTableEntry correctColor, colorReading, lineBroken, storageSpeed; // Storage
 	static final NetworkTableEntry shooterArmAngle, shooterArmLocked; // Shooter Arm
@@ -54,7 +54,8 @@ public class NetworkTables {
 		pitch = limelight.getEntry("targetPitch");
 		yaw = limelight.getEntry("targetYaw");
 		// Shooter
-		shooterTargetRPM = robotState.getEntry("Target RPM");
+		shooterLowRPM = robotState.getEntry("Low Hub RPM");
+		shooterHighRPM = robotState.getEntry("High Hub RPM");
 		leftShooterRPM = robotState.getEntry("Left RPM");
 		leftShooterP = robotState.getEntry("Left Shooter P");
 		leftShooterI = robotState.getEntry("Left Shooter I");
@@ -116,7 +117,8 @@ public class NetworkTables {
 		limelightAngleKI.setDouble(LIMELIGHT_ANGLE_KI);
 		limelightAngleKD.setDouble(LIMELIGHT_ANGLE_KD);
 		// Shooter
-		shooterTargetRPM.setDouble(0);
+		shooterLowRPM.setDouble(SHOOTER_LOW_HUB_RPM);
+		shooterHighRPM.setDouble(SHOOTER_HIGH_HUB_RPM);
 		leftShooterRPM.setDouble(0);
 		leftShooterP.setDouble(0);
 		leftShooterI.setDouble(0);
@@ -225,11 +227,18 @@ public class NetworkTables {
 	}
 
 	// Shooter
-	public static double getShooterTargetRPM() {
-		return shooterTargetRPM.getDouble(0);
+	public static double getShooterLowRPM() {
+		return shooterLowRPM.getDouble(0);
 	}
-	public static void setShooterTargetRPM(double RPM) {
-		shooterTargetRPM.setDouble(RPM);
+	public static void setShooterLowRPM(double RPM) {
+		shooterLowRPM.setDouble(RPM);
+	}
+
+	public static double getShooterHighRPM() {
+		return shooterHighRPM.getDouble(0);
+	}
+	public static void setShooterHighRPM(double RPM) {
+		shooterHighRPM.setDouble(RPM);
 	}
 
 	public static double getLeftShooterP() {
