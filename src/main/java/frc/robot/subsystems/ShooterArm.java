@@ -29,6 +29,8 @@ public class ShooterArm extends SubsystemBase {
 	private final NetworkTableEntry encoderPos = table.getEntry("Encoder Pos");
 	private final NetworkTableEntry goalNT = table.getEntry("Goal");
 	private final NetworkTableEntry controllerOutput = table.getEntry("Controller Output");
+	private final NetworkTableEntry currentError = table.getEntry("Error");
+	private final NetworkTableEntry rawEncoderPos = table.getEntry("Raw Encoder");
 
 	/**
 	 * Motors
@@ -108,12 +110,15 @@ public class ShooterArm extends SubsystemBase {
 		goalNT.setDouble(0);
 
 		controllerOutput.setDouble(0);
+		rawEncoderPos.setDouble(0);
 	}
 
 	@Override
 	public void periodic() {
 		encoderPos.setDouble(getEncoderPosition());
 		goalNT.setDouble(goal);
+		currentError.setDouble(PID.getPositionError());
+		rawEncoderPos.setDouble(encoderMotor.getSelectedSensorPosition());
 	}
 
 	@Override

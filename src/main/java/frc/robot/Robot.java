@@ -53,7 +53,7 @@ public class Robot extends ScheduledRobot {
 //		getOperatorRightBumper().whenPressed(new ToggleIntake(intakeFlipper)); //TODO: Reenable after intake flipper is ready
 
 		// Toggle shooter arm position
-		getOperatorLeftBumper().whenPressed(new ToggleShooterArmPosition(shooterArm));
+//		getOperatorLeftBumper().whenPressed(new ToggleShooterArmPosition(shooterArm));
 
 		// Set storage speed
 		getOperatorYButton().whileHeld(new RunStorageConstant(storage, STORAGE_RUN_SPEED));
@@ -64,10 +64,10 @@ public class Robot extends ScheduledRobot {
 		getOperatorXButton().whenPressed(new SetShooterRPM(shooter, NetworkTables.getShooterHighRPM()));
 
 		// Limelight align to target and shoot
-		getDriverRightBumper().whenPressed(new LimelightShoot(drivetrain, limelight, shooter, shooterArm, storage, NetworkTables.getShooterHighRPM()));
+//		getDriverRightBumper().whenPressed(new LimelightShoot(drivetrain, limelight, shooter, shooterArm, storage, NetworkTables.getShooterHighRPM()));
 
 		//
-		getDriverLeftBumper().whenPressed(new LowHubShoot(shooter, shooterArm, storage, NetworkTables.getShooterLowRPM()));
+//		getDriverLeftBumper().whenPressed(new LowHubShoot(shooter, shooterArm, storage, NetworkTables.getShooterLowRPM()));
 
 		// Climb cycle dpad control
 		getOperatorDPadUp().whileHeld(new RunElevatorConstant(elevator, ELEVATOR_UP_SPEED));
@@ -92,7 +92,7 @@ public class Robot extends ScheduledRobot {
 	public void autonomousInit() {
 		scheduler.scheduleDefaultCommand(new PoseEstimation(drivetrain), TIME_OFFSET, 10);
 		shooterArm.resetEncoder(SHOOTER_ARM_MAX_ANGLE);
-		scheduler.scheduleDefaultCommand(new RunShooterArm(shooterArm));
+//		scheduler.scheduleDefaultCommand(new RunShooterArm(shooterArm));
 		drivetrain.setBrake();
 
 
@@ -105,7 +105,7 @@ public class Robot extends ScheduledRobot {
 			case 2:
 				break;
 			case 3:
-				autonomousCommand = new TwoCargoAuto(auto, drivetrain, intake, storage, shooterArm, shooter, intakeFlipper, limelight, NetworkTables.getAutoRPM());
+//				autonomousCommand = new TwoCargoAuto(auto, drivetrain, intake, storage, shooterArm, shooter, intakeFlipper, limelight, NetworkTables.getAutoRPM());
 				break;
 			default: throw new IllegalStateException("Unknown auto profile " + auto);
 		}
@@ -121,10 +121,11 @@ public class Robot extends ScheduledRobot {
 		drivetrain.setBrake();
 
 		// Tank drive on the drivetrain
+		// Yes, the right left is swapped, it's supposed to be that way trust me
 		 scheduler.scheduleDefaultCommand(new TankDrive(drivetrain, getDriverLeftYAxis(), getDriverRightYAxis()));
 
 		// Telescoping arms on the operator controller
-		scheduler.scheduleDefaultCommand(new RunElevator(elevator, getOperatorLeftYAxis()));
+//		scheduler.scheduleDefaultCommand(new RunElevator(elevator, getOperatorLeftYAxis()));
 
 		// Run the intake (and storage) on the operator right trigger
 		scheduler.scheduleDefaultCommand(new RunIntake(intake, storage, getOperatorRightTrigger()));
@@ -134,13 +135,13 @@ public class Robot extends ScheduledRobot {
 //		scheduler.scheduleDefaultCommand(new RunIntakeFlipper(intakeFlipper));
 
 		// Run the shooter arm
-		scheduler.scheduleDefaultCommand(new RunShooterArm(shooterArm));
+//		scheduler.scheduleDefaultCommand(new RunShooterArm(shooterArm));
 
 		// Run the storage
 		scheduler.scheduleDefaultCommand(new RunStorage(storage));
 
 		// Run the winches on the operator controller
-		scheduler.scheduleDefaultCommand(new RunWinch(winch, getOperatorRightYAxis()));
+//		scheduler.scheduleDefaultCommand(new RunWinch(winch, getOperatorRightYAxis()));
 
 		drivetrain.setBrake();
 	}
@@ -152,9 +153,10 @@ public class Robot extends ScheduledRobot {
 
 		getOperatorXButton().whenPressed(new ResetShooterArmEncoderWithEntry(shooterArm, resetAngle));
 
-		getOperatorYButton().whenPressed(new LockWinches(winch));
+		getOperatorAButton().whenPressed(new LockElevator(elevator));
 
-		autonomousCommand.cancel();
-		drivetrain.setCoast();
+//		getOperatorYButton().whenPressed(new LockWinches(winch));
+
+//		drivetrain.setCoast();
 	}
 }

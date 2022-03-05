@@ -35,5 +35,6 @@ public class RunElevatorConstant extends CommandBase {
 	@Override
 	public void end(boolean interrupted) {
 		elevator.set(0);
+		elevator.lock();
 	}
 }

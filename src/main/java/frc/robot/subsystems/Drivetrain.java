@@ -30,10 +30,10 @@ public class Drivetrain extends SubsystemBase {
 	/**
 	 * Motors
 	 */
-	public final WPI_TalonFX leftLeader = new WPI_TalonFX(DRIVETRAIN_LEFT_FRONT_MOTOR_ID);
-	public final WPI_TalonFX leftFollower = new WPI_TalonFX(DRIVETRAIN_LEFT_BACK_MOTOR_ID);
-	public final WPI_TalonFX rightLeader = new WPI_TalonFX(DRIVETRAIN_RIGHT_FRONT_MOTOR_ID);
-	public final WPI_TalonFX rightFollower = new WPI_TalonFX(DRIVETRAIN_RIGHT_BACK_MOTOR_ID);
+	public final WPI_TalonFX rightLeader = new WPI_TalonFX(DRIVETRAIN_LEFT_FRONT_MOTOR_ID);
+	public final WPI_TalonFX rightFollower = new WPI_TalonFX(DRIVETRAIN_LEFT_BACK_MOTOR_ID);
+	public final WPI_TalonFX leftLeader = new WPI_TalonFX(DRIVETRAIN_RIGHT_FRONT_MOTOR_ID);
+	public final WPI_TalonFX leftFollower = new WPI_TalonFX(DRIVETRAIN_RIGHT_BACK_MOTOR_ID);
 
 	/**
 	 * Wrapper class for motors that makes them easier to use
