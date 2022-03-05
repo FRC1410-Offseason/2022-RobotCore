@@ -13,6 +13,7 @@ public class Intake extends SubsystemBase {
 	public Intake() {
 		// Config motor
 		intakeMotor.restoreFactoryDefaults();
+		intakeMotor.setInverted(true);
 	}
 
 	/**

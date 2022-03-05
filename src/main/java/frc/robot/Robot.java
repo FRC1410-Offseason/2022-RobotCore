@@ -40,8 +40,6 @@ public class Robot extends ScheduledRobot {
 	private final Limelight limelight = new Limelight();
 	private final Trajectories auto = new Trajectories(drivetrain);
 
-
-
 	@Override
 	public void registerControls() {
 		getDriverRightBumper().whenPressed(new LimelightShoot(drivetrain, limelight, shooter, shooterArm, storage, 2055));
@@ -125,6 +123,7 @@ public class Robot extends ScheduledRobot {
 
 		// Run the intake (and storage) on the operator right trigger
 		scheduler.scheduleDefaultCommand(new RunIntake(intake, storage, getOperatorRightTrigger()));
+		scheduler.scheduleDefaultCommand(new RunIntakeFlipperWithAxis(intakeFlipper, getOperatorLeftYAxis()));
 
 		// Run the intake flipper
 //		scheduler.scheduleDefaultCommand(new RunIntakeFlipper(intakeFlipper)); //TODO: Reenable after intake flipper is ready
@@ -137,7 +136,7 @@ public class Robot extends ScheduledRobot {
 		scheduler.scheduleDefaultCommand(new RunStorage(storage));
 
 		// Run the winches on the operator controller
-		scheduler.scheduleDefaultCommand(new RunWinch(winch, getOperatorRightYAxis()));
+//		scheduler.scheduleDefaultCommand(new RunWinch(winch, getOperatorRightYAxis()));
 		drivetrain.setBrake();
 	}
 
