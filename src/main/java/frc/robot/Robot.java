@@ -42,7 +42,6 @@ public class Robot extends ScheduledRobot {
 
 	@Override
 	public void registerControls() {
-		getDriverRightBumper().whenPressed(new LimelightShoot(drivetrain, limelight, shooter, shooterArm, storage, 2055));
 		getDriverLeftBumper().whenPressed(new LimelightAnglePID(limelight, drivetrain));
 		getOperatorRightBumper().whileHeld(new ToggleIntake(intakeFlipper));
 		// Toggle intake position
@@ -61,10 +60,13 @@ public class Robot extends ScheduledRobot {
 //		getDriverAButton().whenPressed(new RunCommand(() -> winch.lock(), winch));
 //		getDriverXButton().whenPressed(new RunCommand(() -> winch.unlock(), winch));
 		// Set shooter rpm
-//		getOperatorXButton().whenPressed(new SetShooterRPM(shooter, NetworkTables.getShooterTargetRPM()));
+		getOperatorXButton().whenPressed(new SetShooterRPM(shooter, NetworkTables.getShooterHighRPM()));
 
 		// Limelight align to target and shoot
-		getDriverRightBumper().whenPressed(new LimelightShoot(drivetrain, limelight, shooter, shooterArm, storage, 2055));
+		getDriverRightBumper().whenPressed(new LimelightShoot(drivetrain, limelight, shooter, shooterArm, storage, NetworkTables.getShooterHighRPM()));
+
+		//
+		getDriverLeftBumper().whenPressed(new LowHubShoot(shooter, shooterArm, storage, NetworkTables.getShooterLowRPM()));
 
 		// Climb cycle dpad control
 		getOperatorDPadUp().whileHeld(new RunElevatorConstant(elevator, ELEVATOR_UP_SPEED));
