@@ -10,6 +10,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import edu.wpi.first.wpilibj.smartdashboard.*;
 import edu.wpi.first.wpilibj.util.Color;
@@ -17,8 +18,7 @@ import edu.wpi.first.wpilibj.util.Color8Bit;
 import frc.robot.framework.subsystem.SubsystemBase;
 
 import static frc.robotmap.Constants.*;
-import static frc.robotmap.IDs.SHOOTER_ARM_L_MOTOR;
-import static frc.robotmap.IDs.SHOOTER_ARM_R_MOTOR;
+import static frc.robotmap.IDs.*;
 import static frc.robotmap.Tuning.*;
 
 public class ShooterArm extends SubsystemBase {
@@ -32,6 +32,9 @@ public class ShooterArm extends SubsystemBase {
 	private final NetworkTableEntry currentError = table.getEntry("Error");
 	private final NetworkTableEntry rawEncoderPos = table.getEntry("Raw Encoder");
 
+	private final NetworkTableEntry upperLimitNT = table.getEntry("Upper Limit");
+	private final NetworkTableEntry lowerLimitNT = table.getEntry("Lower Limit");
+
 	/**
 	 * Motors
 	 */
@@ -42,6 +45,9 @@ public class ShooterArm extends SubsystemBase {
 	 * Grabbing the encoder objects from the motors
 	 */
 	private final WPI_TalonSRX encoderMotor;
+
+	private final DigitalInput upperLimit = new DigitalInput(WINCH_LEFT_LIMIT_SWITCH_ID);
+	private final DigitalInput lowerLimit = new DigitalInput(WINCH_RIGHT_LIMIT_SWITCH_ID);
 
 	private boolean manualControl = true;
 
@@ -111,6 +117,9 @@ public class ShooterArm extends SubsystemBase {
 
 		controllerOutput.setDouble(0);
 		rawEncoderPos.setDouble(0);
+
+		upperLimitNT.setBoolean(false);
+		lowerLimitNT.setBoolean(false);
 	}
 
 	@Override
@@ -119,17 +128,20 @@ public class ShooterArm extends SubsystemBase {
 		goalNT.setDouble(goal);
 		currentError.setDouble(PID.getPositionError());
 		rawEncoderPos.setDouble(encoderMotor.getSelectedSensorPosition());
+
+		upperLimitNT.setBoolean(upperLimit.get());
+		lowerLimitNT.setBoolean(lowerLimit.get());
 	}
 
-	@Override
-	// Broken atm, even more so now
-	public void simulationPeriodic() {
-		// Set inputs to the simulator
-		sim.setInputVoltage(currentVoltage);
-
-		// Update the sim (default time is 20 ms)
-		sim.update(DT50HZ);
-	}
+//	@Override
+//	// Broken atm, even more so now
+//	public void simulationPeriodic() {
+//		// Set inputs to the simulator
+//		sim.setInputVoltage(currentVoltage);
+//
+//		// Update the sim (default time is 20 ms)
+//		sim.update(DT50HZ);
+//	}
 
 	public void setGoal(double value) {
 		goal = MathUtil.clamp(value, SHOOTER_ARM_RESTING_ANGLE, SHOOTER_ARM_MAX_ANGLE);
@@ -145,6 +157,14 @@ public class ShooterArm extends SubsystemBase {
 		return goal;
 	}
 
+	public boolean getUpperLimit() {
+		return upperLimit.get();
+	}
+
+	public boolean getLowerLimit() {
+		return lowerLimit.get();
+	}
+
 	/**
 	 * Get the current position of the mechanism
 	 * @return average encoder position in radians
@@ -154,13 +174,13 @@ public class ShooterArm extends SubsystemBase {
 	}
 
 	public void runPIDExecute() {
-		double output = PID.calculate(getEncoderPosition(), goal);
-		controllerOutput.setDouble(output);
-		if (!(Math.abs(PID.getPositionError()) > 16)) {
-			double cappedOutput = MathUtil.clamp(output, -0.3, 0.3);
-			leftMotor.set(cappedOutput);
-			rightMotor.set(cappedOutput);
-		}
+//		double output = PID.calculate(getEncoderPosition(), goal);
+//		controllerOutput.setDouble(output);
+//		if (!(Math.abs(PID.getPositionError()) > 16)) {
+//			double cappedOutput = MathUtil.clamp(output, -0.3, 0.3);
+//			leftMotor.set(cappedOutput);
+//			rightMotor.set(cappedOutput);
+//		}
 	}
 
 	/**
@@ -174,8 +194,15 @@ public class ShooterArm extends SubsystemBase {
 	}
 
 	public void set(double value) {
-		leftMotor.set(value);
-		rightMotor.set(value);
+		double clampedOutput = MathUtil.clamp(value, SHOOTER_ARM_DOWN_SPEED, SHOOTER_ARM_UP_SPEED);
+
+		if ((value < 0 && !lowerLimit.get()) || (value > 0 && !upperLimit.get())) {
+			leftMotor.set(clampedOutput);
+			rightMotor.set(clampedOutput);
+		} else {
+			leftMotor.set(0);
+			leftMotor.set(0);
+		}
 	}
 
 	public boolean isAtTarget() {

@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.CommandGroupBase;
 import frc.robot.commands.actions.SetShooterRPM;
-import frc.robot.commands.actions.ToggleShooterArmPosition;
 import frc.robot.commands.grouped.*;
 import frc.robot.commands.looped.*;
 import frc.robot.commands.actions.*;
@@ -52,14 +51,9 @@ public class Robot extends ScheduledRobot {
 		// Toggle intake position
 //		getOperatorRightBumper().whenPressed(new ToggleIntake(intakeFlipper)); //TODO: Reenable after intake flipper is ready
 
-		// Toggle shooter arm position
-//		getOperatorLeftBumper().whenPressed(new ToggleShooterArmPosition(shooterArm));
-
 		// Set storage speed
 		getOperatorYButton().whileHeld(new RunStorageConstant(storage, STORAGE_RUN_SPEED));
 
-//		getDriverAButton().whenPressed(new RunCommand(() -> winch.lock(), winch));
-//		getDriverXButton().whenPressed(new RunCommand(() -> winch.unlock(), winch));
 		// Set shooter rpm
 		getOperatorXButton().whenPressed(new SetShooterRPM(shooter, NetworkTables.getShooterHighRPM()));
 
@@ -92,7 +86,6 @@ public class Robot extends ScheduledRobot {
 	public void autonomousInit() {
 		scheduler.scheduleDefaultCommand(new PoseEstimation(drivetrain), TIME_OFFSET, 10);
 		shooterArm.resetEncoder(SHOOTER_ARM_MAX_ANGLE);
-//		scheduler.scheduleDefaultCommand(new RunShooterArm(shooterArm));
 		drivetrain.setBrake();
 
 
@@ -133,9 +126,6 @@ public class Robot extends ScheduledRobot {
 
 		// Run the intake flipper
 //		scheduler.scheduleDefaultCommand(new RunIntakeFlipper(intakeFlipper));
-
-		// Run the shooter arm
-//		scheduler.scheduleDefaultCommand(new RunShooterArm(shooterArm));
 
 		// Run the storage
 		scheduler.scheduleDefaultCommand(new RunStorage(storage));
