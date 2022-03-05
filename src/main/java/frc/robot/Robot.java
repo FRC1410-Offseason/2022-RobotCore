@@ -18,6 +18,7 @@ import frc.robot.util.Trajectories;
 
 import static frc.robotmap.Constants.*;
 import static frc.robotmap.IDs.PRESSURE_SENSOR;
+import static frc.robotmap.Tuning.*;
 
 public class Robot extends ScheduledRobot {
 
@@ -141,9 +142,14 @@ public class Robot extends ScheduledRobot {
 		scheduler.scheduleDefaultCommand(new RunArmWithAxis(shooterArm, getOperatorLeftYAxis()));
 		scheduler.scheduleDefaultCommand(new RunIntakeFlipperWithAxis(intakeFlipper, getOperatorRightYAxis()));
 
-		getOperatorXButton().whenPressed(new ResetShooterArmEncoderWithEntry(shooterArm, resetAngle));
+//		getOperatorXButton().whenPressed(new ResetShooterArmEncoderWithEntry(shooterArm, resetAngle));
+//
+//		getOperatorAButton().whenPressed(new LockElevator(elevator));
 
-		getOperatorAButton().whenPressed(new LockElevator(elevator));
+		getOperatorDPadUp().whenPressed(new SetShooterRPM(shooter, SHOOTER_HIGH_HUB_RPM));
+		getOperatorDPadUp().whenPressed(new SetShooterRPM(shooter, 0));
+
+		getOperatorAButton().whileHeld(new RunStorageConstant(storage, STORAGE_RUN_SPEED));
 
 //		getOperatorYButton().whenPressed(new LockWinches(winch));
 
