@@ -66,8 +66,10 @@ public class Winch extends SubsystemBase {
 	 * @param speed Speed from -1 to 1
 	 */
 	public void runWinch(double speed) {
-		leftMotor.set(ControlMode.PercentOutput, speed * WINCH_LEFT_MOD);
-		rightMotor.set(ControlMode.PercentOutput, speed);
+		if (!getRightSwitch() && !getLeftSwitch()) {
+			leftMotor.set(ControlMode.PercentOutput, speed * WINCH_LEFT_MOD);
+			rightMotor.set(ControlMode.PercentOutput, speed);
+		}
 	}
 
 	/**

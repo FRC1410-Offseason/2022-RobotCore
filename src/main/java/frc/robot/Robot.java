@@ -1,10 +1,12 @@
 package frc.robot;
 
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.CommandGroupBase;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.commands.actions.SetShooterRPM;
 import frc.robot.commands.actions.ToggleShooterArmPosition;
 import frc.robot.commands.grouped.*;
@@ -24,6 +26,10 @@ public class Robot extends ScheduledRobot {
 	private final AnalogInput pressure = new AnalogInput(PRESSURE_SENSOR);
 	CommandGroupBase autonomousCommand = null;
 
+	private final NetworkTableInstance instance = NetworkTableInstance.getDefault();
+	private final NetworkTable table = instance.getTable("Shooter Arm");
+	private final NetworkTableEntry resetAngle = table.getEntry("Reset arm to: ");
+
 	public static void main(String[] args) {RobotBase.startRobot(Robot::new);}
 	private Robot() {
 		super((long) DT50HZ);
@@ -42,7 +48,6 @@ public class Robot extends ScheduledRobot {
 
 	@Override
 	public void registerControls() {
-		getDriverLeftBumper().whenPressed(new LimelightAnglePID(limelight, drivetrain));
 		getOperatorRightBumper().whileHeld(new ToggleIntake(intakeFlipper));
 		// Toggle intake position
 //		getOperatorRightBumper().whenPressed(new ToggleIntake(intakeFlipper)); //TODO: Reenable after intake flipper is ready
@@ -52,10 +57,6 @@ public class Robot extends ScheduledRobot {
 
 		// Set storage speed
 		getOperatorYButton().whileHeld(new RunStorageConstant(storage, STORAGE_RUN_SPEED));
-
-		getOperatorXButton().whenPressed(new RunCommand(() -> shooterArm.setGoal(SHOOTER_ARM_INTAKE_ANGLE), shooterArm));
-		getOperatorAButton().whenPressed(new RunCommand(() -> shooterArm.setGoal(SHOOTER_ARM_MAX_ANGLE), shooterArm));
-//		getOperatorBButton().whenPressed(new RunCommand(() -> shooterArm.resetEncoder(20)));
 
 //		getDriverAButton().whenPressed(new RunCommand(() -> winch.lock(), winch));
 //		getDriverXButton().whenPressed(new RunCommand(() -> winch.unlock(), winch));
@@ -81,6 +82,8 @@ public class Robot extends ScheduledRobot {
 		NetworkTables.setCorrectColor(DriverStation.getAlliance().toString());
 		NetworkTables.setPressure(pressure);
 		drivetrain.setCoast();
+
+		resetAngle.setDouble(0);
 
 		shooterArm.resetEncoder(SHOOTER_ARM_MAX_ANGLE);
 	}
@@ -118,10 +121,10 @@ public class Robot extends ScheduledRobot {
 		drivetrain.setBrake();
 
 		// Tank drive on the drivetrain
-		// scheduler.scheduleDefaultCommand(new TankDrive(drivetrain, getDriverLeftYAxis(), getDriverRightYAxis()));
+		 scheduler.scheduleDefaultCommand(new TankDrive(drivetrain, getDriverLeftYAxis(), getDriverRightYAxis()));
 
 		// Telescoping arms on the operator controller
-//		scheduler.scheduleDefaultCommand(new RunElevator(elevator, getOperatorLeftYAxis()));
+		scheduler.scheduleDefaultCommand(new RunElevator(elevator, getOperatorLeftYAxis()));
 
 		// Run the intake (and storage) on the operator right trigger
 		scheduler.scheduleDefaultCommand(new RunIntake(intake, storage, getOperatorRightTrigger()));
@@ -144,6 +147,13 @@ public class Robot extends ScheduledRobot {
 
 	@Override
 	public void testInit() {
+		scheduler.scheduleDefaultCommand(new RunArmWithAxis(shooterArm, getOperatorLeftYAxis()));
+		scheduler.scheduleDefaultCommand(new RunIntakeFlipperWithAxis(intakeFlipper, getOperatorRightYAxis()));
+
+		getOperatorXButton().whenPressed(new ResetShooterArmEncoderWithEntry(shooterArm, resetAngle));
+
+		getOperatorYButton().whenPressed(new LockWinches(winch));
+
 		autonomousCommand.cancel();
 		drivetrain.setCoast();
 	}

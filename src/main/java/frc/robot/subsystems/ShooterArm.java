@@ -1,6 +1,5 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -18,7 +17,8 @@ import edu.wpi.first.wpilibj.util.Color8Bit;
 import frc.robot.framework.subsystem.SubsystemBase;
 
 import static frc.robotmap.Constants.*;
-import static frc.robotmap.IDs.*;
+import static frc.robotmap.IDs.SHOOTER_ARM_L_MOTOR;
+import static frc.robotmap.IDs.SHOOTER_ARM_R_MOTOR;
 import static frc.robotmap.Tuning.*;
 
 public class ShooterArm extends SubsystemBase {
@@ -28,6 +28,7 @@ public class ShooterArm extends SubsystemBase {
 
 	private final NetworkTableEntry encoderPos = table.getEntry("Encoder Pos");
 	private final NetworkTableEntry goalNT = table.getEntry("Goal");
+	private final NetworkTableEntry controllerOutput = table.getEntry("Controller Output");
 
 	/**
 	 * Motors
@@ -102,6 +103,11 @@ public class ShooterArm extends SubsystemBase {
 		// Send the arm widget to Smart Dashboard
 		SmartDashboard.putData("Arm Sim", simMech);
 		tower.setColor(new Color8Bit(Color.kBlue));
+
+		encoderPos.setDouble(0);
+		goalNT.setDouble(0);
+
+		controllerOutput.setDouble(0);
 	}
 
 	@Override
@@ -144,8 +150,12 @@ public class ShooterArm extends SubsystemBase {
 
 	public void runPIDExecute() {
 		double output = PID.calculate(getEncoderPosition(), goal);
-		leftMotor.set(output);
-		rightMotor.set(output);
+		controllerOutput.setDouble(output);
+		if (!(Math.abs(PID.getPositionError()) > 16)) {
+			double cappedOutput = MathUtil.clamp(output, -0.3, 0.3);
+			leftMotor.set(cappedOutput);
+			rightMotor.set(cappedOutput);
+		}
 	}
 
 	/**
