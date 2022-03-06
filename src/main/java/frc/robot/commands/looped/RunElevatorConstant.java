@@ -18,12 +18,12 @@ public class RunElevatorConstant extends CommandBase {
 	@Override
 	public void initialize() {
 		elevator.set(0);
-		elevator.lock();
+//		elevator.lock();
 	}
 
 	@Override
 	public void execute() {
-		elevator.unlock();
+//		elevator.unlock();
 		elevator.set(speed);
 	}
 
@@ -35,6 +35,6 @@ public class RunElevatorConstant extends CommandBase {
 	@Override
 	public void end(boolean interrupted) {
 		elevator.set(0);
-		elevator.lock();
+//		elevator.lock();
 	}
 }

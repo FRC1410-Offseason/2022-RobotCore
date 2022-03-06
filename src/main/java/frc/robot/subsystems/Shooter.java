@@ -128,6 +128,9 @@ public class Shooter extends SubsystemBase {
 	 * @param rpm speed of motors in revolutions per minute
 	 */
 	public void setSpeeds(double rpm) {
+		leftController.setIAccum(0);
+		rightController.setIAccum(0);
+
 		target = rpm;
 
 		leftController.setReference(target, CANSparkMax.ControlType.kVelocity);

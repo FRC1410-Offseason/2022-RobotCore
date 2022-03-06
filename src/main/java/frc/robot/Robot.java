@@ -50,15 +50,12 @@ public class Robot extends ScheduledRobot {
 
 	@Override
 	public void registerControls() {
-//		getOperatorRightBumper().whileHeld(new ToggleIntake(intakeFlipper));
 		// Toggle intake position
-//		getOperatorRightBumper().whenPressed(new ToggleIntake(intakeFlipper)); //TODO: Reenable after intake flipper is ready
+//		getOperatorRightBumper().whenPressed(new ToggleIntake(intakeFlipper));
 
 		// Set storage speed
-		getOperatorYButton().whileHeld(new RunStorageConstant(storage, STORAGE_RUN_SPEED));
-
-		// Set shooter rpm
-		getOperatorXButton().whenPressed(new SetShooterRPM(shooter, NetworkTables.getShooterHighRPM()));
+		getOperatorYButton().whileHeld(new RunIntakeWithButton(intake, storage));
+		getOperatorXButton().whileHeld(new RunIntakeWithButton(intake, storage));
 
 		// Limelight align to target and shoot
 //		getDriverRightBumper().whenPressed(new LimelightShoot(drivetrain, limelight, shooter, shooterArm, storage, NetworkTables.getShooterHighRPM()));
@@ -66,11 +63,7 @@ public class Robot extends ScheduledRobot {
 		//
 //		getDriverLeftBumper().whenPressed(new LowHubShoot(shooter, shooterArm, storage, NetworkTables.getShooterLowRPM()));
 
-		// Climb cycle dpad control
-		getOperatorDPadUp().whileHeld(new RunElevatorConstant(elevator, ELEVATOR_UP_SPEED));
-		getOperatorDPadRight().whileHeld(new RunWinchConstant(winch, WINCH_OUT_SPEED));
-		getOperatorDPadDown().whileHeld(new RunElevatorConstant(elevator, ELEVATOR_DOWN_SPEED));
-		getOperatorDPadLeft().whileHeld(new RunWinchConstant(winch, WINCH_IN_SPEED));
+		getOperatorLeftBumper().whenPressed(new ToggleElevatorBrakes(elevator));
 	}
 
 	@Override
@@ -118,8 +111,8 @@ public class Robot extends ScheduledRobot {
 		scheduler.scheduleDefaultCommand(new RunShooterArm(shooterArm));
 		drivetrain.setBrake();
 
-		getOperatorRightBumper().whenPressed(new InstantCommand(() -> shooterArm.setGoal(SHOOTER_ARM_MAX_ANGLE)));
-		getOperatorLeftBumper().whenPressed(new InstantCommand(() -> shooterArm.setGoal(SHOOTER_ARM_INTAKE_ANGLE)));
+//		getOperatorRightBumper().whenPressed(new InstantCommand(() -> shooterArm.setGoal(SHOOTER_ARM_MAX_ANGLE)));
+//		getOperatorLeftBumper().whenPressed(new InstantCommand(() -> shooterArm.setGoal(SHOOTER_ARM_INTAKE_ANGLE)));
 
 
 		// Tank drive on the drivetrain
@@ -130,8 +123,8 @@ public class Robot extends ScheduledRobot {
 //		scheduler.scheduleDefaultCommand(new RunElevator(elevator, getOperatorLeftYAxis()));
 
 		// Run the intake (and storage) on the operator right trigger
-		scheduler.scheduleDefaultCommand(new RunIntake(intake, storage, getOperatorRightTrigger()));
-		scheduler.scheduleDefaultCommand(new RunIntakeFlipperWithAxis(intakeFlipper, getOperatorLeftYAxis()));
+//		scheduler.scheduleDefaultCommand(new RunIntake(intake, storage, getOperatorRightTrigger()));
+		scheduler.scheduleDefaultCommand(new RunElevator(elevator, getOperatorRightTrigger(), getOperatorLeftTrigger()));
 
 		// Run the intake flipper
 //		scheduler.scheduleDefaultCommand(new RunIntakeFlipper(intakeFlipper));
@@ -140,7 +133,7 @@ public class Robot extends ScheduledRobot {
 		scheduler.scheduleDefaultCommand(new RunStorage(storage));
 
 		// Run the winches on the operator controller
-//		scheduler.scheduleDefaultCommand(new RunWinch(winch, getOperatorRightYAxis()));
+		scheduler.scheduleDefaultCommand(new RunWinch(winch, getOperatorRightYAxis(), getOperatorLeftYAxis()));
 
 		drivetrain.setBrake();
 	}

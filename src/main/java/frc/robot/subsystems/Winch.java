@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -51,6 +52,9 @@ public class Winch extends SubsystemBase {
 
 		leftMotor.setInverted(true);
 
+		leftMotor.setNeutralMode(NeutralMode.Brake);
+		rightMotor.setNeutralMode(NeutralMode.Brake);
+
 //		leftLimit.setBoolean(getLeftSwitch());
 //		rightLimit.setBoolean(getRightSwitch());
 	}
@@ -67,9 +71,17 @@ public class Winch extends SubsystemBase {
 	 */
 	public void runWinch(double speed) {
 //		if (!getRightSwitch() && !getLeftSwitch()) {
-			leftMotor.set(ControlMode.PercentOutput, speed * WINCH_LEFT_MOD);
-			rightMotor.set(ControlMode.PercentOutput, speed);
+//			leftMotor.set(ControlMode.PercentOutput, speed);
+//			rightMotor.set(ControlMode.PercentOutput, speed);
 //		}
+	}
+
+	public void runLeftWinch(double speed) {
+		leftMotor.set(ControlMode.PercentOutput, speed);
+	}
+
+	public void runRightWinch(double speed) {
+		rightMotor.set(ControlMode.PercentOutput, speed);
 	}
 
 	/**

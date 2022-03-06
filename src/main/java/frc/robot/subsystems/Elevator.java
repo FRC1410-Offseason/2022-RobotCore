@@ -37,9 +37,6 @@ public class Elevator extends SubsystemBase {
 	// Elevator Brakes
 	private final DoubleSolenoid lock = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, ELEVATOR_FWD, ELEVATOR_BCK);
 
-	// State variable to track state of locks
-	private boolean locked = false;
-
 	/**
 	 * The simulation system
 	 */
@@ -115,13 +112,13 @@ public class Elevator extends SubsystemBase {
 	public void simulationPeriodic() {
 		sim.setInput(getSpeed() * RobotController.getBatteryVoltage());
 
-		if (lock.get() == Value.kForward) {
-			pistonInnards.setLength(40);
-			sim.update(0);
-		} else {
-			pistonInnards.setLength(0);
-			sim.update(DT50HZ);
-		}
+//		if (lock.get() == Value.kForward) {
+//			pistonInnards.setLength(40);
+//			sim.update(0);
+//		} else {
+//			pistonInnards.setLength(0);
+//			sim.update(DT50HZ);
+//		}
 
 		leftEncoder.setPosition(sim.getOutput(0));
 		rightEncoder.setPosition(sim.getOutput(0));
@@ -187,8 +184,12 @@ public class Elevator extends SubsystemBase {
 	 *
 	 * @param state forward or backward
 	 */
-	public void setLock(Value state) {
-		lock.set(state);
+	public void setLock(boolean state) {
+		if (state) {
+			lock.set(Value.kForward);
+		} else {
+			lock.set(Value.kReverse);
+		}
 	}
 
 	/**
@@ -197,37 +198,20 @@ public class Elevator extends SubsystemBase {
 	 * @return True / False -> Locked / Unlocked
 	 */
 	public boolean getLocked() {
-		return locked;
+		return lock.get() == Value.kForward;
 	}
 
 	/**
 	 * Set the state of the locks to locked
 	 */
 	public void lock() {
-		if (!locked) {
-			setLock(Value.kForward);
-			locked = true;
-		}
+		lock.set(Value.kForward);
 	}
 
 	/**
 	 * Set the state of the locks to unlocked
 	 */
 	public void unlock() {
-		if (locked) {
-			setLock(Value.kReverse);
-			locked = false;
-		}
-	}
-
-	/**
-	 * Toggle the state of the locks
-	 */
-	public void toggle() {
-		if (locked) {
-			unlock();
-		} else {
-			lock();
-		}
+		lock.set(Value.kReverse);
 	}
 }

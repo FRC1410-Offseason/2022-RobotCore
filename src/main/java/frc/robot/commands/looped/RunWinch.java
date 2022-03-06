@@ -8,22 +8,20 @@ import frc.robot.subsystems.Winch;
 public class RunWinch extends CommandBase {
 
 	private final Winch winch;
-	private final Axis axis;
+	private final Axis leftAxis;
+	private final Axis rightAxis;
 
-	public RunWinch(Winch winch, Axis axis) {
+	public RunWinch(Winch winch, Axis leftAxis, Axis rightAxis) {
 		this.winch = winch;
-		this.axis = axis;
+		this.leftAxis = leftAxis;
+		this.rightAxis = rightAxis;
 		addRequirements(winch);
 	}
 
 	@Override
 	public void execute() {
-		if (axis.getDeadzoned() != 0) {
-			winch.unlock();
-			winch.runWinch(-axis.getDeadzoned());
-		} else {
-			winch.runWinch(0);
-		}
+		winch.runLeftWinch(leftAxis.getDeadzoned());
+		winch.runRightWinch(rightAxis.getDeadzoned());
 	}
 
 	@Override
@@ -33,6 +31,7 @@ public class RunWinch extends CommandBase {
 
 	@Override
 	public void end(boolean interrupted) {
-		winch.runWinch(0);
+		winch.runRightWinch(0);
+		winch.runLeftWinch(0);
 	}
 }
