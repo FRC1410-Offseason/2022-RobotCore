@@ -22,6 +22,10 @@ public class Trajectories {
 		.setKinematics(DRIVE_KINEMATICS)
 		.setReversed(false);
 
+	private static TrajectoryConfig reverseConfig = new TrajectoryConfig(DRIVETRAIN_MAX_SPEED, DRIVETRAIN_MAX_ACCEL)
+			.setKinematics(DRIVE_KINEMATICS)
+			.setReversed(true);
+
 	public final Trajectory straightline = TrajectoryGenerator.generateTrajectory(List.of(
 		new Pose2d(0, 0, new Rotation2d(Units.degreesToRadians(0))),
 		new Pose2d(1.3, 0, new Rotation2d(Units.degreesToRadians(0)))), config);
@@ -37,10 +41,18 @@ public class Trajectories {
     public final Trajectory lowHighTwoBall = TrajectoryGenerator.generateTrajectory(List.of(
         new Pose2d(-0.75, 0, new Rotation2d(Units.degreesToRadians(0))),
 		new Pose2d(2.3, 0, new Rotation2d(Units.degreesToRadians(0)))), config);
-		
-	public RamseteCommand straightlineCommand, twoBallCommand, driveToShootCommand, lowHighTwoBallCommand;
 
-	public Trajectories(Drivetrain drivetrain) {this.drivetrain = drivetrain;}
+	public final Trajectory twoLowBackToHub = TrajectoryGenerator.generateTrajectory(List.of(
+			new Pose2d(2.3, 0, new Rotation2d(Units.degreesToRadians(0))),
+			new Pose2d(-0.75, 0, new Rotation2d(Units.degreesToRadians(0)))),
+			reverseConfig
+	);
+		
+	public RamseteCommand straightlineCommand, twoBallCommand, driveToShootCommand, lowHighTwoBallCommand, twoLowBackToHubCommand;
+
+	public Trajectories(Drivetrain drivetrain) {
+		this.drivetrain = drivetrain;
+	}
 
 	public RamseteCommand generateRamsete(Trajectory trajectory) {
 		return new RamseteCommand(
@@ -66,5 +78,6 @@ public class Trajectories {
 		twoBallCommand = generateRamsete(twoBall);
 		driveToShootCommand = generateRamsete(driveToShoot);
         lowHighTwoBallCommand = generateRamsete(lowHighTwoBall);
+		twoLowBackToHubCommand = generateRamsete(twoLowBackToHub);
 	}
 }
