@@ -41,7 +41,13 @@ public class TwoCargoLow extends SequentialCommandGroup {
 										new RunStorageForTime(storage, 3, 1)
 								)
 						)
-				)
+				),
+				new ParallelCommandGroup(
+						trajectories.twoLowBackToHubCommand,
+						new SetShooterArmAngle(shooterArm, SHOOTER_ARM_MAX_ANGLE),
+						new RetractIntake(intakeFlipper)
+				),
+				new LowHubShoot(shooter, shooterArm, storage, RPM)
 		);
 	}
 }
