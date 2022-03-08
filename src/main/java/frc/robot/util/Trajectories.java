@@ -28,7 +28,7 @@ public class Trajectories {
 
 	public final Trajectory straightline = TrajectoryGenerator.generateTrajectory(List.of(
 		new Pose2d(0, 0, new Rotation2d(Units.degreesToRadians(0))),
-		new Pose2d(1.3, 0, new Rotation2d(Units.degreesToRadians(0)))), config);
+		new Pose2d(2.5, 0, new Rotation2d(Units.degreesToRadians(0)))), config);
 	
 	public final Trajectory twoBall = TrajectoryGenerator.generateTrajectory(List.of(
 		new Pose2d(0, 0, new Rotation2d(Units.degreesToRadians(0))),
@@ -39,12 +39,12 @@ public class Trajectories {
 		new Pose2d(2.0, 0, new Rotation2d(Units.degreesToRadians(0)))), config);
 
     public final Trajectory lowHighTwoBall = TrajectoryGenerator.generateTrajectory(List.of(
-        new Pose2d(-0.75, 0, new Rotation2d(Units.degreesToRadians(0))),
-		new Pose2d(2.3, 0, new Rotation2d(Units.degreesToRadians(0)))), config);
+        new Pose2d(0, 0, new Rotation2d(Units.degreesToRadians(0))),
+		new Pose2d(3.05, 0, new Rotation2d(Units.degreesToRadians(0)))), config);
 
 	public final Trajectory twoLowBackToHub = TrajectoryGenerator.generateTrajectory(List.of(
-			new Pose2d(2.3, 0, new Rotation2d(Units.degreesToRadians(0))),
-			new Pose2d(-0.75, 0, new Rotation2d(Units.degreesToRadians(0)))),
+			new Pose2d(3.05, 0, new Rotation2d(Units.degreesToRadians(0))),
+			new Pose2d(0, 0, new Rotation2d(Units.degreesToRadians(0)))),
 			reverseConfig
 	);
 		

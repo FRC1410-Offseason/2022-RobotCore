@@ -1,9 +1,7 @@
 package frc.robot.commands.grouped;
 
 
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.commands.actions.*;
 import frc.robot.subsystems.*;
 import frc.robot.util.Trajectories;
@@ -30,7 +28,11 @@ public class TwoCargoLow extends SequentialCommandGroup {
 		addCommands(
 				new LowHubShoot(shooter, shooterArm, storage, RPM),
 				new ParallelCommandGroup(
-						trajectories.lowHighTwoBallCommand,
+						new SequentialCommandGroup(
+								new WaitCommand(1),
+								trajectories.lowHighTwoBallCommand,
+								new RunCommand(() -> drivetrain.tankDriveVolts(0, 0))
+						),
 						new ExtendIntake(intakeFlipper),
 						new SetShooterArmAngle(shooterArm, SHOOTER_ARM_INTAKE_ANGLE),
 
@@ -41,13 +43,13 @@ public class TwoCargoLow extends SequentialCommandGroup {
 										new RunStorageForTime(storage, 3, 1)
 								)
 						)
-				),
-				new ParallelCommandGroup(
-						trajectories.twoLowBackToHubCommand,
-						new SetShooterArmAngle(shooterArm, SHOOTER_ARM_MAX_ANGLE),
-						new RetractIntake(intakeFlipper)
-				),
-				new LowHubShoot(shooter, shooterArm, storage, RPM)
+				)
+//				new ParallelCommandGroup(
+//						trajectories.twoLowBackToHubCommand,
+//						new SetShooterArmAngle(shooterArm, SHOOTER_ARM_MAX_ANGLE),
+//						new RetractIntake(intakeFlipper)
+//				),
+//				new LowHubShoot(shooter, shooterArm, storage, RPM)
 		);
 	}
 }

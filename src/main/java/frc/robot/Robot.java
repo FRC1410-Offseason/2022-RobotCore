@@ -91,8 +91,10 @@ public class Robot extends ScheduledRobot {
 			case 0:
 				break;
 			case 1:
+				autonomousCommand = new TaxiAuto(auto, drivetrain);
 				break;
 			case 2:
+//				autonomousCommand = new TwoCargoLow(auto, drivetrain, intake, storage, shooterArm, shooter, intakeFlipper, 1200);
 				break;
 			case 3:
 				autonomousCommand = new TwoCargoAuto(auto, drivetrain, intake, storage, shooterArm, shooter, intakeFlipper, limelight, NetworkTables.getAutoRPM());
@@ -116,14 +118,9 @@ public class Robot extends ScheduledRobot {
 
 
 		// Tank drive on the drivetrain
-		// Yes, the right left is swapped, it's supposed to be that way trust me
 		 scheduler.scheduleDefaultCommand(new TankDrive(drivetrain, getDriverLeftYAxis(), getDriverRightYAxis()));
 
 		// Telescoping arms on the operator controller
-//		scheduler.scheduleDefaultCommand(new RunElevator(elevator, getOperatorLeftYAxis()));
-
-		// Run the intake (and storage) on the operator right trigger
-//		scheduler.scheduleDefaultCommand(new RunIntake(intake, storage, getOperatorRightTrigger()));
 		scheduler.scheduleDefaultCommand(new RunElevator(elevator, getOperatorRightTrigger(), getOperatorLeftTrigger()));
 
 		// Run the intake flipper
@@ -141,7 +138,7 @@ public class Robot extends ScheduledRobot {
 	@Override
 	public void testInit() {
 		intakeFlipper.resetEncoders(0);
-		shooterArm.resetEncoder(SHOOTER_ARM_INTAKE_ANGLE);
+//		shooterArm.resetEncoder(SHOOTER_ARM_MAX_ANGLE);
 		scheduler.scheduleDefaultCommand(new RunArmWithAxis(shooterArm, getOperatorLeftYAxis()));
 		scheduler.scheduleDefaultCommand(new RunIntakeFlipperWithAxis(intakeFlipper, getOperatorRightYAxis()));
 //		scheduler.scheduleDefaultCommand(new RunShooterArm(shooterArm));
@@ -151,7 +148,7 @@ public class Robot extends ScheduledRobot {
 //		getOperatorAButton().whenPressed(new LockElevator(elevator));
 //		getOperatorRightBumper().whenPressed(new RaiseShooterArm(shooterArm));
 //		getOperatorLeftBumper().whenPressed(new LowerShooterArm(shooterArm));
-		getOperatorXButton().whenPressed(new InstantCommand(() -> intakeFlipper.resetEncoders(INTAKE_DOWN_POSITION)));
+		getOperatorXButton().whenPressed(new InstantCommand(() -> intakeFlipper.resetEncoders(INTAKE_UP_POSITION)));
 
 
 //		getOperatorLeftBumper().whenPressed(new InstantCommand(() -> shooterArm.setGoal(SHOOTER_ARM_INTAKE_ANGLE)));

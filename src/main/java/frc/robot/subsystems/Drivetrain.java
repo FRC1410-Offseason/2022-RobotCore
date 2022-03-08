@@ -60,6 +60,12 @@ public class Drivetrain extends SubsystemBase {
 		initializeTalonFX(rightLeader);
 		initializeTalonFX(rightFollower);
 
+		leftLeader.setSafetyEnabled(false);
+		leftFollower.setSafetyEnabled(false);
+
+		rightLeader.setSafetyEnabled(false);
+		rightFollower.setSafetyEnabled(false);
+
 		leftFollower.follow(leftLeader);
 		rightFollower.follow(rightLeader);
 
@@ -68,9 +74,16 @@ public class Drivetrain extends SubsystemBase {
 
 		drive = new DifferentialDrive(leftLeader, rightLeader);
 
+		drive.setSafetyEnabled(false);
+
 		//Reset everything to make sure it's good to go
 		resetEncoders();
 		zeroHeading();
+	}
+
+	@Override
+	public void periodic() {
+		drive.feedWatchdog();
 	}
 
 	/**
