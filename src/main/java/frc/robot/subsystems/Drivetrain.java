@@ -162,9 +162,9 @@ public class Drivetrain extends SubsystemBase {
 	 */
 	public void tankDriveVolts(double leftVolts, double rightVolts) {
 		leftLeader.setVoltage(leftVolts);
-		leftFollower.setVoltage(leftVolts);
+//		leftFollower.setVoltage(leftVolts);
 		rightLeader.setVoltage(rightVolts);
-		rightFollower.setVoltage(rightVolts);
+//		rightFollower.setVoltage(rightVolts);
 		drive.feed();
 	}
 
@@ -173,9 +173,9 @@ public class Drivetrain extends SubsystemBase {
 	 */
 	public void resetEncoders() {
 		leftLeader.setSelectedSensorPosition(0);
-		leftFollower.setSelectedSensorPosition(0);
+//		leftFollower.setSelectedSensorPosition(0);
 		rightLeader.setSelectedSensorPosition(0);
-		rightFollower.setSelectedSensorPosition(0);
+//		rightFollower.setSelectedSensorPosition(0);
 	}
 
 	/**
@@ -184,8 +184,8 @@ public class Drivetrain extends SubsystemBase {
 	public void setCoast() {
 		leftLeader.setNeutralMode(NeutralMode.Coast);
 		rightLeader.setNeutralMode(NeutralMode.Coast);
-		leftFollower.setNeutralMode(NeutralMode.Coast);
-		rightFollower.setNeutralMode(NeutralMode.Coast);
+//		leftFollower.setNeutralMode(NeutralMode.Coast);
+//		rightFollower.setNeutralMode(NeutralMode.Coast);
 	}
 
 	/**

@@ -24,7 +24,7 @@ public class RunIntakeFlipperWithAxis extends CommandBase {
 	@Override
 	public void execute() {
 		System.out.println("Running");
-		intakeFlipper.setSpeed(axis.getDeadzoned());
+		intakeFlipper.setSpeed(axis.getDeadzoned() / 3);
 	}
 
 	@Override

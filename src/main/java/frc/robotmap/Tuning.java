@@ -83,6 +83,6 @@ public final class Tuning {
 	// SHOOTER
 	public static final double SHOOT_STORAGE_DURATION = 2.0;
 	public static final double AUTONOMOUS_SHOOTING_RPM = 2320;
-	public static final int SHOOTER_LOW_HUB_RPM = 0; //TODO: Find values
+	public static final int SHOOTER_LOW_HUB_RPM = 1200; //TODO: Find values
 	public static final int SHOOTER_HIGH_HUB_RPM = 2320;
 }

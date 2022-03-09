@@ -19,7 +19,7 @@ public class RunIntakeWithButton extends CommandBase {
 	@Override
 	public void execute() {
 		intake.setSpeed(1);
-		storage.setIntaking(true);
+		storage.runStorage(1);
 	}
 
 	@Override
@@ -30,6 +30,6 @@ public class RunIntakeWithButton extends CommandBase {
 	@Override
 	public void end(boolean interrupted) {
 		intake.setSpeed(0);
-		storage.setIntaking(false);
+		storage.runStorage(0);
 	}
 }
