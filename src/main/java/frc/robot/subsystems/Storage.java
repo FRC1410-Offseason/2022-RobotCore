@@ -54,12 +54,12 @@ public class Storage extends SubsystemBase {
 	/**
 	 * Color sensor for reading the color of the cargo and updating state
 	 */
-	private final ColorSensorV3 colorSensor = new ColorSensorV3(I2C.Port.kOnboard);
+	// private final ColorSensorV3 colorSensor = new ColorSensorV3(I2C.Port.kOnboard);
 
 	/**
 	 * Used to match the color from the sensor that is closest to the known red and blue colors
 	 */
-	private final ColorMatch colorMatch = new ColorMatch();
+	// private final ColorMatch colorMatch = new ColorMatch();
 
 	/**
 	 * Line break sensor used to detect if ball is present or not
@@ -103,8 +103,8 @@ public class Storage extends SubsystemBase {
 		motor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute);
 
 		// Add the two color targets to the color matcher
-		colorMatch.addColorMatch(RED_TARGET);
-		colorMatch.addColorMatch(BLUE_TARGET);
+		// colorMatch.addColorMatch(RED_TARGET);
+		// colorMatch.addColorMatch(BLUE_TARGET);
 	}
 
 	@Override
@@ -121,14 +121,14 @@ public class Storage extends SubsystemBase {
 		lineBreakNt.setBoolean(lineBreak.get());
 		outtakeFlagNt.setBoolean(outtakeFlag);
 
-		var currentColor = colorMatch.matchClosestColor(colorSensor.getColor());
-		if (currentColor.color.equals(RED_TARGET)) {
-			color.setString("RED");
-		} else if (currentColor.color.equals(BLUE_TARGET)) {
-			color.setString("BLUE");
-		} else {
-			color.setString("NONE");
-		}
+		// var currentColor = colorMatch.matchClosestColor(colorSensor.getColor());
+		// if (currentColor.color.equals(RED_TARGET)) {
+		// 	color.setString("RED");
+		// } else if (currentColor.color.equals(BLUE_TARGET)) {
+		// 	color.setString("BLUE");
+		// } else {
+		// 	color.setString("NONE");
+		// }
 
 		if (currentState.getSlot1().getColor() == ColorSensorStatus.ALLIANCE) {
 			slot1Color.setString("ALLIANCE");
@@ -161,13 +161,13 @@ public class Storage extends SubsystemBase {
 		outtakeFlag = flag;
 	}
 
-	public Color getColor() {
-		return colorSensor.getColor();
-	}
+	// public Color getColor() {
+	// 	return colorSensor.getColor();
+	// }
 
-	public ColorMatch getColorMatch() {
-		return colorMatch;
-	}
+	// public ColorMatch getColorMatch() {
+	// 	return colorMatch;
+	// }
 
 	public boolean getLineBreak() {
 		return lineBreak.get();

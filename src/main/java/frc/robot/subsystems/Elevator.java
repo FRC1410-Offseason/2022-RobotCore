@@ -141,7 +141,7 @@ public class Elevator extends SubsystemBase {
 	 * @param speed a double -1 to 1
 	 */
 	public void set(double speed) {
-		leftMotor.set(speed);
+		leftMotor.set(-speed);
 		rightMotor.set(speed);
 	}
 

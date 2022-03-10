@@ -35,6 +35,7 @@ public abstract class ScheduledRobot extends RobotBase implements ControlScheme 
 		}
 
 		HAL.observeUserProgramStarting();
+        System.out.println("INITIALIZING CONTROLS");
 		registerControls();
 
 		scheduler.start();

@@ -33,28 +33,28 @@ public class RunStorage extends CommandBase {
 				// Stop motor so we can read the color
 				storage.runStorage(0);
 				// Read the color from the color sensor
-				ColorMatchResult result = storage.getColorMatch().matchClosestColor(storage.getColor());
-				if (result.color.equals(RED_TARGET)) {
-					if (storage.getCurrentAlliance() == DriverStation.Alliance.Red) {
-						// If the detected color is red, and we're on the red alliance, then the color is correct
-						storage.getCurrentState().setSlot1(true);
-					} else {
-						// If the detected color is red, and we're on the blue alliance, then the color is incorrect
-						storage.getCurrentState().setSlot1(false);
-						// If the color is wrong then we need to set the outtake flag for the outtake handler
-						storage.setOuttakeFlag(true);
-					}
-				} else {
-					if (storage.getCurrentAlliance() == DriverStation.Alliance.Red) {
-						// If the detected color is blue, and we're on the red alliance, then the color is incorrect
-						storage.getCurrentState().setSlot1(false);
-						// If the color is wrong then we need to set the outtake flag for the outtake handler
-						storage.setOuttakeFlag(true);
-					} else {
-						// If the detected color is blue, and we're on the blue alliance, then the color is correct
-						storage.getCurrentState().setSlot1(true);
-					}
-				}
+				// ColorMatchResult result = storage.getColorMatch().matchClosestColor(storage.getColor());
+				// if (result.color.equals(RED_TARGET)) {
+				// 	if (storage.getCurrentAlliance() == DriverStation.Alliance.Red) {
+				// 		// If the detected color is red, and we're on the red alliance, then the color is correct
+				// 		storage.getCurrentState().setSlot1(true);
+				// 	} else {
+				// 		// If the detected color is red, and we're on the blue alliance, then the color is incorrect
+				// 		storage.getCurrentState().setSlot1(false);
+				// 		// If the color is wrong then we need to set the outtake flag for the outtake handler
+				// 		storage.setOuttakeFlag(true);
+				// 	}
+				// } else {
+				// 	if (storage.getCurrentAlliance() == DriverStation.Alliance.Red) {
+				// 		// If the detected color is blue, and we're on the red alliance, then the color is incorrect
+				// 		storage.getCurrentState().setSlot1(false);
+				// 		// If the color is wrong then we need to set the outtake flag for the outtake handler
+				// 		storage.setOuttakeFlag(true);
+				// 	} else {
+				// 		// If the detected color is blue, and we're on the blue alliance, then the color is correct
+				// 		storage.getCurrentState().setSlot1(true);
+				// 	}
+				// }
 			} else {
 				if (storage.isIntaking()) {
 					storage.runStorage(STORAGE_INTAKE_SPEED);

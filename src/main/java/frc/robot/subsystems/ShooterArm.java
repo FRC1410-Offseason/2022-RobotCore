@@ -225,16 +225,26 @@ public class ShooterArm extends SubsystemBase {
 	}
 
 	public void set(double value) {
-		double clampedOutput = MathUtil.clamp(value, SHOOTER_ARM_DOWN_SPEED, SHOOTER_ARM_UP_SPEED);
+		       
+        double clampedOutput = MathUtil.clamp(value, SHOOTER_ARM_DOWN_SPEED, SHOOTER_ARM_UP_SPEED);
 
 		if ((value < 0 && !lowerLimit.get()) || (value > 0 && !upperLimit.get())) {
 			leftMotor.set(clampedOutput);
 			rightMotor.set(clampedOutput);
+            System.out.println("CLAMPED OUTPUT: " + clampedOutput);
 		} else {
 			leftMotor.set(0);
 			leftMotor.set(0);
 		}
 	}
+
+    public void manualSet(double value) {
+        double clampedOutput = MathUtil.clamp(value, SHOOTER_ARM_DOWN_SPEED, SHOOTER_ARM_UP_SPEED);
+
+        leftMotor.set(clampedOutput);
+        rightMotor.set(clampedOutput);
+        System.out.println("CLAMPED OUTPUT: " + clampedOutput);
+    }
 
 	public boolean isAtTarget() {
 		return Math.abs(getEncoderPosition() - goal) < SHOOTER_ARM_IS_FINISHED;

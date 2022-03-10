@@ -17,7 +17,8 @@ public class RaiseShooterArmConstant extends CommandBase {
 
 	@Override
 	public void execute() {
-		shooterArm.set(SHOOTER_ARM_UP_SPEED);
+		shooterArm.manualSet(SHOOTER_ARM_UP_SPEED);
+        System.out.println("RUNNING UPWARDS");
 	}
 
 	@Override

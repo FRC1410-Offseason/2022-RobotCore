@@ -29,6 +29,10 @@ public class Trajectories {
 	public final Trajectory straightline = TrajectoryGenerator.generateTrajectory(List.of(
 		new Pose2d(0, 0, new Rotation2d(Units.degreesToRadians(0))),
 		new Pose2d(2.5, 0, new Rotation2d(Units.degreesToRadians(0)))), config);
+        
+    public final Trajectory straightline2 = TrajectoryGenerator.generateTrajectory(List.of(
+		new Pose2d(0, 0, new Rotation2d(Units.degreesToRadians(0))),
+		new Pose2d(0, 2.5, new Rotation2d(Units.degreesToRadians(0)))), config);
 	
 	public final Trajectory twoBall = TrajectoryGenerator.generateTrajectory(List.of(
 		new Pose2d(0, 0, new Rotation2d(Units.degreesToRadians(0))),
@@ -48,7 +52,7 @@ public class Trajectories {
 			reverseConfig
 	);
 		
-	public RamseteCommand straightlineCommand, twoBallCommand, driveToShootCommand, lowHighTwoBallCommand, twoLowBackToHubCommand;
+	public RamseteCommand straightlineCommand, straightlineCommand2, twoBallCommand, driveToShootCommand, lowHighTwoBallCommand, twoLowBackToHubCommand;
 
 	public Trajectories(Drivetrain drivetrain) {
 		this.drivetrain = drivetrain;
@@ -64,8 +68,8 @@ public class Trajectories {
 			drivetrain::getWheelSpeeds,
 			new PIDController(KP_VEL, 0, 0, 10.0 / 1000),
 			new PIDController(KP_VEL, 0, 0, 10.0 / 1000),
-			drivetrain::tankDriveVolts
-			// drivetrain
+			drivetrain::tankDriveVolts,
+			drivetrain
 		);
 	}
 
@@ -75,6 +79,7 @@ public class Trajectories {
 
 	public void generateAuto() {
 		straightlineCommand = generateRamsete(straightline);
+        straightlineCommand2 = generateRamsete(straightline2);
 		twoBallCommand = generateRamsete(twoBall);
 		driveToShootCommand = generateRamsete(driveToShoot);
         lowHighTwoBallCommand = generateRamsete(lowHighTwoBall);

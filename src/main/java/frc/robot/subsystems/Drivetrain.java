@@ -40,6 +40,8 @@ public class Drivetrain extends SubsystemBase {
 	 */
 	private final DifferentialDrive drive;
 
+    private boolean isInverted = false;
+
 	/**
 	 * Odometry but GUD, uses some fancy vector math to accurately update the estimated position of the robot on the field
 	 */
@@ -126,9 +128,17 @@ public class Drivetrain extends SubsystemBase {
 	 * @param right -1 to 1 representing right velocity
 	 */
 	public void tankDrive(double left, double right, boolean squared) {
-		drive.tankDrive(left, right, squared);
+		if (isInverted) {
+            drive.tankDrive(-right, -left, squared);
+        } else {
+            drive.tankDrive(left, right, squared);
+        }
 		drive.feed();
 	}
+
+    public void flip() {
+        isInverted = !isInverted;
+    }
 
 	/**
 	 * Get the estimated position of the robot
@@ -161,6 +171,9 @@ public class Drivetrain extends SubsystemBase {
 	 * @param rightVolts -12 to 12
 	 */
 	public void tankDriveVolts(double leftVolts, double rightVolts) {
+        System.out.println("Applied LEFT voltage: " + leftVolts);
+        System.out.println("Applied RIGHT voltage: " + rightVolts);
+
 		leftLeader.setVoltage(leftVolts);
 //		leftFollower.setVoltage(leftVolts);
 		rightLeader.setVoltage(rightVolts);

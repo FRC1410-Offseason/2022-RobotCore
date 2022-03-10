@@ -17,7 +17,7 @@ public class LowerShooterArmConstant extends CommandBase {
 
 	@Override
 	public void execute() {
-		shooterArm.set(SHOOTER_ARM_DOWN_SPEED);
+		shooterArm.manualSet(SHOOTER_ARM_DOWN_SPEED);
 	}
 
 	@Override

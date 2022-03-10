@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.CommandGroupBase;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.actions.SetShooterRPM;
 import frc.robot.commands.grouped.*;
 import frc.robot.commands.looped.*;
@@ -48,33 +49,6 @@ public class Robot extends ScheduledRobot {
 	private final Trajectories auto = new Trajectories(drivetrain);
 
 	@Override
-	public void registerControls() {
-		// Toggle intake position
-		getOperatorRightBumper().whenPressed(new ToggleIntake(intakeFlipper));
-
-		// Set storage speed
-		getOperatorYButton().whileHeld(new RunIntakeWithButton(intake, storage));
-		getOperatorXButton().whileHeld(new RunIntakeWithButton(intake, storage));
-
-		getOperatorBButton().whenPressed(new RaiseShooterArm(shooterArm));
-		getOperatorAButton().whenPressed(new LowerShooterArm(shooterArm));
-
-		getOperatorDPadLeft().whenPressed(new LowerShooterArmConstant(shooterArm));
-		getOperatorDPadRight().whenPressed(new RaiseShooterArmConstant(shooterArm));
-
-		getOperatorDPadUp().whenPressed(new SetShooterRPM(shooter, NetworkTables.getShooterLowRPM()));
-		getOperatorDPadDown().whenPressed(new SetShooterRPM(shooter, 0));
-
-		// Limelight align to target and shoot
-//		getDriverRightBumper().whenPressed(new LimelightShoot(drivetrain, limelight, shooter, shooterArm, storage, NetworkTables.getShooterHighRPM()));
-
-		// Low Hub Shoot
-		getDriverLeftBumper().whenPressed(new LowHubShoot(shooter, shooterArm, storage, NetworkTables.getShooterLowRPM()));
-
-		getOperatorLeftBumper().whenPressed(new ToggleElevatorBrakes(elevator));
-	}
-
-	@Override
 	public void robotInit() {
 		NetworkTables.setAutoList(autoList);
 		NetworkTables.setCorrectColor(DriverStation.getAlliance().toString());
@@ -88,6 +62,7 @@ public class Robot extends ScheduledRobot {
 
 	@Override
 	public void autonomousInit() {
+        System.out.println("INITIALIZING AUTO");
 		scheduler.scheduleDefaultCommand(new PoseEstimation(drivetrain), TIME_OFFSET, 10);
 		scheduler.scheduleDefaultCommand(new RunIntakeFlipper(intakeFlipper));
 		scheduler.scheduleDefaultCommand(new RunShooterArm(shooterArm));
@@ -97,12 +72,13 @@ public class Robot extends ScheduledRobot {
 
 		switch ((int) NetworkTables.getAutoChooser()) {
 			case 0:
+                autonomousCommand = new SequentialCommandGroup();
 				break;
 			case 1:
 				autonomousCommand = new TaxiAuto(auto, drivetrain);
 				break;
 			case 2:
-//				autonomousCommand = new TwoCargoLow(auto, drivetrain, intake, storage, shooterArm, shooter, intakeFlipper, 1200);
+				autonomousCommand = new TwoCargoLowTime(auto, drivetrain, intake, storage, shooterArm, shooter, intakeFlipper, 1200);
 				break;
 			case 3:
 				autonomousCommand = new TwoCargoAuto(auto, drivetrain, intake, storage, shooterArm, shooter, intakeFlipper, limelight, NetworkTables.getAutoRPM());
@@ -113,6 +89,35 @@ public class Robot extends ScheduledRobot {
 
 		scheduler.scheduleDefaultCommand(autonomousCommand, TIME_OFFSET, 10, RobotMode.TELEOP, RobotMode.TEST);
 		scheduler.debugDumpList();
+	}
+
+    @Override
+	public void registerControls() {
+		// Toggle intake position
+		getOperatorRightBumper().whenPressed(new ToggleIntake(intakeFlipper));
+
+		// Set storage speed
+		getOperatorYButton().whileHeld(new RunIntakeWithButton(intake, storage));
+		getOperatorXButton().whileHeld(new RunIntakeWithButton(intake, storage));
+
+		getOperatorBButton().whenPressed(new RaiseShooterArm(shooterArm));
+		getOperatorAButton().whenPressed(new LowerShooterArm(shooterArm));
+
+		getOperatorDPadLeft().whileHeld(new LowerShooterArmConstant(shooterArm));
+		getOperatorDPadRight().whileHeld(new RaiseShooterArmConstant(shooterArm));
+
+		getOperatorDPadUp().whenPressed(new SetShooterRPM(shooter, NetworkTables.getShooterLowRPM()));
+		getOperatorDPadDown().whenPressed(new SetShooterRPM(shooter, 0));
+
+		// Limelight align to target and shoot
+//		getDriverRightBumper().whenPressed(new LimelightShoot(drivetrain, limelight, shooter, shooterArm, storage, NetworkTables.getShooterHighRPM()));
+
+		// Low Hub Shoot
+		getDriverLeftBumper().whenPressed(new LowHubShoot(shooter, shooterArm, storage, NetworkTables.getShooterLowRPM()));
+
+        getDriverRightBumper().whenPressed(new FlipDrivetrain(drivetrain));
+
+		// getOperatorLeftBumper().whenPressed(new ToggleElevatorBrakes(elevator));
 	}
 
 	@Override
@@ -130,7 +135,7 @@ public class Robot extends ScheduledRobot {
 		 scheduler.scheduleDefaultCommand(new TankDrive(drivetrain, getDriverLeftYAxis(), getDriverRightYAxis()));
 
 		// Telescoping arms on the operator controller
-		scheduler.scheduleDefaultCommand(new RunElevator(elevator, getOperatorRightTrigger(), getOperatorLeftTrigger()));
+		scheduler.scheduleDefaultCommand(new RunElevator(elevator, getOperatorLeftTrigger(), getOperatorRightTrigger()));
 
 		// Run the intake flipper
 //		scheduler.scheduleDefaultCommand(new RunIntakeFlipper(intakeFlipper));
@@ -139,7 +144,7 @@ public class Robot extends ScheduledRobot {
 		scheduler.scheduleDefaultCommand(new RunStorage(storage));
 
 		// Run the winches on the operator controller
-		scheduler.scheduleDefaultCommand(new RunWinch(winch, getOperatorRightYAxis(), getOperatorLeftYAxis()));
+		scheduler.scheduleDefaultCommand(new RunWinch(winch, getOperatorLeftYAxis(), getOperatorRightYAxis()));
 
 		drivetrain.setBrake();
 	}

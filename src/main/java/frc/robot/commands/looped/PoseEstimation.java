@@ -55,5 +55,13 @@ public class PoseEstimation extends CommandBase {
         theta.setDouble(drivetrain.getPoseEstimation().getRotation().getDegrees());
         navxangle.setDouble(drivetrain.gyro.getRotation2d().getDegrees());
         navxIsCalibrating.setBoolean(drivetrain.gyro.isCalibrating());
+
+        System.out.println("Left Leader Encoder: " + drivetrain.leftLeader.getSelectedSensorPosition(0)/ENCODER_CONSTANT);
+        System.out.println("Left Follower Encoder: " + drivetrain.leftFollower.getSelectedSensorPosition(0)/ENCODER_CONSTANT);
+        System.out.println("Right Leader Encoder: " + drivetrain.rightLeader.getSelectedSensorPosition(0)/ENCODER_CONSTANT);
+        System.out.println("Right Follower Encoder: " + drivetrain.rightFollower.getSelectedSensorPosition(0)/ENCODER_CONSTANT);
+
+        // System.out.println("CURRENT X READING: " + drivetrain.getPoseEstimation().getX());
+        // System.out.println("CURRENT Y READING: " + drivetrain.getPoseEstimation().getY());
     }
 }
