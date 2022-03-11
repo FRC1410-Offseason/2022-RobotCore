@@ -13,6 +13,7 @@ public final class Tuning {
 
     //ELEVATOR
     public static final double TA_RAISE_SPEED = 0.75;
+
   	// SHOOTER
 	public static final double SHOOTER_LEFT_KP = 0.000180; // 0.000140
 	public static final double SHOOTER_LEFT_KI = 0;
@@ -70,6 +71,8 @@ public final class Tuning {
 	public static final double INTAKE_IS_FINISHED = 0.5; // Rotations
 	public static final double INTAKE_UP_POSITION = 0; // Rotations
 	public static final double INTAKE_DOWN_POSITION = -38.6; // Rotations. From testing, real number will be different
+
+    public static final double INTAKE_DEPLOYMENT_DELAY = 1;
 
 	// SHOOTER ARM
 	public static final double SA_P = 0.027; // Probably needs to be slightly more aggressive, but that's for later
