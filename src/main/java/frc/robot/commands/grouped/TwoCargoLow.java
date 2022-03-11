@@ -28,7 +28,7 @@ public class TwoCargoLow extends SequentialCommandGroup {
         shooterArm.resetEncoder(SHOOTER_ARM_MAX_ANGLE);
 
         addCommands(
-				new InstantCommand(() -> drivetrain.tankDriveVolts(0, 0)),
+//				new InstantCommand(() -> drivetrain.tankDriveVolts(0, 0)),
                 new LowHubShoot(shooter, shooterArm, storage, RPM),
                 new ParallelCommandGroup(
                         new SequentialCommandGroup(
@@ -50,7 +50,7 @@ public class TwoCargoLow extends SequentialCommandGroup {
                                 new WaitCommand(trajectories.lowHighTwoBall.getTotalTimeSeconds() / 2),
                                 new ParallelCommandGroup(
                                         new SetIntakeSpeed(intake, 1, 2.5),
-                                        new RunStorageForTime(storage, 1.2, 1)
+                                        new RunStorageForTime(storage, 1.5, 1)
                                 )
                         )
                 ),
@@ -63,8 +63,10 @@ public class TwoCargoLow extends SequentialCommandGroup {
 								new RaiseShooterArmConstant(shooterArm)
 						)
                 ),
+				new InstantCommand(() -> drivetrain.tankDriveVolts(0, 0)),
                 new LowHubShoot(shooter, shooterArm, storage, RPM),
-				trajectories.lowHighTwoBallCommand,
+				new InstantCommand(() -> drivetrain.tankDriveVolts(5, 5)),
+				new WaitCommand(1.45),
 				new RunCommand(() -> drivetrain.tankDriveVolts(0, 0)),
                 new WaitCommand(15)
         );
