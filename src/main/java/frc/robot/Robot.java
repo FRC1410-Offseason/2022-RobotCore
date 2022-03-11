@@ -110,6 +110,7 @@ public class Robot extends ScheduledRobot {
 
 		getOperatorDPadLeft().whileHeld(new LowerShooterArmConstant(shooterArm));
 		getOperatorDPadRight().whileHeld(new RaiseShooterArmConstant(shooterArm));
+        getOperatorDPadRight().whenPressed(new RetractIntake(intakeFlipper));
 
 		getOperatorDPadUp().whenPressed(new SetShooterRPM(shooter, NetworkTables.getShooterLowRPM()));
 		getOperatorDPadDown().whenPressed(new SetShooterRPM(shooter, 0));
