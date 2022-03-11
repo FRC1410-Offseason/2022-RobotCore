@@ -33,8 +33,10 @@ public class TwoCargoLow extends SequentialCommandGroup {
                                 trajectories.lowHighTwoBallCommand,
                                 new InstantCommand(() -> drivetrain.tankDriveVolts(0, 0))
                         ),
-                        new ExtendIntake(intakeFlipper),
-                        new SetShooterArmAngle(shooterArm, SHOOTER_ARM_INTAKE_ANGLE),
+						new SequentialCommandGroup(
+							new SetShooterArmAngle(shooterArm, SHOOTER_ARM_INTAKE_ANGLE),
+                        	new ExtendIntake(intakeFlipper)
+						),
 
                         new SequentialCommandGroup(
                                 new WaitCommand(1),
