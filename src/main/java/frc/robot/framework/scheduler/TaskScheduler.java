@@ -73,8 +73,8 @@ public class TaskScheduler {
 				// Feed the watchdog
 				NotifierJNI.updateNotifierAlarm(m_notifier, (long) (1e6));
 			} catch (Throwable e) {
-                System.out.println("Error encountered: " + e);
-				DriverStation.reportError("Encountered error while ticking scheduler!", e.getStackTrace());
+				System.err.println("Encountered error while ticking scheduler:\n");
+				DriverStation.reportError(e.getMessage(), e.getStackTrace());
 			}
 		}
 	}

@@ -12,7 +12,7 @@ public class LowerShooterArmConstant extends CommandBase {
 
 	public LowerShooterArmConstant(ShooterArm shooterArm) {
 		this.shooterArm = shooterArm;
-		addRequirements(shooterArm);
+//		addRequirements(shooterArm);
 	}
 
 	@Override

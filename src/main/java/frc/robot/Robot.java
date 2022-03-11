@@ -65,7 +65,7 @@ public class Robot extends ScheduledRobot {
         System.out.println("INITIALIZING AUTO");
 		scheduler.scheduleDefaultCommand(new PoseEstimation(drivetrain), TIME_OFFSET, 10);
 		scheduler.scheduleDefaultCommand(new RunIntakeFlipper(intakeFlipper));
-		scheduler.scheduleDefaultCommand(new RunShooterArm(shooterArm));
+//		scheduler.scheduleDefaultCommand(new RunShooterArm(shooterArm));
 		shooterArm.resetEncoder(SHOOTER_ARM_MAX_ANGLE);
 		drivetrain.setBrake();
 		intakeFlipper.resetEncoders(0);
