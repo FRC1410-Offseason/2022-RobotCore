@@ -52,10 +52,10 @@ public class TwoCargoLowTime extends SequentialCommandGroup {
                 new SetShooterArmAngle(shooterArm, SHOOTER_ARM_INTAKE_ANGLE),
 
                 new SequentialCommandGroup(
-                   new WaitCommand(1),
+                   new WaitCommand(1.5),
                     new ParallelCommandGroup(
-                            new SetIntakeSpeed(intake, 1, 1),
-                            new RunStorageForTime(storage, 1, 1)
+                            new SetIntakeSpeed(intake, 1, 2),
+                            new RunStorageForTime(storage, 2, 1)
                     )
                 )
             ),
