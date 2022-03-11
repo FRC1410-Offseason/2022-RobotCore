@@ -16,11 +16,6 @@ public class RunRightTAConstant extends CommandBase {
 	}
 
 	@Override
-	public void initialize() {
-		arm.set(0);
-	}
-
-	@Override
 	public void execute() {
 		arm.set(speed);
 	}

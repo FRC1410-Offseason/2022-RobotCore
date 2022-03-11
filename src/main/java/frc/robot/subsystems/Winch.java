@@ -45,6 +45,8 @@ public class Winch extends SubsystemBase {
 	 */
 	private boolean lockEngaged = false;
 
+	private boolean isActive = false;
+
 	public Winch() {
 		// Configure motors
 		leftMotor.configFactoryDefault();
@@ -52,8 +54,8 @@ public class Winch extends SubsystemBase {
 
 		leftMotor.setInverted(true);
 
-		leftMotor.setNeutralMode(NeutralMode.Brake);
-		rightMotor.setNeutralMode(NeutralMode.Brake);
+		leftMotor.setNeutralMode(NeutralMode.Coast);
+		rightMotor.setNeutralMode(NeutralMode.Coast);
 
 //		leftLimit.setBoolean(getLeftSwitch());
 //		rightLimit.setBoolean(getRightSwitch());
@@ -61,6 +63,10 @@ public class Winch extends SubsystemBase {
 
 	@Override
 	public void periodic() {
+		if (isActive) {
+			leftMotor.setNeutralMode(NeutralMode.Brake);
+			rightMotor.setNeutralMode(NeutralMode.Brake);
+		}
 //		leftLimit.setBoolean(getLeftSwitch());
 //		rightLimit.setBoolean(getRightSwitch());
 	}
@@ -70,6 +76,9 @@ public class Winch extends SubsystemBase {
 	 * @param speed Speed from -1 to 1
 	 */
 	public void runWinch(double speed) {
+		if (speed != 0) {
+			isActive = true;
+		}
 //		if (!getRightSwitch() && !getLeftSwitch()) {
 //			leftMotor.set(ControlMode.PercentOutput, speed);
 //			rightMotor.set(ControlMode.PercentOutput, speed);
@@ -77,10 +86,16 @@ public class Winch extends SubsystemBase {
 	}
 
 	public void runLeftWinch(double speed) {
+		if (speed != 0) {
+			isActive = true;
+		}
 		leftMotor.set(ControlMode.PercentOutput, speed);
 	}
 
 	public void runRightWinch(double speed) {
+		if (speed != 0) {
+			isActive = true;
+		}
 		rightMotor.set(ControlMode.PercentOutput, speed);
 	}
 
