@@ -3,6 +3,8 @@ package frc.robot.commands.grouped;
 
 import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.commands.actions.*;
+import frc.robot.commands.looped.LowerShooterArmConstant;
+import frc.robot.commands.looped.RaiseShooterArmConstant;
 import frc.robot.subsystems.*;
 import frc.robot.util.Trajectories;
 
@@ -26,6 +28,7 @@ public class TwoCargoLow extends SequentialCommandGroup {
         shooterArm.resetEncoder(SHOOTER_ARM_MAX_ANGLE);
 
         addCommands(
+				new InstantCommand(() -> drivetrain.tankDriveVolts(0, 0)),
                 new LowHubShoot(shooter, shooterArm, storage, RPM),
                 new ParallelCommandGroup(
                         new SequentialCommandGroup(
@@ -34,7 +37,11 @@ public class TwoCargoLow extends SequentialCommandGroup {
                                 new InstantCommand(() -> drivetrain.tankDriveVolts(0, 0))
                         ),
 						new SequentialCommandGroup(
-							new SetShooterArmAngle(shooterArm, SHOOTER_ARM_INTAKE_ANGLE),
+							new ParallelRaceGroup(
+									new WaitCommand(1),
+									new LowerShooterArmConstant(shooterArm)
+							),
+							new WaitCommand(0.5),
                         	new ExtendIntake(intakeFlipper)
 						),
 
@@ -42,17 +49,23 @@ public class TwoCargoLow extends SequentialCommandGroup {
                                 new WaitCommand(1),
                                 new WaitCommand(trajectories.lowHighTwoBall.getTotalTimeSeconds() / 2),
                                 new ParallelCommandGroup(
-                                        new SetIntakeSpeed(intake, 1, 2),
-                                        new RunStorageForTime(storage, 2, 1)
+                                        new SetIntakeSpeed(intake, 1, 2.5),
+                                        new RunStorageForTime(storage, 1.2, 1)
                                 )
                         )
                 ),
                 new ParallelCommandGroup(
                         trajectories.twoLowBackToHubCommand,
-                        new SetShooterArmAngle(shooterArm, SHOOTER_ARM_MAX_ANGLE),
-                        new RetractIntake(intakeFlipper)
+						new RetractIntake(intakeFlipper),
+						new WaitCommand(0.5),
+						new ParallelRaceGroup(
+								new WaitCommand(1),
+								new RaiseShooterArmConstant(shooterArm)
+						)
                 ),
                 new LowHubShoot(shooter, shooterArm, storage, RPM),
+				trajectories.lowHighTwoBallCommand,
+				new RunCommand(() -> drivetrain.tankDriveVolts(0, 0)),
                 new WaitCommand(15)
         );
     }
