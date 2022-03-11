@@ -25,27 +25,20 @@ public class OneLowOneHigh extends SequentialCommandGroup {
         trajectories.generateAuto();
         trajectories.setStartingAutonomousPose(trajectories.lowHighTwoBall);
         shooterArm.resetEncoder(SHOOTER_ARM_MAX_ANGLE);
-        
-        
-        addCommands(
-            
-            new LowHubShoot(shooter, shooterArm, storage, RPM),
 
+        addCommands(
+            new LowHubShoot(shooter, shooterArm, storage, RPM),
             new ParallelCommandGroup(
                 trajectories.lowHighTwoBallCommand,
-
                 new SetShooterArmAngle(shooterArm, SHOOTER_ARM_INTAKE_ANGLE),
                 new ExtendIntake(intakeFlipper),
 
                 new SequentialCommandGroup(
                     new WaitCommand(1),
-
                     new ParallelCommandGroup(new SetIntakeSpeed(intake, 1, 3), new RunStorageForTime(storage, 3, 2))
                 )
             ),
-
             new LimelightShoot(drivetrain, intakeFlipper, limelight, shooter, shooterArm, storage, RPM)
-
         );
     }
 }

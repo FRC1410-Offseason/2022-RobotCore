@@ -32,7 +32,7 @@ public class OneCargoLowTime extends SequentialCommandGroup {
                                 new WaitCommand(1),
                                 new SequentialCommandGroup(
                                         new InstantCommand(() -> drivetrain.tankDriveVolts(5, 5)),
-                                        new WaitCommand(1),
+                                        new WaitCommand(1.45),
                                         new RunCommand(() -> drivetrain.tankDriveVolts(0, 0))
                                 )
                         )
