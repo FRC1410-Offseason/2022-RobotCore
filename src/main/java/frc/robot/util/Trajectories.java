@@ -68,8 +68,7 @@ public class Trajectories {
 			drivetrain::getWheelSpeeds,
 			new PIDController(KP_VEL, 0, 0, 10.0 / 1000),
 			new PIDController(KP_VEL, 0, 0, 10.0 / 1000),
-			drivetrain::tankDriveVolts,
-			drivetrain
+			drivetrain::tankDriveVolts
 		);
 	}
 

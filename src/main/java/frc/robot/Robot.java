@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.CommandGroupBase;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.commands.actions.SetShooterRPM;
 import frc.robot.commands.grouped.*;
 import frc.robot.commands.looped.*;
 import frc.robot.commands.actions.*;
@@ -45,7 +44,7 @@ public class Robot extends ScheduledRobot {
 	private final Storage storage = new Storage(DriverStation.getAlliance());
 	private final ShooterArm shooterArm = new ShooterArm(storage.getShooterArmMotor());
 	private final Winch winch = new Winch();
-	private final Limelight limelight = new Limelight();
+	// private final Limelight limelight = new Limelight();
 	private final Trajectories auto = new Trajectories(drivetrain);
 
 	@Override
@@ -53,7 +52,7 @@ public class Robot extends ScheduledRobot {
 		NetworkTables.setAutoList(autoList);
 		NetworkTables.setCorrectColor(DriverStation.getAlliance().toString());
 		NetworkTables.setPressure(pressure);
-		drivetrain.setCoast();
+		drivetrain.setBrake();
 
 		resetAngle.setDouble(SHOOTER_ARM_MAX_ANGLE);
 
@@ -78,11 +77,14 @@ public class Robot extends ScheduledRobot {
 				autonomousCommand = new TaxiAuto(auto, drivetrain);
 				break;
 			case 2:
-				autonomousCommand = new TwoCargoLowTime(auto, drivetrain, intake, storage, shooterArm, shooter, intakeFlipper, 1200);
+				autonomousCommand = new OneCargoLowTime(auto, drivetrain, intake, storage, shooterArm, shooter, intakeFlipper, SHOOTER_LOW_HUB_RPM);
 				break;
 			case 3:
-				autonomousCommand = new TwoCargoAuto(auto, drivetrain, intake, storage, shooterArm, shooter, intakeFlipper, limelight, NetworkTables.getAutoRPM());
+				autonomousCommand = new TwoCargoLowTime(auto, drivetrain, intake, storage, shooterArm, shooter, intakeFlipper, SHOOTER_LOW_HUB_RPM);
 				break;
+            case 4:
+                autonomousCommand = new TwoCargoLow(auto, drivetrain, intake, storage, shooterArm, shooter, intakeFlipper, SHOOTER_LOW_HUB_RPM);
+                break;
 			default: throw new IllegalStateException("Unknown auto profile " + auto);
 		}
 
@@ -97,11 +99,13 @@ public class Robot extends ScheduledRobot {
 		getOperatorRightBumper().whenPressed(new ToggleIntake(intakeFlipper));
 
 		// Set storage speed
-		getOperatorYButton().whileHeld(new RunIntakeWithButton(intake, storage));
-		getOperatorXButton().whileHeld(new RunIntakeWithButton(intake, storage));
+		getOperatorYButton().whileHeld(new RunIntakeWithButton(intake, storage, shooter));
+		getOperatorXButton().whileHeld(new RunIntakeWithButton(intake, storage, shooter));
 
 		getOperatorBButton().whenPressed(new RaiseShooterArm(shooterArm));
+        getOperatorBButton().whenPressed(new RetractIntake(intakeFlipper));
 		getOperatorAButton().whenPressed(new LowerShooterArm(shooterArm));
+        getOperatorAButton().whenPressed(new ExtendIntake(intakeFlipper));
 
 		getOperatorDPadLeft().whileHeld(new LowerShooterArmConstant(shooterArm));
 		getOperatorDPadRight().whileHeld(new RaiseShooterArmConstant(shooterArm));
@@ -184,6 +188,7 @@ public class Robot extends ScheduledRobot {
 
 	@Override
 	public void testPeriodic() {
+        drivetrain.setCoast();
 		System.out.println(intakeFlipper.getEncoderPosition());
 	}
 }
