@@ -11,6 +11,8 @@ public final class Tuning {
 	public static final double OPERATOR_DEADZONE_VALUE = 0.12;
   	public static final double TEST_DEADZONE_VALUE = 0.12;
 
+    //ELEVATOR
+    public static final double TA_RAISE_SPEED = 0.75;
   	// SHOOTER
 	public static final double SHOOTER_LEFT_KP = 0.000180; // 0.000140
 	public static final double SHOOTER_LEFT_KI = 0;

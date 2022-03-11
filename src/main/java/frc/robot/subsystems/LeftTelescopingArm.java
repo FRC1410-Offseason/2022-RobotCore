@@ -21,21 +21,19 @@ import frc.robot.framework.subsystem.SubsystemBase;
 import static frc.robotmap.Constants.*;
 import static frc.robotmap.IDs.*;
 
-public class Elevator extends SubsystemBase {
+public class LeftTelescopingArm extends SubsystemBase {
 
 	// Elevator motors
 	private final CANSparkMax leftMotor = new CANSparkMax(ELEVATOR_LEFT_MOTOR_ID, CANSparkMaxLowLevel.MotorType.kBrushless);
-	private final CANSparkMax rightMotor = new CANSparkMax(ELEVATOR_RIGHT_MOTOR_ID, CANSparkMaxLowLevel.MotorType.kBrushless);
 	private double currentVoltage = 0;
 
 	/**
 	 * Grab the encoders from the motor objects
 	 */
 	private final RelativeEncoder leftEncoder = leftMotor.getEncoder();
-	private final RelativeEncoder rightEncoder = rightMotor.getEncoder();
 
 	// Elevator Brakes
-	private final DoubleSolenoid lock = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, ELEVATOR_FWD, ELEVATOR_BCK);
+	// private final DoubleSolenoid lock = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 3, 4);
 
 	/**
 	 * The simulation system
@@ -88,24 +86,21 @@ public class Elevator extends SubsystemBase {
 					)
 			);
 
-	public Elevator() {
+	public LeftTelescopingArm() {
 		//Reset the motors
 		leftMotor.restoreFactoryDefaults();
-		rightMotor.restoreFactoryDefaults();
 		
 		//The motors to brake mode
 		leftMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
-		rightMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
 
 		leftMotor.setInverted(true);
 
 		//Set the conversion factor for the encoders so that they report in meters instead of rev ticks
 		leftEncoder.setPositionConversionFactor(ELEVATOR_METERS_PER_REV);
-		rightEncoder.setPositionConversionFactor(ELEVATOR_METERS_PER_REV);
 
 		// Send the sim stuff to the simulation over networktables
-		SmartDashboard.putData("Elevator Sim", simWidget);
-		SmartDashboard.putData("Elevator Piston", pistonSim);
+		SmartDashboard.putData("Left Elevator Sim", simWidget);
+		SmartDashboard.putData("Left Elevator Piston", pistonSim);
 	}
 
 	@Override
@@ -121,7 +116,6 @@ public class Elevator extends SubsystemBase {
 //		}
 
 		leftEncoder.setPosition(sim.getOutput(0));
-		rightEncoder.setPosition(sim.getOutput(0));
 
 		elevatorSim.setLength(sim.getOutput(0) * 23);
 	}
@@ -133,7 +127,6 @@ public class Elevator extends SubsystemBase {
 	public void setVoltage(double voltage) {
 		currentVoltage = voltage;
 		leftMotor.setVoltage(voltage);
-		rightMotor.setVoltage(voltage);
 	}
 
 	/**
@@ -142,15 +135,21 @@ public class Elevator extends SubsystemBase {
 	 */
 	public void set(double speed) {
 		leftMotor.set(-speed);
-		rightMotor.set(speed);
 	}
+
+    public void setLeft(double speed) {
+        leftMotor.set(-speed);
+    }
+
+    public void setRight(double speed) {
+    }
 
 	/**
 	 * Get the current speed as a double between -1 and 1
 	 * @return a double between -1 and 1
 	 */
 	public double getSpeed() {
-		return (leftMotor.get() + rightMotor.get()) / 2;
+		return leftMotor.get();
 	}
 
 	/**
@@ -162,56 +161,8 @@ public class Elevator extends SubsystemBase {
 	}
 
 	/**
-	 * Sets left motor speed
-	 *
-	 * @param speed Speed from -1 to 1
-	 */
-	public void runLeftElevator(double speed) {
-		leftMotor.set(speed);
-	}
-
-	/**
-	 * Sets right motor speed
-	 *
-	 * @param speed Speed from -1 to 1
-	 */
-	public void runRightElevator(double speed) {
-		rightMotor.set(speed);
-	}
-
-	/**
 	 * Set the state of the locks
 	 *
 	 * @param state forward or backward
 	 */
-	public void setLock(boolean state) {
-		if (state) {
-			lock.set(Value.kForward);
-		} else {
-			lock.set(Value.kReverse);
-		}
-	}
-
-	/**
-	 * Return the state of the locks
-	 *
-	 * @return True / False -> Locked / Unlocked
-	 */
-	public boolean getLocked() {
-		return lock.get() == Value.kForward;
-	}
-
-	/**
-	 * Set the state of the locks to locked
-	 */
-	public void lock() {
-		lock.set(Value.kForward);
-	}
-
-	/**
-	 * Set the state of the locks to unlocked
-	 */
-	public void unlock() {
-		lock.set(Value.kReverse);
-	}
 }

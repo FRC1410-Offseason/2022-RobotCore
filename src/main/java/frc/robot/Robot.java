@@ -37,7 +37,8 @@ public class Robot extends ScheduledRobot {
 	}
 
 	private final Drivetrain drivetrain = new Drivetrain();
-	private final Elevator elevator = new Elevator();
+    private final LeftTelescopingArm leftTA = new LeftTelescopingArm();
+    private final RightTelescopingArm rightTA = new RightTelescopingArm();
 	private final Intake intake = new Intake();
 	private final IntakeFlipper intakeFlipper = new IntakeFlipper();
 	private final Shooter shooter = new Shooter();
@@ -96,15 +97,15 @@ public class Robot extends ScheduledRobot {
     @Override
 	public void registerControls() {
 		// Toggle intake position
-		getOperatorRightBumper().whenPressed(new ToggleIntake(intakeFlipper));
+		getOperatorRightBumper().whenPressed(new RetractIntake(intakeFlipper));
 
 		// Set storage speed
 		getOperatorYButton().whileHeld(new RunIntakeWithButton(intake, storage, shooter));
 		getOperatorXButton().whileHeld(new RunIntakeWithButton(intake, storage, shooter));
 
-		getOperatorBButton().whenPressed(new RaiseShooterArm(shooterArm));
+        getOperatorBButton().whileHeld(new RaiseShooterArmConstant(shooterArm));
         getOperatorBButton().whenPressed(new RetractIntake(intakeFlipper));
-		getOperatorAButton().whenPressed(new LowerShooterArm(shooterArm));
+		getOperatorAButton().whileHeld(new LowerShooterArmConstant(shooterArm));
         getOperatorAButton().whenPressed(new ExtendIntake(intakeFlipper));
 
 		getOperatorDPadLeft().whileHeld(new LowerShooterArmConstant(shooterArm));
@@ -117,9 +118,12 @@ public class Robot extends ScheduledRobot {
 //		getDriverRightBumper().whenPressed(new LimelightShoot(drivetrain, limelight, shooter, shooterArm, storage, NetworkTables.getShooterHighRPM()));
 
 		// Low Hub Shoot
-		getDriverLeftBumper().whenPressed(new LowHubShoot(shooter, shooterArm, storage, NetworkTables.getShooterLowRPM()));
+		getDriverAButton().whenPressed(new LowHubShoot(shooter, shooterArm, storage, NetworkTables.getShooterLowRPM()));
 
-        getDriverRightBumper().whenPressed(new FlipDrivetrain(drivetrain));
+        getDriverYButton().whenPressed(new FlipDrivetrain(drivetrain));
+
+        getDriverLeftBumper().whileHeld(new RunLeftTAConstant(leftTA, TA_RAISE_SPEED));
+        getDriverRightBumper().whileHeld(new RunRightTAConstant(rightTA, TA_RAISE_SPEED));
 
 		// getOperatorLeftBumper().whenPressed(new ToggleElevatorBrakes(elevator));
 	}
@@ -136,10 +140,11 @@ public class Robot extends ScheduledRobot {
 
 
 		// Tank drive on the drivetrain
-		 scheduler.scheduleDefaultCommand(new TankDrive(drivetrain, getDriverLeftYAxis(), getDriverRightYAxis()));
+		scheduler.scheduleDefaultCommand(new TankDrive(drivetrain, getDriverLeftYAxis(), getDriverRightYAxis()));
 
 		// Telescoping arms on the operator controller
-		scheduler.scheduleDefaultCommand(new RunElevator(elevator, getOperatorLeftTrigger(), getOperatorRightTrigger()));
+		scheduler.scheduleDefaultCommand(new RunLeftTA(leftTA, getDriverLeftTrigger()));
+        scheduler.scheduleDefaultCommand(new RunRightTA(rightTA, getDriverRightTrigger()));
 
 		// Run the intake flipper
 //		scheduler.scheduleDefaultCommand(new RunIntakeFlipper(intakeFlipper));
