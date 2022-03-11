@@ -31,15 +31,16 @@ public class TwoCargoLowTime extends SequentialCommandGroup {
                 new SequentialCommandGroup(
                     new WaitCommand(1),
                     new SequentialCommandGroup(
-                        new InstantCommand(() -> drivetrain.tankDriveVolts(5, 5)),
+                        new InstantCommand(() -> drivetrain.tankDriveVolts(4, 4)),
                         new WaitCommand(1),
                         new InstantCommand(() -> drivetrain.tankDriveVolts(0, 0)),
                         new WaitCommand(1),
-                        new InstantCommand(() -> drivetrain.tankDriveVolts(-4, -4)),
+                        new InstantCommand(() -> drivetrain.tankDriveVolts(-5, -5)),
                         new WaitCommand(1),
                         new InstantCommand(() -> drivetrain.tankDriveVolts(0, 0)),
-                        new RetractIntake(intakeFlipper),
-                        new SetShooterArmAngle(shooterArm, SHOOTER_ARM_MAX_ANGLE),
+						new ParallelCommandGroup(
+							new RetractIntake(intakeFlipper),
+							new SetShooterArmAngle(shooterArm, SHOOTER_ARM_MAX_ANGLE)),
                         new WaitCommand(1),
                         new LowHubShoot(shooter, shooterArm, storage, RPM),
                         new InstantCommand(() -> drivetrain.tankDriveVolts(5, 5)),
