@@ -46,7 +46,7 @@ public class ShooterArm extends SubsystemBase {
 	 */
 	private final WPI_TalonSRX encoderMotor;
 
-	private final DigitalInput upperLimit = new DigitalInput(9);
+	private final DigitalInput upperLimit = new DigitalInput(8);
 	private final DigitalInput lowerLimit = new DigitalInput(1);
 
 	private boolean manualControl = true;
