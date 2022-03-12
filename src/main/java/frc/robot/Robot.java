@@ -112,14 +112,14 @@ public class Robot extends ScheduledRobot {
 		getOperatorDPadRight().whileHeld(new RaiseShooterArmConstant(shooterArm));
         getOperatorDPadRight().whenPressed(new RetractIntake(intakeFlipper));
 
-		getOperatorDPadUp().whenPressed(new SetShooterRPM(shooter, NetworkTables.getShooterLowRPM()));
+		getOperatorDPadUp().whenPressed(new SetShooterRPM(shooter, SHOOTER_LOW_HUB_RPM));
 		getOperatorDPadDown().whenPressed(new SetShooterRPM(shooter, 0));
 
 		// Limelight align to target and shoot
 //		getDriverRightBumper().whenPressed(new LimelightShoot(drivetrain, limelight, shooter, shooterArm, storage, NetworkTables.getShooterHighRPM()));
 
 		// Low Hub Shoot
-		getDriverAButton().whenPressed(new LowHubShoot(shooter, shooterArm, storage, NetworkTables.getShooterLowRPM()));
+		getDriverAButton().whenPressed(new LowHubShoot(shooter, shooterArm, storage, SHOOTER_LOW_HUB_RPM));
 
         getDriverYButton().whenPressed(new FlipDrivetrain(drivetrain));
 
