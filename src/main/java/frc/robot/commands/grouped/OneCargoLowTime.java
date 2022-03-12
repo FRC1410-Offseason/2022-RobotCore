@@ -2,7 +2,6 @@ package frc.robot.commands.grouped;
 
 
 import edu.wpi.first.wpilibj2.command.*;
-import frc.robot.commands.actions.*;
 import frc.robot.subsystems.*;
 import frc.robot.util.Trajectories;
 
@@ -22,7 +21,7 @@ public class OneCargoLowTime extends SequentialCommandGroup {
     {
         drivetrain.gyro.reset();
         trajectories.generateAuto();
-        trajectories.setStartingAutonomousPose(trajectories.lowHighTwoBall);
+        trajectories.setStartingAutonomousPose(trajectories.twoBallGet);
         shooterArm.resetEncoder(SHOOTER_ARM_MAX_ANGLE);
 
         addCommands(

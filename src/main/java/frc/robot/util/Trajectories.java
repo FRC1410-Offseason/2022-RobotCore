@@ -33,26 +33,38 @@ public class Trajectories {
     public final Trajectory straightline2 = TrajectoryGenerator.generateTrajectory(List.of(
 		new Pose2d(0, 0, new Rotation2d(Units.degreesToRadians(0))),
 		new Pose2d(0, 2.5, new Rotation2d(Units.degreesToRadians(0)))), config);
-	
-	public final Trajectory twoBall = TrajectoryGenerator.generateTrajectory(List.of(
-		new Pose2d(0, 0, new Rotation2d(Units.degreesToRadians(0))),
-		new Pose2d(2.3, 0, new Rotation2d(Units.degreesToRadians(0)))), config);
 
-	public final Trajectory driveToShoot = TrajectoryGenerator.generateTrajectory(List.of(
-		new Pose2d(1.2, 0, new Rotation2d(Units.degreesToRadians(0))),
-		new Pose2d(2.0, 0, new Rotation2d(Units.degreesToRadians(0)))), config);
-
-    public final Trajectory lowHighTwoBall = TrajectoryGenerator.generateTrajectory(List.of(
+	// Two Ball Auto
+    public final Trajectory twoBallGet = TrajectoryGenerator.generateTrajectory(List.of(
         new Pose2d(0, 0, new Rotation2d(Units.degreesToRadians(0))),
 		new Pose2d(2.5, 0, new Rotation2d(Units.degreesToRadians(0)))), config);
 
-	public final Trajectory twoLowBackToHub = TrajectoryGenerator.generateTrajectory(List.of(
+	public final Trajectory twoBallReturn = TrajectoryGenerator.generateTrajectory(List.of(
 			new Pose2d(2.5, 0, new Rotation2d(Units.degreesToRadians(0))),
-			new Pose2d(0, 0, new Rotation2d(Units.degreesToRadians(0)))),
-			reverseConfig
-	);
+			new Pose2d(0, 0, new Rotation2d(Units.degreesToRadians(0)))), reverseConfig);
+
+	// Two Ball High
+	public final Trajectory twoBall = TrajectoryGenerator.generateTrajectory(List.of(
+			new Pose2d(0, 0, new Rotation2d(Units.degreesToRadians(0))),
+			new Pose2d(2.3, 0, new Rotation2d(Units.degreesToRadians(0)))), config);
+
+	public final Trajectory driveToShoot = TrajectoryGenerator.generateTrajectory(List.of(
+			new Pose2d(1.2, 0, new Rotation2d(Units.degreesToRadians(0))),
+			new Pose2d(2.0, 0, new Rotation2d(Units.degreesToRadians(0)))), config);
+
+	// Three Ball Auto
+	public final Trajectory threeBallGet = TrajectoryGenerator.generateTrajectory(List.of(
+		new Pose2d(0, 0, new Rotation2d(Units.degreesToRadians(0))),
+		new Pose2d(0.3, 0, new Rotation2d(Units.degreesToRadians(80))),
+		new Pose2d(0, 0, new Rotation2d(Units.degreesToRadians(300)))), config); // TODO: Fill
+	
+	public final Trajectory threeBallReturn = TrajectoryGenerator.generateTrajectory(List.of(
+		new Pose2d(0, 0, new Rotation2d(Units.degreesToRadians(300))), // TODO: Fill
+		new Pose2d(0.3, 0, new Rotation2d(Units.degreesToRadians(80))),
+		new Pose2d(0, 0, new Rotation2d(Units.degreesToRadians(0)))), reverseConfig);
+	
 		
-	public RamseteCommand straightlineCommand, straightlineCommand2, twoBallCommand, driveToShootCommand, lowHighTwoBallCommand, twoLowBackToHubCommand;
+	public RamseteCommand straightlineCommand, straightlineCommand2, twoBallCommand, driveToShootCommand, twoBallGetCommand, twoBallReturnCommand, threeBallGetCommand, threeBallReturnCommand;
 
 	public Trajectories(Drivetrain drivetrain) {
 		this.drivetrain = drivetrain;
@@ -81,7 +93,9 @@ public class Trajectories {
         straightlineCommand2 = generateRamsete(straightline2);
 		twoBallCommand = generateRamsete(twoBall);
 		driveToShootCommand = generateRamsete(driveToShoot);
-        lowHighTwoBallCommand = generateRamsete(lowHighTwoBall);
-		twoLowBackToHubCommand = generateRamsete(twoLowBackToHub);
+        twoBallGetCommand = generateRamsete(twoBallGet);
+		twoBallReturnCommand = generateRamsete(twoBallReturn);
+		threeBallGetCommand = generateRamsete(threeBallGet);
+		threeBallReturnCommand = generateRamsete(threeBallReturn);
 	}
 }

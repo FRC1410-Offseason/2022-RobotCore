@@ -24,16 +24,16 @@ public class TwoCargoLow extends SequentialCommandGroup {
     {
         drivetrain.gyro.reset();
         trajectories.generateAuto();
-        trajectories.setStartingAutonomousPose(trajectories.lowHighTwoBall);
+        trajectories.setStartingAutonomousPose(trajectories.twoBallGet);
         shooterArm.resetEncoder(SHOOTER_ARM_MAX_ANGLE);
 
         addCommands(
-//				new InstantCommand(() -> drivetrain.tankDriveVolts(0, 0)),
+				new InstantCommand(() -> drivetrain.tankDriveVolts(0, 0)),
                 new LowHubShoot(shooter, shooterArm, storage, RPM),
                 new ParallelCommandGroup(
                         new SequentialCommandGroup(
                                 new WaitCommand(1),
-                                trajectories.lowHighTwoBallCommand,
+                                trajectories.twoBallGetCommand,
                                 new InstantCommand(() -> drivetrain.tankDriveVolts(0, 0))
                         ),
 						new SequentialCommandGroup(
@@ -47,7 +47,7 @@ public class TwoCargoLow extends SequentialCommandGroup {
 
                         new SequentialCommandGroup(
                                 new WaitCommand(1),
-                                new WaitCommand(trajectories.lowHighTwoBall.getTotalTimeSeconds() / 2),
+                                new WaitCommand(trajectories.twoBallGet.getTotalTimeSeconds() / 2),
                                 new ParallelCommandGroup(
                                         new SetIntakeSpeed(intake, 1, 2.5),
                                         new RunStorageForTime(storage, 1.5, 1)
@@ -55,7 +55,7 @@ public class TwoCargoLow extends SequentialCommandGroup {
                         )
                 ),
                 new ParallelCommandGroup(
-                        trajectories.twoLowBackToHubCommand,
+                        trajectories.twoBallReturnCommand,
 						new RetractIntake(intakeFlipper),
 						new WaitCommand(0.5),
 						new ParallelRaceGroup(
