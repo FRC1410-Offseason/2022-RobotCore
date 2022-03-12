@@ -182,7 +182,7 @@ public class Robot extends ScheduledRobot {
 
 //		getOperatorRightBumper().whenPressed(new ExtendIntake(intakeFlipper));
 
-		getOperatorDPadUp().whenPressed(new SetShooterRPM(shooter, NetworkTables.getShooterLowRPM()));
+		getOperatorDPadUp().whenPressed(new SetShooterRPM(shooter, SHOOTER_LOW_HUB_RPM));
 		getOperatorDPadDown().whenPressed(new SetShooterRPM(shooter, 0));
 
 		getOperatorAButton().whileHeld(new RunStorageConstant(storage, STORAGE_RUN_SPEED));

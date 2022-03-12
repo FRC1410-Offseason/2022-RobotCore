@@ -27,6 +27,7 @@ public class Shooter extends SubsystemBase {
 
 	private final NetworkTableEntry leftRPM = table.getEntry("Left RPM");
 	private final NetworkTableEntry rightRPM = table.getEntry("Right RPM");
+	private final NetworkTableEntry targetRPM = table.getEntry("Target RPM");
 
 	// Declare Motors
 	private final CANSparkMax leftMotor = new CANSparkMax(SHOOTER_LEFT_MOTOR_ID, MotorType.kBrushless);
@@ -75,6 +76,7 @@ public class Shooter extends SubsystemBase {
 
 		leftRPM.setDouble(0);
 		rightRPM.setDouble(0);
+		targetRPM.setDouble(0);
   }
 
 	public void queueOuttake() {
@@ -89,6 +91,7 @@ public class Shooter extends SubsystemBase {
 	public void periodic() {
 		leftRPM.setDouble(leftEncoder.getVelocity());
 		rightRPM.setDouble(rightEncoder.getVelocity());
+		targetRPM.setDouble(target);
 	}
 
 	/**

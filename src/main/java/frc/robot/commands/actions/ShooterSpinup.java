@@ -18,7 +18,6 @@ public class ShooterSpinup extends CommandBase {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        RPM += SHOOTER_RPM_TOLERANCE;
         shooter.setSpeeds(RPM);
     }
 

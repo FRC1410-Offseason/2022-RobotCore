@@ -17,9 +17,9 @@ import frc.robot.util.Trajectories;
 
 import static frc.robotmap.Constants.*;
 
-public class TwoCargoAuto extends ParallelCommandGroup {
+public class TwoCargoHigh extends ParallelCommandGroup {
 
-    public TwoCargoAuto(Trajectories trajectories, Drivetrain drivetrain, Intake intake, Storage storage, ShooterArm shooterArm, Shooter shooter, IntakeFlipper intakeFlipper, Limelight limelight, double RPM) {
+    public TwoCargoHigh(Trajectories trajectories, Drivetrain drivetrain, Intake intake, Storage storage, ShooterArm shooterArm, Shooter shooter, IntakeFlipper intakeFlipper, Limelight limelight, double RPM) {
         drivetrain.gyro.reset();
         trajectories.generateAuto();
         trajectories.setStartingAutonomousPose(trajectories.twoBall);
