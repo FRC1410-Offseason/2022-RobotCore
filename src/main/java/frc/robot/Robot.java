@@ -84,7 +84,7 @@ public class Robot extends ScheduledRobot {
 				autonomousCommand = new TwoCargoLow(auto, drivetrain, intake, storage, shooterArm, shooter, intakeFlipper, SHOOTER_LOW_HUB_RPM);
 				break;
             case 4:
-                autonomousCommand = new ThreeCargoLow(auto, drivetrain, intake, storage, shooterArm, shooter, intakeFlipper, SHOOTER_LOW_HUB_RPM);
+                autonomousCommand = new TwoCargoLow(auto, drivetrain, intake, storage, shooterArm, shooter, intakeFlipper, SHOOTER_LOW_HUB_RPM);
                 break;
 			default: throw new IllegalStateException("Unknown auto profile " + auto);
 		}

@@ -57,10 +57,12 @@ public class TwoCargoLow extends SequentialCommandGroup {
                 new ParallelCommandGroup(
                         trajectories.twoBallReturnCommand,
 						new RetractIntake(intakeFlipper),
-						new WaitCommand(1),
-						new ParallelRaceGroup(
+						new SequentialCommandGroup(
 								new WaitCommand(1),
-								new RaiseShooterArmConstant(shooterArm)
+								new ParallelRaceGroup(
+										new WaitCommand(1),
+										new RaiseShooterArmConstant(shooterArm)
+								)
 						)
                 ),
 				new InstantCommand(() -> drivetrain.tankDriveVolts(0, 0)),
