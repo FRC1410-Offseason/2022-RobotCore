@@ -38,7 +38,7 @@ public class TwoCargoLow extends SequentialCommandGroup {
                         ),
 						new SequentialCommandGroup(
 							new ParallelRaceGroup(
-									new WaitCommand(1),
+									new WaitCommand(SHOOTER_ARM_DOWN_TIME),
 									new LowerShooterArmConstant(shooterArm)
 							),
 							new WaitCommand(0.5),
@@ -60,7 +60,7 @@ public class TwoCargoLow extends SequentialCommandGroup {
 						new SequentialCommandGroup(
 								new WaitCommand(1),
 								new ParallelRaceGroup(
-										new WaitCommand(1),
+										new WaitCommand(SHOOTER_ARM_UP_TIME),
 										new RaiseShooterArmConstant(shooterArm)
 								)
 						)

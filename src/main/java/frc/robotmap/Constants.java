@@ -34,6 +34,8 @@ public final class Constants {
 
 	public static final double SHOOTER_ARM_UP_SPEED = 0.22;
 	public static final double SHOOTER_ARM_DOWN_SPEED = -0.1;
+	public static final double SHOOTER_ARM_UP_TIME = 1;
+	public static final double SHOOTER_ARM_DOWN_TIME = 1;
 
 	// DRIVETRAIN
 

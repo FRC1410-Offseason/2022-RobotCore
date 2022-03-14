@@ -1,32 +1,36 @@
-package frc.robot.commands.looped;
+package frc.robot.commands.actions;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ShooterArm;
 
 import static frc.robotmap.Constants.SHOOTER_ARM_UP_SPEED;
 
 
-public class RaiseShooterArmConstant extends CommandBase {
+public class RaiseShooterArmForTime extends CommandBase {
 
 	private final ShooterArm shooterArm;
+	private final Timer timer = new Timer();
+	private final double time;
 
-	public RaiseShooterArmConstant(ShooterArm shooterArm) {
+	public RaiseShooterArmForTime(ShooterArm shooterArm, double time) {
 		this.shooterArm = shooterArm;
+		this.time = time;
 	}
 
 	@Override
-	public void execute() {
+	public void initialize() {
+		timer.start();
 		shooterArm.manualSet(SHOOTER_ARM_UP_SPEED);
-        System.out.println("RUNNING UPWARDS");
 	}
 
 	@Override
 	public boolean isFinished() {
-		return false;
+		return timer.get() >= time;
 	}
 
 	@Override
 	public void end(boolean interrupted) {
-		shooterArm.set(0);
+		shooterArm.manualSet(0);
 	}
 }
