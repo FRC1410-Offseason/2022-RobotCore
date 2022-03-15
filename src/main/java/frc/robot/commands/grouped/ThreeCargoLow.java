@@ -26,7 +26,6 @@ public class ThreeCargoLow extends SequentialCommandGroup {
 		drivetrain.gyro.reset();
 		trajectories.generateAuto();
 		trajectories.setStartingAutonomousPose(trajectories.twoBallGet);
-		shooterArm.resetEncoder(SHOOTER_ARM_MAX_ANGLE);
 
 		addCommands(
 				new InstantCommand(() -> drivetrain.tankDriveVolts(0, 0)),

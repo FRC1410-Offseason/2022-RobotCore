@@ -43,7 +43,7 @@ public class Robot extends ScheduledRobot {
 	private final IntakeFlipper intakeFlipper = new IntakeFlipper();
 	private final Shooter shooter = new Shooter();
 	private final Storage storage = new Storage(DriverStation.getAlliance());
-	private final ShooterArm shooterArm = new ShooterArm(storage.getShooterArmMotor());
+	private final ShooterArm shooterArm = new ShooterArm();
 	private final Winch winch = new Winch();
 	// private final Limelight limelight = new Limelight();
 	private final Trajectories auto = new Trajectories(drivetrain);
@@ -64,8 +64,6 @@ public class Robot extends ScheduledRobot {
         System.out.println("INITIALIZING AUTO");
 		scheduler.scheduleDefaultCommand(new PoseEstimation(drivetrain), TIME_OFFSET, 10);
 		scheduler.scheduleDefaultCommand(new RunIntakeFlipper(intakeFlipper));
-//		scheduler.scheduleDefaultCommand(new RunShooterArm(shooterArm));
-		shooterArm.resetEncoder(SHOOTER_ARM_MAX_ANGLE);
 		drivetrain.setBrake();
 		intakeFlipper.resetEncoders(0);
 
@@ -99,13 +97,13 @@ public class Robot extends ScheduledRobot {
 		getOperatorYButton().whileHeld(new RunIntakeWithButton(intake, storage, shooter));
 		getOperatorXButton().whileHeld(new RunIntakeWithButton(intake, storage, shooter));
 
-        getOperatorRightBumper().whenPressed(new RaiseShooterArmForTime(shooterArm, SHOOTER_ARM_UP_TIME));
+        getOperatorRightBumper().whenPressed(new RaiseShooterArm(shooterArm));
         getOperatorRightBumper().whenPressed(new RetractIntake(intakeFlipper));
-		getOperatorLeftBumper().whenPressed(new LowerShooterArmForTime(shooterArm, SHOOTER_ARM_DOWN_TIME));
+		getOperatorLeftBumper().whenPressed(new LowerShooterArm(shooterArm));
         getOperatorLeftBumper().whenPressed(new ExtendIntakeDelayed(intakeFlipper));
 
-		getOperatorDPadLeft().whileHeld(new LowerShooterArmConstant(shooterArm));
-		getOperatorDPadRight().whileHeld(new RaiseShooterArmConstant(shooterArm));
+		getOperatorDPadLeft().whileHeld(new LowerShooterArm(shooterArm));
+		getOperatorDPadRight().whileHeld(new RaiseShooterArm(shooterArm));
         getOperatorDPadRight().whenPressed(new RetractIntake(intakeFlipper));
 
 		getOperatorDPadUp().whenPressed(new SetShooterRPM(shooter, SHOOTER_LOW_HUB_RPM));
@@ -124,7 +122,6 @@ public class Robot extends ScheduledRobot {
 	public void teleopInit() {
 		scheduler.scheduleDefaultCommand(new RunIntakeFlipper(intakeFlipper));
 //		scheduler.scheduleDefaultCommand(new RunShooterArm(shooterArm));
-		shooterArm.resetEncoder(SHOOTER_ARM_MAX_ANGLE);
 		drivetrain.setBrake();
 
 		// Toggle the shooter arm
@@ -153,7 +150,6 @@ public class Robot extends ScheduledRobot {
 
 		intakeFlipper.resetEncoders(0);
 //		shooterArm.resetEncoder(SHOOTER_ARM_MAX_ANGLE);
-		scheduler.scheduleDefaultCommand(new RunArmWithAxis(shooterArm, getOperatorLeftYAxis()));
 		scheduler.scheduleDefaultCommand(new RunIntakeFlipperWithAxis(intakeFlipper, getOperatorRightYAxis()));
 //		scheduler.scheduleDefaultCommand(new RunShooterArm(shooterArm));
 //		scheduler.scheduleDefaultCommand(new RunIntakeFlipper(intakeFlipper));

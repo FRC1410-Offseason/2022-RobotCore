@@ -37,8 +37,8 @@ public class IDs {
 	public static final int WINCH_RIGHT_LIMIT_SWITCH_ID = 2;
 
 	// SHOOTER ARM
-	public static final int SHOOTER_ARM_L_MOTOR = 21; // Spark Max / NEO
-	public static final int SHOOTER_ARM_R_MOTOR = 22; // Spark Max / NEO
+	public static final int SHOOTER_ARM_SOLENOID_FWD = 0;
+	public static final int SHOOTER_ARM_SOLENOID_BCK = 1;
 	public static final int PRESSURE_SENSOR = 0;
 
     // CONTROLLERS, DO NOT TOUCH
