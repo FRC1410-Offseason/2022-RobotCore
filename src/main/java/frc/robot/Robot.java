@@ -123,7 +123,7 @@ public class Robot extends ScheduledRobot {
 	@Override
 	public void teleopInit() {
 		scheduler.scheduleDefaultCommand(new RunIntakeFlipper(intakeFlipper));
-		scheduler.scheduleDefaultCommand(new RunShooterArm(shooterArm));
+//		scheduler.scheduleDefaultCommand(new RunShooterArm(shooterArm));
 		shooterArm.resetEncoder(SHOOTER_ARM_MAX_ANGLE);
 		drivetrain.setBrake();
 
