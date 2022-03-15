@@ -199,8 +199,8 @@ public class Drivetrain extends SubsystemBase {
 	public void setCoast() {
 		leftLeader.setNeutralMode(NeutralMode.Coast);
 		rightLeader.setNeutralMode(NeutralMode.Coast);
-//		leftFollower.setNeutralMode(NeutralMode.Coast);
-//		rightFollower.setNeutralMode(NeutralMode.Coast);
+		leftFollower.setNeutralMode(NeutralMode.Coast);
+		rightFollower.setNeutralMode(NeutralMode.Coast);
 	}
 
 	/**
@@ -209,6 +209,8 @@ public class Drivetrain extends SubsystemBase {
 	public void setBrake() {
 		leftLeader.setNeutralMode(NeutralMode.Brake);
 		rightLeader.setNeutralMode(NeutralMode.Brake);
+		leftFollower.setNeutralMode(NeutralMode.Brake);
+		rightFollower.setNeutralMode(NeutralMode.Brake);
 	}
 
 	/**

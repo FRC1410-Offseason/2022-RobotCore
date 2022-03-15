@@ -53,7 +53,6 @@ public class Robot extends ScheduledRobot {
 		NetworkTables.setAutoList(autoList);
 		NetworkTables.setCorrectColor(DriverStation.getAlliance().toString());
 		NetworkTables.setPressure(pressure);
-		drivetrain.setBrake();
 
 		resetAngle.setDouble(SHOOTER_ARM_MAX_ANGLE);
 
@@ -150,6 +149,8 @@ public class Robot extends ScheduledRobot {
 
 	@Override
 	public void testInit() {
+		drivetrain.setCoast();
+
 		intakeFlipper.resetEncoders(0);
 //		shooterArm.resetEncoder(SHOOTER_ARM_MAX_ANGLE);
 		scheduler.scheduleDefaultCommand(new RunArmWithAxis(shooterArm, getOperatorLeftYAxis()));
@@ -177,13 +178,10 @@ public class Robot extends ScheduledRobot {
 		getOperatorAButton().whileHeld(new RunStorageConstant(storage, STORAGE_RUN_SPEED));
 
 //		getOperatorYButton().whenPressed(new LockWinches(winch));
-
-		drivetrain.setCoast();
 	}
 
 	@Override
 	public void testPeriodic() {
-        drivetrain.setCoast();
 		System.out.println(intakeFlipper.getEncoderPosition());
 	}
 }
