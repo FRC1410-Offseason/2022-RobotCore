@@ -37,8 +37,8 @@ public class IDs {
 	public static final int WINCH_RIGHT_LIMIT_SWITCH_ID = 2;
 
 	// SHOOTER ARM
-	public static final int SHOOTER_ARM_SOLENOID_FWD = 0;
-	public static final int SHOOTER_ARM_SOLENOID_BCK = 1;
+	public static final int SHOOTER_ARM_SOLENOID_FWD = 2;
+	public static final int SHOOTER_ARM_SOLENOID_BCK = 5;
 	public static final int PRESSURE_SENSOR = 0;
 
     // CONTROLLERS, DO NOT TOUCH
