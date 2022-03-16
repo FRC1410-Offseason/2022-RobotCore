@@ -102,8 +102,8 @@ public class Robot extends ScheduledRobot {
 		getOperatorLeftBumper().whenPressed(new LowerShooterArm(shooterArm));
         getOperatorLeftBumper().whenPressed(new ExtendIntakeDelayed(intakeFlipper));
 
-		getOperatorDPadLeft().whileHeld(new LowerShooterArm(shooterArm));
-		getOperatorDPadRight().whileHeld(new RaiseShooterArm(shooterArm));
+		getOperatorDPadLeft().whenPressed(new LowerShooterArm(shooterArm));
+		getOperatorDPadRight().whenPressed(new RaiseShooterArm(shooterArm));
         getOperatorDPadRight().whenPressed(new RetractIntake(intakeFlipper));
 
 		getOperatorDPadUp().whenPressed(new SetShooterRPM(shooter, SHOOTER_LOW_HUB_RPM));
