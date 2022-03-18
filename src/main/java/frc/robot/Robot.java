@@ -1,8 +1,5 @@
 package frc.robot;
 
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -27,10 +24,6 @@ public class Robot extends ScheduledRobot {
 	private final AnalogInput pressure = new AnalogInput(PRESSURE_SENSOR);
 	CommandGroupBase autonomousCommand = null;
 
-	private final NetworkTableInstance instance = NetworkTableInstance.getDefault();
-	private final NetworkTable table = instance.getTable("Shooter Arm");
-	private final NetworkTableEntry resetAngle = table.getEntry("Reset arm to: ");
-
 	public static void main(String[] args) {RobotBase.startRobot(Robot::new);}
 	private Robot() {
 		super((long) DT50HZ);
@@ -53,10 +46,6 @@ public class Robot extends ScheduledRobot {
 		NetworkTables.setAutoList(autoList);
 		NetworkTables.setCorrectColor(DriverStation.getAlliance().toString());
 		NetworkTables.setPressure(pressure);
-
-		resetAngle.setDouble(SHOOTER_ARM_MAX_ANGLE);
-
-//		shooterArm.resetEncoder(SHOOTER_ARM_MAX_ANGLE);
 	}
 
 	@Override
@@ -80,9 +69,6 @@ public class Robot extends ScheduledRobot {
 			case 3:
 				autonomousCommand = new TwoCargoLow(auto, drivetrain, intake, storage, shooterArm, shooter, intakeFlipper, SHOOTER_LOW_HUB_RPM);
 				break;
-            case 4:
-                autonomousCommand = new TwoCargoLow(auto, drivetrain, intake, storage, shooterArm, shooter, intakeFlipper, SHOOTER_LOW_HUB_RPM);
-                break;
 			default: throw new IllegalStateException("Unknown auto profile " + auto);
 		}
 
@@ -93,10 +79,22 @@ public class Robot extends ScheduledRobot {
 
     @Override
 	public void registerControls() {
-		// Set storage speed
+
+		/**
+		 * Intaking sequence:
+		 * 	Run the intake at full speed
+		 * 	Run the storage at full speed
+		 * 	Run the shooter wheels backwards
+		 */
 		getOperatorYButton().whileHeld(new RunIntakeWithButton(intake, storage, shooter));
 		getOperatorXButton().whileHeld(new RunIntakeWithButton(intake, storage, shooter));
 
+		/**
+		 * Sequences for toggling the robot position, the robot is either:
+		 * 	In an intaking position, where the shooter arm is down and the intake is out
+		 * 	In a shooting / scoring position, where the shooter arm is up and the intake is up
+		 * 	In a climbing position, where the shooter arm is down but the intake is up (lowers the center of mass)
+		 */
         getOperatorRightBumper().whenPressed(new RaiseShooterArm(shooterArm));
         getOperatorRightBumper().whenPressed(new RetractIntake(intakeFlipper));
 		getOperatorLeftBumper().whenPressed(new LowerShooterArm(shooterArm));
@@ -106,27 +104,31 @@ public class Robot extends ScheduledRobot {
 		getOperatorDPadRight().whenPressed(new RaiseShooterArm(shooterArm));
         getOperatorDPadRight().whenPressed(new RetractIntake(intakeFlipper));
 
+		/**
+		 * Manually spin up the shooter wheels, in case the driver needs to take over
+		 */
 		getOperatorDPadUp().whenPressed(new SetShooterRPM(shooter, SHOOTER_LOW_HUB_RPM));
 		getOperatorDPadDown().whenPressed(new SetShooterRPM(shooter, 0));
 
-		// Low Hub Shoot
+		// Sequence for scoring into the low hub
 		getDriverAButton().whenPressed(new LowHubShoot(shooter, shooterArm, storage, SHOOTER_LOW_HUB_RPM));
 
+		// Flip the direction that the drivetrain moves relative to the driver controller
         getDriverYButton().whenPressed(new FlipDrivetrain(drivetrain));
 
+		// Telescoping arms are controlled independently on a button and a trigger for the driver
         getDriverLeftBumper().whileHeld(new RunLeftTAConstant(leftTA, TA_RAISE_SPEED));
         getDriverRightBumper().whileHeld(new RunRightTAConstant(rightTA, TA_RAISE_SPEED));
 	}
 
 	@Override
 	public void teleopInit() {
-		scheduler.scheduleDefaultCommand(new RunIntakeFlipper(intakeFlipper));
-//		scheduler.scheduleDefaultCommand(new RunShooterArm(shooterArm));
+
+		// Make sure the drivetrain is in brake mode
 		drivetrain.setBrake();
 
-		// Toggle the shooter arm
-//		getOperatorRightBumper().whenPressed(new InstantCommand(() -> shooterArm.setGoal(SHOOTER_ARM_MAX_ANGLE)));
-//		getOperatorLeftBumper().whenPressed(new InstantCommand(() -> shooterArm.setGoal(SHOOTER_ARM_INTAKE_ANGLE)));
+		// The command that handles the intake flipper motors
+		scheduler.scheduleDefaultCommand(new RunIntakeFlipper(intakeFlipper));
 
 		// Tank drive on the drivetrain
 		scheduler.scheduleDefaultCommand(new TankDrive(drivetrain, getDriverLeftYAxis(), getDriverRightYAxis()));
@@ -149,31 +151,16 @@ public class Robot extends ScheduledRobot {
 		drivetrain.setCoast();
 
 		intakeFlipper.resetEncoders(0);
-//		shooterArm.resetEncoder(SHOOTER_ARM_MAX_ANGLE);
 		scheduler.scheduleDefaultCommand(new RunIntakeFlipperWithAxis(intakeFlipper, getOperatorRightYAxis()));
-//		scheduler.scheduleDefaultCommand(new RunShooterArm(shooterArm));
-//		scheduler.scheduleDefaultCommand(new RunIntakeFlipper(intakeFlipper));
-//		getOperatorXButton().whenPressed(new ResetShooterArmEncoderWithEntry(shooterArm, resetAngle));
-//
-//		getOperatorAButton().whenPressed(new LockElevator(elevator));
-//		getOperatorRightBumper().whenPressed(new RaiseShooterArm(shooterArm));
-//		getOperatorLeftBumper().whenPressed(new LowerShooterArm(shooterArm));
+
 		getOperatorXButton().whenPressed(new InstantCommand(() -> intakeFlipper.resetEncoders(INTAKE_UP_POSITION)));
 		getOperatorYButton().whenPressed(new InstantCommand(() -> intakeFlipper.resetEncoders(INTAKE_DOWN_POSITION)));
-
-//		getOperatorLeftBumper().whenPressed(new InstantCommand(() -> shooterArm.setGoal(SHOOTER_ARM_INTAKE_ANGLE)));
-//		getOperatorRightBumper().whenPressed(new InstantCommand(() -> shooterArm.setGoal(SHOOTER_ARM_MAX_ANGLE)));
-
-//		getOperatorLeftBumper().whenPressed(new RetractIntake(intakeFlipper));
-
-//		getOperatorRightBumper().whenPressed(new ExtendIntake(intakeFlipper));
 
 		getOperatorDPadUp().whenPressed(new SetShooterRPM(shooter, SHOOTER_LOW_HUB_RPM));
 		getOperatorDPadDown().whenPressed(new SetShooterRPM(shooter, 0));
 
 		getOperatorAButton().whileHeld(new RunStorageConstant(storage, STORAGE_RUN_SPEED));
 
-//		getOperatorYButton().whenPressed(new LockWinches(winch));
 	}
 
 	@Override
