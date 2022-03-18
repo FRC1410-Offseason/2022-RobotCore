@@ -33,7 +33,7 @@ public class RightTelescopingArm extends SubsystemBase {
 	private final RelativeEncoder rightEncoder = rightMotor.getEncoder();
 
 	// Elevator Brake
-	private final DoubleSolenoid lock = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, ELEVATOR_FWD, ELEVATOR_BCK);
+//	private final DoubleSolenoid lock = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, ELEVATOR_FWD, ELEVATOR_BCK);
 
 	/**
 	 * The simulation system
@@ -149,41 +149,5 @@ public class RightTelescopingArm extends SubsystemBase {
 	 */
 	public double getCurrentVoltage() {
 		return currentVoltage;
-	}
-
-	/**
-	 * Set the state of the locks
-	 *
-	 * @param state forward or backward
-	 */
-	public void setLock(boolean state) {
-		if (state) {
-			lock.set(Value.kForward);
-		} else {
-			lock.set(Value.kReverse);
-		}
-	}
-
-	/**
-	 * Return the state of the locks
-	 *
-	 * @return True / False -> Locked / Unlocked
-	 */
-	public boolean getLocked() {
-		return lock.get() == Value.kForward;
-	}
-
-	/**
-	 * Set the state of the locks to locked
-	 */
-	public void lock() {
-		lock.set(Value.kForward);
-	}
-
-	/**
-	 * Set the state of the locks to unlocked
-	 */
-	public void unlock() {
-		lock.set(Value.kReverse);
 	}
 }

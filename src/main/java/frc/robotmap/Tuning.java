@@ -72,7 +72,7 @@ public final class Tuning {
 	public static final double INTAKE_UP_POSITION = 0; // Rotations
 	public static final double INTAKE_DOWN_POSITION = -38.6; // Rotations. From testing, real number will be different
 
-    public static final double INTAKE_DEPLOYMENT_DELAY = 1;
+    public static final double INTAKE_DEPLOYMENT_DELAY = 0.5;
 
 	// SHOOTER ARM
 	public static final double SA_P = 0.027; // Probably needs to be slightly more aggressive, but that's for later

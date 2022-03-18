@@ -1,8 +1,6 @@
 package frc.robotmap;
 
 public class IDs {
-	public static final int[] LEFT_ENCODER_PORTS = { 6, 7 };
-	public static final int[] RIGHT_ENCODER_PORTS = { 8, 9 };
 
 	public static final int DRIVETRAIN_LEFT_FRONT_MOTOR_ID = 1; // Talon FX / Falcon 500
 	public static final int DRIVETRAIN_LEFT_BACK_MOTOR_ID = 2; // Talon FX / Falcon 500
@@ -23,8 +21,8 @@ public class IDs {
 	public static final int INTAKE_MOTOR = 31; // Spark Max / NEO 550
 
 	// ELEVATOR
-	public static final int ELEVATOR_FWD = 2;
-	public static final int ELEVATOR_BCK = 5;
+	public static final int ELEVATOR_FWD = 7;
+	public static final int ELEVATOR_BCK = 8;
 	public static final int ELEVATOR_LEFT_MOTOR_ID = 51; // Spark Max / NEO 550
 	public final static int ELEVATOR_RIGHT_MOTOR_ID = 52; // Spark Max / NEO 550
 
@@ -33,8 +31,6 @@ public class IDs {
 	public static final int WINCH_BCK = 4;
 	public static final int WINCH_LEFT_MOTOR_ID = 61; // Victor SPX / Bag?
 	public static final int WINCH_RIGHT_MOTOR_ID = 62; // Victor SPX / Bag?
-	public static final int WINCH_LEFT_LIMIT_SWITCH_ID = 1;
-	public static final int WINCH_RIGHT_LIMIT_SWITCH_ID = 2;
 
 	// SHOOTER ARM
 	public static final int SHOOTER_ARM_SOLENOID_FWD = 2;

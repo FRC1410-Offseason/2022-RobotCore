@@ -51,12 +51,12 @@ public class ShooterArm extends SubsystemBase {
 	}
 
 	public void extend() {
-		armSolenoid.set(DoubleSolenoid.Value.kForward);
+		armSolenoid.set(DoubleSolenoid.Value.kReverse);
 		isArmUp = true;
 	}
 
 	public void retract() {
-		armSolenoid.set(DoubleSolenoid.Value.kReverse);
+		armSolenoid.set(DoubleSolenoid.Value.kForward);
 		isArmUp = false;
 	}
 

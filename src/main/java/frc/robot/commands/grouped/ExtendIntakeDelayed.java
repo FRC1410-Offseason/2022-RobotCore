@@ -7,11 +7,11 @@ import static frc.robotmap.Tuning.*;
 
 public class ExtendIntakeDelayed extends SequentialCommandGroup {
 
-    public ExtendIntakeDelayed(IntakeFlipper flipper) {
+    public ExtendIntakeDelayed(IntakeFlipper intakeFlipper) {
 
         addCommands (
             new WaitCommand(INTAKE_DEPLOYMENT_DELAY),
-            new ExtendIntake(flipper)
+            new ExtendIntake(intakeFlipper)
         );
     }   
 }
