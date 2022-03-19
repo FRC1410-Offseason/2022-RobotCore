@@ -1,8 +1,7 @@
 package frc.robot.commands.grouped;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.*;
 
 import frc.robot.commands.actions.*;
 import frc.robot.subsystems.*;
