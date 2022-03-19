@@ -3,8 +3,6 @@ package frc.robot.commands.grouped;
 
 import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.commands.actions.*;
-import frc.robot.commands.looped.LowerShooterArmConstant;
-import frc.robot.commands.looped.RaiseShooterArmConstant;
 import frc.robot.subsystems.*;
 import frc.robot.util.Trajectories;
 
@@ -25,7 +23,6 @@ public class TwoCargoLowTime extends SequentialCommandGroup {
         drivetrain.gyro.reset();
         trajectories.generateAuto();
         trajectories.setStartingAutonomousPose(trajectories.twoBallGet);
-        shooterArm.resetEncoder(SHOOTER_ARM_MAX_ANGLE);
 
         addCommands(
             new LowHubShoot(shooter, shooterArm, storage, RPM),
@@ -45,7 +42,7 @@ public class TwoCargoLowTime extends SequentialCommandGroup {
 							new WaitCommand(0.5),
 							new ParallelRaceGroup(
 								new WaitCommand(1),
-								new RaiseShooterArmConstant(shooterArm)
+								new RaiseShooterArm(shooterArm)
 							)
 //							new SetShooterArmAngle(shooterArm,	 SHOOTER_ARM_MAX_ANGLE)),
 						),
@@ -59,7 +56,7 @@ public class TwoCargoLowTime extends SequentialCommandGroup {
 				new SequentialCommandGroup(
 					new ParallelRaceGroup(
 							new WaitCommand(1),
-							new LowerShooterArmConstant(shooterArm)
+							new LowerShooterArm(shooterArm)
 					),
 					new WaitCommand(0.5),
                 	new ExtendIntake(intakeFlipper)

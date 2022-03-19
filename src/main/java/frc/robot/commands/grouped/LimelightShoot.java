@@ -20,7 +20,6 @@ public class LimelightShoot extends SequentialCommandGroup {
 			new RetractIntake(intakeFlipper),
 			new ShooterSpinup(shooter, RPM),
 			new LimelightAnglePID(limelight, drivetrain),
-			new SetShooterArmAngle(shooterArm, SHOOTER_ARM_MAX_ANGLE),
 			new RunStorageForTime(storage, 0.3, -1)));
 		toRun.add(new Shoot(shooter, storage));
 

@@ -21,13 +21,12 @@ public class OneLowOneHigh extends SequentialCommandGroup {
         drivetrain.gyro.reset();
         trajectories.generateAuto();
         trajectories.setStartingAutonomousPose(trajectories.twoBallGet);
-        shooterArm.resetEncoder(SHOOTER_ARM_MAX_ANGLE);
 
         addCommands(
             new LowHubShoot(shooter, shooterArm, storage, RPM),
             new ParallelCommandGroup(
                 trajectories.twoBallGetCommand,
-                new SetShooterArmAngle(shooterArm, SHOOTER_ARM_INTAKE_ANGLE),
+                new LowerShooterArm(shooterArm),
                 new ExtendIntake(intakeFlipper),
 
                 new SequentialCommandGroup(

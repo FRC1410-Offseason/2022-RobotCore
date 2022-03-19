@@ -15,16 +15,12 @@ import frc.robot.subsystems.IntakeFlipper;
 import frc.robot.subsystems.Limelight;
 import frc.robot.util.Trajectories;
 
-import static frc.robotmap.Constants.*;
-
 public class TwoCargoHigh extends ParallelCommandGroup {
 
     public TwoCargoHigh(Trajectories trajectories, Drivetrain drivetrain, Intake intake, Storage storage, ShooterArm shooterArm, Shooter shooter, IntakeFlipper intakeFlipper, Limelight limelight, double RPM) {
         drivetrain.gyro.reset();
         trajectories.generateAuto();
         trajectories.setStartingAutonomousPose(trajectories.twoBall);
-        shooterArm.resetEncoder(SHOOTER_ARM_MAX_ANGLE);
-        
         
         addCommands(
             // Drivetrain - Trajectories
@@ -55,7 +51,7 @@ public class TwoCargoHigh extends ParallelCommandGroup {
                 new SetShooterRPM(shooter, 0)
             ),
             // Shooter Arm
-            new SetShooterArmAngle(shooterArm, SHOOTER_ARM_INTAKE_ANGLE)
+            new LowerShooterArm(shooterArm)
         );
     }
 }

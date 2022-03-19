@@ -22,7 +22,6 @@ public class OneCargoLowTime extends SequentialCommandGroup {
         drivetrain.gyro.reset();
         trajectories.generateAuto();
         trajectories.setStartingAutonomousPose(trajectories.twoBallGet);
-        shooterArm.resetEncoder(SHOOTER_ARM_MAX_ANGLE);
 
         addCommands(
                 new LowHubShoot(shooter, shooterArm, storage, RPM),
