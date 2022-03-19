@@ -49,11 +49,11 @@ public class Robot extends ScheduledRobot {
 
 	@Override
 	public void autonomousInit() {
-        System.out.println("INITIALIZING AUTO");
 		scheduler.scheduleDefaultCommand(new PoseEstimation(drivetrain), TIME_OFFSET, 10);
 		scheduler.scheduleDefaultCommand(new RunIntakeFlipper(intakeFlipper));
 		drivetrain.setBrake();
 		intakeFlipper.resetEncoders(0);
+		leds.setProfile(LEDs.LEDProfile.AUTO);
 
 		switch ((int) NetworkTables.getAutoChooser()) {
 			case 0:
@@ -124,6 +124,8 @@ public class Robot extends ScheduledRobot {
 
 	@Override
 	public void teleopInit() {
+		// Resets LEDs
+		leds.setProfile(LEDs.LEDProfile.OFF);
 
 		// Make sure the drivetrain is in brake mode
 		drivetrain.setBrake();
@@ -149,6 +151,9 @@ public class Robot extends ScheduledRobot {
 
 	@Override
 	public void testInit() {
+		// Resets LEDs
+		leds.setProfile(LEDs.LEDProfile.OFF);
+
 		drivetrain.setCoast();
 
 		intakeFlipper.resetEncoders(0);
