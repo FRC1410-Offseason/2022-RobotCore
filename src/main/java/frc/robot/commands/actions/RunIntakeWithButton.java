@@ -1,9 +1,7 @@
 package frc.robot.commands.actions;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.Shooter;
-import frc.robot.subsystems.Storage;
+import frc.robot.subsystems.*;
 
 import static frc.robotmap.Constants.*;
 public class RunIntakeWithButton extends CommandBase {
@@ -11,14 +9,19 @@ public class RunIntakeWithButton extends CommandBase {
 	private final Intake intake;
 	private final Storage storage;
     private final Shooter shooter;
-    // private final Shooter shooter;
+	private final LEDs leds;
 
-	public RunIntakeWithButton(Intake intake, Storage storage, Shooter shooter) {
+	public RunIntakeWithButton(Intake intake, Storage storage, Shooter shooter, LEDs leds) {
 		this.intake = intake;
 		this.storage = storage;
         this.shooter = shooter;
-        // this.shooter = shooter;
+         this.leds = leds;
 		addRequirements(this.intake, this.storage);
+	}
+
+	@Override
+	public void initialize() {
+		leds.setProfile(LEDs.LEDProfile.PINK);
 	}
 
 	@Override
@@ -38,5 +41,7 @@ public class RunIntakeWithButton extends CommandBase {
 		intake.setSpeed(0);
 		storage.runStorage(0);
         shooter.setSpeeds(0);
+
+		leds.setProfile(LEDs.LEDProfile.OFF);
 	}
 }

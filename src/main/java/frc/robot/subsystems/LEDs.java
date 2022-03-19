@@ -18,6 +18,7 @@ public class LEDs extends SubsystemBase {
 		double GREEN = 0.75;
 		double BLUE = 0.85;
 		double RED = 0.61;
+		double PINK = 0.57;
 	}
 
 	@Override

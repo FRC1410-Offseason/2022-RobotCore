@@ -22,6 +22,7 @@ public class ThreeCargoLow extends SequentialCommandGroup {
 			ShooterArm shooterArm,
 			Shooter shooter,
 			IntakeFlipper intakeFlipper,
+			LEDs leds,
 			NetworkTableEntry RPM)
 	{
 		drivetrain.gyro.reset();
@@ -30,7 +31,7 @@ public class ThreeCargoLow extends SequentialCommandGroup {
 
 		addCommands(
 				new InstantCommand(() -> drivetrain.tankDriveVolts(0, 0)),
-				new LowHubShoot(shooter, shooterArm, storage, RPM)
+				new LowHubShoot(shooter, shooterArm, storage, leds, RPM)
 		);
 	}
 }

@@ -32,6 +32,7 @@ public class Robot extends ScheduledRobot {
     private final RightTelescopingArm rightTA = new RightTelescopingArm();
 	private final Intake intake = new Intake();
 	private final IntakeFlipper intakeFlipper = new IntakeFlipper();
+	private final LEDs leds = new LEDs();
 	private final Shooter shooter = new Shooter();
 	private final Storage storage = new Storage(DriverStation.getAlliance());
 	private final ShooterArm shooterArm = new ShooterArm();
@@ -62,10 +63,10 @@ public class Robot extends ScheduledRobot {
 				autonomousCommand = new TaxiAuto(auto, drivetrain);
 				break;
 			case 2:
-				autonomousCommand = new OneCargoLowTime(auto, drivetrain, intake, storage, shooterArm, shooter, intakeFlipper, NetworkTables.autoRPM);
+				autonomousCommand = new OneCargoLowTime(auto, drivetrain, intake, storage, shooterArm, shooter, intakeFlipper, leds, NetworkTables.autoRPM);
 				break;
 			case 3:
-				autonomousCommand = new TwoCargoLow(auto, drivetrain, intake, storage, shooterArm, shooter, intakeFlipper, NetworkTables.autoRPM);
+				autonomousCommand = new TwoCargoLow(auto, drivetrain, intake, storage, shooterArm, shooter, intakeFlipper, leds, NetworkTables.autoRPM);
 				break;
 			default: throw new IllegalStateException("Unknown auto profile " + auto);
 		}
@@ -84,9 +85,9 @@ public class Robot extends ScheduledRobot {
 		 * 	Run the storage at full speed
 		 * 	Run the shooter wheels backwards
 		 */
-		getOperatorYButton().whileHeld(new RunIntakeWithButton(intake, storage, shooter));
+		getOperatorYButton().whileHeld(new RunIntakeWithButton(intake, storage, shooter, leds));
         getOperatorYButton().whenReleased(new RunStorageForTime(storage, STORAGE_REVERSE_TIME, STORAGE_REVERSE_SPEED));
-		getOperatorXButton().whileHeld(new RunIntakeWithButton(intake, storage, shooter));
+		getOperatorXButton().whileHeld(new RunIntakeWithButton(intake, storage, shooter, leds));
         getOperatorXButton().whenReleased(new RunStorageForTime(storage, STORAGE_REVERSE_TIME, STORAGE_REVERSE_SPEED));
 
 		/**
@@ -111,7 +112,7 @@ public class Robot extends ScheduledRobot {
 		getOperatorDPadDown().whenPressed(new IncrementShooterRPM(shooter, NetworkTables.shooterLowRPM, -SHOOTER_RPM_INCREMENT));
 
 		// Sequence for scoring into the low hub
-		getDriverAButton().whenPressed(new LowHubShoot(shooter, shooterArm, storage, NetworkTables.shooterLowRPM));
+		getDriverAButton().whenPressed(new LowHubShoot(shooter, shooterArm, storage, leds, NetworkTables.shooterLowRPM));
 
 		// Flip the direction that the drivetrain moves relative to the driver controller
         getDriverYButton().whenPressed(new FlipDrivetrain(drivetrain));
