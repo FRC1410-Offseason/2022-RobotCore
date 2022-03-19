@@ -20,6 +20,7 @@ public class RunStorageForTime extends CommandBase {
 
     @Override
     public void initialize() {
+        timer.reset();
         timer.start();
         storage.runStorage(speed);
     }
@@ -32,5 +33,6 @@ public class RunStorageForTime extends CommandBase {
     @Override
     public void end(boolean interrupted) {
         storage.runStorage(0);
+        timer.stop();
     }
 }

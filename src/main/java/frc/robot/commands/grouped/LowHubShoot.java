@@ -1,11 +1,14 @@
 package frc.robot.commands.grouped;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.wpilibj2.command.*;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+
 import frc.robot.commands.actions.*;
 import frc.robot.subsystems.*;
 
 import static frc.robotmap.Constants.*;
+import static frc.robotmap.Tuning.*;
 
 import java.util.ArrayList;
 
@@ -18,7 +21,7 @@ public class LowHubShoot extends SequentialCommandGroup {
 		toRun.add(new ParallelCommandGroup(
 			new InstantCommand(() -> leds.setProfile(LEDs.LEDProfile.GREEN)),
 			new RunStorageForTime(storage, STORAGE_REVERSE_TIME, STORAGE_REVERSE_SPEED),
-			new ShooterSpinup(shooter, RPM.getDouble(0))
+			new ShooterSpinup(shooter, RPM.getDouble(SHOOTER_LOW_HUB_RPM))
 		));
 		toRun.add(new Shoot(shooter, storage));
 		toRun.add(new InstantCommand(() -> leds.setProfile(LEDs.LEDProfile.OFF)));
