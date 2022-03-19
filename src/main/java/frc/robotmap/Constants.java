@@ -72,6 +72,7 @@ public final class Constants {
 
 	public static final double STORAGE_RUN_SPEED = 1;
 	public static final double STORAGE_SHOOT_SPEED = 1;
+    public static final double STORAGE_REVERSE_SPEED = -0.5;
 	public static final double STORAGE_INTAKE_SPEED = 1;
 
 	// INTAKE
