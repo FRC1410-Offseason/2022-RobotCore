@@ -66,6 +66,8 @@ public class TwoCargoLow extends SequentialCommandGroup {
                 ),
 				new InstantCommand(() -> drivetrain.tankDriveVolts(0, 0)),
                 new LowHubShoot(shooter, shooterArm, storage, leds, RPM),
+				new InstantCommand(() -> drivetrain.tankDriveVolts(5, 5)),
+				new WaitCommand(1.45),
 				new RunCommand(() -> drivetrain.tankDriveVolts(0, 0)),
                 new WaitCommand(15)
         );
