@@ -70,10 +70,12 @@ public final class Constants {
 	public static final Color BLUE_TARGET = new Color(new Color8Bit(100, 138, 216));
 	public static final Color RED_TARGET = new Color(new Color8Bit(224, 69, 56));
 
-	public static final double STORAGE_RUN_SPEED = 1;
+	public static final double STORAGE_RUN_SPEED = 0.8;
 	public static final double STORAGE_SHOOT_SPEED = 1;
     public static final double STORAGE_REVERSE_SPEED = -0.5;
-	public static final double STORAGE_INTAKE_SPEED = 1;
+	public static final double STORAGE_INTAKE_SPEED = 0.8;
+
+    public static final double STORAGE_REVERSE_TIME = 0.2;
 
 	// INTAKE
 	public static final double INTAKE_FORWARD_SPEED = 1;

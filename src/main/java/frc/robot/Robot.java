@@ -87,9 +87,9 @@ public class Robot extends ScheduledRobot {
 		 * 	Run the shooter wheels backwards
 		 */
 		getOperatorYButton().whileHeld(new RunIntakeWithButton(intake, storage, shooter));
-        getOperatorYButton().whenReleased(new RunStorageForTime(storage, 0.1, STORAGE_REVERSE_SPEED));
+        getOperatorYButton().whenReleased(new RunStorageForTime(storage, STORAGE_REVERSE_TIME, STORAGE_REVERSE_SPEED));
 		getOperatorXButton().whileHeld(new RunIntakeWithButton(intake, storage, shooter));
-        getOperatorYButton().whenReleased(new RunStorageForTime(storage, 0.1, STORAGE_REVERSE_SPEED));
+        getOperatorXButton().whenReleased(new RunStorageForTime(storage, STORAGE_REVERSE_TIME, STORAGE_REVERSE_SPEED));
 
 		/**
 		 * Sequences for toggling the robot position, the robot is either:
