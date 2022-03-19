@@ -18,6 +18,7 @@ public class OneCargoLowTime extends SequentialCommandGroup {
             ShooterArm shooterArm,
             Shooter shooter,
             IntakeFlipper intakeFlipper,
+			LEDs leds,
             NetworkTableEntry RPM)
     {
         drivetrain.gyro.reset();
@@ -25,7 +26,7 @@ public class OneCargoLowTime extends SequentialCommandGroup {
         trajectories.setStartingAutonomousPose(trajectories.twoBallGet);
 
         addCommands(
-                new LowHubShoot(shooter, shooterArm, storage, RPM),
+                new LowHubShoot(shooter, shooterArm, storage, leds, RPM),
                 new ParallelCommandGroup(
                         new SequentialCommandGroup(
                                 new WaitCommand(1),

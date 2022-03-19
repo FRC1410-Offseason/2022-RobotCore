@@ -68,7 +68,6 @@ public class Limelight extends SubsystemBase {
         return latestResult.getLatencyMillis() / 1000.0;
     }
 
-	// TODO: Lots of things here that probably need to be constants
 	public double getLimelightHeight(double shooterAngle) {
         return (24.08 * Math.sin(shooterAngle)) + 4.7;
     }
@@ -99,8 +98,7 @@ public class Limelight extends SubsystemBase {
         return target.getYaw();
     }
 
-	// TODO – docs & move to constant
-    // Distnace to vision target from camera
+    // Distance to vision target from camera
     public boolean isYawAcceptable(double distance, double yaw) {
         double acceptableYaw = 4 - (0.165 * distance / 12);
         if (Math.abs(yaw) < acceptableYaw) return true;
@@ -111,7 +109,6 @@ public class Limelight extends SubsystemBase {
         return 4 - (0.165 * distance / 12);
     }
 
-	// TODO – move to javadoc
     // Radius is the distance from the limelight to the vision target
     // Distance is the distance from the limelight to the center of the robot
     // Distance could be a constant because our high goal shooting is only happening at 53.1deg

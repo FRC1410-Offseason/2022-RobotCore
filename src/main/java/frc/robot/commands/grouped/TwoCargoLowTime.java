@@ -19,6 +19,7 @@ public class TwoCargoLowTime extends SequentialCommandGroup {
             ShooterArm shooterArm,
             Shooter shooter,
             IntakeFlipper intakeFlipper,
+			LEDs leds,
             NetworkTableEntry RPM)
     {
         drivetrain.gyro.reset();
@@ -26,7 +27,7 @@ public class TwoCargoLowTime extends SequentialCommandGroup {
         trajectories.setStartingAutonomousPose(trajectories.twoBallGet);
 
         addCommands(
-            new LowHubShoot(shooter, shooterArm, storage, RPM),
+            new LowHubShoot(shooter, shooterArm, storage, leds, RPM),
             new ParallelCommandGroup(
                 new SequentialCommandGroup(
                     new WaitCommand(1),
@@ -48,7 +49,7 @@ public class TwoCargoLowTime extends SequentialCommandGroup {
 //							new SetShooterArmAngle(shooterArm,	 SHOOTER_ARM_MAX_ANGLE)),
 						),
                         new WaitCommand(3),
-                        new LowHubShoot(shooter, shooterArm, storage, RPM),
+                        new LowHubShoot(shooter, shooterArm, storage, leds, RPM),
                         new InstantCommand(() -> drivetrain.tankDriveVolts(5, 5)),
                         new WaitCommand(1.45),
                         new RunCommand(() -> drivetrain.tankDriveVolts(0, 0))

@@ -19,6 +19,7 @@ public class TwoCargoLow extends SequentialCommandGroup {
             ShooterArm shooterArm,
             Shooter shooter,
             IntakeFlipper intakeFlipper,
+			LEDs leds,
             NetworkTableEntry RPM)
     {
         drivetrain.gyro.reset();
@@ -27,7 +28,7 @@ public class TwoCargoLow extends SequentialCommandGroup {
 
         addCommands(
 				new InstantCommand(() -> drivetrain.tankDriveVolts(0, 0)),
-                new LowHubShoot(shooter, shooterArm, storage, RPM),
+                new LowHubShoot(shooter, shooterArm, storage, leds, RPM),
                 new ParallelCommandGroup(
                         new SequentialCommandGroup(
                                 new WaitCommand(1),
@@ -64,7 +65,7 @@ public class TwoCargoLow extends SequentialCommandGroup {
 						)
                 ),
 				new InstantCommand(() -> drivetrain.tankDriveVolts(0, 0)),
-                new LowHubShoot(shooter, shooterArm, storage, RPM),
+                new LowHubShoot(shooter, shooterArm, storage, leds, RPM),
 				new InstantCommand(() -> drivetrain.tankDriveVolts(5, 5)),
 				new WaitCommand(1.45),
 				new RunCommand(() -> drivetrain.tankDriveVolts(0, 0)),
