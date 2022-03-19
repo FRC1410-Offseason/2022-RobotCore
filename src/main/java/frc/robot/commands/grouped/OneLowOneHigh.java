@@ -1,5 +1,6 @@
 package frc.robot.commands.grouped;
 
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -17,7 +18,7 @@ import static frc.robotmap.Constants.*;
 
 public class OneLowOneHigh extends SequentialCommandGroup {
 
-    public OneLowOneHigh(Trajectories trajectories, Drivetrain drivetrain, Intake intake, Storage storage, ShooterArm shooterArm, Shooter shooter, IntakeFlipper intakeFlipper, Limelight limelight, double RPM) {
+    public OneLowOneHigh(Trajectories trajectories, Drivetrain drivetrain, Intake intake, Storage storage, ShooterArm shooterArm, Shooter shooter, IntakeFlipper intakeFlipper, Limelight limelight, NetworkTableEntry RPM) {
         drivetrain.gyro.reset();
         trajectories.generateAuto();
         trajectories.setStartingAutonomousPose(trajectories.twoBallGet);

@@ -1,6 +1,7 @@
 package frc.robot.commands.grouped;
 
 
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.commands.actions.*;
 import frc.robot.subsystems.*;
@@ -18,7 +19,7 @@ public class TwoCargoLowTime extends SequentialCommandGroup {
             ShooterArm shooterArm,
             Shooter shooter,
             IntakeFlipper intakeFlipper,
-            double RPM)
+            NetworkTableEntry RPM)
     {
         drivetrain.gyro.reset();
         trajectories.generateAuto();

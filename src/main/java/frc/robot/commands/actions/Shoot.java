@@ -32,7 +32,6 @@ public class Shoot extends CommandBase {
 		timer.reset();
 		storage.runStorage(STORAGE_SHOOT_SPEED);
 		timer.start();
-		System.out.println("storage ran");
 	}
 
 	@Override

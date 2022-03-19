@@ -1,5 +1,6 @@
 package frc.robot.commands.grouped;
 
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -17,7 +18,7 @@ import frc.robot.util.Trajectories;
 
 public class TwoCargoHigh extends ParallelCommandGroup {
 
-    public TwoCargoHigh(Trajectories trajectories, Drivetrain drivetrain, Intake intake, Storage storage, ShooterArm shooterArm, Shooter shooter, IntakeFlipper intakeFlipper, Limelight limelight, double RPM) {
+    public TwoCargoHigh(Trajectories trajectories, Drivetrain drivetrain, Intake intake, Storage storage, ShooterArm shooterArm, Shooter shooter, IntakeFlipper intakeFlipper, Limelight limelight, NetworkTableEntry RPM) {
         drivetrain.gyro.reset();
         trajectories.generateAuto();
         trajectories.setStartingAutonomousPose(trajectories.twoBall);
@@ -46,9 +47,9 @@ public class TwoCargoHigh extends ParallelCommandGroup {
             ),
             // Shooter
             new SequentialCommandGroup(
-                new SetShooterRPM(shooter, -2000),
+                new InstantCommand(() -> shooter.setSpeeds(-2000)),
                 new WaitCommand(4.75),
-                new SetShooterRPM(shooter, 0)
+				new InstantCommand(() -> shooter.setSpeeds(0))
             ),
             // Shooter Arm
             new LowerShooterArm(shooterArm)

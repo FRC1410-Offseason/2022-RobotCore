@@ -1,5 +1,6 @@
 package frc.robot.commands.grouped;
 
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -12,13 +13,13 @@ import java.util.ArrayList;
 
 public class LowHubShoot extends SequentialCommandGroup {
 
-	public LowHubShoot(Shooter shooter, ShooterArm shooterArm, Storage storage, double RPM) {
+	public LowHubShoot(Shooter shooter, ShooterArm shooterArm, Storage storage, NetworkTableEntry RPM) {
 		// TODO: Add calculation for desired exit velocity of cargo
 
 		ArrayList<Command> toRun = new ArrayList<>();
 
 		toRun.add(new ParallelCommandGroup(
-			new ShooterSpinup(shooter, RPM),
+			new ShooterSpinup(shooter, RPM.getDouble(0)),
 			new RaiseShooterArm(shooterArm),
 			new RunStorageForTime(storage, STORAGE_REVERSE_TIME, STORAGE_REVERSE_SPEED)));
 		toRun.add(new Shoot(shooter, storage));

@@ -3,9 +3,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj2.command.CommandGroupBase;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.commands.grouped.*;
 import frc.robot.commands.looped.*;
 import frc.robot.commands.actions.*;
@@ -64,10 +62,10 @@ public class Robot extends ScheduledRobot {
 				autonomousCommand = new TaxiAuto(auto, drivetrain);
 				break;
 			case 2:
-				autonomousCommand = new OneCargoLowTime(auto, drivetrain, intake, storage, shooterArm, shooter, intakeFlipper, SHOOTER_LOW_HUB_RPM);
+				autonomousCommand = new OneCargoLowTime(auto, drivetrain, intake, storage, shooterArm, shooter, intakeFlipper, NetworkTables.autoRPM);
 				break;
 			case 3:
-				autonomousCommand = new TwoCargoLow(auto, drivetrain, intake, storage, shooterArm, shooter, intakeFlipper, SHOOTER_LOW_HUB_RPM);
+				autonomousCommand = new TwoCargoLow(auto, drivetrain, intake, storage, shooterArm, shooter, intakeFlipper, NetworkTables.autoRPM);
 				break;
 			default: throw new IllegalStateException("Unknown auto profile " + auto);
 		}
@@ -109,11 +107,11 @@ public class Robot extends ScheduledRobot {
 		/**
 		 * Manually spin up the shooter wheels, in case the driver needs to take over
 		 */
-		getOperatorDPadUp().whenPressed(new SetShooterRPM(shooter, SHOOTER_LOW_HUB_RPM));
-		getOperatorDPadDown().whenPressed(new SetShooterRPM(shooter, 0));
+		getOperatorDPadUp().whenPressed(new IncrementShooterRPM(shooter, NetworkTables.shooterLowRPM, SHOOTER_RPM_INCREMENT));
+		getOperatorDPadDown().whenPressed(new IncrementShooterRPM(shooter, NetworkTables.shooterLowRPM, -SHOOTER_RPM_INCREMENT));
 
 		// Sequence for scoring into the low hub
-		getDriverAButton().whenPressed(new LowHubShoot(shooter, shooterArm, storage, SHOOTER_LOW_HUB_RPM));
+		getDriverAButton().whenPressed(new LowHubShoot(shooter, shooterArm, storage, NetworkTables.shooterLowRPM));
 
 		// Flip the direction that the drivetrain moves relative to the driver controller
         getDriverYButton().whenPressed(new FlipDrivetrain(drivetrain));
@@ -158,8 +156,8 @@ public class Robot extends ScheduledRobot {
 		getOperatorXButton().whenPressed(new InstantCommand(() -> intakeFlipper.resetEncoders(INTAKE_UP_POSITION)));
 		getOperatorYButton().whenPressed(new InstantCommand(() -> intakeFlipper.resetEncoders(INTAKE_DOWN_POSITION)));
 
-		getOperatorDPadUp().whenPressed(new SetShooterRPM(shooter, SHOOTER_LOW_HUB_RPM));
-		getOperatorDPadDown().whenPressed(new SetShooterRPM(shooter, 0));
+		getOperatorDPadUp().whenPressed(new SetShooterRPM(shooter, NetworkTables.shooterLowRPM));
+		getOperatorDPadDown().whenPressed(new InstantCommand(() -> shooter.setSpeeds(0)));
 
 		getOperatorAButton().whileHeld(new RunStorageConstant(storage, STORAGE_RUN_SPEED));
 
