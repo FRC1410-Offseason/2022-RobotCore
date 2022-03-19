@@ -95,7 +95,7 @@ public class Robot extends ScheduledRobot {
 		 * 	In a shooting / scoring position, where the shooter arm is up and the intake is up
 		 * 	In a climbing position, where the shooter arm is down but the intake is up (lowers the center of mass)
 		 */
-        getOperatorRightBumper().whenPressed(new RaiseShooterArm(shooterArm));
+        getOperatorRightBumper().whenPressed(new RaiseShooterArmDelayed(shooterArm));
         getOperatorRightBumper().whenPressed(new RetractIntake(intakeFlipper));
 		getOperatorLeftBumper().whenPressed(new LowerShooterArm(shooterArm));
         getOperatorLeftBumper().whenPressed(new ExtendIntakeDelayed(intakeFlipper));
