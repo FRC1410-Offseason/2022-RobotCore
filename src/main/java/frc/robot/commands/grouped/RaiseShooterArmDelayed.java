@@ -11,7 +11,7 @@ public class RaiseShooterArmDelayed extends SequentialCommandGroup {
 	public RaiseShooterArmDelayed(ShooterArm shooterArm) {
 
 		addCommands (
-				new WaitCommand(INTAKE_DEPLOYMENT_DELAY),
+				new WaitCommand(SHOOTER_ARM_DEPLOYMENT_DELAY),
 				new RaiseShooterArm(shooterArm)
 		);
 	}
