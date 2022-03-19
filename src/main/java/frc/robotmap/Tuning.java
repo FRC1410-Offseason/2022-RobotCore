@@ -75,6 +75,8 @@ public final class Tuning {
     public static final double INTAKE_DEPLOYMENT_DELAY = 0.5;
 
 	// SHOOTER ARM
+	public static final double SHOOTER_ARM_DEPLOYMENT_DELAY = 0.3;
+
 	public static final double SA_P = 0.027; // Probably needs to be slightly more aggressive, but that's for later
 	public static final double SA_I = 0;
 	public static final double SA_D = 0;
