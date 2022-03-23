@@ -91,5 +91,5 @@ public final class Constants {
 	public static final double WINCH_OUT_SPEED = -1;
 
 	// FEEDBACK
-	public static final int LED_CONTROLLER_PORT = 0;
+	public static final int LED_CONTROLLER_PORT = 8;
 }
