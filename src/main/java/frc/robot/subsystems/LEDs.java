@@ -20,7 +20,7 @@ public class LEDs extends SubsystemBase {
 		double RED = 0.61;
 		double PINK = 0.57;
 		double TWOCOLORSWITCH = -0.61;
-        double RAINBOW = -0.97;
+        double RAINBOW = 0.99; // -0.97
 	}
 
 	@Override
