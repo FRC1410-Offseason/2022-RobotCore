@@ -18,7 +18,7 @@ import static frc.robotmap.Tuning.*;
 
 public class Robot extends ScheduledRobot {
 
-	private final String[] autoList = {"0 - Taxi", "1 - 2CargoDrive", "2 - 2CargoNoSA", "3 - 2CargoAuto"};
+	private final String[] autoList = {"0 - Nothing,", "1 - Taxi", "2 - 1 Cargo Low", "3 - 2 Cargo Low"};
 	private final AnalogInput pressure = new AnalogInput(PRESSURE_SENSOR);
 	CommandGroupBase autonomousCommand = null;
 
@@ -125,7 +125,7 @@ public class Robot extends ScheduledRobot {
 	@Override
 	public void teleopInit() {
 		// Resets LEDs
-		leds.setProfile(LEDs.LEDProfile.OFF);
+		leds.setProfile(LEDs.LEDProfile.RAINBOW);
 
 		// Make sure the drivetrain is in brake mode
 		drivetrain.setBrake();
@@ -152,7 +152,7 @@ public class Robot extends ScheduledRobot {
 	@Override
 	public void testInit() {
 		// Resets LEDs
-		leds.setProfile(LEDs.LEDProfile.OFF);
+		leds.setProfile(LEDs.LEDProfile.RAINBOW);
 
 		drivetrain.setCoast();
 

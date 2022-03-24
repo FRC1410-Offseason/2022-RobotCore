@@ -23,7 +23,7 @@ public class LowHubShoot extends SequentialCommandGroup {
 			new ShooterSpinup(shooter, RPM.getDouble(SHOOTER_LOW_HUB_RPM))
 		));
 		toRun.add(new Shoot(shooter, storage));
-		toRun.add(new InstantCommand(() -> leds.setProfile(LEDs.LEDProfile.OFF)));
+		toRun.add(new InstantCommand(() -> leds.setProfile(LEDs.LEDProfile.RAINBOW)));
 
 		addCommands(toRun.toArray(Command[]::new));
 	}
