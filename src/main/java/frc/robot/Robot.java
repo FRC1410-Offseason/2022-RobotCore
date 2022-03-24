@@ -53,7 +53,6 @@ public class Robot extends ScheduledRobot {
 		scheduler.scheduleDefaultCommand(new RunIntakeFlipper(intakeFlipper));
 		drivetrain.setBrake();
 		intakeFlipper.resetEncoders(0);
-		leds.setProfile(LEDs.LEDProfile.TWOCOLORSWITCH);
 
 		switch ((int) NetworkTables.getAutoChooser()) {
 			case 0:
@@ -75,6 +74,11 @@ public class Robot extends ScheduledRobot {
 		scheduler.scheduleDefaultCommand(autonomousCommand, TIME_OFFSET, 10, RobotMode.TELEOP, RobotMode.TEST);
 		scheduler.debugDumpList();
 	}
+
+    @Override
+    public void autonomousPeriodic() {
+        leds.setProfile(LEDs.LEDProfile.TWOCOLORSWITCH);
+    }
 
     @Override
 	public void registerControls() {
