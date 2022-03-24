@@ -42,6 +42,6 @@ public class RunIntakeWithButton extends CommandBase {
 		storage.runStorage(0);
         shooter.setSpeeds(0);
 
-		leds.setProfile(LEDs.LEDProfile.OFF);
+		leds.setProfile(LEDs.LEDProfile.RAINBOW);
 	}
 }
