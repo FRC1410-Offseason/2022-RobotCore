@@ -13,7 +13,6 @@ public class RunIntakeFlipperWithAxis extends CommandBase {
 	public RunIntakeFlipperWithAxis(IntakeFlipper intakeFlipper, Axis axis) {
 		this.intakeFlipper = intakeFlipper;
 		this.axis = axis;
-//		addRequirements(intakeFlipper);
 	}
 
 	@Override

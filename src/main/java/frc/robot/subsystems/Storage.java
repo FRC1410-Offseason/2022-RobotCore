@@ -52,16 +52,6 @@ public class Storage extends SubsystemBase {
 	private final WPI_TalonSRX motor = new WPI_TalonSRX(STORAGE_MOTOR_ID);
 
 	/**
-	 * Color sensor for reading the color of the cargo and updating state
-	 */
-	// private final ColorSensorV3 colorSensor = new ColorSensorV3(I2C.Port.kOnboard);
-
-	/**
-	 * Used to match the color from the sensor that is closest to the known red and blue colors
-	 */
-	// private final ColorMatch colorMatch = new ColorMatch();
-
-	/**
 	 * Line break sensor used to detect if ball is present or not
 	 * From our testing, the color sensor is not able to consistently tell the difference between an empty storage and a red ball
 	 * So this sensor is necessary to be completely certain what the know the state of the storage
@@ -101,34 +91,17 @@ public class Storage extends SubsystemBase {
 		motor.configFactoryDefault();
 		motor.setInverted(true);
 		motor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute);
-
-		// Add the two color targets to the color matcher
-		// colorMatch.addColorMatch(RED_TARGET);
-		// colorMatch.addColorMatch(BLUE_TARGET);
 	}
 
 	@Override
 	public void periodic() {
 		encoderNt.setDouble(motor.getSelectedSensorPosition());
 
-//		if (intaking) {
-//			runStorage(STORAGE_INTAKE_SPEED);
-//		}
-
 		slot1Ball.setBoolean(currentState.getSlot1().getBallPresent());
 		slot2Ball.setBoolean(currentState.getSlot2().getBallPresent());
 
 		lineBreakNt.setBoolean(lineBreak.get());
 		outtakeFlagNt.setBoolean(outtakeFlag);
-
-		// var currentColor = colorMatch.matchClosestColor(colorSensor.getColor());
-		// if (currentColor.color.equals(RED_TARGET)) {
-		// 	color.setString("RED");
-		// } else if (currentColor.color.equals(BLUE_TARGET)) {
-		// 	color.setString("BLUE");
-		// } else {
-		// 	color.setString("NONE");
-		// }
 
 		if (currentState.getSlot1().getColor() == ColorSensorStatus.ALLIANCE) {
 			slot1Color.setString("ALLIANCE");
@@ -145,30 +118,6 @@ public class Storage extends SubsystemBase {
 		lineBreakPrev = lineBreak.get();
 	}
 
-	/**
-	 * Get the current value of the outtake flag
-	 * @return true if outtake is necessary, false otherwise
-	 */
-	public boolean getOuttakeFlag() {
-		return outtakeFlag;
-	}
-
-	/**
-	 * Used to reset the flag when outtaking has been done
-	 * @param flag the boolean to set the flag to, should usually be false
-	 */
-	public void setOuttakeFlag(boolean flag) {
-		outtakeFlag = flag;
-	}
-
-	// public Color getColor() {
-	// 	return colorSensor.getColor();
-	// }
-
-	// public ColorMatch getColorMatch() {
-	// 	return colorMatch;
-	// }
-
 	public boolean getLineBreak() {
 		return lineBreak.get();
 	}
@@ -181,20 +130,12 @@ public class Storage extends SubsystemBase {
 		return manualControl;
 	}
 
-	public void setManualControl(boolean manualControl) {
-		this.manualControl = manualControl;
-	}
-
 	public boolean isIntaking() {
 		return intaking;
 	}
 
 	public void setIntaking(boolean intaking) {
 		this.intaking = intaking;
-	}
-
-	public final WPI_TalonSRX getShooterArmMotor() {
-		return motor;
 	}
 
 	/**
@@ -205,19 +146,11 @@ public class Storage extends SubsystemBase {
 		return this.currentState;
 	}
 
-	public DriverStation.Alliance getCurrentAlliance() {
-		return currentAlliance;
-	}
-
 	/**
 	 * Run the storage motor at a certain power
 	 * @param power a double from -1 to 1
 	 */
 	public void runStorage(double power) {
 		motor.set(power);
-	}
-
-	public void resetOuttakeFlag() {
-		outtakeFlag = false;
 	}
 }

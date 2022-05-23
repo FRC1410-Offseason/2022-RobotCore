@@ -54,11 +54,6 @@ public class IntakeFlipper extends SubsystemBase {
 		return (leftEncoder.getPosition() + rightEncoder.getPosition()) / 2;
 	}
 
-	public void resetEncoders() {
-		leftEncoder.setPosition(0);
-		rightEncoder.setPosition(0);
-	}
-
 	public void resetEncoders(double value) {
 		leftEncoder.setPosition(value);
 		rightEncoder.setPosition(value);

@@ -77,16 +77,6 @@ public final class Tuning {
 	// SHOOTER ARM
 	public static final double SHOOTER_ARM_DEPLOYMENT_DELAY = 0.3;
 
-	public static final double SA_P = 0.027; // Probably needs to be slightly more aggressive, but that's for later
-	public static final double SA_I = 0;
-	public static final double SA_D = 0;
-
-	public static final double SA_P_UP = 0.029;
-	public static final double SA_I_UP = 0;
-	public static final double SA_D_UP = 0;
-
-	public static final double SHOOTER_ARM_IS_FINISHED = 3; // Degree
-
 	// SHOOTER
 	public static final double SHOOT_STORAGE_DURATION = 2.0;
 	public static final int AUTONOMOUS_SHOOTING_RPM = 1500;

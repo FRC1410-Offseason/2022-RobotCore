@@ -1,27 +1,13 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
-import edu.wpi.first.wpilibj.smartdashboard.*;
-import edu.wpi.first.wpilibj.util.Color;
-import edu.wpi.first.wpilibj.util.Color8Bit;
 import frc.robot.framework.subsystem.SubsystemBase;
 
-import static frc.robotmap.Constants.*;
 import static frc.robotmap.IDs.*;
-import static frc.robotmap.Tuning.*;
 
 public class ShooterArm extends SubsystemBase {
 
@@ -46,10 +32,6 @@ public class ShooterArm extends SubsystemBase {
 		}
 	}
 
-	public boolean isArmUp() {
-		return isArmUp;
-	}
-
 	public void extend() {
 		armSolenoid.set(DoubleSolenoid.Value.kReverse);
 		isArmUp = true;
@@ -58,13 +40,5 @@ public class ShooterArm extends SubsystemBase {
 	public void retract() {
 		armSolenoid.set(DoubleSolenoid.Value.kForward);
 		isArmUp = false;
-	}
-
-	public void toggle() {
-		if (isArmUp) {
-			retract();
-		} else {
-			extend();
-		}
 	}
 }

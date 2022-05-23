@@ -12,8 +12,6 @@ public class RunStorageConstant extends CommandBase {
 	public RunStorageConstant(Storage storage, double speed) {
 		this.storage = storage;
 		this.speed = speed;
-		// each subsystem used by the command must be passed into the
-		// addRequirements() method (which takes a vararg of Subsystem)
 		addRequirements(storage);
 	}
 

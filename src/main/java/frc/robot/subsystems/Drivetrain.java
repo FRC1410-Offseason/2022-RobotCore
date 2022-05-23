@@ -2,7 +2,6 @@ package frc.robot.subsystems;
 
 import static frc.robotmap.IDs.*;
 import static frc.robotmap.Tuning.*;
-import static frc.robotmap.Constants.*;
 
 import com.ctre.phoenix.motorcontrol.InvertType;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -21,6 +20,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.kauailabs.navx.frc.AHRS;
 
 public class Drivetrain extends SubsystemBase {
+
 	/**
 	 * These are used for odometry / pose estimation
 	 * This is not best practice, but it works, and we don't have time to fix it atm
@@ -101,31 +101,11 @@ public class Drivetrain extends SubsystemBase {
 	public void initializeTalonFX(WPI_TalonFX motor) {
 		motor.configFactoryDefault();
 		motor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 10);
-		//motor.setNeutralMode(NeutralMode.Brake);
 		motor.configNeutralDeadband(0.001);
 	}
 
 	/**
-	 * Tank drive with deadzoned inputs, expects inputs to be deadzoned before being passed in
-	 * @param deadzonedLeftAxis a double between -1 and 1
-	 * @param deadzonedRightAxis a double between -1 and 1
-	 */
-	public void tankDriveDeadzoned(double deadzonedLeftAxis, double deadzonedRightAxis, boolean squared) {
-		drive.tankDrive(deadzonedLeftAxis, deadzonedRightAxis, squared);
-		drive.feed();
-	}
-
-	/**
-	 * Run the drivetrain in arcade mode
-	 * @param forward -1 to 1 representing the desired velocity
-	 * @param rotation -1 to 1 representing the desired angular velocity
-	 */
-	public void arcadeDrive(double forward, double rotation) {
-		drive.arcadeDrive(forward, rotation);
-	}
-
-	/**
-	 * Not really any different from the `tankDriveDeadzoned()` method
+	 * Run the drivetrain with a tank drive scheme
 	 * @param left -1 to 1 representing left velocity
 	 * @param right -1 to 1 representing right velocity
 	 */
@@ -177,9 +157,7 @@ public class Drivetrain extends SubsystemBase {
         System.out.println("Applied RIGHT voltage: " + rightVolts);
 
 		leftLeader.setVoltage(leftVolts);
-//		leftFollower.setVoltage(leftVolts);
 		rightLeader.setVoltage(rightVolts);
-//		rightFollower.setVoltage(rightVolts);
 		drive.feed();
 	}
 
@@ -188,9 +166,7 @@ public class Drivetrain extends SubsystemBase {
 	 */
 	public void resetEncoders() {
 		leftLeader.setSelectedSensorPosition(0);
-//		leftFollower.setSelectedSensorPosition(0);
 		rightLeader.setSelectedSensorPosition(0);
-//		rightFollower.setSelectedSensorPosition(0);
 	}
 
 	/**

@@ -15,7 +15,6 @@ public class RunStorageForTime extends CommandBase {
         this.storage = storage;
         this.seconds = seconds;
         this.speed = speed;
-        // addRequirements(storage);
     }
 
     @Override

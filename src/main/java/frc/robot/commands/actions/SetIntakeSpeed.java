@@ -14,7 +14,6 @@ public class SetIntakeSpeed extends CommandBase {
 		this.intake = intake;
 		this.speed = speed;
 		this.duration = duration;
-		// addRequirements(intake);
 	}
 
 	@Override

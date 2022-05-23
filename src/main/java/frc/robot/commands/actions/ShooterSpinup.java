@@ -11,11 +11,9 @@ public class ShooterSpinup extends CommandBase {
     public ShooterSpinup(Shooter shooter, double RPM) {
         this.shooter = shooter;
         this.RPM = RPM;
-
         addRequirements(shooter);
     }
 
-    // Called when the command is initially scheduled.
     @Override
     public void initialize() {
         shooter.setSpeeds(RPM);

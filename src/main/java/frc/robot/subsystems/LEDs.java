@@ -29,24 +29,6 @@ public class LEDs extends SubsystemBase {
 	}
 
 	/**
-	 * Returns the current profile
-	 * @return double from -0.99 to 0.99
-	 */
-	public double getProfile() {
-		return profile;
-	}
-
-	/**
-	 * Raw input for controller
-	 * @param desiredProfile -0.99 -> 0.99
-	 */
-	public void setRawProfile(double desiredProfile) {
-		if (desiredProfile != profile) {
-			profile = desiredProfile;
-		}
-	}
-
-	/**
 	 * Magic
 	 * @param desiredProfile magic
 	 */

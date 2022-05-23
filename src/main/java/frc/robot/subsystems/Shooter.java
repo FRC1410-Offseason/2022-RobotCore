@@ -5,15 +5,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import frc.robot.NetworkTables;
 import frc.robot.framework.subsystem.SubsystemBase;
-import frc.robot.util.GradientDescentOptimized;
-import frc.robot.util.PolynomialRegression;
-import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.DoubleConsumer;
 
 import static frc.robotmap.Constants.*;
 import static frc.robotmap.IDs.SHOOTER_LEFT_MOTOR_ID;
@@ -78,14 +70,6 @@ public class Shooter extends SubsystemBase {
 		rightRPM.setDouble(0);
 		targetRPM.setDouble(0);
   }
-
-	public void queueOuttake() {
-		outtakeQueued = true;
-	}
-
-	public boolean isOuttakeQueued() {
-		return outtakeQueued;
-	}
 
 	@Override
 	public void periodic() {

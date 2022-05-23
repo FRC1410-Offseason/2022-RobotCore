@@ -22,8 +22,6 @@ public class Shoot extends CommandBase {
 	public Shoot(Shooter shooter, Storage storage) {
 		this.shooter = shooter;
 		this.storage = storage;
-
-//		 addRequirements(shooter, storage);
 		addRequirements(storage);
 	}
 

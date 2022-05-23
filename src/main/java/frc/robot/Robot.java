@@ -37,7 +37,6 @@ public class Robot extends ScheduledRobot {
 	private final Storage storage = new Storage(DriverStation.getAlliance());
 	private final ShooterArm shooterArm = new ShooterArm();
 	private final Winch winch = new Winch();
-	// private final Limelight limelight = new Limelight();
 	private final Trajectories auto = new Trajectories(drivetrain);
 
 	@Override
